@@ -289,8 +289,7 @@ public sealed class RevisionDiffThreadingTests
         SeedFiles(control, fileTreeMode);
         FileStatusList files = control.GetTestAccessor().DiffFiles;
         files.SelectFileOrFolder(RelativePath.From(FirstFile), notify: false).Should().BeTrue();
-        FileStatusList.TestAccessor accessor = files.GetTestAccessor();
-        TreeView renderer = fileTreeMode ? accessor.Tree : accessor.DiffTree;
+        TreeView renderer = fileTreeMode ? files.FindControl<TreeView>("tvFiles")! : files.FindControl<TreeView>("tvDiffFiles")!;
         renderer.SelectedItem.Should().NotBeNull();
 
         files.Clear();

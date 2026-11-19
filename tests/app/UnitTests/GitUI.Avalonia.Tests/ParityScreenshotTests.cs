@@ -361,17 +361,19 @@ public sealed partial class ParityScreenshotTests
             else if (view is FileStatusList fileStatusList)
             {
                 FileStatusList.TestAccessor accessor = fileStatusList.GetTestAccessor();
-                if (accessor.List.IsVisible)
+                ListBox fileList = fileStatusList.FindControl<ListBox>("lstFiles")!;
+                TreeView fileTree = fileStatusList.FindControl<TreeView>("tvFiles")!;
+                if (fileList.IsVisible)
                 {
                     accessor.UpdateContextMenu();
-                    accessor.ContextMenu.Open(accessor.List);
+                    accessor.ContextMenu.Open(fileList);
                     Dispatcher.UIThread.RunJobs();
                 }
-                else if (accessor.Tree.IsVisible)
+                else if (fileTree.IsVisible)
                 {
                     for (int pass = 0; pass < 3; pass++)
                     {
-                        foreach (TreeViewItem item in accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>())
+                        foreach (TreeViewItem item in fileTree.GetVisualDescendants().OfType<TreeViewItem>())
                         {
                             item.IsExpanded = true;
                         }

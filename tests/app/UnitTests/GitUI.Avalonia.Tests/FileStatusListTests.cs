@@ -38,21 +38,53 @@ public sealed class FileStatusListTests
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
 
         control.SetFilter("old-name");
-        accessor.FilteredItemsCount.Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
+        control.GitItemFilteredStatuses.Count.Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
         control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
         accessor.FilterComboBox.Classes.Should().Contain("file-filter-active");
 
         control.SetFilter("[");
-        accessor.FilteredItemsCount.Should().Be(2, "an invalid expression keeps the last valid result");
+        control.GitItemFilteredStatuses.Count.Should().Be(2, "an invalid expression keeps the last valid result");
         control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
         accessor.FilterComboBox.Classes.Should().Contain("file-filter-invalid");
         ToolTip.GetTip(accessor.FilterComboBox).Should().BeOfType<string>().Which.Should().NotBeEmpty();
 
         control.SetFilter(string.Empty);
-        accessor.FilteredItemsCount.Should().Be(3);
+        control.GitItemFilteredStatuses.Count.Should().Be(3);
         control.GitItemFilteredStatuses.Should().Equal(renamed, documentation, rangeDiff);
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_filter_should_restore_only_previous_matches_or_select_the_single_remaining_file()
+    {
+        using AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+        try
+        {
+            FileStatusList control = new();
+            GitItemStatus previous = new("old.cs") { IsTracked = true };
+            GitItemStatus first = new("match-first.cs") { IsTracked = true };
+            GitItemStatus second = new("match-second.cs") { IsTracked = true };
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()), [previous, first, second]);
+            control.SelectFileOrFolder(RelativePath.From(previous.Name)).Should().BeTrue();
+
+            control.SetFilter("^match");
+            control.GitItemFilteredStatuses.Should().Equal(first, second);
+            control.HasSelection.Should().BeFalse();
+
+            control.SetFilter("^match-first");
+            control.GitItemFilteredStatuses.Should().ContainSingle().Which.Should().BeSameAs(first);
+            control.SelectedGitItem.Should().BeSameAs(first);
+
+            control.SetFilter("^match");
+            control.SelectedGitItem.Should().BeSameAs(first);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
     }
 
     [AvaloniaTest]
@@ -67,13 +99,13 @@ public sealed class FileStatusListTests
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
             control.SetFilter("directory");
-            control.GetTestAccessor().FilteredItemsCount.Should().Be(0);
+            control.GitItemFilteredStatuses.Count.Should().Be(0);
             control.SetFilter("match");
-            control.GetTestAccessor().FilteredItemsCount.Should().Be(1);
+            control.GitItemFilteredStatuses.Count.Should().Be(1);
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.TrimStart;
             control.SetFilter("directory");
-            control.GetTestAccessor().FilteredItemsCount.Should().Be(1);
+            control.GitItemFilteredStatuses.Count.Should().Be(1);
         }
         finally
         {
@@ -88,7 +120,7 @@ public sealed class FileStatusListTests
         GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
         GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
         TextBox before = new();
         Window window = new()
         {
@@ -109,8 +141,8 @@ public sealed class FileStatusListTests
             Dispatcher.UIThread.RunJobs();
             selectionChanges = 0;
 
-            accessor.List.SelectedIndex = 1;
-            accessor.List.SelectedIndex = 0;
+            fileList.SelectedIndex = 1;
+            fileList.SelectedIndex = 0;
             selectionChanges.Should().Be(0);
 
             await Task.Delay(TimeSpan.FromMilliseconds(FileStatusList.SelectedIndexChangeThrottleDuration.TotalMilliseconds * 2));
@@ -206,9 +238,10 @@ public sealed class FileStatusListTests
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            accessor.DiffTree.SelectedItems!.Clear();
-            accessor.DiffTree.SelectedItems.Add(accessor.DiffTree.Items[0]!);
-            accessor.DiffTree.SelectedItems.Add(accessor.DiffTree.Items[1]!);
+            TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+            diffTree.SelectedItems!.Clear();
+            diffTree.SelectedItems.Add(diffTree.Items[0]!);
+            diffTree.SelectedItems.Add(diffTree.Items[1]!);
 
             control.SelectedGitItems.Should().Equal(first, second);
             accessor.UpdateContextMenu();
@@ -239,18 +272,18 @@ public sealed class FileStatusListTests
             [new FileStatusWithDescription(null, revision, "Diff with parent", [first, second])],
             isFileTreeMode: false);
 
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        FileStatusList.DiffTreeNode header = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+        TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+        FileStatusList.DiffTreeNode header = diffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
         header.Text.Should().Be("(2) Diff with parent");
         header.IsGroupHeader.Should().BeTrue();
         header.Item.Should().BeNull();
         header.IsExpanded.Should().BeTrue();
         header.Children.SelectMany(Flatten).Count(node => node.Item is not null).Should().Be(2);
-        accessor.DiffTree.IsVisible.Should().BeTrue();
-        accessor.List.IsVisible.Should().BeFalse();
+        diffTree.IsVisible.Should().BeTrue();
+        control.FindControl<ListBox>("lstFiles")!.IsVisible.Should().BeFalse();
         control.SelectedGitItem.Should().Be(first);
 
-        accessor.DiffTree.SelectedItem = header;
+        diffTree.SelectedItem = header;
 
         control.SelectedGitItem.Should().BeNull("a revision summary is not a file selection");
     }
@@ -270,10 +303,10 @@ public sealed class FileStatusListTests
                 [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
                 isFileTreeMode: false);
 
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-            accessor.DiffTree.IsVisible.Should().BeTrue();
-            accessor.List.IsVisible.Should().BeFalse();
-            FileStatusList.DiffTreeNode root = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+            TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+            diffTree.IsVisible.Should().BeTrue();
+            control.FindControl<ListBox>("lstFiles")!.IsVisible.Should().BeFalse();
+            FileStatusList.DiffTreeNode root = diffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
             root.Text.Should().Be("src");
             root.IsGroupHeader.Should().BeFalse();
             root.Children.Should().ContainSingle().Which.Text.Should().Be("only.cs");
@@ -308,7 +341,7 @@ public sealed class FileStatusListTests
 
             FileStatusList.DiffTreeNode[] roots =
             [
-                .. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>(),
+                .. control.FindControl<TreeView>("tvDiffFiles")!.Items.Cast<FileStatusList.DiffTreeNode>(),
             ];
             roots.Select(node => node.Text).Should().Equal("eng/avalonia", "src/app/GitUI.Avalonia/LeftPanel");
             roots[0].Children.Should().ContainSingle().Which.Text.Should().Be("framework-adaptations.json");
@@ -340,7 +373,7 @@ public sealed class FileStatusListTests
                 [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
                 isFileTreeMode: false);
 
-            FileStatusList.DiffTreeNode root = control.GetTestAccessor().DiffTree.Items
+            FileStatusList.DiffTreeNode root = control.FindControl<TreeView>("tvDiffFiles")!.Items
                 .Cast<FileStatusList.DiffTreeNode>()
                 .Single();
             root.Text.Should().Be("src/only.cs");
@@ -398,10 +431,10 @@ public sealed class FileStatusListTests
 
             control.SetDiffs(first, second, [item]);
 
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-            accessor.DiffTree.IsVisible.Should().BeTrue();
-            accessor.List.IsVisible.Should().BeFalse();
-            FileStatusList.DiffTreeNode root = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+            TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+            diffTree.IsVisible.Should().BeTrue();
+            control.FindControl<ListBox>("lstFiles")!.IsVisible.Should().BeFalse();
+            FileStatusList.DiffTreeNode root = diffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
             root.Text.Should().Be("src");
             root.Children.Should().ContainSingle().Which.Text.Should().Be("App.cs");
             root.Children.Single().Item?.FirstRevision.Should().BeSameAs(first);
@@ -540,20 +573,20 @@ public sealed class FileStatusListTests
         ];
 
         control.SetDiffs(groups, isFileTreeMode: false);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        FileStatusList.DiffTreeNode[] roots = [.. accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+        TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+        FileStatusList.DiffTreeNode[] roots = [.. diffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
         roots.Should().HaveCount(3);
         roots[0].Text.Should().Be("(2) Changes");
         roots[1].Text.Should().Be("(0) No changes");
         roots[1].Children.Should().BeEmpty();
         roots[2].Item?.Item.Should().Be(range, "a range-diff marker remains a selectable root like WinForms");
         roots[2].IsGroupHeader.Should().BeFalse();
-        accessor.NoFilesLabel.IsVisible.Should().BeFalse();
+        control.FindControl<TextBlock>("NoFiles")!.IsVisible.Should().BeFalse();
 
         control.SetFilter("source");
-        control.GetTestAccessor().FilteredItemsCount.Should().Be(2, "range-diff markers remain visible through file filters");
+        control.GitItemFilteredStatuses.Count.Should().Be(2, "range-diff markers remain visible through file filters");
 
-        roots = [.. accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+        roots = [.. diffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
         roots[0].Text.Should().Be("(1/2) Changes");
         roots[1].Text.Should().Be("(0) No changes");
         roots[2].Item?.Item.Should().Be(range);
@@ -591,7 +624,7 @@ public sealed class FileStatusListTests
             ],
             isFileTreeMode: false);
 
-            FileStatusList.DiffTreeNode[] roots = [.. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+            FileStatusList.DiffTreeNode[] roots = [.. control.FindControl<TreeView>("tvDiffFiles")!.Items.Cast<FileStatusList.DiffTreeNode>()];
             roots.Should().HaveCount(3);
             roots[0].IsExpanded.Should().BeFalse();
             roots[1].IsExpanded.Should().BeTrue();
@@ -628,7 +661,7 @@ public sealed class FileStatusListTests
 
         FileStatusList.DiffTreeNode[] roots =
         [
-            .. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>(),
+            .. control.FindControl<TreeView>("tvDiffFiles")!.Items.Cast<FileStatusList.DiffTreeNode>(),
         ];
         roots[0].IsExpanded.Should().BeFalse();
         roots[1].IsExpanded.Should().BeTrue();
@@ -649,16 +682,16 @@ public sealed class FileStatusListTests
         ],
         isFileTreeMode: false);
 
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        FileStatusList.DiffTreeNode secondNode = accessor.DiffTree.Items
+        TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+        FileStatusList.DiffTreeNode secondNode = diffTree.Items
             .Cast<FileStatusList.DiffTreeNode>()
             .ElementAt(1)
             .Children.SelectMany(Flatten)
             .Single(node => node.Item is not null);
-        accessor.DiffTree.SelectedItem = secondNode;
+        diffTree.SelectedItem = secondNode;
 
         control.SetFilter("shared");
-        control.GetTestAccessor().FilteredItemsCount.Should().Be(2);
+        control.GitItemFilteredStatuses.Count.Should().Be(2);
 
         control.SelectedGitItem.Should().BeSameAs(secondParent);
     }
@@ -854,7 +887,7 @@ public sealed class FileStatusListTests
         control.SetDiffs(
             [new FileStatusWithDescription(null, revision, "Files", [first, second])],
             isFileTreeMode: true);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        TreeView fileTree = control.FindControl<TreeView>("tvFiles")!;
         Window window = new()
         {
             Width = 360,
@@ -866,18 +899,18 @@ public sealed class FileStatusListTests
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            accessor.Tree.Classes.Should().Contain("gitextensions-native-tree");
-            TreeViewItem root = accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>().First();
+            fileTree.Classes.Should().Contain("gitextensions-native-tree");
+            TreeViewItem root = fileTree.GetVisualDescendants().OfType<TreeViewItem>().First();
             root.IsExpanded = true;
             Dispatcher.UIThread.RunJobs();
 
-            accessor.Tree.GetVisualDescendants()
+            fileTree.GetVisualDescendants()
                 .OfType<TreeConnectorControl>()
                 .Should().NotBeEmpty();
 
             for (int depth = 0; depth < 3; depth++)
             {
-                foreach (TreeViewItem item in accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>().ToArray())
+                foreach (TreeViewItem item in fileTree.GetVisualDescendants().OfType<TreeViewItem>().ToArray())
                 {
                     item.IsExpanded = true;
                 }
@@ -914,7 +947,7 @@ public sealed class FileStatusListTests
                 "data-bound containers must use their model's sibling index");
 
             TreeViewItem FindItem(string text)
-                => accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>()
+                => fileTree.GetVisualDescendants().OfType<TreeViewItem>()
                     .Single(item => item.GetVisualDescendants().OfType<ContentPresenter>()
                         .Where(presenter => presenter.Name == "PART_HeaderPresenter"
                             && presenter.FindAncestorOfType<TreeViewItem>() == item)
@@ -925,7 +958,7 @@ public sealed class FileStatusListTests
                 => item.GetVisualDescendants().OfType<ContentPresenter>()
                     .Single(presenter => presenter.Name == "PART_HeaderPresenter"
                         && presenter.FindAncestorOfType<TreeViewItem>() == item)
-                    .TranslatePoint(default, accessor.Tree)!.Value.X;
+                    .TranslatePoint(default, fileTree)!.Value.X;
         }
         finally
         {

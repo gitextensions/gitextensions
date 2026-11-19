@@ -225,11 +225,11 @@ public sealed class StashTests
         form.Clear.IsEnabled.Should().BeFalse();
         form.Apply.IsEnabled.Should().BeFalse();
         form.StashSelectedFiles.IsEnabled.Should().BeTrue("the first changed file is selected automatically");
-        form.Stashed.GetTestAccessor().RefreshButton.IsVisible.Should().BeTrue();
-        form.Stashed.GetTestAccessor().RefreshButton.IsEnabled.Should().BeTrue();
+        form.Stashed.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
+        form.Stashed.FindControl<Button>("btnRefresh")!.IsEnabled.Should().BeTrue();
         form.Stashed.FindControl<MenuItem>("tsmiShowSkipWorktreeFiles")!.IsEnabled.Should().BeTrue();
         form.Stashed.FindControl<MenuItem>("tsmiShowUntrackedFiles")!.IsEnabled.Should().BeTrue();
-        form.Stashed.GetTestAccessor().Splitter.Height.Should().Be(0);
+        form.Stashed.FindControl<TextBlock>("lblSplitter")!.Height.Should().Be(0);
 
         form.StashSelectedFiles.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 

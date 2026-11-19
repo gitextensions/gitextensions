@@ -103,7 +103,7 @@ partial class FileStatusList
     private void DenseTree_Click(object sender, EventArgs e)
     {
         AppSettings.FileStatusMergeSingleItemWithFolder.Value = tsmiDenseTree.IsChecked;
-        ApplyFilter(selectFirstItem: false);
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
     private void EditGitIgnore_Click(object sender, EventArgs e)
@@ -125,7 +125,7 @@ partial class FileStatusList
     }
 
     private void Filter_ButtonClick(object sender, EventArgs e)
-        => ApplyFilter(selectFirstItem: false);
+        => FilterFiles(cboFilterComboBox.Text ?? string.Empty);
 
     private void FindInFilesGitGrep_ButtonClick(object sender, EventArgs e)
     {
@@ -245,7 +245,7 @@ partial class FileStatusList
     private void ShowGroupNodesInFlatList_Click(object sender, EventArgs e)
     {
         AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.IsChecked;
-        ApplyFilter(selectFirstItem: false);
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
     private void ShowIgnoredFiles_Click(object sender, EventArgs e)

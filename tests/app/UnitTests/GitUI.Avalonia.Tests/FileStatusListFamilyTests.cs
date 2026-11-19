@@ -170,10 +170,9 @@ public sealed class FileStatusListFamilyTests
     public void FileStatusList_should_expose_original_toolbar_and_full_context_menu_shape()
     {
         FileStatusList control = new();
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
         control.TranslateItems(Substitute.For<ITranslation>());
 
-        accessor.Toolbar.Children.Should().NotBeEmpty();
+        control.FindControl<StackPanel>("Toolbar")!.Children.Should().NotBeEmpty();
         control.FindControl<MenuItem>("tsmiUpdateSubmodule").Should().NotBeNull();
         control.FindControl<MenuItem>("tsmiResetFileTo").Should().NotBeNull();
         control.FindControl<MenuItem>("tsmiOpenWithDifftool").Should().NotBeNull();
@@ -200,14 +199,15 @@ public sealed class FileStatusListFamilyTests
     public void FileStatusList_should_collapse_the_filter_row_only_for_the_empty_state()
     {
         FileStatusList control = new();
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        TextBlock noFiles = control.FindControl<TextBlock>("NoFiles")!;
 
         control.Clear();
 
-        accessor.NoFilesLabel.IsVisible.Should().BeTrue();
-        accessor.FilterRow.IsVisible.Should().BeFalse();
-        accessor.List.IsVisible.Should().BeTrue("the WinForms list remains beneath the empty-state label");
-        accessor.RefreshButton.IsEnabled.Should().BeFalse();
+        noFiles.IsVisible.Should().BeTrue();
+        Control filterRow = (Control)control.FindControl<ComboBox>("cboFilterComboBox")!.Parent!;
+        filterRow.IsVisible.Should().BeFalse();
+        control.FindControl<ListBox>("lstFiles")!.IsVisible.Should().BeTrue("the WinForms list remains beneath the empty-state label");
+        control.FindControl<Button>("btnRefresh")!.IsEnabled.Should().BeFalse();
         control.FindControl<MenuItem>("tsmiShowSkipWorktreeFiles")!.IsEnabled.Should().BeFalse();
         control.FindControl<MenuItem>("tsmiShowUntrackedFiles")!.IsEnabled.Should().BeFalse();
 
@@ -219,8 +219,8 @@ public sealed class FileStatusListFamilyTests
         };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
 
-        accessor.NoFilesLabel.IsVisible.Should().BeFalse();
-        accessor.FilterRow.IsVisible.Should().BeTrue();
+        noFiles.IsVisible.Should().BeFalse();
+        filterRow.IsVisible.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -228,6 +228,7 @@ public sealed class FileStatusListFamilyTests
     {
         FileStatusList control = new();
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
         GitItemStatus worktree = new("tracked.txt")
         {
             IsChanged = true,
@@ -235,7 +236,7 @@ public sealed class FileStatusListFamilyTests
             Staged = StagedStatus.WorkTree,
         };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
-        accessor.List.SelectedIndex = 0;
+        fileList.SelectedIndex = 0;
 
         int stageCalls = 0;
         int filterCalls = 0;
@@ -282,13 +283,13 @@ public sealed class FileStatusListFamilyTests
 
         GitItemStatus submodule = new("submodule") { IsSubmodule = true, IsTracked = true };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [submodule]);
-        accessor.List.SelectedIndex = 0;
+        fileList.SelectedIndex = 0;
         accessor.UpdateContextMenu().Should().BeFalse();
         accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeTrue();
 
         GitItemStatus statusOnly = new("summary") { IsStatusOnly = true };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [statusOnly]);
-        accessor.List.SelectedIndex = 0;
+        fileList.SelectedIndex = 0;
         accessor.UpdateContextMenu().Should().BeTrue();
     }
 
@@ -297,6 +298,7 @@ public sealed class FileStatusListFamilyTests
     {
         FileStatusList control = new();
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
         GitItemStatus worktree = new("tracked.txt")
         {
             IsChanged = true,
@@ -304,17 +306,17 @@ public sealed class FileStatusListFamilyTests
             Staged = StagedStatus.WorkTree,
         };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
-        accessor.List.SelectedIndex = 0;
+        fileList.SelectedIndex = 0;
         accessor.UpdateContextMenu().Should().BeFalse();
         Window window = new() { Content = control };
 
         try
         {
             window.Show();
-            accessor.ContextMenu.Open(accessor.List);
+            accessor.ContextMenu.Open(fileList);
             global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
-            accessor.CopyPathsMenuItem.Bounds.Height.Should().BeGreaterThan(0);
+            control.FindControl<MenuItem>("tsmiCopyPaths")!.Bounds.Height.Should().BeGreaterThan(0);
             accessor.SortByContextMenuItem.Bounds.Height.Should().BeGreaterThan(0);
         }
         finally
@@ -706,8 +708,8 @@ public sealed class FileStatusListFamilyTests
                     bool flat = sortType is DiffListSortType.FilePathFlat
                         or DiffListSortType.FileExtensionFlat
                         or DiffListSortType.FileStatusFlat;
-                    accessor.List.IsVisible.Should().Be(flat, $"{sortType} is a flat renderer");
-                    accessor.DiffTree.IsVisible.Should().Be(!flat, $"{sortType} preserves hierarchy");
+                    control.FindControl<ListBox>("lstFiles")!.IsVisible.Should().Be(flat, $"{sortType} is a flat renderer");
+                    control.FindControl<TreeView>("tvDiffFiles")!.IsVisible.Should().Be(!flat, $"{sortType} preserves hierarchy");
                     control.AllItems.Should().HaveCount(2);
                     control.SelectFileOrFolder(RelativePath.From(first.Name)).Should().BeTrue();
                     control.SelectedGitItem.Should().BeSameAs(first);
@@ -741,6 +743,7 @@ public sealed class FileStatusListFamilyTests
             AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
             FileStatusList control = new();
             FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            Grid grepPanel = control.FindControl<Grid>("FindInCommitFilesGitGrepPanel")!;
 
             accessor.OpenFindInFilesMenu();
 
@@ -765,11 +768,11 @@ public sealed class FileStatusListFamilyTests
             accessor.FindUsingInputBoxMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value.Should().Be(1);
             AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeTrue();
-            accessor.FindInFilesPanel.IsVisible.Should().BeTrue();
+            grepPanel.IsVisible.Should().BeTrue();
 
             accessor.ToggleFindInFiles();
             AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeFalse();
-            accessor.FindInFilesPanel.IsVisible.Should().BeFalse();
+            grepPanel.IsVisible.Should().BeFalse();
         }
         finally
         {
@@ -791,18 +794,19 @@ public sealed class FileStatusListFamilyTests
             AppSettings.SetBool(settingsKey, false);
             FileStatusList control = new();
             FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            ToggleButton byPath = control.FindControl<ToggleButton>("btnByPath")!;
             accessor.UpdateToolbar();
-            int buttonIndex = accessor.Toolbar.Children.IndexOf(accessor.ByPathButton);
+            int buttonIndex = control.FindControl<StackPanel>("Toolbar")!.Children.IndexOf(byPath);
             MenuItem visibilityItem = (MenuItem)accessor.ToolbarMenuItem.Items[buttonIndex]!;
 
             visibilityItem.IsChecked.Should().BeFalse();
-            accessor.ByPathButton.IsVisible.Should().BeFalse();
+            byPath.IsVisible.Should().BeFalse();
 
             visibilityItem.IsChecked = true;
             visibilityItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             AppSettings.GetBool(settingsKey, defaultValue: true).Should().BeTrue();
-            accessor.ByPathButton.IsVisible.Should().BeTrue();
+            byPath.IsVisible.Should().BeTrue();
         }
         finally
         {
@@ -822,9 +826,9 @@ public sealed class FileStatusListFamilyTests
 
             control.Bind(() => { }, canAutoRefresh: false);
 
-            accessor.RefreshButton.IsVisible.Should().BeTrue();
+            control.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
             accessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeFalse();
-            accessor.ToolbarSeparator.IsVisible.Should().BeFalse();
+            control.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeFalse();
 
             accessor.EnableShowDiffForAllParents();
             accessor.OpenSettingsMenu();
@@ -833,14 +837,14 @@ public sealed class FileStatusListFamilyTests
 
             control.SetDiffs([], isFileTreeMode: true);
 
-            accessor.Toolbar.IsVisible.Should().BeFalse();
-            accessor.Splitter.Height.Should().Be(1);
+            control.FindControl<StackPanel>("Toolbar")!.IsVisible.Should().BeFalse();
+            control.FindControl<TextBlock>("lblSplitter")!.Height.Should().Be(1);
 
             FileStatusList autoRefreshControl = new();
             FileStatusList.TestAccessor autoRefreshAccessor = autoRefreshControl.GetTestAccessor();
             autoRefreshControl.Bind(() => { }, canAutoRefresh: true);
             autoRefreshAccessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeTrue();
-            autoRefreshAccessor.ToolbarSeparator.IsVisible.Should().BeTrue();
+            autoRefreshControl.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeTrue();
         }
         finally
         {
@@ -861,6 +865,6 @@ public sealed class FileStatusListFamilyTests
         ],
         isFileTreeMode: false);
 
-        control.GetTestAccessor().CollapseGroupsButton.IsVisible.Should().BeTrue();
+        control.FindControl<Button>("btnCollapseGroups")!.IsVisible.Should().BeTrue();
     }
 }

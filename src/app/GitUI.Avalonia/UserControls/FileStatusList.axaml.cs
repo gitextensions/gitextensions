@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -146,13 +147,9 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
         tvFiles.ContainerPrepared += TreeContainerPrepared;
         lstFiles.DoubleTapped += FileStatusListView_DoubleClick;
-        tvDiffFiles.DoubleTapped += (_, _) =>
-        {
-            if (SelectedFileStatusItem is not null)
-            {
-                FileStatusListView_DoubleClick(this, EventArgs.Empty);
-            }
-        };
+
+        // Avalonia tree rows handle the double tap for expansion before it bubbles to the list.
+        tvDiffFiles.AddHandler(InputElement.DoubleTappedEvent, FileStatusListView_DoubleClick, RoutingStrategies.Bubble, handledEventsToo: true);
         tvFiles.DoubleTapped += FileStatusListView_DoubleClick;
         cboFilterComboBox.PropertyChanged += (_, e) =>
         {
@@ -441,11 +438,11 @@ public partial class FileStatusList : GitModuleControl
 
             if (Dispatcher.UIThread.CheckAccess())
             {
-                ApplyFilter(selectFirstItem: false, updateCausedByFilter: true);
+                UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
             }
             else
             {
-                Dispatcher.UIThread.Post(() => ApplyFilter(selectFirstItem: false, updateCausedByFilter: true));
+                Dispatcher.UIThread.Post(() => UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true));
             }
         }
     }
@@ -866,7 +863,7 @@ public partial class FileStatusList : GitModuleControl
         _gitItemStatuses = items;
         _allListItems = [.. items.Cast<object>()];
         _allTreeItems = [];
-        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
+        UpdateFileStatusListView(GitItemStatusesWithDescription);
     }
 
     /// <summary>
@@ -1212,7 +1209,7 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.ItemsSource = null;
     }
 
-    private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default, bool? selectFirstItem = null)
+    private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         HashSet<GitItemStatus>? previouslySelectedItems = null;
@@ -1327,7 +1324,12 @@ public partial class FileStatusList : GitModuleControl
         selectionRestored |= !selectionRestored
                              && selectedPath is not null
                              && SelectFileOrFolder(selectedPath, notify: false);
-        if (!selectionRestored && (selectFirstItem ?? (!updateCausedByFilter && SelectFirstItemOnSetItems)))
+        bool singleRootFile = _isFileTreeMode
+            ? tvFiles.Items is [FileTreeNode { IsFolder: false }]
+            : ShowDiffTree
+                ? tvDiffFiles.Items is [DiffTreeNode { Item: not null, Children.Count: 0 }]
+                : lstFiles.ItemCount == 1;
+        if (singleRootFile || (!selectionRestored && !updateCausedByFilter && SelectFirstItemOnSetItems))
         {
             SelectFirstVisibleItem();
         }
@@ -1906,7 +1908,7 @@ public partial class FileStatusList : GitModuleControl
     public void SetFilter(string value)
     {
         cboFilterComboBox.Text = value;
-        ApplyFilter(selectFirstItem: true, updateCausedByFilter: true);
+        FilterFiles(value);
     }
 
     private void DeleteFilterButton_Click(object? sender, EventArgs e)
@@ -1922,8 +1924,20 @@ public partial class FileStatusList : GitModuleControl
             cboFilterComboBox.Text = value;
         }
 
+        _filterTimer.Stop();
+        try
+        {
+            StoreFilter(value);
+        }
+        catch (ArgumentException exception)
+        {
+            SetFilterState(FilterState.Invalid, exception.Message);
+            return _gitItemFilteredStatuses.Count;
+        }
+
         // Feed back the current list of files
-        return ApplyFilter(selectFirstItem: false, updateCausedByFilter: true);
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+        return _gitItemFilteredStatuses.Count;
     }
 
     private bool IsFilterMatch(GitItemStatus item)
@@ -2276,7 +2290,7 @@ public partial class FileStatusList : GitModuleControl
             _showDiffGroups = false;
         }
 
-        UpdateFileStatusListView(groups, selectFirstItem: !isFileTreeMode && SelectFirstItemOnSetItems);
+        UpdateFileStatusListView(groups);
     }
 
     public void Clear()
@@ -2387,24 +2401,6 @@ public partial class FileStatusList : GitModuleControl
     private void FileStatusList_LostFocus(object? sender, EventArgs e)
     {
         Dispatcher.UIThread.Post(() => _hasKeyboardFocus = IsKeyboardFocusWithin);
-    }
-
-    private int ApplyFilter(bool selectFirstItem, bool updateCausedByFilter = false)
-    {
-        _filterTimer.Stop();
-        string filterText = cboFilterComboBox.Text ?? string.Empty;
-        try
-        {
-            StoreFilter(filterText);
-        }
-        catch (ArgumentException exception)
-        {
-            SetFilterState(FilterState.Invalid, exception.Message);
-            return _gitItemFilteredStatuses.Count;
-        }
-
-        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter, selectFirstItem: selectFirstItem);
-        return _gitItemFilteredStatuses.Count;
     }
 
     private bool SelectFileStatusItem(FileStatusItem item, bool notify)
@@ -2524,18 +2520,11 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
-        internal Control FilterRow => (Control)_fileStatusList.cboFilterComboBox.Parent!;
-        internal TextBlock NoFilesLabel => _fileStatusList.NoFiles;
-        internal ListBox List => _fileStatusList.lstFiles;
-        internal TreeView DiffTree => _fileStatusList.tvDiffFiles;
-        internal TreeView Tree => _fileStatusList.tvFiles;
         internal ContextMenu ContextMenu => _fileStatusList.ItemContextMenu;
-        internal StackPanel Toolbar => _fileStatusList.Toolbar;
         internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
         internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
         internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
         internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
-        internal MenuItem CopyPathsMenuItem => _fileStatusList.tsmiCopyPaths;
         internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
         internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
         internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
@@ -2550,11 +2539,7 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
         internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
         internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
-        internal ToggleButton ByPathButton => _fileStatusList.btnByPath;
-        internal Button RefreshButton => _fileStatusList.btnRefresh;
-        internal Button CollapseGroupsButton => _fileStatusList.btnCollapseGroups;
         internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
-        internal Separator ToolbarSeparator => _fileStatusList.sepToolbar;
         internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
         internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
         internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
@@ -2562,9 +2547,6 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem FindUsingInputBoxMenuItem => _fileStatusList.tsmiFindUsingInputBox;
         internal MenuItem ShowDiffForAllParentsMenuItem => _fileStatusList.tsmiShowDiffForAllParents;
         internal MenuItem ToolbarMenuItem => _fileStatusList.tsmiToolbar;
-        internal Grid FindInFilesPanel => _fileStatusList.FindInCommitFilesGitGrepPanel;
-        internal TextBlock Splitter => _fileStatusList.lblSplitter;
-        internal int FilteredItemsCount => _fileStatusList._gitItemFilteredStatuses.Count;
 
         internal bool UpdateContextMenu()
         {
@@ -2580,9 +2562,6 @@ public partial class FileStatusList : GitModuleControl
 
         internal void SelectFirstTreeLeaf()
             => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
-
-        internal void DoubleClick()
-            => _fileStatusList.FileStatusListView_DoubleClick(_fileStatusList, EventArgs.Empty);
 
         internal void SetSort(DiffListSortType sortType)
         {
@@ -2616,7 +2595,7 @@ public partial class FileStatusList : GitModuleControl
                 _ => throw new ArgumentOutOfRangeException(nameof(status)),
             };
             button.IsChecked = visible;
-            _fileStatusList.ApplyFilter(selectFirstItem: false);
+            _fileStatusList.UpdateFileStatusListView(_fileStatusList.GitItemStatusesWithDescription, updateCausedByFilter: true);
         }
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)

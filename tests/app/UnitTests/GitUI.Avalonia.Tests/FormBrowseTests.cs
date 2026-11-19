@@ -2299,8 +2299,7 @@ public sealed class FormBrowseTests
                 await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt"
                     && form.fileViewer.TextEditor.Text.Contains("+second revision", StringComparison.Ordinal));
                 form.UpdateLayout();
-                FileStatusList.TestAccessor accessor = files.GetTestAccessor();
-                Control target = (TreeViewItem)accessor.DiffTree.ContainerFromIndex(0)!;
+                Control target = (TreeViewItem)files.FindControl<TreeView>("tvDiffFiles")!.ContainerFromIndex(0)!;
                 target.IsEffectivelyVisible.Should().BeTrue();
                 Click(form, target, MouseButton.Left);
                 files.IsKeyboardFocusWithin.Should().BeTrue();
@@ -6362,7 +6361,7 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt");
             menu.Open(files);
             Dispatcher.UIThread.RunJobs();
-            CopyPathsToolStripMenuItem copy = (CopyPathsToolStripMenuItem)files.GetTestAccessor().CopyPathsMenuItem;
+            CopyPathsToolStripMenuItem copy = files.FindControl<CopyPathsToolStripMenuItem>("tsmiCopyPaths")!;
             copy.IsEnabled.Should().BeTrue();
             copy.IsSubMenuOpen = true;
             Dispatcher.UIThread.RunJobs();
