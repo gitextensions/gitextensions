@@ -6381,6 +6381,128 @@ public sealed class FormBrowseTests
         }
     }
 
+    [AvaloniaTest]
+    public async Task Browse_git_grep_should_publish_results_for_the_current_revision_after_the_diff()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "first commit content");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "first" }).Should().BeTrue();
+        ObjectId first = module.GetCurrentCheckout();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("rm") { "--", "tracked.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "remove" }).Should().BeTrue();
+        File.WriteAllText(Path.Combine(_workingDirectory, "later.txt"), "content in a different file");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "later.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "later" }).Should().BeTrue();
+        ObjectId second = module.GetCurrentCheckout();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = true;
+
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == second);
+            RevisionGridControl grid = form.RevisionGrid;
+            grid.SetSelectedRevision(first).Should().BeTrue();
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == first);
+
+            FileStatusList files = form.revisionDiff.FileStatusList;
+            ComboBox grep = files.FindControl<ComboBox>("cboFindInCommitFilesGitGrep")!;
+            grep.IsEffectivelyVisible.Should().BeTrue();
+            TaskCompletionSource searched = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler recordSearch = (_, _) => searched.TrySetResult();
+            files.DataSourceChanged += recordSearch;
+            try
+            {
+                grep.Text = "content";
+                await searched.Task.WaitAsync(TimeSpan.FromSeconds(15));
+            }
+            finally
+            {
+                files.DataSourceChanged -= recordSearch;
+            }
+
+            files.GitItemStatuses.Count(item => item.Name == "tracked.txt").Should().Be(2,
+                "the original publishes both the ordinary diff and the git-grep group");
+
+            List<int> published = [];
+            files.DataSourceChanged += (_, _) => published.Add(files.GitItemStatuses.Count(item => item.Name == "later.txt"));
+            grid.SetSelectedRevision(second).Should().BeTrue();
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == second);
+            published.Where(count => count > 0).Should().Equal(1, 2);
+            grep.Text.Should().Be("content");
+
+            form.UpdateLayout();
+            TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
+            tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeFalse();
+            tree.ContainerFromIndex(tree.ItemCount - 1).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Browse_git_grep_dialog_should_open_at_the_original_owner_offset()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision is not null);
+            form.UpdateLayout();
+            form.Position = new PixelPoint(160, 120);
+            form.revisionDiff.FileStatusList.ExecuteCommand(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab)
+                .Should().BeTrue();
+            FormFindInCommitFilesGitGrep dialog = form.OwnedWindows.OfType<FormFindInCommitFilesGitGrep>().Single();
+            dialog.Position.Should().Be(form.Position + new PixelPoint(90, 110));
+            dialog.Close();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormDiff_should_publish_its_ordinary_diff_through_the_file_list()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId first = module.GetCurrentCheckout();
+        File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "changed content");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "change" }).Should().BeTrue();
+        ObjectId second = module.GetCurrentCheckout();
+
+        using FormDiff form = new(new GitUICommands(_serviceContainer, module), first, second, "Base", "Compare");
+        FileStatusList files = form.FindControl<FileStatusList>("DiffFiles")!;
+        GitUI.Editor.FileViewer viewer = form.FindControl<GitUI.Editor.FileViewer>("DiffText")!;
+        List<string[]> publications = [];
+        files.DataSourceChanged += (_, _) => publications.Add([.. files.GitItemStatuses.Select(item => item.Name)]);
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt");
+            publications.Should().ContainSingle().Which.Should().Equal("tracked.txt");
+            files.FindInCommitFilesGitGrepActive.Should().BeFalse();
+            await WaitUntilAsync(() => viewer.GetText().Contains("changed content", StringComparison.Ordinal));
+
+            files.SetFilter("^different");
+            files.GitItemFilteredStatuses.Should().BeEmpty();
+            await WaitUntilAsync(() => !viewer.GetText().Contains("changed content", StringComparison.Ordinal));
+            files.SetFilter("^tracked");
+            files.GitItemFilteredStatuses.Should().ContainSingle().Which.Name.Should().Be("tracked.txt");
+            await WaitUntilAsync(() => viewer.GetText().Contains("changed content", StringComparison.Ordinal));
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
     private GitModule CreateRepositoryWithMerge()
     {
         GitModule module = CreateRepositoryWithInitialCommit();

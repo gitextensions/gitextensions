@@ -22,8 +22,10 @@ using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 using ResourceManager;
+using PixelPoint = Avalonia.PixelPoint;
 using Rectangle = Avalonia.Rect;
 
 namespace GitUI;
@@ -99,6 +101,9 @@ public partial class FileStatusList : GitModuleControl
     [Description("Disable showing open submodule menu items as bold")]
     [DefaultValue(false)]
     public bool DisableSubmoduleMenuItemBold { get; set; }
+
+    // Framework constraint: joined revision reloads must return through their owner's UI factory.
+    internal JoinableTaskFactory? MainThreadFactory { get; set; }
 
     // Framework constraint: a keyed native-image registry replaces WinForms ImageList storage and retains its source indices.
     private record ImageListData(IReadOnlyDictionary<string, IImage> ImageList, Dictionary<string, int> StateImageIndexMap, IImage DefaultFileImage, int IconSize);
@@ -354,7 +359,11 @@ public partial class FileStatusList : GitModuleControl
         _diffCalculator.GetActualRevision = getActualRevision;
         SetFileTreeMode(isFileTreeMode);
         lblSplitter.Height = isFileTreeMode ? 1 : 0;
-        if (!isFileTreeMode)
+        if (isFileTreeMode)
+        {
+            _diffCalculator.SetGrep("", fileTreeMode: true);
+        }
+        else
         {
             UpdateToolbar();
         }
@@ -762,11 +771,15 @@ public partial class FileStatusList : GitModuleControl
             SelectFirstVisibleItem();
         }
 
-        Control target = _isFileTreeMode ? tvFiles : ShowDiffTree ? tvDiffFiles : lstFiles;
-        if (!target.Focus())
+        if (!GetTarget().Focus())
         {
-            Dispatcher.UIThread.Post(() => target.Focus());
+            // Framework constraint: a newly selected tab lays out its native presenter after the focus request.
+            Dispatcher.UIThread.Post(() => GetTarget().Focus(), DispatcherPriority.Loaded);
         }
+
+        return;
+
+        Control GetTarget() => _isFileTreeMode ? tvFiles : ShowDiffTree ? tvDiffFiles : lstFiles;
     }
 
     public FileStatusItem? SelectNextItem(bool backwards, bool loop, bool notify = true)
@@ -936,49 +949,54 @@ public partial class FileStatusList : GitModuleControl
 
     public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId headId, CancellationToken cancellationToken)
     {
+        _reloadSequence.CancelCurrent();
         FileStatusListLoading();
         UpdateToolbar(revisions);
         bool isFileTreeMode = _isFileTreeMode;
         _enableDisablingShowDiffForAllParents = !isFileTreeMode;
         bool showSkipWorktreeFiles = tsmiShowSkipWorktreeFiles.IsChecked == true;
         bool showUntrackedFiles = tsmiShowUntrackedFiles.IsChecked == true;
-        IReadOnlyList<FileStatusWithDescription> groups = await Task.Run(() =>
+        JoinableTaskFactory mainThreadFactory = MainThreadFactory ?? ThreadHelper.JoinableTaskFactory;
+        IReadOnlyList<FileStatusWithDescription> groups = [];
+        if (isFileTreeMode)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            _diffCalculator.SetDiff(
-                revisions,
-                headId,
-                allowMultiDiff: !isFileTreeMode,
-                showSkipWorktreeFiles,
-                showUntrackedFiles);
-            return _diffCalculator.Calculate(
-                prevList: [],
-                refreshDiff: true,
-                refreshGrep: false,
-                cancellationToken);
-        }, cancellationToken);
-        bool withGitGrep = FindInCommitFilesGitGrepActive;
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            SetDiffs(groups, isFileTreeMode);
-        });
-
-        // git grep, fetched as a separate step
-        if (withGitGrep)
+            GitItemStatusesWithDescription = [];
+        }
+        else
         {
             groups = await Task.Run(() =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return _diffCalculator.Calculate(
-                    prevList: groups,
-                    refreshDiff: false,
-                    refreshGrep: true,
-                    cancellationToken);
+                _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: true, showSkipWorktreeFiles, showUntrackedFiles);
+                return _diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken);
             }, cancellationToken);
-            await Dispatcher.UIThread.InvokeAsync(() => SetDiffs(groups, isFileTreeMode));
+
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            bool withGitGrep = FindInCommitFilesGitGrepActive;
+            UpdateFileStatusListView(groups, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None, cancellationToken: cancellationToken);
+
+            // git grep, fetched as a separate step
+            if (!withGitGrep)
+            {
+                return;
+            }
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() => LoadingFiles.IsVisible = false);
+        string search = cboFindInCommitFilesGitGrep.Text ?? "";
+        groups = await Task.Run(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (isFileTreeMode)
+            {
+                _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: false);
+            }
+
+            _diffCalculator.SetGrep(GetGrepArguments(search), fileTreeMode: isFileTreeMode && string.IsNullOrWhiteSpace(search));
+            return _diffCalculator.Calculate(prevList: groups, refreshDiff: false, refreshGrep: true, cancellationToken);
+        }, cancellationToken);
+
+        await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+        UpdateFileStatusListView(groups, gitGrepState: GitGrepState.Provided, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -1202,17 +1220,127 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.ItemsSource = null;
     }
 
+    private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default, bool? selectFirstItem = null)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        HashSet<GitItemStatus>? previouslySelectedItems = null;
+        if (updateCausedByFilter)
+        {
+            IList? selectedItems = tvFiles.IsVisible ? tvFiles.SelectedItems
+                : tvDiffFiles.IsVisible ? tvDiffFiles.SelectedItems
+                : lstFiles.SelectedItems;
+            previouslySelectedItems = selectedItems is null ? []
+                : [.. selectedItems.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>()];
+        }
+
+        FileStatusItem? selectedFileStatus = SelectedFileStatusItem;
+        RelativePath? selectedPath = SelectedRelativePath;
+
+        if (!ReferenceEquals(items, GitItemStatusesWithDescription))
+        {
+            FileStatusItem[] statusItems =
+            [
+                .. items.SelectMany(group => group.Statuses.Select(
+                    item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB))),
+            ];
+            _gitItemStatuses = [.. statusItems.Select(item => item.Item)];
+            _allListItems = _isFileTreeMode ? [] : statusItems;
+            _allTreeItems = _isFileTreeMode ? statusItems : [];
+            GitItemStatusesWithDescription = items;
+        }
+
+        if (_isFileTreeMode)
+        {
+            FileStatusItem[] visibleItems = [.. _allTreeItems.Where(item => IsFilterMatch(item.Item))];
+            _gitItemFilteredStatuses = [.. visibleItems.Select(item => item.Item)];
+            tvFiles.ItemsSource = BuildFileTree(visibleItems);
+        }
+        else if (items.Count > 0)
+        {
+            Dictionary<int, bool> expansion = tvDiffFiles.Items
+                .Cast<DiffTreeNode>()
+                .Where(node => node.GroupIndex is not null)
+                .ToDictionary(node => node.GroupIndex!.Value, node => node.IsExpanded);
+            IReadOnlyList<DiffTreeNode> roots = GetNodes(items, expansion, gitGrepState, cancellationToken);
+            _showDiffGroups = items.Count > 1
+                              || (GroupByRevision
+                              && !(items.Count == 1 && items[0].Statuses.Count == 0));
+            _gitItemFilteredStatuses =
+            [
+                .. roots.SelectMany(Flatten)
+                    .Select(node => node.Item?.Item)
+                    .OfType<GitItemStatus>(),
+            ];
+
+            if (ShowDiffTree)
+            {
+                tvDiffFiles.ItemsSource = roots;
+                lstFiles.ItemsSource = null;
+            }
+            else
+            {
+                List<object> visibleItems =
+                [
+                    .. roots.SelectMany(Flatten)
+                        .Where(node => node.Item is not null)
+                        .Select(node => (object)node.Item!),
+                ];
+                _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
+                lstFiles.ItemsSource = visibleItems;
+                tvDiffFiles.ItemsSource = null;
+            }
+        }
+        else
+        {
+            List<object> visibleItems =
+            [
+                .. _allListItems.Where(item => GetGitItemStatus(item) is GitItemStatus status && IsFilterMatch(status)),
+            ];
+
+            _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
+            lstFiles.ItemsSource = visibleItems;
+        }
+
+        SetFileStatusListVisibility(
+            showNoFiles: _gitItemFilteredStatuses.Count == 0 && (!ShowDiffTree || tvDiffFiles.ItemCount == 0));
+        UpdateToolbar();
+        bool selectionRestored = false;
+        if (previouslySelectedItems?.Count is > 0)
+        {
+            SelectItems(item => GetGitItemStatus(item) is GitItemStatus status && previouslySelectedItems.Contains(status));
+            selectionRestored = HasSelection;
+        }
+
+        selectionRestored |= !selectionRestored
+                             && selectedFileStatus is not null
+                             && SelectFileStatusItem(selectedFileStatus, notify: false);
+        selectionRestored |= !selectionRestored
+                             && selectedPath is not null
+                             && SelectFileOrFolder(selectedPath, notify: false);
+        if (!selectionRestored && (selectFirstItem ?? (!updateCausedByFilter && SelectFirstItemOnSetItems)))
+        {
+            SelectFirstVisibleItem();
+        }
+
+        DataSourceChanged?.Invoke(this, EventArgs.Empty);
+        FilterChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     private IReadOnlyList<DiffTreeNode> GetNodes(
         IReadOnlyList<FileStatusWithDescription> groups,
-        IReadOnlyDictionary<int, bool> previousExpansion)
+        IReadOnlyDictionary<int, bool> previousExpansion,
+        GitGrepState gitGrepState,
+        CancellationToken cancellationToken)
     {
         bool showDiffGroups = groups.Count > 1
                               || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0));
         DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
-        bool hasGrepGroup = groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses);
+        bool hasGrepGroup = gitGrepState != GitGrepState.None
+                            && (gitGrepState != GitGrepState.Unknown || groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
         List<DiffTreeNode> roots = [];
         for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             FileStatusWithDescription group = groups[groupIndex];
             FileStatusItem[] visibleItems =
             [
@@ -1239,7 +1367,7 @@ public partial class FileStatusList : GitModuleControl
                    || groups.Count < 3
                    || groupIndex == 0)
                   && group.Statuses.Count > 0;
-            bool expanded = previousExpansion.TryGetValue(groupIndex, out bool wasExpanded)
+            bool expanded = gitGrepState == GitGrepState.Unknown && previousExpansion.TryGetValue(groupIndex, out bool wasExpanded)
                 ? wasExpanded
                 : defaultExpanded;
             bool expandFolders = expanded
@@ -1530,6 +1658,9 @@ public partial class FileStatusList : GitModuleControl
                     cboFindInCommitFilesGitGrep.Text = value;
                 },
                 FindInCommitFilesGitGrepToggle = SetFindInCommitFilesGitGrepVisibility,
+
+                // offset a few pixels compared to FindAndReplaceForm
+                Position = owner.Position + new PixelPoint(90, 110),
             };
             _formFindInCommitFilesGitGrep.Closed += (_, _) => _formFindInCommitFilesGitGrep = null;
         }
@@ -1541,7 +1672,7 @@ public partial class FileStatusList : GitModuleControl
         _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(FindInCommitFilesGitGrepVisible);
         if (!_formFindInCommitFilesGitGrep.IsVisible)
         {
-                _formFindInCommitFilesGitGrep.Show(owner);
+            _formFindInCommitFilesGitGrep.Show(owner);
         }
 
         _formFindInCommitFilesGitGrep.Activate();
@@ -1869,18 +2000,11 @@ public partial class FileStatusList : GitModuleControl
         {
             // delay to handle keypresses
             await Task.Delay(delay, cancellationToken);
-            string searchArg = search;
-            if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex.IsMatch(searchArg))
-            {
-                searchArg = searchArg.Replace(@"\\", @"\\\\");
-                searchArg = $@"-e ""{searchArg}""";
-            }
-
             bool isFileTreeMode = _isFileTreeMode;
             IReadOnlyList<FileStatusWithDescription> previous = GitItemStatusesWithDescription;
             IReadOnlyList<FileStatusWithDescription> groups = await Task.Run(() =>
             {
-                _diffCalculator.SetGrep(searchArg, fileTreeMode: isFileTreeMode && string.IsNullOrWhiteSpace(searchArg));
+                _diffCalculator.SetGrep(GetGrepArguments(search), fileTreeMode: isFileTreeMode && string.IsNullOrWhiteSpace(search));
                 return _diffCalculator.Calculate(
                     prevList: previous,
                     refreshDiff: false,
@@ -1890,13 +2014,24 @@ public partial class FileStatusList : GitModuleControl
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                SetDiffs(groups, isFileTreeMode);
+                UpdateFileStatusListView(groups, gitGrepState: string.IsNullOrEmpty(search) ? GitGrepState.None : GitGrepState.Provided, cancellationToken: cancellationToken);
                 if (!string.IsNullOrEmpty(search))
                 {
                     AddToSearchFilter(search);
                 }
             });
         });
+    }
+
+    // Framework constraint: both native search updates and revision refreshes use the current editor text.
+    private static string GetGrepArguments(string search)
+    {
+        if (string.IsNullOrWhiteSpace(search) || GrepStringRegex.IsMatch(search))
+        {
+            return search;
+        }
+
+        return $@"-e ""{search.Replace(@"\\", @"\\\\")}""";
     }
 
     private void cboFindInCommitFilesGitGrep_SelectedIndexChanged(object? sender, EventArgs e)
@@ -1999,40 +2134,26 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(IReadOnlyList<FileStatusWithDescription> groups, bool isFileTreeMode)
     {
+        if (_isFileTreeMode != isFileTreeMode)
+        {
+            GitItemStatusesWithDescription = [];
+        }
+
         SetFileTreeMode(isFileTreeMode);
-        GitItemStatusesWithDescription = isFileTreeMode ? [] : groups;
-        _showDiffGroups = !isFileTreeMode
-                          && (groups.Count > 1
-                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0)));
-        if (isFileTreeMode)
+        if (groups.Count == 0)
         {
-            FileStatusItem[] items =
-            [
-                .. groups.SelectMany(group => group.Statuses.Select(
-                    item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB))),
-            ];
-            SetTreeEntries(items);
-            return;
+            _gitItemStatuses = [];
+            _allListItems = [];
+            _allTreeItems = [];
+            _showDiffGroups = false;
         }
 
-        List<FileStatusEntry> entries = [];
-        foreach (FileStatusWithDescription group in groups)
-        {
-            foreach (GitItemStatus status in group.Statuses)
-            {
-                entries.Add(new FileStatusEntry(
-                    new FileStatusItem(group.FirstRev, group.SecondRev, status, group.BaseA, group.BaseB)));
-            }
-        }
-
-        _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
-        _allListItems = [.. entries.Cast<object>()];
-        _allTreeItems = [];
-        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
+        UpdateFileStatusListView(groups, selectFirstItem: !isFileTreeMode && SelectFirstItemOnSetItems);
     }
 
     public void Clear()
     {
+        _reloadSequence.CancelCurrent();
         ClearSelected();
         UpdateToolbar([]);
         _allListItems = [];
@@ -2057,27 +2178,6 @@ public partial class FileStatusList : GitModuleControl
             : ShowDiffTree
                 ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
                 : lstFiles.Items.Cast<object>().Select(GetFileStatusItem).OfType<FileStatusItem>();
-
-    private void SetRevisionEntries(IReadOnlyList<FileStatusEntry> entries)
-    {
-        SetFileTreeMode(false);
-        GitItemStatusesWithDescription = [];
-        _showDiffGroups = false;
-        _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
-        _allListItems = [.. entries.Cast<object>()];
-        _allTreeItems = [];
-        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
-    }
-
-    private void SetTreeEntries(IReadOnlyList<FileStatusItem> items)
-    {
-        GitItemStatusesWithDescription = [];
-        _showDiffGroups = false;
-        _gitItemStatuses = items.Select(item => item.Item).ToList();
-        _allListItems = [];
-        _allTreeItems = items;
-        ApplyFilter(selectFirstItem: false);
-    }
 
     private void SetFileTreeMode(bool isFileTreeMode)
     {
@@ -2192,18 +2292,6 @@ public partial class FileStatusList : GitModuleControl
     private int ApplyFilter(bool selectFirstItem, bool updateCausedByFilter = false)
     {
         _filterTimer.Stop();
-        HashSet<GitItemStatus>? previouslySelectedItems = null;
-        if (updateCausedByFilter)
-        {
-            IList? selectedItems = tvFiles.IsVisible ? tvFiles.SelectedItems
-                : tvDiffFiles.IsVisible ? tvDiffFiles.SelectedItems
-                : lstFiles.SelectedItems;
-            previouslySelectedItems = selectedItems is null ? []
-                : [.. selectedItems.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>()];
-        }
-
-        FileStatusItem? selectedFileStatus = SelectedFileStatusItem;
-        RelativePath? selectedPath = SelectedRelativePath;
         string filterText = cboFilterComboBox.Text ?? string.Empty;
         try
         {
@@ -2215,81 +2303,7 @@ public partial class FileStatusList : GitModuleControl
             return _gitItemFilteredStatuses.Count;
         }
 
-        if (_isFileTreeMode)
-        {
-            FileStatusItem[] visibleItems = [.. _allTreeItems.Where(item => IsFilterMatch(item.Item))];
-            _gitItemFilteredStatuses = [.. visibleItems.Select(item => item.Item)];
-            tvFiles.ItemsSource = BuildFileTree(visibleItems);
-        }
-        else if (GitItemStatusesWithDescription.Count > 0)
-        {
-            Dictionary<int, bool> expansion = tvDiffFiles.Items
-                .Cast<DiffTreeNode>()
-                .Where(node => node.GroupIndex is not null)
-                .ToDictionary(node => node.GroupIndex!.Value, node => node.IsExpanded);
-            IReadOnlyList<DiffTreeNode> roots = GetNodes(GitItemStatusesWithDescription, expansion);
-            _showDiffGroups = GitItemStatusesWithDescription.Count > 1
-                              || (GroupByRevision
-                              && !(GitItemStatusesWithDescription.Count == 1 && GitItemStatusesWithDescription[0].Statuses.Count == 0));
-            _gitItemFilteredStatuses =
-            [
-                .. roots.SelectMany(Flatten)
-                    .Select(node => node.Item?.Item)
-                    .OfType<GitItemStatus>(),
-            ];
-
-            if (ShowDiffTree)
-            {
-                tvDiffFiles.ItemsSource = roots;
-                lstFiles.ItemsSource = null;
-            }
-            else
-            {
-                List<object> visibleItems =
-                [
-                    .. roots.SelectMany(Flatten)
-                        .Where(node => node.Item is not null)
-                        .Select(node => (object)new FileStatusEntry(node.Item!)),
-                ];
-                _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
-                lstFiles.ItemsSource = visibleItems;
-                tvDiffFiles.ItemsSource = null;
-            }
-        }
-        else
-        {
-            List<object> visibleItems =
-            [
-                .. _allListItems.Where(item => GetGitItemStatus(item) is GitItemStatus status && IsFilterMatch(status)),
-            ];
-
-            _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
-            lstFiles.ItemsSource = visibleItems;
-        }
-
-        SetFileStatusListVisibility(
-            showNoFiles: _gitItemFilteredStatuses.Count == 0 && (!ShowDiffTree || tvDiffFiles.ItemCount == 0));
-        UpdateToolbar();
-        bool selectionRestored = false;
-        if (previouslySelectedItems?.Count is > 0)
-        {
-            SelectItems(item => GetGitItemStatus(item) is GitItemStatus status && previouslySelectedItems.Contains(status));
-            selectionRestored = HasSelection;
-        }
-
-        selectionRestored |= !selectionRestored
-                             && selectedFileStatus is not null
-                             && SelectFileStatusItem(selectedFileStatus, notify: false);
-        selectionRestored |= !selectionRestored
-                             && selectedPath is not null
-                             && SelectFileOrFolder(selectedPath, notify: false);
-        if (!selectionRestored && selectFirstItem)
-        {
-            SelectFirstVisibleItem();
-        }
-
-        DataSourceChanged?.Invoke(this, EventArgs.Empty);
-        FilterChanged?.Invoke(this, EventArgs.Empty);
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter, selectFirstItem: selectFirstItem);
         return _gitItemFilteredStatuses.Count;
     }
 
@@ -2871,7 +2885,6 @@ public partial class FileStatusList : GitModuleControl
     private static FileStatusItem? GetFileStatusItem(object? item)
         => item switch
         {
-            FileStatusEntry entry => entry.Item,
             FileStatusItem fileStatusItem => fileStatusItem,
             DiffTreeNode node => node.Item,
             FileTreeNode node => node.Item,
@@ -2890,8 +2903,7 @@ public partial class FileStatusList : GitModuleControl
             return new Panel();
         }
 
-        FileStatusEntry? entry = item as FileStatusEntry;
-        GitItemStatus? gitItemStatus = entry?.Item.Item ?? item as GitItemStatus;
+        GitItemStatus? gitItemStatus = GetGitItemStatus(item);
         if (gitItemStatus is null)
         {
             return new Panel();
@@ -2951,8 +2963,6 @@ public partial class FileStatusList : GitModuleControl
             });
         });
     }
-
-    private sealed record FileStatusEntry(FileStatusItem Item);
 
     private enum FilterState
     {
