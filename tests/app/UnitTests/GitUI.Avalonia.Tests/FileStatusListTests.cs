@@ -230,6 +230,7 @@ public sealed class FileStatusListTests
         GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        MenuItem stage = control.FindControl<MenuItem>("tsmiStageFile")!;
         Window window = new() { Width = 320, Height = 180, Content = control };
         int stageCalls = 0;
         control.BindContextMenu(() => { }, canAutoRefresh: true, () => stageCalls++, unstage: null);
@@ -245,17 +246,17 @@ public sealed class FileStatusListTests
 
             control.SelectedGitItems.Should().Equal(first, second);
             accessor.UpdateContextMenu();
-            accessor.StageMenuItem.IsVisible.Should().BeTrue();
-            accessor.StageMenuItem.IsEnabled.Should().BeTrue();
-            accessor.UnstageMenuItem.IsVisible.Should().BeFalse();
-            accessor.CherryPickMenuItem.IsVisible.Should().BeFalse();
+            stage.IsVisible.Should().BeTrue();
+            stage.IsEnabled.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiUnstageFile")!.IsVisible.Should().BeFalse();
+            control.FindControl<MenuItem>("tsmiCherryPickChanges")!.IsVisible.Should().BeFalse();
 
-            accessor.StageMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            stage.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             stageCalls.Should().Be(1);
         }
         finally
         {
-            accessor.ContextMenu.Close();
+            control.FindControl<ContextMenu>("ItemContextMenu")!.Close();
             window.Close();
         }
     }

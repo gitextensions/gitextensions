@@ -138,7 +138,6 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.ItemTemplate = new FuncTreeDataTemplate<FileTreeNode>(
             (node, _) => CreateTreeRow(node),
             node => node.Children);
-        lstFiles.ContextMenu = ItemContextMenu;
         tvDiffFiles.ContextMenu = ItemContextMenu;
         tvFiles.ContextMenu = ItemContextMenu;
         lstFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
@@ -2520,33 +2519,12 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
-        internal ContextMenu ContextMenu => _fileStatusList.ItemContextMenu;
-        internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
-        internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
-        internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
         internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
         internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
-        internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
-        internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
-        internal MenuItem ResetToMenuItem => _fileStatusList.tsmiResetFileTo;
-        internal MenuItem ResetToSelectedMenuItem => _fileStatusList.tsmiResetFileToSelected;
-        internal MenuItem ResetToParentMenuItem => _fileStatusList.tsmiResetFileToParent;
-        internal MenuItem AddToGitIgnoreMenuItem => _fileStatusList.tsmiAddFileToGitIgnore;
-        internal MenuItem AddToGitInfoExcludeMenuItem => _fileStatusList.tsmiAddFileToGitInfoExclude;
         internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
         internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
         internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
         internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
-        internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
-        internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
-        internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
-        internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
-        internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
-        internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
-        internal MenuItem FindUsingBasicMenuItem => _fileStatusList._NO_TRANSLATE_tsmiFindUsingBasic;
-        internal MenuItem FindUsingInputBoxMenuItem => _fileStatusList.tsmiFindUsingInputBox;
-        internal MenuItem ShowDiffForAllParentsMenuItem => _fileStatusList.tsmiShowDiffForAllParents;
-        internal MenuItem ToolbarMenuItem => _fileStatusList.tsmiToolbar;
 
         internal bool UpdateContextMenu()
         {
@@ -2571,12 +2549,6 @@ public partial class FileStatusList : GitModuleControl
 
         internal void UpdateToolbar()
             => _fileStatusList.UpdateToolbar();
-
-        internal void OpenFindInFilesMenu()
-            => _fileStatusList.FindInFilesGitGrep_DropDownOpening(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
-
-        internal void ToggleFindInFiles()
-            => _fileStatusList.FindInFilesGitGrep_ButtonClick(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
 
         internal void OpenSettingsMenu()
             => _fileStatusList.Settings_DropDownOpening(_fileStatusList.btnSettings, EventArgs.Empty);

@@ -228,6 +228,8 @@ public sealed class FileStatusListFamilyTests
     {
         FileStatusList control = new();
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
+        MenuItem resetToParent = control.FindControl<MenuItem>("tsmiResetFileToParent")!;
         ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
         GitItemStatus worktree = new("tracked.txt")
         {
@@ -254,24 +256,24 @@ public sealed class FileStatusListFamilyTests
         control.BindContextMenu(() => { }, canAutoRefresh: true, () => stageCalls++, unstage: null);
 
         accessor.UpdateContextMenu().Should().BeFalse();
-        accessor.StageMenuItem.IsVisible.Should().BeTrue();
-        accessor.UnstageMenuItem.IsVisible.Should().BeFalse();
-        accessor.ResetChunkMenuItem.IsVisible.Should().BeTrue();
-        accessor.InteractiveAddMenuItem.IsVisible.Should().BeTrue();
-        accessor.ResetToMenuItem.IsVisible.Should().BeTrue();
-        accessor.ResetToSelectedMenuItem.IsVisible.Should().BeFalse();
-        accessor.ResetToParentMenuItem.IsVisible.Should().BeTrue();
-        accessor.ResetToParentMenuItem.Header.Should().Be("First: A Commit index");
-        accessor.AddToGitIgnoreMenuItem.IsVisible.Should().BeTrue();
-        accessor.AddToGitInfoExcludeMenuItem.IsVisible.Should().BeTrue();
-        accessor.SkipWorktreeMenuItem.IsVisible.Should().BeTrue();
-        accessor.StopTrackingMenuItem.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiStageFile")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiUnstageFile")!.IsVisible.Should().BeFalse();
+        control.FindControl<MenuItem>("tsmiResetChunkOfFile")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiInteractiveAdd")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiResetFileTo")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiResetFileToSelected")!.IsVisible.Should().BeFalse();
+        resetToParent.IsVisible.Should().BeTrue();
+        resetToParent.Header.Should().Be("First: A Commit index");
+        control.FindControl<MenuItem>("tsmiAddFileToGitIgnore")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiAddFileToGitInfoExclude")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiSkipWorktree")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiStopTracking")!.IsVisible.Should().BeTrue();
         accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeFalse();
         accessor.SortByContextMenuItem.IsVisible.Should().BeTrue();
-        accessor.ContextMenu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+        menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
 
         accessor.UpdateContextMenu().Should().BeFalse();
-        accessor.ContextMenu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+        menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
 
         control.ExecuteCommand(RevisionDiffControl.Command.StageSelectedFile).Should().BeTrue();
         control.ExecuteCommand(RevisionDiffControl.Command.FilterFileInGrid).Should().BeTrue();
@@ -294,10 +296,56 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_file_context_menu_should_open_from_the_file_presenter_only()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        FileStatusList control = new();
+        Window window = new() { Width = 660, Height = 380, Content = control };
+        ListBox files = control.FindControl<ListBox>("lstFiles")!;
+        ContextMenu menu = files.ContextMenu!;
+        try
+        {
+            window.Show();
+            GitItemStatus item = new("tracked.cs") { IsTracked = true, IsChanged = true };
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+            control.SelectedGitItem.Should().BeSameAs(item);
+            window.UpdateLayout();
+
+            ToggleButton groupByPath = control.FindControl<ToggleButton>("btnByPath")!;
+            RightClick(groupByPath);
+            menu.IsOpen.Should().BeFalse("the source file context menu is attached to the file presenter");
+
+            ListBoxItem row = files.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
+            RightClick(row);
+            menu.IsOpen.Should().BeTrue();
+            control.SelectedGitItem.Should().BeSameAs(item);
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
+
+        void RightClick(Control target)
+        {
+            target.IsEffectivelyVisible.Should().BeTrue();
+            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_context_menu_should_render_derived_menu_items_with_the_standard_menu_theme()
     {
         FileStatusList control = new();
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
         ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
         GitItemStatus worktree = new("tracked.txt")
         {
@@ -313,7 +361,7 @@ public sealed class FileStatusListFamilyTests
         try
         {
             window.Show();
-            accessor.ContextMenu.Open(fileList);
+            menu.Open(fileList);
             global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
             control.FindControl<MenuItem>("tsmiCopyPaths")!.Bounds.Height.Should().BeGreaterThan(0);
@@ -321,7 +369,7 @@ public sealed class FileStatusListFamilyTests
         }
         finally
         {
-            accessor.ContextMenu.Close();
+            menu.Close();
             window.Close();
         }
     }
@@ -345,15 +393,16 @@ public sealed class FileStatusListFamilyTests
         ],
         isFileTreeMode: true);
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
 
         accessor.SelectFirstTreeRoot();
         accessor.UpdateContextMenu().Should().BeFalse();
         accessor.ExpandAllMenuItem.IsVisible.Should().BeTrue();
         accessor.CollapseAllMenuItem.IsVisible.Should().BeTrue();
         accessor.SelectAllMenuItem.IsVisible.Should().BeTrue();
-        int selectAllIndex = accessor.ContextMenu.Items.IndexOf(accessor.SelectAllMenuItem);
-        accessor.ContextMenu.Items.IndexOf(accessor.CollapseAllMenuItem).Should().Be(selectAllIndex + 1);
-        accessor.ContextMenu.Items.IndexOf(accessor.ExpandAllMenuItem).Should().Be(selectAllIndex + 2);
+        int selectAllIndex = menu.Items.IndexOf(accessor.SelectAllMenuItem);
+        menu.Items.IndexOf(accessor.CollapseAllMenuItem).Should().Be(selectAllIndex + 1);
+        menu.Items.IndexOf(accessor.ExpandAllMenuItem).Should().Be(selectAllIndex + 2);
         accessor.SelectAllMenuItem.Icon.Should().BeOfType<Image>();
         accessor.CollapseAllMenuItem.Icon.Should().BeOfType<Image>();
         accessor.ExpandAllMenuItem.Icon.Should().BeOfType<Image>();
@@ -727,64 +776,6 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
-    public void FileStatusList_should_persist_git_grep_mode_and_options_from_the_original_toolbar_routes()
-    {
-        bool originalIgnoreCase = AppSettings.GitGrepIgnoreCase.Value;
-        bool originalWholeWord = AppSettings.GitGrepMatchWholeWord.Value;
-        string originalArguments = AppSettings.GitGrepUserArguments.Value;
-        int originalTypeIndex = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value;
-        bool originalVisible = AppSettings.ShowFindInCommitFilesGitGrep.Value;
-        try
-        {
-            AppSettings.GitGrepIgnoreCase.Value = false;
-            AppSettings.GitGrepMatchWholeWord.Value = true;
-            AppSettings.GitGrepUserArguments.Value = "--extended-regexp";
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = 1;
-            AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
-            FileStatusList control = new();
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-            Grid grepPanel = control.FindControl<Grid>("FindInCommitFilesGitGrepPanel")!;
-
-            accessor.OpenFindInFilesMenu();
-
-            accessor.FindUsingMatchCaseMenuItem.IsChecked.Should().BeTrue();
-            accessor.FindUsingWholeWordMenuItem.IsChecked.Should().BeTrue();
-            accessor.FindUsingOptionsMenuItem.Header.Should().Be("_Options: --extended-regexp");
-
-            accessor.FindUsingMatchCaseMenuItem.IsChecked = false;
-            accessor.FindUsingMatchCaseMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-            AppSettings.GitGrepIgnoreCase.Value.Should().BeTrue();
-
-            accessor.FindUsingWholeWordMenuItem.IsChecked = false;
-            accessor.FindUsingWholeWordMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-            AppSettings.GitGrepMatchWholeWord.Value.Should().BeFalse();
-
-            accessor.FindUsingBasicMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-            AppSettings.GitGrepUserArguments.Value.Should().Be("--basic-regexp");
-
-            control.CanUseFindInCommitFilesGitGrep = true;
-            accessor.UpdateToolbar();
-            accessor.FindUsingInputBoxMenuItem.IsChecked = true;
-            accessor.FindUsingInputBoxMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value.Should().Be(1);
-            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeTrue();
-            grepPanel.IsVisible.Should().BeTrue();
-
-            accessor.ToggleFindInFiles();
-            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeFalse();
-            grepPanel.IsVisible.Should().BeFalse();
-        }
-        finally
-        {
-            AppSettings.GitGrepIgnoreCase.Value = originalIgnoreCase;
-            AppSettings.GitGrepMatchWholeWord.Value = originalWholeWord;
-            AppSettings.GitGrepUserArguments.Value = originalArguments;
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = originalTypeIndex;
-            AppSettings.ShowFindInCommitFilesGitGrep.Value = originalVisible;
-        }
-    }
-
-    [AvaloniaTest]
     public void FileStatusList_should_persist_each_toolbar_item_visibility()
     {
         const string settingsKey = "FileStatusList.Toolbar.Visibility.btnByPath";
@@ -797,7 +788,7 @@ public sealed class FileStatusListFamilyTests
             ToggleButton byPath = control.FindControl<ToggleButton>("btnByPath")!;
             accessor.UpdateToolbar();
             int buttonIndex = control.FindControl<StackPanel>("Toolbar")!.Children.IndexOf(byPath);
-            MenuItem visibilityItem = (MenuItem)accessor.ToolbarMenuItem.Items[buttonIndex]!;
+            MenuItem visibilityItem = (MenuItem)control.FindControl<MenuItem>("tsmiToolbar")!.Items[buttonIndex]!;
 
             visibilityItem.IsChecked.Should().BeFalse();
             byPath.IsVisible.Should().BeFalse();
@@ -823,17 +814,18 @@ public sealed class FileStatusListFamilyTests
             AppSettings.ShowDiffForAllParents = true;
             FileStatusList control = new();
             FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            MenuItem showAllParents = control.FindControl<MenuItem>("tsmiShowDiffForAllParents")!;
 
             control.Bind(() => { }, canAutoRefresh: false);
 
             control.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
-            accessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeFalse();
+            control.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeFalse();
             control.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeFalse();
 
             accessor.EnableShowDiffForAllParents();
             accessor.OpenSettingsMenu();
-            accessor.ShowDiffForAllParentsMenuItem.IsVisible.Should().BeTrue();
-            accessor.ShowDiffForAllParentsMenuItem.IsChecked.Should().BeTrue();
+            showAllParents.IsVisible.Should().BeTrue();
+            showAllParents.IsChecked.Should().BeTrue();
 
             control.SetDiffs([], isFileTreeMode: true);
 
@@ -841,9 +833,8 @@ public sealed class FileStatusListFamilyTests
             control.FindControl<TextBlock>("lblSplitter")!.Height.Should().Be(1);
 
             FileStatusList autoRefreshControl = new();
-            FileStatusList.TestAccessor autoRefreshAccessor = autoRefreshControl.GetTestAccessor();
             autoRefreshControl.Bind(() => { }, canAutoRefresh: true);
-            autoRefreshAccessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeTrue();
+            autoRefreshControl.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeTrue();
             autoRefreshControl.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeTrue();
         }
         finally

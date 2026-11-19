@@ -233,8 +233,9 @@ public sealed class FileRevealTests
                 frame.Should().NotBeNull();
             }
 
-            ContextMenu menu = list.ContextMenu!;
-            list.GetTestAccessor().ContextMenu.Should().BeSameAs(menu);
+            TreeView tree = list.FindControl<TreeView>("tvFiles")!;
+            ContextMenu menu = tree.ContextMenu!;
+            list.FindControl<ContextMenu>("ItemContextMenu").Should().BeSameAs(menu);
             ProcessStartInfo? reveal = null;
             bool? waitForExit = null;
             NativeFileReveal.TestAccessor.StartProcess = (request, wait) =>
@@ -243,7 +244,7 @@ public sealed class FileRevealTests
                 waitForExit = wait;
                 return Task.FromResult(true);
             };
-            menu.Open(list);
+            menu.Open(tree);
             Dispatcher.UIThread.RunJobs();
             menu.IsOpen.Should().BeTrue();
             using (var frame = browse.CaptureRenderedFrame())

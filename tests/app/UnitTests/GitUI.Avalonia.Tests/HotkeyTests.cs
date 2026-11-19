@@ -779,7 +779,7 @@ public sealed class HotkeyTests
             ]);
         FileStatusList fileStatusList = form.fileTree.FileStatusList;
         int stageInvocations = 0;
-        fileStatusList.GetTestAccessor().StageMenuItem.Click += (_, _) => stageInvocations++;
+        fileStatusList.FindControl<MenuItem>("tsmiStageFile")!.Click += (_, _) => stageInvocations++;
 
         fileStatusList.ProcessHotkey(WinFormsShims.Keys.None).Should().BeFalse();
 
@@ -1072,7 +1072,7 @@ public sealed class HotkeyTests
             form.Show();
             form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
             int stageInvocations = 0;
-            form.fileTree.FileStatusList.GetTestAccessor().StageMenuItem.Click += (_, _) => stageInvocations++;
+            form.fileTree.FileStatusList.FindControl<MenuItem>("tsmiStageFile")!.Click += (_, _) => stageInvocations++;
 
             form.ProcessHotkey(WinFormsShims.Keys.F6).Should().BeTrue();
 

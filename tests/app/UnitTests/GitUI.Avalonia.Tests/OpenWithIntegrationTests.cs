@@ -99,8 +99,9 @@ public sealed class OpenWithIntegrationTests
                 frame.Should().NotBeNull();
             }
 
-            ContextMenu menu = list.ContextMenu!;
-            list.GetTestAccessor().ContextMenu.Should().BeSameAs(menu);
+            TreeView tree = list.FindControl<TreeView>("tvFiles")!;
+            ContextMenu menu = tree.ContextMenu!;
+            list.FindControl<ContextMenu>("ItemContextMenu").Should().BeSameAs(menu);
             int dialogs = 0;
             nint actualParent = 0;
             string? actualFile = null;
@@ -130,7 +131,7 @@ public sealed class OpenWithIntegrationTests
                 applicationLaunch = startInfo;
                 return Task.FromResult(true);
             };
-            menu.Open(list);
+            menu.Open(tree);
             Dispatcher.UIThread.RunJobs();
             menu.IsOpen.Should().BeTrue();
             using (var frame = browse.CaptureRenderedFrame())

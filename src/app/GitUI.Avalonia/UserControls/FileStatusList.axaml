@@ -27,71 +27,6 @@
       <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
     </Style>
   </UserControl.Styles>
-  <UserControl.ContextMenu>
-    <wf:ContextMenuStrip x:Name="ItemContextMenu">
-      <MenuItem x:Name="tsmiUpdateSubmodule" Header="_Update submodule" />
-      <MenuItem x:Name="tsmiResetSubmoduleChanges" Header="R_eset submodule changes" />
-      <MenuItem x:Name="tsmiStashSubmoduleChanges" Header="S_tash submodule changes" />
-      <MenuItem x:Name="tsmiCommitSubmoduleChanges" Header="_Commit submodule changes" />
-      <Separator x:Name="sepSubmodule" />
-      <MenuItem x:Name="tsmiStageFile" Header="_Stage selected" IsVisible="False">
-        <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
-      </MenuItem>
-      <MenuItem x:Name="tsmiUnstageFile" Header="_Unstage selected" IsVisible="False">
-        <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
-      </MenuItem>
-      <MenuItem x:Name="tsmiResetFileTo" Header="_Reset file(s) to">
-        <MenuItem x:Name="tsmiResetFileToSelected" />
-        <MenuItem x:Name="tsmiResetFileToParent" />
-      </MenuItem>
-      <MenuItem x:Name="tsmiResetChunkOfFile" Header="Reset chunk of file..." IsVisible="False" />
-      <MenuItem x:Name="tsmiInteractiveAdd" Header="Interactive add..." IsVisible="False" />
-      <MenuItem x:Name="tsmiCherryPickChanges" Header="Cherr_y pick changes" IsVisible="False" />
-      <Separator x:Name="sepGit" />
-      <MenuItem x:Name="tsmiOpenWithDifftool" Header="Open with _difftool">
-        <wf:ToolStripMenuItem x:Name="tsmiSecondDiffCaption" IsEnabled="False" />
-        <wf:ToolStripMenuItem x:Name="tsmiFirstDiffCaption" IsEnabled="False" />
-        <MenuItem x:Name="tsmiDiffFirstToSelected" x:FieldModifier="internal" Header="_First -&gt; Second" />
-        <MenuItem x:Name="tsmiDiffSelectedToLocal" Header="_Second -&gt; Working directory" />
-        <MenuItem x:Name="tsmiDiffFirstToLocal" Header="First -&gt; _Working directory" />
-        <Separator x:Name="sepDifftoolRemember" />
-        <MenuItem x:Name="tsmiDiffTwoSelected" Header="_Diff the selected files" />
-        <MenuItem x:Name="tsmiDiffWithRemembered" />
-        <MenuItem x:Name="tsmiRememberSecondRevDiff" Header="_Remember Second for diff" />
-        <MenuItem x:Name="tsmiRememberFirstRevDiff" Header="R_emember First for diff" />
-      </MenuItem>
-      <MenuItem x:Name="tsmiOpenWorkingDirectoryFile" Header="_Open working directory file" />
-      <MenuItem x:Name="tsmiOpenWorkingDirectoryFileWith" Header="Open working directory file with..." />
-      <MenuItem x:Name="tsmiOpenRevisionFile" Header="Ope_n this revision (temp file)" />
-      <MenuItem x:Name="tsmiOpenRevisionFileWith" Header="Open this revision _with... (temp file)" />
-      <MenuItem x:Name="tsmiEditWorkingDirectoryFile" x:FieldModifier="internal" Header="_Edit working directory file" />
-      <MenuItem x:Name="tsmiOpenInVisualStudio" Header="Open in _Visual Studio" />
-      <MenuItem x:Name="tsmiSaveAs" Header="S_ave selected as..." />
-      <MenuItem x:Name="tsmiMove" Header="Rena_me / move" />
-      <MenuItem x:Name="tsmiDeleteFile" Header="De_lete file" />
-      <Separator x:Name="sepFile" />
-      <menus:CopyPathsToolStripMenuItem x:Name="tsmiCopyPaths" />
-      <MenuItem x:Name="tsmiShowInFolder" Header="Show _in folder" />
-      <Separator x:Name="sepBrowse" />
-      <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />
-      <MenuItem x:Name="tsmiFilterFileInGrid" Header="Filter file in _grid" IsVisible="False" />
-      <MenuItem x:Name="tsmiFileHistory" Header="File _history" />
-      <MenuItem x:Name="tsmiBlame" x:FieldModifier="internal" Header="_Blame" />
-      <MenuItem x:Name="tsmiFindFile" Header="_Find file..." />
-      <MenuItem x:Name="tsmiOpenFindInCommitFilesGitGrepDialog" Header="Find in _commit files using git-grep..." IsVisible="False" />
-      <MenuItem x:Name="tsmiShowFindInCommitFilesGitGrep" Header="Show 'Find in commit fi_les using git-grep'" IsVisible="False" />
-      <Separator x:Name="sepIgnore" />
-      <MenuItem x:Name="tsmiAddFileToGitIgnore" Header="Add file to _.gitignore" />
-      <MenuItem x:Name="tsmiAddFileToGitInfoExclude" Header="Add file to .git/info/exclude" />
-      <MenuItem x:Name="tsmiSkipWorktree" Header="S_kip worktree" ToggleType="CheckBox" />
-      <MenuItem x:Name="tsmiAssumeUnchanged" Header="Assu_me unchanged" ToggleType="CheckBox" />
-      <MenuItem x:Name="tsmiStopTracking" Header="Stop tracking this file" />
-      <Separator x:Name="sepScripts" />
-      <MenuItem x:Name="tsmiRunScript" Header="Run script">
-        <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
-      </MenuItem>
-    </wf:ContextMenuStrip>
-  </UserControl.ContextMenu>
   <DockPanel>
     <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="{StaticResource GitExtensionsTransparentBrush}">
       <Button x:Name="btnCollapseGroups" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Collapse all groups, otherwise expand the selected group" IsVisible="False">
@@ -188,7 +123,73 @@
       <TextBlock x:Name="LoadingFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="Loading data..." IsVisible="False" IsHitTestVisible="False" />
       <TextBlock x:Name="NoFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="No changes" IsHitTestVisible="False" />
       <ListBox x:Name="FileStatusListView" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" IsVisible="False" />
-      <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
+      <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
+        <ListBox.ContextMenu>
+          <wf:ContextMenuStrip x:Name="ItemContextMenu">
+            <MenuItem x:Name="tsmiUpdateSubmodule" Header="_Update submodule" />
+            <MenuItem x:Name="tsmiResetSubmoduleChanges" Header="R_eset submodule changes" />
+            <MenuItem x:Name="tsmiStashSubmoduleChanges" Header="S_tash submodule changes" />
+            <MenuItem x:Name="tsmiCommitSubmoduleChanges" Header="_Commit submodule changes" />
+            <Separator x:Name="sepSubmodule" />
+            <MenuItem x:Name="tsmiStageFile" Header="_Stage selected" IsVisible="False">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="tsmiUnstageFile" Header="_Unstage selected" IsVisible="False">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="tsmiResetFileTo" Header="_Reset file(s) to">
+              <MenuItem x:Name="tsmiResetFileToSelected" />
+              <MenuItem x:Name="tsmiResetFileToParent" />
+            </MenuItem>
+            <MenuItem x:Name="tsmiResetChunkOfFile" Header="Reset chunk of file..." IsVisible="False" />
+            <MenuItem x:Name="tsmiInteractiveAdd" Header="Interactive add..." IsVisible="False" />
+            <MenuItem x:Name="tsmiCherryPickChanges" Header="Cherr_y pick changes" IsVisible="False" />
+            <Separator x:Name="sepGit" />
+            <MenuItem x:Name="tsmiOpenWithDifftool" Header="Open with _difftool">
+              <wf:ToolStripMenuItem x:Name="tsmiSecondDiffCaption" IsEnabled="False" />
+              <wf:ToolStripMenuItem x:Name="tsmiFirstDiffCaption" IsEnabled="False" />
+              <MenuItem x:Name="tsmiDiffFirstToSelected" x:FieldModifier="internal" Header="_First -&gt; Second" />
+              <MenuItem x:Name="tsmiDiffSelectedToLocal" Header="_Second -&gt; Working directory" />
+              <MenuItem x:Name="tsmiDiffFirstToLocal" Header="First -&gt; _Working directory" />
+              <Separator x:Name="sepDifftoolRemember" />
+              <MenuItem x:Name="tsmiDiffTwoSelected" Header="_Diff the selected files" />
+              <MenuItem x:Name="tsmiDiffWithRemembered" />
+              <MenuItem x:Name="tsmiRememberSecondRevDiff" Header="_Remember Second for diff" />
+              <MenuItem x:Name="tsmiRememberFirstRevDiff" Header="R_emember First for diff" />
+            </MenuItem>
+            <MenuItem x:Name="tsmiOpenWorkingDirectoryFile" Header="_Open working directory file" />
+            <MenuItem x:Name="tsmiOpenWorkingDirectoryFileWith" Header="Open working directory file with..." />
+            <MenuItem x:Name="tsmiOpenRevisionFile" Header="Ope_n this revision (temp file)" />
+            <MenuItem x:Name="tsmiOpenRevisionFileWith" Header="Open this revision _with... (temp file)" />
+            <MenuItem x:Name="tsmiEditWorkingDirectoryFile" x:FieldModifier="internal" Header="_Edit working directory file" />
+            <MenuItem x:Name="tsmiOpenInVisualStudio" Header="Open in _Visual Studio" />
+            <MenuItem x:Name="tsmiSaveAs" Header="S_ave selected as..." />
+            <MenuItem x:Name="tsmiMove" Header="Rena_me / move" />
+            <MenuItem x:Name="tsmiDeleteFile" Header="De_lete file" />
+            <Separator x:Name="sepFile" />
+            <menus:CopyPathsToolStripMenuItem x:Name="tsmiCopyPaths" />
+            <MenuItem x:Name="tsmiShowInFolder" Header="Show _in folder" />
+            <Separator x:Name="sepBrowse" />
+            <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />
+            <MenuItem x:Name="tsmiFilterFileInGrid" Header="Filter file in _grid" IsVisible="False" />
+            <MenuItem x:Name="tsmiFileHistory" Header="File _history" />
+            <MenuItem x:Name="tsmiBlame" x:FieldModifier="internal" Header="_Blame" />
+            <MenuItem x:Name="tsmiFindFile" Header="_Find file..." />
+            <MenuItem x:Name="tsmiOpenFindInCommitFilesGitGrepDialog" Header="Find in _commit files using git-grep..." IsVisible="False" />
+            <MenuItem x:Name="tsmiShowFindInCommitFilesGitGrep" Header="Show 'Find in commit fi_les using git-grep'" IsVisible="False" />
+            <Separator x:Name="sepIgnore" />
+            <MenuItem x:Name="tsmiAddFileToGitIgnore" Header="Add file to _.gitignore" />
+            <MenuItem x:Name="tsmiAddFileToGitInfoExclude" Header="Add file to .git/info/exclude" />
+            <MenuItem x:Name="tsmiSkipWorktree" Header="S_kip worktree" ToggleType="CheckBox" />
+            <MenuItem x:Name="tsmiAssumeUnchanged" Header="Assu_me unchanged" ToggleType="CheckBox" />
+            <MenuItem x:Name="tsmiStopTracking" Header="Stop tracking this file" />
+            <Separator x:Name="sepScripts" />
+            <MenuItem x:Name="tsmiRunScript" Header="Run script">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
+            </MenuItem>
+          </wf:ContextMenuStrip>
+        </ListBox.ContextMenu>
+      </ListBox>
       <TreeView x:Name="tvDiffFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
         <TreeView.Resources><x:Double x:Key="GitExtensionsTreeViewItemIndent">14</x:Double></TreeView.Resources>
         <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="{Binding IsExpanded}" /></Style></TreeView.Styles>

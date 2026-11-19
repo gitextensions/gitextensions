@@ -366,7 +366,7 @@ public sealed partial class ParityScreenshotTests
                 if (fileList.IsVisible)
                 {
                     accessor.UpdateContextMenu();
-                    accessor.ContextMenu.Open(fileList);
+                    fileStatusList.FindControl<ContextMenu>("ItemContextMenu")!.Open(fileList);
                     Dispatcher.UIThread.RunJobs();
                 }
                 else if (fileTree.IsVisible)

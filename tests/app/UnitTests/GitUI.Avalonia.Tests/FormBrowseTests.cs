@@ -1801,6 +1801,86 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Browse_diff_tab_should_persist_git_grep_toolbar_mode_and_options()
+    {
+        AppSettings.GitGrepIgnoreCase.Value = false;
+        AppSettings.GitGrepMatchWholeWord.Value = true;
+        AppSettings.GitGrepUserArguments.Value = "--extended-regexp";
+        AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = 1;
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
+
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
+        form.Show();
+        try
+        {
+            TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+            Click(form, form.DiffTabPage, MouseButton.Left);
+            form.UpdateLayout();
+
+            FileStatusList files = form.revisionDiff.FindControl<FileStatusList>("DiffFiles")!;
+            Grid grepPanel = files.FindControl<Grid>("FindInCommitFilesGitGrepPanel")!;
+            IconSplitButton find = files.FindControl<IconSplitButton>("btnFindInFilesGitGrep")!;
+            MenuFlyout flyout = (MenuFlyout)find.Flyout!;
+            Button primaryButton = find.GetVisualDescendants().OfType<Button>().Single(button => button.Name == "PART_PrimaryButton");
+            Button secondaryButton = find.GetVisualDescendants().OfType<Button>().Single(button => button.Name == "PART_SecondaryButton");
+            MenuItem matchCase = files.FindControl<MenuItem>("tsmiFindUsingMatchCase")!;
+            MenuItem matchWholeWord = files.FindControl<MenuItem>("tsmiFindUsingWholeWord")!;
+            MenuItem options = files.FindControl<MenuItem>("tsmiFindUsingOptions")!;
+            MenuItem basic = files.FindControl<MenuItem>("_NO_TRANSLATE_tsmiFindUsingBasic")!;
+            MenuItem inputBox = files.FindControl<MenuItem>("tsmiFindUsingInputBox")!;
+
+            OpenOptions();
+            matchCase.IsChecked.Should().BeTrue();
+            matchWholeWord.IsChecked.Should().BeTrue();
+            options.Header.Should().Be("_Options: --extended-regexp");
+
+            ClickItem(matchCase);
+            AppSettings.GitGrepIgnoreCase.Value.Should().BeTrue();
+
+            OpenOptions();
+            ClickItem(matchWholeWord);
+            AppSettings.GitGrepMatchWholeWord.Value.Should().BeFalse();
+
+            OpenOptions();
+            ClickItem(options);
+            options.IsSubMenuOpen.Should().BeTrue();
+            ClickItem(basic);
+            AppSettings.GitGrepUserArguments.Value.Should().Be("--basic-regexp");
+
+            OpenOptions();
+            ClickItem(inputBox);
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value.Should().Be(1);
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeTrue();
+            grepPanel.IsVisible.Should().BeTrue();
+
+            Click(form, primaryButton, MouseButton.Left);
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeFalse();
+            grepPanel.IsVisible.Should().BeFalse();
+
+            void OpenOptions()
+            {
+                Click(form, secondaryButton, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+                flyout.IsOpen.Should().BeTrue();
+            }
+
+            static void ClickItem(MenuItem item)
+            {
+                TopLevel popup = TopLevel.GetTopLevel(item)
+                    ?? throw new InvalidOperationException("The git-grep menu item has no open popup.");
+                Click(popup, item, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P8.6i.126")]
     public void Browse_shell_split_button_should_expose_only_launchable_platform_choices()
     {
@@ -6352,15 +6432,20 @@ public sealed class FormBrowseTests
         GitModule module = CreateRepositoryWithInitialCommit();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1400, Height = 850 };
         FileStatusList files = fileTree ? form.fileTree.FileStatusList : form.revisionDiff.FileStatusList;
-        ContextMenu menu = files.GetTestAccessor().ContextMenu;
+        ContextMenu menu = files.FindControl<ContextMenu>("ItemContextMenu")!;
         try
         {
             form.Show();
             form.CommitInfoTabControl.SelectedItem = fileTree ? form.TreeTabPage : form.DiffTabPage;
             await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
             await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt");
-            menu.Open(files);
+            form.UpdateLayout();
+            Control presenter = files.GetVisualDescendants().OfType<Control>()
+                .Single(control => control.IsEffectivelyVisible && ReferenceEquals(control.ContextMenu, menu));
+            TextBlock row = presenter.GetVisualDescendants().OfType<TextBlock>().Single(label => label.Text == "tracked.txt");
+            Click(form, row, MouseButton.Right);
             Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
             CopyPathsToolStripMenuItem copy = files.FindControl<CopyPathsToolStripMenuItem>("tsmiCopyPaths")!;
             copy.IsEnabled.Should().BeTrue();
             copy.IsSubMenuOpen = true;
