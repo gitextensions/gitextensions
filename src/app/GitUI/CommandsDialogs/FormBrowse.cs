@@ -221,10 +221,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly IShellProvider _shellProvider;
 
-    // A per-refresh, lazily-fetched worktree list shared by the left-panel tree and the toolbar
-    // dropdown. Fetched once (off the UI thread, during the tree refresh) and reused, so the
-    // dropdown does not spawn a separate `git worktree list` on the UI thread.
-    private Lazy<IReadOnlyList<GitWorktree>> _worktrees;
+    // An asynchronously-populated worktree list for the toolbar dropdown. The refresh starts the
+    // fetch off the UI thread (independent of the left panel being visible); the dropdown reuses
+    // the last completed value so it never runs `git worktree list` on the UI thread (see #13059).
+    // The left-panel tree fetches its own list off the UI thread, so the two are independent.
+    private Task<IReadOnlyList<GitWorktree>>? _worktreesTask;
+    private IReadOnlyList<GitWorktree> _worktrees = [];
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -269,7 +271,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _consoleEmulatorsRegistry = commands.GetRequiredService<IConsoleEmulatorsRegistry>();
         _shellProvider = commands.GetRequiredService<IShellProvider>();
-        _worktrees = new(() => Module.GetWorktrees(), LazyThreadSafetyMode.PublicationOnly);
 
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
@@ -722,9 +723,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _aheadBehindDataProvider?.ResetCache();
 
-        // Reset the shared worktree list so this refresh (and the toolbar dropdown) use a fresh
-        // fetch, taken once off the UI thread by the left-panel tree and reused by the dropdown.
-        _worktrees = new(() => Module.GetWorktrees(), LazyThreadSafetyMode.PublicationOnly);
+        // Start a fresh worktree fetch off the UI thread (independent of the left panel being
+        // visible), so a dead UNC path never blocks the UI. The dropdown reuses the last
+        // completed value; while the fetch is in flight it shows the previous value (see #13059).
+        // The left-panel tree fetches its own list off the UI thread.
+        _worktreesTask = Task.Run(() => Module.GetWorktrees());
+        _worktreesTask.ContinueWith(
+            t => _worktrees = t.IsFaulted ? _worktrees : t.Result,
+            TaskScheduler.FromCurrentSynchronizationContext());
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
         {
@@ -1345,7 +1351,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        repoObjectsTree.RefreshRevisionsLoading(getRefs, _worktrees, getStashRevs, forceRefresh);
+        repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh);
     }
 
     private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
@@ -3000,10 +3006,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
-        // Reuse the worktree list fetched during the last refresh (off the UI thread) instead
-        // of spawning `git worktree list` on the UI thread. In-app worktree operations and
-        // external changes trigger a refresh, which resets this cache.
-        IReadOnlyList<GitWorktree> worktrees = _worktrees.Value;
+        // Reuse the last completed worktree fetch (taken off the UI thread during the refresh)
+        // instead of spawning `git worktree list` on the UI thread. In-app worktree operations
+        // and external changes trigger a refresh, which starts a new fetch; while it is in
+        // flight this shows the previous value.
+        IReadOnlyList<GitWorktree> worktrees = _worktrees;
 
         foreach (GitWorktree worktree in worktrees)
         {
