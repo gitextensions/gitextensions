@@ -193,19 +193,7 @@ public partial class FileStatusList : GitModuleControl
                 SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
             }
         };
-        DetachedFromLogicalTree += (_, _) =>
-        {
-            // Stop the throttled filtering: a pending callback would otherwise run after the form was
-            // closed and access the detached list view.
-            _filterTimer.Stop();
-            _selectedIndexChangeTimer.Stop();
-
-            _diffListSortSubscription?.Dispose();
-            _diffListSortSubscription = null;
-
-            CancelLoadCustomDifftools();
-            UnbindCommands();
-        };
+        DetachedFromLogicalTree += (_, _) => DisposeCustomResources();
 
         InitializeComplete();
         SetFileStatusListVisibility(showNoFiles: true);
@@ -1109,6 +1097,19 @@ public partial class FileStatusList : GitModuleControl
         _nextItemToSelect = currentIndex >= 0 && currentIndex + 1 < visible.Length
             ? visible[currentIndex + 1]
             : currentIndex > 0 ? visible[currentIndex - 1] : null;
+    }
+
+    protected override void DisposeCustomResources()
+    {
+        _selectedIndexChangeTimer.Stop();
+        _diffListSortSubscription?.Dispose();
+        _diffListSortSubscription = null;
+
+        // Stop the throttled filtering: a pending callback would otherwise run after the form was
+        // closed and access the detached list view.
+        _filterTimer.Stop();
+        CancelLoadCustomDifftools();
+        UnbindCommands();
     }
 
     private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)

@@ -606,6 +606,41 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_dispose_should_release_the_live_sort_subscription()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 620, Height = 350, Content = control };
+        window.Show();
+        try
+        {
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()),
+                [
+                    new GitItemStatus("a/first.cs") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("b/second.md") { IsChanged = true, IsTracked = true },
+                ]);
+            int rebuilt = 0;
+            control.DataSourceChanged += (_, _) => rebuilt++;
+
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            rebuilt.Should().Be(1, "the live attached control currently follows the sort service");
+
+            ((IDisposable)control).Dispose();
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            Dispatcher.UIThread.RunJobs();
+
+            rebuilt.Should().Be(1, "the original DisposeCustomResources releases the sort subscription");
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_apply_all_sort_and_branch_diff_filters()
     {
         DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
