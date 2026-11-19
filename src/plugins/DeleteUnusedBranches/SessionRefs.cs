@@ -1,7 +1,8 @@
-﻿using GitExtensions.Extensibility;
+﻿using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 
-namespace GitCommands.Git;
+namespace GitExtensions.Plugins.DeleteUnusedBranches;
 
 /// <summary>
 ///  Lists and deletes the refs which agentic tools leave behind, i.e. the refs hidden by <see cref="AppSettings.SessionRefsFilters"/>.

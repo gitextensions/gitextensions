@@ -1,9 +1,9 @@
 ﻿using CommonTestUtils;
 using GitCommands;
-using GitCommands.Git;
 using GitExtensions.Extensibility;
+using GitExtensions.Plugins.DeleteUnusedBranches;
 
-namespace GitCommandsTests.Git;
+namespace DeleteUnusedBranchesTests;
 
 public sealed class SessionRefsTests
 {
