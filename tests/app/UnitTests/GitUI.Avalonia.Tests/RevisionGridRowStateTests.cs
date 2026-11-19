@@ -239,7 +239,7 @@ public sealed class RevisionGridRowStateTests
         {
             double x = (actualLane * GraphRenderer.LaneWidth) + (GraphRenderer.LaneWidth / 2);
             x.Should().BeLessThan(actualCell.Bounds.Width, "the actual pointer must remain inside this realized cell");
-            bool hasToolTip = provider.TryGetToolTip(actualRevision, x, out string? tip);
+            bool hasToolTip = provider.TryGetToolTip(x, actualRevision, out string? tip);
             if (phase == "node")
             {
                 hasToolTip.Should().BeTrue("the source graph provider describes the lane independently of the tooltip owner's setting");

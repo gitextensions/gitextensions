@@ -67,26 +67,23 @@ internal abstract class ColumnProvider
     {
     }
 
-    /// <summary>Attempts to get custom tool tip text for a highlight in a cell in this column.</summary>
+    /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
     /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
-    public virtual bool TryGetToolTip(
-        GitRevision revision,
-        IGitRef? highlightRef,
-        [NotNullWhen(returnValue: true)] out string? toolTip)
+    public virtual bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        if (AppSettings.ShowRevisionGridTooltips)
-        {
-            return TryGetToolTip(revision, out toolTip);
-        }
-
         toolTip = null;
         return false;
     }
 
-    /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
+    /// <summary>Attempts to get custom tool tip text for a highlight in a cell in this column.</summary>
     /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
-    public virtual bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public virtual bool TryGetToolTip(double? x, GitRevision revision, IGitRef? highlightRef, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
+        if (AppSettings.ShowRevisionGridTooltips)
+        {
+            return TryGetToolTip(x, revision, out toolTip);
+        }
+
         toolTip = null;
         return false;
     }
@@ -106,7 +103,7 @@ internal abstract class ColumnProvider
         ToolTip.SetTip(
             control,
             AppSettings.ShowRevisionGridTooltips
-                && TryGetToolTip(revision, highlightRef: null, out string? toolTip)
+                && TryGetToolTip(x: null, revision, highlightRef: null, out string? toolTip)
                     ? toolTip
                     : null);
     }

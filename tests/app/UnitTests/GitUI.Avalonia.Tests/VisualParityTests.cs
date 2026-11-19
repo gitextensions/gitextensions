@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -1090,13 +1091,7 @@ public sealed class VisualParityTests
             remote: "origin");
 
         RevisionGridRefRenderer.NestledRefLabelPanel pair =
-            RevisionGridRefRenderer.CreateLabels(
-                [remote, local],
-                showTags: true,
-                showRemoteBranches: true,
-                fill: false,
-                getVirtualRef: null,
-                superprojectRefs: null)
+            RevisionRefLabelFixture.Render([remote, local])
                 .Should()
                 .ContainSingle()
                 .Which.Should()
@@ -1107,13 +1102,7 @@ public sealed class VisualParityTests
             .. pair.Children.OfType<RevisionGridRefRenderer.RefLabelControl>(),
         ];
         RevisionGridRefRenderer.RefLabelControl standaloneTrackingRemote =
-            RevisionGridRefRenderer.CreateLabels(
-                [CreateRef("origin/next", isRemote: true, isSelectedHeadMergeSource: true)],
-                showTags: true,
-                showRemoteBranches: true,
-                fill: false,
-                getVirtualRef: null,
-                superprojectRefs: null)
+            RevisionRefLabelFixture.Render([CreateRef("origin/next", isRemote: true, isSelectedHeadMergeSource: true)])
                 .Should()
                 .ContainSingle()
                 .Which.Should()
@@ -1927,13 +1916,7 @@ public sealed class VisualParityTests
         Color expectedBackground)
     {
         RevisionGridRefRenderer.RefLabelControl label =
-            RevisionGridRefRenderer.CreateLabels(
-                [gitRef],
-                showTags: true,
-                showRemoteBranches: true,
-                fill: false,
-                getVirtualRef: null,
-                superprojectRefs: null)
+            RevisionRefLabelFixture.Render([gitRef])
                 .Should()
                 .ContainSingle()
                 .Which.Should()
@@ -1991,6 +1974,10 @@ public sealed class VisualParityTests
         string trackingRemote = "")
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetRemoteColors().Returns(FrozenDictionary<string, System.Drawing.Color>.Empty);
+        module.GetAllLocalSettings().Returns([]);
+        gitRef.Module.Returns(module);
         gitRef.Name.Returns(name);
         gitRef.IsHead.Returns(isHead);
         gitRef.IsRemote.Returns(isRemote);

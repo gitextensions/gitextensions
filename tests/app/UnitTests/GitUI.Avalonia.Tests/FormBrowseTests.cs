@@ -5493,7 +5493,7 @@ public sealed class FormBrowseTests
 
                 RevisionGraphColumnProvider graphProvider =
                     (RevisionGraphColumnProvider)revisionGrid.ColumnProviders[0];
-                graphProvider.TryGetToolTip(revisionGrid.SelectedRevision!, x: 1, out string? graphToolTip)
+                graphProvider.TryGetToolTip(x: 1, revisionGrid.SelectedRevision!, out string? graphToolTip)
                     .Should().BeTrue();
                 graphToolTip.Should().Contain(revisionGrid.SelectedRevision!.Guid);
 

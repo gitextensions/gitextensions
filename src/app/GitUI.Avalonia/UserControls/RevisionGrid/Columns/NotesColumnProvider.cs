@@ -43,7 +43,7 @@ internal sealed class NotesColumnProvider : ColumnProvider
         }
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         toolTip = revision.Notes;
         return toolTip is not null;

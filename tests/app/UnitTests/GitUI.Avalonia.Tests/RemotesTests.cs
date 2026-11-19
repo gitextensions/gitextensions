@@ -292,13 +292,7 @@ public sealed class RemotesTests
 
             module.ResetRemoteColors();
             GitRef remoteRef = new(module, ObjectId.Random(), "refs/remotes/origin/main", remote: "origin");
-            RevisionGridRefRenderer.RefLabelControl label = RevisionGridRefRenderer.CreateLabels(
-                [remoteRef],
-                showTags: true,
-                showRemoteBranches: true,
-                fill: false,
-                getVirtualRef: null,
-                superprojectRefs: null)
+            RevisionGridRefRenderer.RefLabelControl label = RevisionRefLabelFixture.Render([remoteRef])
                 .Should().ContainSingle()
                 .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
             label.RefBrush.Should().BeAssignableTo<Avalonia.Media.ISolidColorBrush>()

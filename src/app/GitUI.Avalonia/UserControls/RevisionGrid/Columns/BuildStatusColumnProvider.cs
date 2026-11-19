@@ -150,7 +150,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         textBlock.Cursor = string.IsNullOrWhiteSpace(buildStatus?.Url) ? Cursor.Default : new Cursor(StandardCursorType.Hand);
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         toolTip = revision.BuildStatus?.Tooltip ?? revision.BuildStatus?.Description;
         return toolTip is not null;

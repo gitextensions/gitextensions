@@ -146,17 +146,7 @@ internal sealed class RevisionGridToolTipProvider
                     return highlightText;
                 }
 
-                string? toolTip;
-                bool hasToolTip = provider switch
-                {
-                    MessageColumnProvider => provider.TryGetToolTip(state.Revision, highlightRef, out toolTip),
-
-                    // A graph tooltip identifies the actual lane beneath this pixel,
-                    // not merely the revision represented by its recycled row.
-                    RevisionGraphColumnProvider graph => graph.TryGetToolTip(state.Revision, e.GetPosition(cell).X, out toolTip),
-                    _ => provider.TryGetToolTip(state.Revision, out toolTip),
-                };
-                if (hasToolTip
+                if (provider.TryGetToolTip(e.GetPosition(cell).X, state.Revision, highlightRef, out string? toolTip)
                     && !string.IsNullOrWhiteSpace(toolTip))
                 {
                     return toolTip;

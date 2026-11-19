@@ -61,7 +61,7 @@ internal sealed class DateColumnProvider : ColumnProvider
             : FormatDate(dateTime, DateTime.Now, AppSettings.RelativeDate);
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (revision.IsArtificial)
         {

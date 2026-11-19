@@ -8,6 +8,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -247,6 +248,106 @@ public sealed class GraphHistoryRenderingTests
             => cell.DataContext is GitRevision revision && graph.TryGetRowIndex(revision.ObjectId, out int rowIndex)
                 ? graph.GetSegmentsForRow(rowIndex)!.GetLaneCount()
                 : 0;
+    }
+
+    [AvaloniaTest]
+    [TestCase(0)]
+    [TestCase(3)]
+    public async Task ReloadRevisions_should_draw_superproject_refs_after_the_matching_local_ref(int extraRefs)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.ShowRemoteBranches = false;
+        AppSettings.ShowSuperprojectBranches = true;
+        using GitModuleTestHelper sourceRepository = new("submodule-source");
+        using GitModuleTestHelper superproject = new("superproject");
+        sourceRepository.Module.GitExecutable.RunCommand("commit --allow-empty -m submodule").Should().BeTrue();
+        sourceRepository.Module.GitExecutable.RunCommand("branch -M main").Should().BeTrue();
+        superproject.Module.GitExecutable.RunCommand(
+            $"-c protocol.file.allow=always submodule add {sourceRepository.Module.WorkingDir.RemoveTrailingPathSeparator().Quote()} submodule")
+            .Should().BeTrue();
+        superproject.Module.GitExecutable.RunCommand("commit -m superproject").Should().BeTrue();
+        superproject.Module.GitExecutable.RunCommand("branch -M main").Should().BeTrue();
+        superproject.Module.GitExecutable.RunCommand("branch release").Should().BeTrue();
+        for (int index = 0; index < extraRefs; index++)
+        {
+            superproject.Module.GitExecutable.RunCommand($"branch release-{index}").Should().BeTrue();
+        }
+
+        IGitModule submodule = superproject.Module.GetSubmodule("submodule");
+        submodule.SuperprojectModule.Should().NotBeNull("GitModule must discover the actual superproject");
+        submodule.GitExecutable.RunCommand("checkout main").Should().BeTrue();
+
+        IGitUICommandsSource commandsSource = CreateCommandsSource();
+        commandsSource.UICommands.Module.Returns(submodule);
+        RevisionGridControl grid = new() { UICommandsSource = commandsSource };
+        bool loaded = false;
+        grid.RevisionsLoaded += (_, _) => loaded = true;
+        Window window = new() { Width = 1100, Height = 320, Content = grid };
+        window.Show();
+        try
+        {
+            grid.ReloadRevisions(submodule);
+            Stopwatch timeout = Stopwatch.StartNew();
+            while (!loaded && timeout.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            loaded.Should().BeTrue("the real revision reader must publish the submodule commit");
+            RevisionGridRefRenderer.RefLabelControl[] labels;
+            int expectedLabelCount = extraRefs == 0 ? 3 : 6;
+            timeout.Restart();
+            do
+            {
+                Dispatcher.UIThread.RunJobs();
+                window.UpdateLayout();
+                labels = [.. grid.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()];
+                if (labels.Length >= expectedLabelCount)
+                {
+                    break;
+                }
+
+                await Task.Delay(10);
+            }
+            while (timeout.Elapsed < TimeSpan.FromSeconds(15));
+
+            labels.Should().HaveCount(expectedLabelCount);
+            labels.Take(2).Select(label => label.Label).Should().Equal(string.Empty, "main");
+            labels[0].Icon.Should().Be(RefLabelIcon.Head);
+            labels[1].IsDashed.Should().BeTrue("the local branch also references the superproject checkout");
+            labels.Skip(2).Should().OnlyContain(label => label.IsDashed, "these refs belong only to the superproject");
+            if (extraRefs == 0)
+            {
+                labels[2].Label.Should().Be("release");
+            }
+            else
+            {
+                labels.Skip(2).Take(3).Should().OnlyContain(label => label.Label.StartsWith("release", StringComparison.Ordinal));
+                labels[^1].Label.Should().Be("…", "the source reserves its fourth additional slot for the ellipsis");
+            }
+
+            using WriteableBitmap frame = window.CaptureRenderedFrame()!;
+            frame.Should().NotBeNull("the actual revision cell must be rendered for pointer input");
+            Point localPoint = labels[1].TranslatePoint(new Point(labels[1].Bounds.Width / 2, labels[1].Bounds.Height / 2), window)!.Value;
+            Point superprojectPoint = labels[2].TranslatePoint(new Point(labels[2].Bounds.Width / 2, labels[2].Bounds.Height / 2), window)!.Value;
+            window.MouseMove(localPoint, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            labels[1].IsHighlighted.Should().BeTrue("the matching local ref owns a real hit-box");
+            window.MouseMove(superprojectPoint, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            labels[1].IsHighlighted.Should().BeFalse();
+            labels[2].IsHighlighted.Should().BeFalse("the original paints additional superproject refs without registering hit-boxes");
+        }
+        finally
+        {
+            grid.CancelBackgroundTasks();
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+            using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(cancellation.Token);
+        }
     }
 
     [AvaloniaTest]

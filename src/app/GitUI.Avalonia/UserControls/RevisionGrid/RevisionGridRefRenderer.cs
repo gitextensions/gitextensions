@@ -174,90 +174,6 @@ internal static class RevisionGridRefRenderer
         });
 
     /// <summary>
-    ///  Creates the ordered controls for a revision's refs, nesting a local branch with its
-    ///  tracked remote when both point at the same commit.
-    /// </summary>
-    internal static IReadOnlyList<Control> CreateLabels(
-        IReadOnlyList<IGitRef> refs,
-        bool showTags,
-        bool showRemoteBranches,
-        bool fill,
-        Func<IGitRef, (IGitRef GitRef, string Name)?>? getVirtualRef,
-        IReadOnlySet<string>? superprojectRefs,
-        Func<IGitRef, (string Label, string? HighlightedLabel)>? getLabel = null)
-    {
-        IReadOnlyList<IGitRef> sortedRefs = SortRefs(
-            refs.Where(gitRef => (!gitRef.IsTag || showTags)
-                && (!gitRef.IsRemote || showRemoteBranches)));
-        Dictionary<string, IGitRef> trackedRemotes = BuildTrackedRemoteMap(sortedRefs);
-        List<Control> labels = [];
-
-        foreach (IGitRef gitRef in sortedRefs)
-        {
-            if (trackedRemotes.ContainsValue(gitRef))
-            {
-                continue;
-            }
-
-            if (gitRef.IsHead && trackedRemotes.TryGetValue(gitRef.Name, out IGitRef? remote))
-            {
-                RefLabelControl localLabel = CreateLabel(
-                    gitRef,
-                    gitRef.Name,
-                    RefLabelShape.PointRight,
-                    fill,
-                    dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true);
-                RefLabelControl remoteLabel = CreateLabel(
-                    remote,
-                    remote.Remote,
-                    RefLabelShape.NotchLeft,
-                    fill,
-                    showHeadIndicator: false,
-                    dashed: superprojectRefs?.Contains(remote.CompleteName) == true);
-                labels.Add(new NestledRefLabelPanel(localLabel, remoteLabel));
-                continue;
-            }
-
-            if (getVirtualRef?.Invoke(gitRef) is { } virtualRefData)
-            {
-                IGitRef virtualRef = virtualRefData.GitRef;
-                (RefLabelShape refShape, RefLabelShape virtualShape) = gitRef.IsRemote
-                    ? (RefLabelShape.NotchRight, RefLabelShape.PointLeft)
-                    : (RefLabelShape.PointRight, RefLabelShape.NotchLeft);
-                labels.Add(new NestledRefLabelPanel(
-                    CreateLabel(
-                        gitRef,
-                        gitRef.Name,
-                        refShape,
-                        fill,
-                        dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true),
-                    CreateLabel(
-                        virtualRef,
-                        virtualRefData.Name,
-                        virtualShape,
-                        fill,
-                        showHeadIndicator: false,
-                        dashed: true,
-                        fontWeight: virtualRef is NestledVirtualRef { TrackingBranchIsGone: true }
-                            ? FontWeight.Bold
-                            : FontWeight.Normal)));
-                continue;
-            }
-
-            (string label, string? highlightedLabel) = getLabel?.Invoke(gitRef) ?? (gitRef.Name, null);
-            labels.Add(CreateLabel(
-                gitRef,
-                label,
-                gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect,
-                fill,
-                dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true,
-                highlightedLabel: highlightedLabel));
-        }
-
-        return labels;
-    }
-
-    /// <summary>
     ///  Arranges the tracked remote's notch over the local branch's point. This is the
     ///  layout equivalent of the WinForms renderer resetting its drawing offset.
     /// </summary>
@@ -279,6 +195,7 @@ internal static class RevisionGridRefRenderer
 
             // Avalonia paints a parent's Render before its children. A visual-only,
             // noninteractive final sibling preserves the source's deferred pair frames.
+            // Draw highlight frames last so neither capsule overwrites the other's highlight edge.
             VisualChildren.Add(_highlightOverlay);
         }
 
@@ -308,6 +225,8 @@ internal static class RevisionGridRefRenderer
 
             // The source resets offset from the actual clipped branch rectangle,
             // then clips the remote to the remaining cell width, not its ideal width.
+            // Compute the geometry to align the nestled notch/point exactly against the branch point/notch.
+            // Position the NotchLeft rect so its notch tip (rect.X + pointWidth) aligns with the branch point tip (branchRect.Right), cancelling the inter-label margin.
             double remoteX = Math.Max(0, _localLabel.CapsuleBounds.Right - PointWidth + RefLabelHighlightWidth);
             double remainingWidth = Math.Max(0, finalSize.Width - remoteX);
             _remoteLabel.Arrange(new Rect(
@@ -343,29 +262,6 @@ internal static class RevisionGridRefRenderer
         }
     }
 
-    private static Dictionary<string, IGitRef> BuildTrackedRemoteMap(IReadOnlyList<IGitRef> refs)
-    {
-        IReadOnlyList<IGitRef> localBranches = [.. refs.Where(gitRef => gitRef.IsHead)];
-        Dictionary<string, IGitRef> remoteByLocal = [];
-
-        foreach (IGitRef remote in refs.Where(gitRef => gitRef.IsRemote))
-        {
-            foreach (IGitRef local in localBranches)
-            {
-                if (local.IsTrackingRemote(remote))
-                {
-                    if (!remoteByLocal.TryAdd(local.LocalName, remote))
-                    {
-                        throw new InvalidOperationException(
-                            $"Multiple remote refs claim they are tracked by local branch '{local.LocalName}'.");
-                    }
-                }
-            }
-        }
-
-        return remoteByLocal;
-    }
-
     internal static RefLabelControl CreateLabel(
         IGitRef gitRef,
         string label,
@@ -375,10 +271,11 @@ internal static class RevisionGridRefRenderer
         bool dashed = false,
         FontWeight? fontWeight = null,
         string? highlightedLabel = null,
-        RefLabelIcon? icon = null)
+        RefLabelIcon? icon = null,
+        bool isSuperprojectOnly = false)
     {
         RefLabelControl control = new(
-            gitRef,
+            isSuperprojectOnly ? null : gitRef,
             label,
             GetBrushResourceKey(gitRef),
             icon is { } explicitIcon
@@ -393,7 +290,7 @@ internal static class RevisionGridRefRenderer
             shape,
             fill,
             dashed,
-            GetRemoteRefBrush(gitRef),
+            isSuperprojectOnly ? null : GetRemoteRefBrush(gitRef),
             highlightedLabel)
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -533,51 +430,6 @@ internal static class RevisionGridRefRenderer
         }
 
         return "GitExtensionsOtherRefBrush";
-    }
-
-    private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
-    {
-        List<IGitRef> sortedRefs = [.. refs];
-        sortedRefs.Sort(CompareRefs);
-        return sortedRefs;
-
-        static int CompareRefs(IGitRef left, IGitRef right)
-        {
-            int result = GetRank(left).CompareTo(GetRank(right));
-            return result == 0
-                ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
-                : result;
-        }
-
-        static int GetRank(IGitRef gitRef)
-        {
-            if (gitRef.IsBisect)
-            {
-                return 0;
-            }
-
-            if (gitRef.IsSelected)
-            {
-                return 1;
-            }
-
-            if (gitRef.IsSelectedHeadMergeSource)
-            {
-                return 2;
-            }
-
-            if (gitRef.IsHead)
-            {
-                return 3;
-            }
-
-            if (gitRef.IsRemote)
-            {
-                return 4;
-            }
-
-            return 5;
-        }
     }
 
     private static StreamGeometry CreatePath(Action<StreamGeometryContext> draw)

@@ -141,16 +141,16 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         return ColumnLeftMargin + Math.Max(lanesWidth, (int)Column.MinimumWidth);
     }
 
-    public bool TryGetToolTip(GitRevision revision, double x, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        if (x < 0
+        if (x is null or < 0
             || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
         {
             toolTip = null;
             return false;
         }
 
-        int lane = (int)(x / GraphRenderer.LaneWidth);
+        int lane = (int)(x.Value / GraphRenderer.LaneWidth);
         toolTip = _laneInfoProvider.GetLaneInfo(rowIndex, lane);
         return !string.IsNullOrEmpty(toolTip);
     }

@@ -45,7 +45,7 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
         ((TextBlock)control).Text = revision.IsArtificial ? string.Empty : revision.Author ?? string.Empty;
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(double? x, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (revision.IsArtificial)
         {

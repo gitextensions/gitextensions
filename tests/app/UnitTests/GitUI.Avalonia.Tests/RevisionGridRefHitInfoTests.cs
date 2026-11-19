@@ -247,13 +247,7 @@ public sealed class RevisionGridRefHitInfoTests
         IGitRef local = CreateRef(module, objectId, "long-local-branch-name-for-source-clipping", isRemote: false);
         IGitRef remote = CreateRef(module, objectId, "origin/main", isRemote: true);
         local.IsTrackingRemote(remote).Returns(true);
-        Control pair = RevisionGridRefRenderer.CreateLabels(
-            [local, remote],
-            showTags: true,
-            showRemoteBranches: true,
-            fill: false,
-            getVirtualRef: null,
-            superprojectRefs: null).Single();
+        Control pair = RevisionRefLabelFixture.Render([local, remote]).Single();
         pair.VerticalAlignment = VerticalAlignment.Center;
         Window window = new() { Width = 1000, Height = 100, Content = pair };
         window.Show();

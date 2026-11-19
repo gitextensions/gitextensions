@@ -218,12 +218,12 @@ public sealed class RevisionGridColumnProviderTests
         NotesColumnProvider.FirstLine(revision.Notes).Should().Be("First note");
         RevisionGridControl grid = new();
         AuthorNameColumnProvider authorProvider = new(grid, new AuthorRevisionHighlighting());
-        authorProvider.TryGetToolTip(revision, out string? authorToolTip).Should().BeTrue();
+        authorProvider.TryGetToolTip(x: null, revision, out string? authorToolTip).Should().BeTrue();
         authorToolTip.Should().Contain("Author <author@example.com>");
         authorToolTip.Should().Contain("Committer <committer@example.com>");
 
         CommitIdColumnProvider idProvider = new(grid);
-        idProvider.TryGetToolTip(revision, out string? idToolTip).Should().BeTrue();
+        idProvider.TryGetToolTip(x: null, revision, out string? idToolTip).Should().BeTrue();
         idToolTip.Should().Be(revision.Guid);
         TextBlock idCell = (TextBlock)idProvider.CreateCell();
         idProvider.Column.Width = new GridLength(55);
@@ -391,64 +391,6 @@ public sealed class RevisionGridColumnProviderTests
             AppSettings.ShowTags = originalShowTags;
             AppSettings.RevisionGraphDrawNonRelativesGray = originalDrawNonRelativesGray;
         }
-    }
-
-    [AvaloniaTest]
-    public void Message_provider_should_render_superproject_checkout_and_additional_refs()
-    {
-        GitRevision revision = CreateRevision();
-        IGitModule module = Substitute.For<IGitModule>();
-        IGitRef superprojectRef = CreateRef(
-            module,
-            revision.ObjectId,
-            "release",
-            "refs/heads/release");
-        IGitRef existingRef = CreateRef(
-            module,
-            revision.ObjectId,
-            "main",
-            "refs/heads/main",
-            isHead: true);
-        revision.Refs = [existingRef];
-        SuperProjectInfo superProjectInfo = new()
-        {
-            CurrentCommit = revision.ObjectId,
-            Refs = new Dictionary<ObjectId, IReadOnlyList<IGitRef>>
-            {
-                [revision.ObjectId] = [existingRef, superprojectRef],
-            },
-        };
-
-        RevisionGridRefRenderer.RefLabelControl[] labels =
-        [
-            .. DrawSuperproject("DrawSuperprojectInfo"),
-            .. DrawSuperproject("DrawSuperprojectRefs"),
-        ];
-
-        labels.Should().HaveCount(2);
-        labels[0].Icon.Should().Be(RefLabelIcon.Head);
-        labels[0].Label.Should().BeEmpty();
-        labels[1].Label.Should().Be("release");
-        labels[1].IsDashed.Should().BeTrue();
-
-        RevisionGridRefRenderer.RefLabelControl existingLabel = RevisionGridRefRenderer.CreateLabels(
-                revision.Refs,
-                showTags: true,
-                showRemoteBranches: true,
-                fill: false,
-                getVirtualRef: null,
-                superprojectRefs: new HashSet<string>(StringComparer.Ordinal) { existingRef.CompleteName })
-            .Should().ContainSingle()
-            .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
-        existingLabel.IsDashed.Should().BeTrue();
-
-        return;
-
-        IEnumerable<RevisionGridRefRenderer.RefLabelControl> DrawSuperproject(string methodName)
-            => ((IReadOnlyList<Control>)typeof(MessageColumnProvider)
-                .GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic)!
-                .Invoke(null, [revision, superProjectInfo])!)
-                .Cast<RevisionGridRefRenderer.RefLabelControl>();
     }
 
     [AvaloniaTest]
@@ -789,6 +731,7 @@ public sealed class RevisionGridColumnProviderTests
             => Stages.Add("paint");
 
         public override bool TryGetToolTip(
+            double? x,
             GitRevision revision,
             [NotNullWhen(returnValue: true)] out string? toolTip)
         {

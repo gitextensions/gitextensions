@@ -330,7 +330,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         }
     }
 
-    // Avalonia's shared branch-cache service notifies the retained list after asynchronous refreshes.
+    // The retained list subscribes to persisted history changes while attached.
     public void Initialize(IRepositoryHistoryUIService? repositoryHistoryUIService)
     {
         if (_repositoryHistoryUIService is not null && _isSubscribed)

@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System.Collections.Frozen;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -8,7 +9,6 @@ using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Blame;
 using GitUI.Editor;
-using GitUI.UserControls.RevisionGrid;
 using NSubstitute;
 using DrawingColor = System.Drawing.Color;
 
@@ -100,13 +100,7 @@ public sealed class ContentColorGoldenImageTests
             Orientation = Orientation.Horizontal,
             Spacing = 4,
         };
-        panel.Children.AddRange(RevisionGridRefRenderer.CreateLabels(
-            refs,
-            showTags: true,
-            showRemoteBranches: true,
-            fill: false,
-            getVirtualRef: null,
-            superprojectRefs: null));
+        panel.Children.AddRange(RevisionRefLabelFixture.Render(refs));
         return panel;
     }
 
@@ -123,6 +117,10 @@ public sealed class ContentColorGoldenImageTests
         string trackingRemote = "")
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetRemoteColors().Returns(FrozenDictionary<string, System.Drawing.Color>.Empty);
+        module.GetAllLocalSettings().Returns([]);
+        gitRef.Module.Returns(module);
         gitRef.Name.Returns(name);
         gitRef.IsHead.Returns(isHead);
         gitRef.IsRemote.Returns(isRemote);
