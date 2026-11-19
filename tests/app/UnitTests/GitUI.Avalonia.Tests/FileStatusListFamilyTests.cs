@@ -1,6 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -104,13 +107,14 @@ public sealed class FileStatusListFamilyTests
         service.DiffListSorting.Returns(DiffListSortType.FilePath);
         SortDiffListContextMenuItem menu = new(service);
         SortDiffListContextMenuItem.TestAccessor accessor = menu.GetTestAccessor();
+        MenuItem[] items = [.. menu.Items.OfType<MenuItem>()];
 
-        accessor.Items.Should().HaveCount(6);
-        accessor.Items.Single(item => Equals(item.Tag, DiffListSortType.FilePath)).IsChecked.Should().BeTrue();
+        items.Should().HaveCount(6);
+        items.Single(item => Equals(item.Tag, DiffListSortType.FilePath)).IsChecked.Should().BeTrue();
 
         service.DiffListSorting.Returns(DiffListSortType.FileStatusFlat);
         accessor.RaiseDropDownOpening();
-        accessor.Items.Single(item => Equals(item.Tag, DiffListSortType.FileStatusFlat)).IsChecked.Should().BeTrue();
+        items.Single(item => Equals(item.Tag, DiffListSortType.FileStatusFlat)).IsChecked.Should().BeTrue();
     }
 
     [Test]
@@ -473,6 +477,129 @@ public sealed class FileStatusListFamilyTests
         }
         finally
         {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_select_the_exact_status_when_two_revisions_touch_the_same_path()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        FileStatusList control = new() { GroupByRevision = true };
+        Window window = new() { Width = 620, Height = 350, Content = control };
+        window.Show();
+        try
+        {
+            GitRevision first = new(ObjectId.Random());
+            GitRevision second = new(ObjectId.Random());
+            GitItemStatus modified = new("same.cs") { IsChanged = true, IsTracked = true };
+            GitItemStatus deleted = new("same.cs") { IsDeleted = true, IsTracked = true };
+            control.SetDiffs(
+                [
+                    new FileStatusWithDescription(null, first, "first", [modified]),
+                    new FileStatusWithDescription(first, second, "second", [deleted]),
+                ],
+                isFileTreeMode: false);
+
+            control.SelectedGitItem = deleted;
+            control.SelectedGitItem.Should().BeSameAs(deleted);
+            control.SelectedItem!.SecondRevision.Should().BeSameAs(second);
+
+            control.SelectedGitItem = new GitItemStatus("same.cs");
+            control.SelectedGitItem.Should().BeSameAs(modified);
+
+            control.SelectedGitItem = new GitItemStatus("missing.cs");
+            control.HasSelection.Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_publish_a_single_selected_item_only_when_exactly_one_file_is_selected()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        RevisionDiffControl diff = new();
+        FileStatusList files = diff.FindControl<FileStatusList>("DiffFiles")!;
+        Window window = new() { Width = 790, Height = 410, Content = diff };
+        window.Show();
+        try
+        {
+            GitItemStatus first = new("first.cs") { IsChanged = true, IsTracked = true };
+            GitItemStatus second = new("second.cs") { IsChanged = true, IsTracked = true };
+            files.SetDiffs(null, new GitRevision(ObjectId.Random()), [first, second]);
+
+            files.SetSelectionFilter(@"\.cs$").Should().Be(2);
+            files.SelectedGitItems.Should().BeEquivalentTo(new[] { first, second });
+            files.SelectedGitItem.Should().BeNull();
+            files.SelectedItem.Should().BeNull();
+
+            files.SetSelectionFilter(@"^first\.cs$").Should().Be(1);
+            files.SelectedGitItem.Should().BeSameAs(first);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_sort_submenu_should_render_the_original_captions_and_mnemonics()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        FileStatusList control = new() { GroupByRevision = false };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId),
+            [new GitItemStatus("tracked.cs") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree }]);
+        ListBox list = control.FindControl<ListBox>("lstFiles")!;
+        ContextMenu menu = list.ContextMenu!;
+        Window window = new() { Width = 640, Height = 400, Content = control };
+        window.Show();
+        try
+        {
+            window.UpdateLayout();
+            ListBoxItem row = (ListBoxItem)list.ContainerFromIndex(0)!;
+            Point point = row.TranslatePoint(
+                new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), window)
+                ?? throw new InvalidOperationException("The actual file row must belong to the test window.");
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            SortDiffListContextMenuItem sort = menu.Items.OfType<SortDiffListContextMenuItem>().Single();
+            sort.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            (string Caption, string Key)[] expected =
+            [
+                ("File path - tree", "P"),
+                ("File path - flat", "F"),
+                ("File extension - tree", "E"),
+                ("File extension - flat", "X"),
+                ("File status - tree", "S"),
+                ("File status - flat", "T"),
+            ];
+            MenuItem[] items = [.. sort.Items.OfType<MenuItem>()];
+            items.Should().HaveCount(expected.Length);
+            for (int i = 0; i < items.Length; i++)
+            {
+                TopLevel.GetTopLevel(items[i]).Should().NotBeNull("the sort item belongs to the open submenu");
+                AccessText text = items[i].GetVisualDescendants().OfType<AccessText>().Single();
+                text.Measure(Size.Infinity);
+                string renderedCaption = string.Concat(text.TextLayout.TextLines.SelectMany(line => line.TextRuns)
+                    .OfType<global::Avalonia.Media.TextFormatting.ShapedTextRun>().Select(run => run.Text.ToString()));
+                renderedCaption.Should().Be(expected[i].Caption);
+                (text.AccessKey ?? string.Empty).ToUpperInvariant().Should().Be(expected[i].Key);
+            }
+        }
+        finally
+        {
+            menu.Close();
             window.Close();
             DiffListSortService.Instance.DiffListSorting = originalSort;
         }

@@ -48,7 +48,8 @@ public class SortDiffListContextMenuItem : MenuItem
         static MenuItem CreateItem(string text, DiffListSortType sortType)
             => new()
             {
-                Header = text,
+                // Avalonia uses underscores for access keys.
+                Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(text),
                 Tag = sortType,
                 ToggleType = MenuItemToggleType.Radio,
             };
@@ -86,7 +87,5 @@ public class SortDiffListContextMenuItem : MenuItem
 
         public void RaiseDropDownOpening()
             => _contextMenuItem.RequerySortingMethod();
-
-        public IReadOnlyList<MenuItem> Items => _contextMenuItem.AllItems();
     }
 }

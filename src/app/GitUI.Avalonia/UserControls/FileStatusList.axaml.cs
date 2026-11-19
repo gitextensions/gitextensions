@@ -44,7 +44,6 @@ public partial class FileStatusList : GitModuleControl
     private IReadOnlyList<GitItemStatus> _gitItemStatuses = [];
     private Action? _refreshAction;
     private IGitUICommands? _boundCommands;
-    private bool _suppressSelectionChanged;
     private bool _hasKeyboardFocus;
     private PointerPressedEventArgs? _dragPointerPressedEventArgs;
     public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
@@ -60,6 +59,7 @@ public partial class FileStatusList : GitModuleControl
     private readonly CancellationTokenSequence _reloadSequence = new();
     private readonly Separator _sortBySeparator = new();
     private GitItemStatus? _nextItemToSelect;
+    private bool _enableSelectedIndexChangeEvent = true;
     private bool _isFileTreeMode;
     private bool _mouseEntered;
     private Rectangle _dragBoxFromMouseDown;
@@ -393,11 +393,7 @@ public partial class FileStatusList : GitModuleControl
                 return false;
             }
 
-            _suppressSelectionChanged = !notify;
-            ExpandAncestors(diffNode);
-            tvDiffFiles.SelectedItem = diffNode;
-            _suppressSelectionChanged = false;
-            tvDiffFiles.ScrollIntoView(diffNode);
+            SetSelectedItem(diffNode, notify);
             return true;
         }
 
@@ -410,10 +406,7 @@ public partial class FileStatusList : GitModuleControl
                 return false;
             }
 
-            _suppressSelectionChanged = !notify;
-            lstFiles.SelectedItem = item;
-            _suppressSelectionChanged = false;
-            lstFiles.ScrollIntoView(item);
+            SetSelectedItem(item, notify);
             return true;
         }
 
@@ -425,10 +418,7 @@ public partial class FileStatusList : GitModuleControl
             return false;
         }
 
-        _suppressSelectionChanged = !notify;
-        ExpandAncestors(node);
-        tvFiles.SelectedItem = node;
-        _suppressSelectionChanged = false;
+        SetSelectedItem(node, notify);
         return true;
     }
 
@@ -625,13 +615,51 @@ public partial class FileStatusList : GitModuleControl
         get => SelectedItem?.Item;
         set
         {
-            if (value is null)
+            object? itemToBeSelected = GetItemByStatus(value);
+            if (itemToBeSelected is null)
             {
                 ClearSelected();
-                return;
+            }
+            else
+            {
+                SetSelectedItem(itemToBeSelected, notify: true);
             }
 
-            SelectFileOrFolder(RelativePath.From(value.Name));
+            return;
+
+            object? GetItemByStatus(GitItemStatus? status)
+            {
+                if (status is null)
+                {
+                    return null;
+                }
+
+                IEnumerable<object> items = _isFileTreeMode
+                    ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten)
+                    : ShowDiffTree
+                        ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)
+                        : lstFiles.Items.Cast<object>();
+                object? newSelected = null;
+                foreach (object node in items)
+                {
+                    if (GetGitItemStatus(node) is not GitItemStatus item)
+                    {
+                        continue;
+                    }
+
+                    if (item == status)
+                    {
+                        return node;
+                    }
+
+                    if (status.CompareName(item) == 0 && newSelected is null)
+                    {
+                        newSelected = node;
+                    }
+                }
+
+                return newSelected;
+            }
         }
     }
 
@@ -657,11 +685,16 @@ public partial class FileStatusList : GitModuleControl
     /// <summary>
     ///  Gets the selected file status item, or <see langword="null"/>.
     /// </summary>
-    public FileStatusItem? SelectedItem => _isFileTreeMode
-        ? (tvFiles.SelectedItem as FileTreeNode)?.Item
-        : ShowDiffTree
-            ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
-            : GetFileStatusItem(lstFiles.SelectedItem);
+    public FileStatusItem? SelectedItem
+    {
+        get
+        {
+            IList? selectedItems = _isFileTreeMode ? tvFiles.SelectedItems
+                : ShowDiffTree ? tvDiffFiles.SelectedItems
+                : lstFiles.SelectedItems;
+            return selectedItems is { Count: 1 } ? GetFileStatusItem(selectedItems[0]) : null;
+        }
+    }
 
     /// <summary>
     ///  Gets all selected revision-aware items.
@@ -1019,6 +1052,44 @@ public partial class FileStatusList : GitModuleControl
 
     public void SetNoFilesText(string text)
         => NoFiles.Text = text;
+
+    // Framework constraint: separate native presenters own the selected tree node or flat-list item.
+    private void SetSelectedItem(object node, bool notify)
+    {
+        _enableSelectedIndexChangeEvent = notify;
+        try
+        {
+            switch (node)
+            {
+                case DiffTreeNode diffNode:
+                    ExpandAncestors(diffNode);
+                    tvDiffFiles.SelectedItem = diffNode;
+                    break;
+
+                case FileTreeNode fileNode:
+                    ExpandAncestors(fileNode);
+                    tvFiles.SelectedItem = fileNode;
+                    break;
+
+                default:
+                    lstFiles.SelectedItem = node;
+                    break;
+            }
+        }
+        finally
+        {
+            _enableSelectedIndexChangeEvent = true;
+        }
+
+        if (node is DiffTreeNode selectedDiff)
+        {
+            tvDiffFiles.ScrollIntoView(selectedDiff);
+        }
+        else if (node is not FileTreeNode)
+        {
+            lstFiles.ScrollIntoView(node);
+        }
+    }
 
     public int SetSelectionFilter(string selectionFilter)
     {
@@ -2029,7 +2100,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void RaiseSelectedIndexChanged()
     {
-        if (!_suppressSelectionChanged)
+        if (_enableSelectedIndexChangeEvent)
         {
             _selectedIndexChangeTimer.Stop();
             _selectedIndexChangeTimer.Start();
@@ -2127,7 +2198,7 @@ public partial class FileStatusList : GitModuleControl
                 : tvDiffFiles.IsVisible ? tvDiffFiles.SelectedItems
                 : lstFiles.SelectedItems;
             previouslySelectedItems = selectedItems is null ? []
-                : [.. selectedItems.Cast<object>().Select(GetSelectedStatus).OfType<GitItemStatus>()];
+                : [.. selectedItems.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>()];
         }
 
         FileStatusItem? selectedFileStatus = SelectedFileStatusItem;
@@ -2219,14 +2290,6 @@ public partial class FileStatusList : GitModuleControl
         DataSourceChanged?.Invoke(this, EventArgs.Empty);
         FilterChanged?.Invoke(this, EventArgs.Empty);
         return _gitItemFilteredStatuses.Count;
-
-        static GitItemStatus? GetSelectedStatus(object item)
-            => item switch
-            {
-                DiffTreeNode node => node.Item?.Item,
-                FileTreeNode node => node.Item?.Item,
-                _ => GetGitItemStatus(item),
-            };
     }
 
     private bool SelectFileStatusItem(FileStatusItem item, bool notify)
@@ -2241,11 +2304,7 @@ public partial class FileStatusList : GitModuleControl
                 return false;
             }
 
-            _suppressSelectionChanged = !notify;
-            ExpandAncestors(node);
-            tvDiffFiles.SelectedItem = node;
-            _suppressSelectionChanged = false;
-            tvDiffFiles.ScrollIntoView(node);
+            SetSelectedItem(node, notify);
             return true;
         }
 
@@ -2259,10 +2318,7 @@ public partial class FileStatusList : GitModuleControl
                 return false;
             }
 
-            _suppressSelectionChanged = !notify;
-            ExpandAncestors(node);
-            tvFiles.SelectedItem = node;
-            _suppressSelectionChanged = false;
+            SetSelectedItem(node, notify);
             return true;
         }
 
@@ -2273,10 +2329,7 @@ public partial class FileStatusList : GitModuleControl
             return false;
         }
 
-        _suppressSelectionChanged = !notify;
-        lstFiles.SelectedItem = listItem;
-        _suppressSelectionChanged = false;
-        lstFiles.ScrollIntoView(listItem);
+        SetSelectedItem(listItem, notify);
         return true;
     }
 
@@ -2366,11 +2419,9 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
         internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
         internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
-        internal MenuItem OpenWithDifftoolMenuItem => _fileStatusList.tsmiOpenWithDifftool;
         internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
         internal MenuItem CopyPathsMenuItem => _fileStatusList.tsmiCopyPaths;
         internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
-        internal Separator SortBySeparator => _fileStatusList._sortBySeparator;
         internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
         internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
         internal MenuItem ResetToMenuItem => _fileStatusList.tsmiResetFileTo;
@@ -2378,22 +2429,17 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem ResetToParentMenuItem => _fileStatusList.tsmiResetFileToParent;
         internal MenuItem AddToGitIgnoreMenuItem => _fileStatusList.tsmiAddFileToGitIgnore;
         internal MenuItem AddToGitInfoExcludeMenuItem => _fileStatusList.tsmiAddFileToGitInfoExclude;
-        internal MenuItem OpenInVisualStudioMenuItem => _fileStatusList.tsmiOpenInVisualStudio;
         internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
         internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
         internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
         internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
         internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
-        internal MenuItem AssumeUnchangedMenuItem => _fileStatusList.tsmiAssumeUnchanged;
         internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
         internal ToggleButton ByPathButton => _fileStatusList.btnByPath;
-        internal ToggleButton ByExtensionButton => _fileStatusList.btnByExtension;
-        internal ToggleButton ByStatusButton => _fileStatusList.btnByStatus;
         internal Button RefreshButton => _fileStatusList.btnRefresh;
         internal Button CollapseGroupsButton => _fileStatusList.btnCollapseGroups;
         internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
         internal Separator ToolbarSeparator => _fileStatusList.sepToolbar;
-        internal IconSplitButton FindInFilesButton => _fileStatusList.btnFindInFilesGitGrep;
         internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
         internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
         internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
@@ -2826,6 +2872,8 @@ public partial class FileStatusList : GitModuleControl
         {
             FileStatusEntry entry => entry.Item,
             FileStatusItem fileStatusItem => fileStatusItem,
+            DiffTreeNode node => node.Item,
+            FileTreeNode node => node.Item,
             _ => null,
         };
 
