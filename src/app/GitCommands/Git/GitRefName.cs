@@ -120,6 +120,12 @@ public static class GitRefName
     ///  "refname is ambiguous" (issue #13458). E.g. "13435" becomes "refs/heads/13435".
     ///  Non-numeric names, commit hashes, and full ref paths are returned unchanged.
     /// </summary>
+    /// <remarks>
+    ///  Unlike <see cref="GetFullBranchName" />, this qualifies only purely numeric names.
+    ///  The merge/rebase branch argument can also be a remote-tracking branch (e.g.
+    ///  "origin/main") or a tag (e.g. "v1.0"); qualifying those to "refs/heads/..."
+    ///  produces a ref git rejects, so they must be left unchanged.
+    /// </remarks>
     [Pure]
     [return: NotNullIfNotNull(nameof(branchName))]
     public static string? ToBranchRef(string? branchName)
