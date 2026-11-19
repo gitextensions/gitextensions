@@ -49,7 +49,17 @@ partial class RepoObjectsTree
 
     private void ReorderTreeNode(TreeNode node, bool up)
     {
-        Tree? tree = (Tree?)node.Tag;
+        // The Bisect tree is always the first one and cannot be moved, nor can another tree be moved above it.
+        if (node.Tag is not Tree tree || tree is BisectTree)
+        {
+            return;
+        }
+
+        if (up && node.PrevNode?.Tag is BisectTree)
+        {
+            return;
+        }
+
         Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
         Dictionary<int, Tree> indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 

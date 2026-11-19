@@ -26,7 +26,7 @@ internal sealed class BisectNode : BaseRevisionNode
     /// <summary>
     ///  Shortens the commit hash in the ref name, e.g. "good-0123456789abcdef..." to "good-01234567".
     /// </summary>
-    internal static string GetDisplayName(string name, ObjectId objectId)
+    private static string GetDisplayName(string name, ObjectId objectId)
     {
         string hash = objectId.ToString();
         return name.EndsWith($"-{hash}", StringComparison.Ordinal)

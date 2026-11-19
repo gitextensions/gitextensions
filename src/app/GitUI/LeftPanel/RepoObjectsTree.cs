@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Reflection;
 using GitCommands;
@@ -487,28 +487,36 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// </summary>
     private void RefreshBisectTree(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
+        // Not created until the UICommandsSource is set.
+        BisectTree? bisectTree = _bisectTree;
+        if (bisectTree is null)
+        {
+            return;
+        }
+
         CancellationToken cancellationToken = _bisectCancellationTokenSequence.Next();
+        IGitModule module = Module;
 
         ThreadHelper.FileAndForget(async () =>
         {
-            await TaskScheduler.Default;
-            bool isBisecting = Module.IsValidGitWorkingDir() && BisectTree.IsBisecting(getRefs(RefsFilter.NoFilter));
+            IReadOnlyList<IGitRef> refs = module.IsValidGitWorkingDir() ? getRefs(RefsFilter.NoFilter) : [];
+            bool isBisecting = BisectTree.IsBisecting(refs);
 
             await treeMain.SwitchToMainThreadAsync(cancellationToken);
 
-            bool isShown = _rootNodes.Contains(_bisectTree);
+            bool isShown = _rootNodes.Contains(bisectTree);
             if (isBisecting)
             {
                 if (!isShown)
                 {
-                    AddTree(_bisectTree);
+                    AddTree(bisectTree);
                 }
 
-                _bisectTree.Refresh(getRefs);
+                bisectTree.Refresh(refs);
             }
             else if (isShown)
             {
-                RemoveTree(_bisectTree);
+                RemoveTree(bisectTree);
             }
         });
     }
@@ -771,6 +779,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         public ContextMenuStrip ContextMenu => _repoObjectsTree.menuMain;
         public NativeTreeView TreeView => _repoObjectsTree.treeMain;
+        public Tree BisectTree => _repoObjectsTree._bisectTree;
+
+        public void AddTree(Tree tree) => _repoObjectsTree.AddTree(tree);
+
+        public void SelectTree(Tree tree)
+        {
+            TreeView.SelectedNode = tree.TreeViewNode;
+            _repoObjectsTree.SelectNode(tree, multiple: false, includingDescendants: false);
+        }
 
         public void OpenContextMenu()
         {
