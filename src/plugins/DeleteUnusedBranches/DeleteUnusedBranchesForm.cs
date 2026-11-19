@@ -203,6 +203,8 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         ThreadHelper.FileAndForget(async () =>
         {
+            List<string> failedSessionRefs = [];
+
             try
             {
                 foreach (Branch remoteBranch in remoteBranches)
@@ -231,7 +233,12 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
                 foreach (Branch sessionRef in sessionRefs)
                 {
-                    _gitCommands.GitExecutable.GetOutput(SessionRefs.GetDeleteRefArgs(sessionRef.Name));
+                    // Delete session refs one by one without throwing on a non-zero exit, so a missing or protected ref does not block the remaining ones
+                    ExecutionResult result = _gitCommands.GitExecutable.Execute(SessionRefs.GetDeleteRefArgs(sessionRef.Name), throwOnErrorExit: false);
+                    if (result is { ExitedSuccessfully: false })
+                    {
+                        failedSessionRefs.Add($"{sessionRef.Name}: {result.StandardError.Trim()}");
+                    }
                 }
             }
             catch (Exception ex)
@@ -247,6 +254,11 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
             SetWorkingState(isWorking: false);
             await RefreshObsoleteBranchesAsync().ConfigureAwait(false);
+
+            if (failedSessionRefs.Count > 0)
+            {
+                MessageBoxes.ShowError(this, string.Join(Environment.NewLine, failedSessionRefs), _deleteCaption.Text);
+            }
         });
     }
 
