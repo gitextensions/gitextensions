@@ -18,7 +18,7 @@
            Padding="0"
            Content="_Directory:"
            Target="{Binding #_NO_TRANSLATE_Directory}" />
-    <ComboBox x:Name="_NO_TRANSLATE_Directory"
+    <compat:DirectoryComboBox x:Name="_NO_TRANSLATE_Directory"
               Grid.Row="1" Grid.Column="1"
               Margin="0,2,0,0"
               HorizontalAlignment="Stretch"

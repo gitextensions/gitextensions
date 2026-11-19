@@ -1,9 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Input.Raw;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -242,6 +246,81 @@ public sealed class HelpInfoDialogsTests
         finally
         {
             form.Close();
+            TestDirectory.Delete(temporary.FullName);
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormOpenDirectory_should_offer_filesystem_suggestions_without_replacing_recent_history()
+    {
+        using AppSettingsTestScope settings = new();
+        DirectoryInfo temporary = Directory.CreateTempSubdirectory("GitExtensions.OpenDirectory-");
+        try
+        {
+            DirectoryInfo folder = temporary.CreateSubdirectory("project");
+            DirectoryInfo second = temporary.CreateSubdirectory("proposal");
+            DirectoryInfo unrelated = temporary.CreateSubdirectory("unrelated");
+            File.WriteAllText(Path.Combine(temporary.FullName, "profile.txt"), string.Empty);
+            string recent = Path.Combine(temporary.FullName, "recently-opened");
+            await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new(recent)]);
+            using FormOpenDirectory form = new(Substitute.For<IGitExecutorProvider>(), currentModule: null);
+            form.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                ComboBox directory = form.FindControl<ComboBox>("_NO_TRANSLATE_Directory")!;
+                TextBox editor = directory.GetVisualDescendants().OfType<TextBox>().Single();
+                editor.Focus().Should().BeTrue();
+                editor.SelectAll();
+                string prefix = Path.Combine(temporary.FullName, "pro");
+                form.KeyTextInput(prefix);
+
+                ListBox suggestions = await WaitForSuggestions(2);
+                suggestions.Items.Cast<string>().Should().Equal(folder.FullName, second.FullName);
+                directory.Text.Should().Be(folder.FullName);
+                (editor.SelectionStart, editor.SelectionEnd).Should().Be((prefix.Length, folder.FullName.Length));
+                directory.Items.Cast<string>().Should().Contain(recent).And.NotContain(folder.FullName);
+
+                Button goUp = form.FindControl<Button>("folderGoUpButton")!;
+                Point center = goUp.TranslatePoint(new Point(goUp.Bounds.Width / 2, goUp.Bounds.Height / 2), form)!.Value;
+                form.MouseDown(center, MouseButton.Left);
+                form.MouseUp(center, MouseButton.Left);
+
+                suggestions = await WaitForSuggestions(3);
+                suggestions.Items.Cast<string>().Should().Equal(folder.FullName, second.FullName, unrelated.FullName);
+                directory.Text.Should().Be(temporary.FullName.EnsureTrailingPathSeparator());
+                directory.Items.Cast<string>().Should().Contain(recent).And.NotContain(folder.FullName);
+
+                form.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+                form.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+                form.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+                directory.Text.Should().Be(second.FullName);
+                form.IsVisible.Should().BeTrue("accepting a suggestion keeps the Open action available");
+
+                async Task<ListBox> WaitForSuggestions(int count)
+                {
+                    for (int attempt = 0; attempt < 300; attempt++)
+                    {
+                        Dispatcher.UIThread.RunJobs();
+                        if (directory.GetLogicalDescendants().OfType<Popup>().FirstOrDefault(popup =>
+                                popup.IsOpen && ReferenceEquals(popup.PlacementTarget, editor))?.Child is ListBox list && list.ItemCount == count)
+                        {
+                            return list;
+                        }
+
+                        await Task.Delay(10);
+                    }
+
+                    throw new AssertionException("The directory editor never showed filesystem suggestions.");
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
             TestDirectory.Delete(temporary.FullName);
         }
     }

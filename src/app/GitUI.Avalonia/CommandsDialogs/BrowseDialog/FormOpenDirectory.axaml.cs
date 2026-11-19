@@ -153,10 +153,9 @@ public partial class FormOpenDirectory : GitExtensionsForm
                 return;
             }
 
-            // WinForms appended a separator through SendKeys to trigger the file-system
-            // auto-complete; Avalonia has no equivalent, so set the parent path directly.
+            // The native editor requests the filesystem suggestions after setting the parent path.
             _NO_TRANSLATE_Directory.Text = currentDirectory.Parent.FullName.EnsureTrailingPathSeparator();
-            _NO_TRANSLATE_Directory.Focus();
+            _NO_TRANSLATE_Directory.SuggestDirectories();
         }
         catch
         {
