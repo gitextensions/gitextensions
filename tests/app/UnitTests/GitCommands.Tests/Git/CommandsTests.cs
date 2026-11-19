@@ -454,6 +454,46 @@ public partial class CommandsTests
     }
 
     [Test]
+    public void MergeBranch_should_qualify_numeric_branch_name()
+    {
+        Commands.MergeBranch("13435", false, false, false, "", false, null, PathUtil.ToPosixPath, null).Arguments.Should().Be("merge --no-ff --no-edit refs/heads/13435");
+    }
+
+    [Test]
+    public void MergeBranch_should_not_qualify_non_branch_names()
+    {
+        Commands.MergeBranch("branch", false, false, false, "", false, null, PathUtil.ToPosixPath, null).Arguments.Should().Be("merge --no-ff --no-edit branch");
+        Commands.MergeBranch("origin/13435", false, false, false, "", false, null, PathUtil.ToPosixPath, null).Arguments.Should().Be("merge --no-ff --no-edit origin/13435");
+        Commands.MergeBranch("4e0f0fe3f6add43557913c354de02560b8faec32", false, false, false, "", false, null, PathUtil.ToPosixPath, null).Arguments.Should().Be("merge --no-ff --no-edit 4e0f0fe3f6add43557913c354de02560b8faec32");
+    }
+
+    [Test]
+    public void Rebase_should_qualify_numeric_branch_name()
+    {
+        Commands.RebaseOptions rebaseOptions = new()
+        {
+            BranchName = "13435",
+            From = "99999",
+            OnTo = "88888"
+        };
+
+        Commands.Rebase(rebaseOptions).Arguments.Should().Be("-c rebase.autosquash=false rebase --onto refs/heads/88888 \"refs/heads/99999\" \"refs/heads/13435\"");
+    }
+
+    [Test]
+    public void Rebase_should_not_qualify_non_branch_names()
+    {
+        Commands.RebaseOptions rebaseOptions = new()
+        {
+            BranchName = "branch",
+            From = "from",
+            OnTo = "onto"
+        };
+
+        Commands.Rebase(rebaseOptions).Arguments.Should().Be("-c rebase.autosquash=false rebase --onto onto \"from\" \"branch\"");
+    }
+
+    [Test]
     public void RemoveCmd()
     {
         // TODO file names should be quoted
