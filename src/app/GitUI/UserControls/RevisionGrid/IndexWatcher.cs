@@ -20,6 +20,7 @@ public sealed class IndexWatcher : IDisposable
     public event EventHandler<IndexChangedEventArgs>? Changed;
 
     private readonly IGitUICommandsSource _uICommandsSource;
+    private static readonly TimeSpan _captureTimeout = TimeSpan.FromSeconds(10);
     private readonly object _syncRoot = new();
     private int _generation;
     private DateTime _watchedSinceUtc;
@@ -28,6 +29,11 @@ public sealed class IndexWatcher : IDisposable
     ///  The <see cref="GetIndexContentHash"/> of the index at the last <see cref="Reset"/>, <see langword="null"/> if not (yet) known.
     /// </summary>
     private byte[]? _indexContentHashAtReset;
+
+    /// <summary>
+    ///  The task reading <see cref="_indexContentHashAtReset"/>, <see langword="null"/> if none.
+    /// </summary>
+    private Task? _indexContentHashCapture;
 
     private IGitModule Module => _uICommandsSource.UICommands.Module;
 
@@ -157,10 +163,38 @@ public sealed class IndexWatcher : IDisposable
         // e.g. after "git stash". Git Extensions runs the first status update after a refresh, i.e. after Reset(),
         // without "--no-optional-locks" to speed up the subsequent updates, so the refresh would mark the index as changed itself.
         // Ignore rewrites which do not change the entries. Other changes of the index (made concurrently or not) change the entries.
-        byte[]? hashAtReset;
+        // The first status may rewrite the index before the baseline has been read, so do not take "not yet read" for "changed".
+        // Wait for the baseline; if the capture raced with the rewrite and stored null, re-capture the now-stable index once.
+        byte[]? hashAtReset = null;
+        Task? capture;
         lock (_syncRoot)
         {
-            hashAtReset = _indexContentHashAtReset;
+            capture = _indexContentHashCapture;
+        }
+
+        for (int captureCount = 0; ; ++captureCount)
+        {
+            if (capture is null)
+            {
+                break;
+            }
+
+            // The FileSystemWatcher events run on the thread pool, so waiting here cannot deadlock the UI thread
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            capture.Wait(_captureTimeout);
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+            lock (_syncRoot)
+            {
+                hashAtReset = _indexContentHashAtReset;
+                if (hashAtReset is not null || captureCount >= 1)
+                {
+                    break;
+                }
+
+                // The capture raced with the rewrite and stored null, so re-capture the now-stable index
+                CaptureIndexContentHash();
+                capture = _indexContentHashCapture;
+            }
         }
 
         if (hashAtReset is not null && ReadIndexContentHash(e.FullPath) is byte[] hash && hash.AsSpan().SequenceEqual(hashAtReset))
@@ -209,6 +243,7 @@ public sealed class IndexWatcher : IDisposable
         {
             ++_generation;
             _indexContentHashAtReset = null;
+            _indexContentHashCapture = null;
             GitIndexWatcher.EnableRaisingEvents = false;
             RefsWatcher.EnableRaisingEvents = false;
             IndexChanged = false;
@@ -221,6 +256,7 @@ public sealed class IndexWatcher : IDisposable
     private void CaptureIndexContentHash()
     {
         _indexContentHashAtReset = null;
+        _indexContentHashCapture = null;
         if (!_enabled || _gitDirPath is null)
         {
             return;
@@ -237,7 +273,7 @@ public sealed class IndexWatcher : IDisposable
             return;
         }
 
-        ThreadHelper.FileAndForget(() =>
+        Task capture = Task.Run(() =>
         {
             byte[]? hash = ReadIndexContentHash(indexPath, stateAtReset);
             lock (_syncRoot)
@@ -248,6 +284,8 @@ public sealed class IndexWatcher : IDisposable
                 }
             }
         });
+        _indexContentHashCapture = capture;
+        capture.FileAndForget();
     }
 
     private static IndexFileState? GetIndexFileState(string indexPath)
@@ -299,7 +337,7 @@ public sealed class IndexWatcher : IDisposable
     ///  Gets a hash of the entries of the git index (https://git-scm.com/docs/index-format) without the file system data
     ///  (times, device, inode, uid, gid, file size) and without the extensions, which "git status" refreshes.
     /// </summary>
-    /// <returns>The hash or <see langword="null"/> if the data is not an index of version 2, 3 or 4 with SHA-1 object IDs.</returns>
+    /// <returns>The hash or <see langword="null"/> if the data is not a complete index of version 2, 3 or 4 with SHA-1 object IDs and a valid checksum, or if it is a split index.</returns>
     private static byte[]? GetIndexContentHash(ReadOnlySpan<byte> index)
     {
         const int headerLength = 12;
@@ -311,6 +349,9 @@ public sealed class IndexWatcher : IDisposable
         const int extendedFlagsLength = 2;
         const ushort extendedFlag = 0x4000;
         const int entryAlignment = 8;
+        const int extensionSignatureLength = 4;
+        const int extensionHeaderLength = extensionSignatureLength + 4;
+        const int checksumLength = 20;
 
         if (index.Length < headerLength || !index.StartsWith("DIRC"u8))
         {
@@ -340,6 +381,10 @@ public sealed class IndexWatcher : IDisposable
             if (version >= 3 && (flags & extendedFlag) != 0)
             {
                 nameOffset += extendedFlagsLength;
+                if (entries.Length < nameOffset)
+                {
+                    return null;
+                }
             }
 
             int entryLength;
@@ -369,6 +414,38 @@ public sealed class IndexWatcher : IDisposable
             hash.AppendData(entries.Slice(modeOffset, modeLength));
             hash.AppendData(entries[statDataLength..entryLength]);
             entries = entries[entryLength..];
+        }
+
+        // The extensions are not hashed, because "git status" refreshes them (e.g. the untracked cache), but a split index
+        // keeps the deleted and replaced entries of the shared index ("sharedindex.*") in the "link" extension.
+        // The entries cannot be compared then, so report a change. The trailing checksum must be present, which also detects a truncated index.
+        while (entries.Length > checksumLength)
+        {
+            if (entries.Length < extensionHeaderLength + checksumLength)
+            {
+                return null;
+            }
+
+            uint extensionSize = BinaryPrimitives.ReadUInt32BigEndian(entries[extensionSignatureLength..]);
+            if (entries.StartsWith("link"u8) || extensionSize > entries.Length - extensionHeaderLength - checksumLength)
+            {
+                return null;
+            }
+
+            entries = entries[(extensionHeaderLength + (int)extensionSize)..];
+        }
+
+        if (entries.Length != checksumLength)
+        {
+            return null;
+        }
+
+        // Validate the trailing SHA-1 checksum, which git uses to detect a corrupt index; a mismatch means the index is invalid
+        using IncrementalHash indexChecksum = IncrementalHash.CreateHash(HashAlgorithmName.SHA1);
+        indexChecksum.AppendData(index[..^checksumLength]);
+        if (!indexChecksum.GetHashAndReset().AsSpan().SequenceEqual(entries))
+        {
+            return null;
         }
 
         return hash.GetHashAndReset();
@@ -497,6 +574,15 @@ public sealed class IndexWatcher : IDisposable
                     }
                 },
                 timeout);
+        }
+
+        public void SimulateCaptureRacedWithRewrite()
+        {
+            lock (indexWatcher._syncRoot)
+            {
+                indexWatcher._indexContentHashAtReset = null;
+                indexWatcher._indexContentHashCapture = Task.CompletedTask;
+            }
         }
     }
 

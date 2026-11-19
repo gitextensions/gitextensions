@@ -1,4 +1,5 @@
 ﻿using System.Buffers.Binary;
+using System.Security.Cryptography;
 using System.Text;
 using CommonTestUtils;
 using GitCommands;
@@ -67,10 +68,45 @@ public sealed class IndexWatcherContentTests
         IndexWatcher.TestAccessor.GetIndexContentHash(Encoding.ASCII.GetBytes("initial")).Should().BeNull();
         IndexWatcher.TestAccessor.GetIndexContentHash(index[..30]).Should().BeNull("the entry is truncated");
         IndexWatcher.TestAccessor.GetIndexContentHash(CreateIndex(5, statData: 1, new Entry("a.txt"))).Should().BeNull("the version is unknown");
+        IndexWatcher.TestAccessor.GetIndexContentHash(index[..^1]).Should().BeNull("the checksum is truncated");
+        IndexWatcher.TestAccessor.GetIndexContentHash(CreateIndex(3, statData: 1, new Entry("a.txt", ExtendedFlags: 0x2000))[..(12 + 62)])
+            .Should().BeNull("the extended flags are truncated");
     }
 
     [Test]
-    public void Notification_of_the_index_refresh_by_git_status_should_not_mark_the_index_as_changed()
+    public void GetIndexContentHash_should_return_null_for_an_invalid_checksum()
+    {
+        byte[] index = CreateIndex(2, statData: 1, new Entry("a.txt"));
+        byte[] withCorruptedChecksum = (byte[])index.Clone();
+        withCorruptedChecksum[^1] ^= 0xFF;
+
+        IndexWatcher.TestAccessor.GetIndexContentHash(index).Should().NotBeNull();
+        IndexWatcher.TestAccessor.GetIndexContentHash(withCorruptedChecksum).Should().BeNull("the checksum does not match the content");
+    }
+
+    [Test]
+    public void GetIndexContentHash_should_skip_extensions_but_not_hash_a_split_index()
+    {
+        byte[] index = CreateIndex(2, statData: 1, new Entry("a.txt"));
+        byte[] withUntrackedCache = InsertExtension(index, "UNTR"u8.ToArray(), [1, 2, 3]);
+
+        IndexWatcher.TestAccessor.GetIndexContentHash(withUntrackedCache).Should().Equal(IndexWatcher.TestAccessor.GetIndexContentHash(index));
+        IndexWatcher.TestAccessor.GetIndexContentHash(InsertExtension(index, "link"u8.ToArray(), [])).Should().BeNull("deleted and replaced entries of the shared index are not hashed");
+        IndexWatcher.TestAccessor.GetIndexContentHash(InsertExtension(index, "UNTR"u8.ToArray(), [1, 2, 3])[..^22]).Should().BeNull("the extension is truncated");
+
+        static byte[] InsertExtension(byte[] index, byte[] signature, byte[] data)
+        {
+            byte[] size = new byte[sizeof(uint)];
+            BinaryPrimitives.WriteUInt32BigEndian(size, (uint)data.Length);
+            byte[] content = [.. index[..^20], .. signature, .. size, .. data];
+            using IncrementalHash checksum = IncrementalHash.CreateHash(HashAlgorithmName.SHA1);
+            checksum.AppendData(content);
+            return [.. content, .. checksum.GetHashAndReset()];
+        }
+    }
+
+    [Test]
+    public void Notification_of_the_index_refresh_should_not_mark_the_index_as_changed()
     {
         using GitModuleTestHelper repo = new();
         string file = repo.CreateRepoFile("a.txt", "a");
@@ -85,11 +121,11 @@ public sealed class IndexWatcherContentTests
         indexWatcher.Reset();
         accessor.WaitForIndexContentHashAtReset(TimeSpan.FromSeconds(10)).Should().BeTrue();
 
-        // Like after "git stash": the file times do not match the index, so the next "git status" refreshes and rewrites the index
+        // Like after "git stash": the file times do not match the index, so the next status refreshes and rewrites the index
         DateTime indexTimeBefore = File.GetLastWriteTimeUtc(indexPath);
         File.SetLastWriteTimeUtc(file, DateTime.UtcNow.AddHours(1));
-        repo.Module.GitExecutable.GetOutput("status");
-        File.GetLastWriteTimeUtc(indexPath).Should().NotBe(indexTimeBefore, "git status must have rewritten the index");
+        repo.Module.GitExecutable.GetOutput("update-index --refresh");
+        File.GetLastWriteTimeUtc(indexPath).Should().NotBe(indexTimeBefore, "the index refresh must have rewritten the index");
 
         accessor.RaiseIndexChanged();
         accessor.IndexChanged.Should().BeFalse();
@@ -99,6 +135,35 @@ public sealed class IndexWatcherContentTests
 
         accessor.RaiseIndexChanged();
         accessor.IndexChanged.Should().BeTrue();
+    }
+
+    [Test]
+    public void Notification_should_re_capture_the_baseline_if_the_initial_capture_raced_with_a_rewrite()
+    {
+        using GitModuleTestHelper repo = new();
+        string file = repo.CreateRepoFile("a.txt", "a");
+        repo.Module.GitExecutable.GetOutput("add a.txt");
+        repo.Module.GitExecutable.GetOutput("commit -m initial");
+        IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+        uiCommandsSource.UICommands.Module.Returns(repo.Module);
+        using IndexWatcher indexWatcher = new(uiCommandsSource);
+        IndexWatcher.TestAccessor accessor = indexWatcher.GetTestAccessor();
+        string indexPath = Path.Join(repo.Module.WorkingDirGitDir, "index");
+
+        indexWatcher.Reset();
+        accessor.WaitForIndexContentHashAtReset(TimeSpan.FromSeconds(10)).Should().BeTrue();
+
+        // Like after "git stash": the file times do not match the index, so the next status refreshes and rewrites the index
+        DateTime indexTimeBefore = File.GetLastWriteTimeUtc(indexPath);
+        File.SetLastWriteTimeUtc(file, DateTime.UtcNow.AddHours(1));
+        repo.Module.GitExecutable.GetOutput("update-index --refresh");
+        File.GetLastWriteTimeUtc(indexPath).Should().NotBe(indexTimeBefore, "the index refresh must have rewritten the index");
+
+        // Simulate the initial capture racing with the index rewrite: the baseline is null
+        accessor.SimulateCaptureRacedWithRewrite();
+
+        accessor.RaiseIndexChanged();
+        accessor.IndexChanged.Should().BeFalse("the re-captured baseline matches the index, so the self-induced rewrite is ignored");
     }
 
     private static byte[] CreateIndex(uint version, uint statData, params Entry[] entries)
@@ -145,11 +210,11 @@ public sealed class IndexWatcherContentTests
             }
         }
 
-        // The checksum (as well as extensions like the untracked cache) changes with every refresh
-        for (int i = 0; i < 5; ++i)
-        {
-            WriteUInt32(statData);
-        }
+        // Compute the trailing SHA-1 checksum of the preceding bytes, as git does
+        byte[] content = stream.ToArray();
+        using IncrementalHash checksum = IncrementalHash.CreateHash(HashAlgorithmName.SHA1);
+        checksum.AppendData(content);
+        stream.Write(checksum.GetHashAndReset());
 
         return stream.ToArray();
 
