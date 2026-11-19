@@ -4,6 +4,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -364,6 +365,117 @@ public sealed class FileStatusListFamilyTests
         accessor.SelectFirstTreeLeaf();
         accessor.CollapseRootFoldersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
         accessor.FirstTreeRootExpanded.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_group_extensions_by_the_original_case_sensitive_key()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 670, Height = 390, Content = control };
+        window.Show();
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FileExtension;
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()),
+                [
+                    new GitItemStatus("lower-a.cs") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("lower-b.cs") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("upper-a.CS") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("upper-b.CS") { IsChanged = true, IsTracked = true },
+                ]);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+            tree.IsVisible.Should().BeTrue();
+            string?[] headings = [.. tree.GetVisualDescendants().OfType<TextBlock>()
+                .Select(text => text.Text).Where(text => text is ".cs" or ".CS")];
+            string[] expected = [.. new[] { ".cs", ".CS" }.OrderBy(FileStatusList.GroupKey.From)];
+            headings.Should().Equal(expected, "the original groups and orders by GroupKey");
+            control.GitItemFilteredStatuses.Should().HaveCount(4);
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_apply_the_current_sort_when_the_view_reattaches()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 480, Height = 280, Content = control };
+        window.Show();
+        try
+        {
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()),
+                [
+                    new GitItemStatus("a/first.cs") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("b/second.md") { IsChanged = true, IsTracked = true },
+                ]);
+            Dispatcher.UIThread.RunJobs();
+            TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+            ListBox list = control.FindControl<ListBox>("lstFiles")!;
+            tree.IsVisible.Should().BeFalse();
+            list.IsVisible.Should().BeTrue();
+
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            window.Content = control;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            tree.IsVisible.Should().BeTrue("the original sorting subscription starts with the current sort");
+            list.IsVisible.Should().BeFalse();
+            control.GitItemFilteredStatuses.Should().HaveCount(2);
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_keep_all_selected_files_when_the_diff_list_is_resorted_or_filtered()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+        RevisionDiffControl diff = new();
+        FileStatusList files = diff.FindControl<FileStatusList>("DiffFiles")!;
+        Window window = new() { Width = 790, Height = 410, Content = diff };
+        window.Show();
+        try
+        {
+            files.SetDiffs(null, new GitRevision(ObjectId.Random()),
+                [
+                    new GitItemStatus("first.cs") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("other.md") { IsChanged = true, IsTracked = true },
+                    new GitItemStatus("second.cs") { IsChanged = true, IsTracked = true },
+                ]);
+            string[] selected = ["first.cs", "second.cs"];
+            files.SetSelectionFilter(@"\.cs$").Should().Be(2);
+            files.SelectedGitItems.Select(item => item.Name).Should().BeEquivalentTo(selected);
+
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FileExtension;
+            files.SelectedGitItems.Select(item => item.Name).Should().BeEquivalentTo(selected, "the original keeps every selected file when rebuilding the sorted tree");
+
+            files.SetFilter(@"\.cs$");
+            files.GitItemFilteredStatuses.Select(item => item.Name).Should().BeEquivalentTo(selected);
+            files.SelectedGitItems.Select(item => item.Name).Should().BeEquivalentTo(selected, "the original keeps every selected file which still matches the filter");
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
     }
 
     [AvaloniaTest]
