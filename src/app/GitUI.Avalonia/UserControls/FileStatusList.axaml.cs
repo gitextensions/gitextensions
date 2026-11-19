@@ -8,6 +8,7 @@ using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -115,7 +116,18 @@ public partial class FileStatusList : GitModuleControl
     public FileStatusList()
     {
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
-        _fullPathResolver = new FullPathResolver(() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : string.Empty);
+        _fullPathResolver = new FullPathResolver(() =>
+        {
+            if (TryGetUICommandsDirect(out IGitUICommands? commands))
+            {
+                return commands.Module.WorkingDir;
+            }
+
+            // Avalonia also creates detached file lists for the previewer.
+            return this.GetLogicalAncestors().Any(ancestor => ancestor is IGitUICommandsSource)
+                ? Module.WorkingDir
+                : string.Empty;
+        });
         _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
         _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
         InitializeComponent();
@@ -179,9 +191,14 @@ public partial class FileStatusList : GitModuleControl
         KeyDown += FileStatusListView_KeyDown;
         GotFocus += FileStatusList_Enter;
         LostFocus += FileStatusList_LostFocus;
-        PointerPressed += FileStatusListView_MouseDown;
-        PointerMoved += FileStatusListView_MouseMove;
-        PointerReleased += FileStatusListView_MouseUp;
+        Control[] fileStatusListViews = [lstFiles, tvDiffFiles, tvFiles];
+        foreach (Control fileStatusListView in fileStatusListViews)
+        {
+            fileStatusListView.AddHandler(PointerPressedEvent, FileStatusListView_MouseDown, RoutingStrategies.Bubble, handledEventsToo: true);
+            fileStatusListView.AddHandler(PointerMovedEvent, FileStatusListView_MouseMove, RoutingStrategies.Bubble, handledEventsToo: true);
+            fileStatusListView.AddHandler(PointerReleasedEvent, FileStatusListView_MouseUp, RoutingStrategies.Bubble, handledEventsToo: true);
+        }
+
         WireToolbar();
         WireContextMenu();
         WinFormsAutoSizeTextBlock.Attach(NoFiles, includePadding: true);
@@ -1810,7 +1827,7 @@ public partial class FileStatusList : GitModuleControl
         PointerPoint point = e.GetCurrentPoint(this);
 
         // SELECT
-        if (point.Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+        if (!e.Handled && point.Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
         {
             Avalonia.Visual? source = e.Source as Avalonia.Visual;
             if (source?.FindAncestorOfType<TreeViewItem>(includeSelf: true) is { DataContext: object treeItem })
@@ -2494,10 +2511,6 @@ public partial class FileStatusList : GitModuleControl
         internal ComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
         internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
         internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
-        internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
-        internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
-        internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
-        internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
 
         internal bool UpdateContextMenu()
         {
@@ -2505,14 +2518,6 @@ public partial class FileStatusList : GitModuleControl
             _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
             return eventArgs.Cancel;
         }
-
-        internal bool FirstTreeRootExpanded => ((FileTreeNode)_fileStatusList.tvFiles.Items[0]!).IsExpanded;
-
-        internal void SelectFirstTreeRoot()
-            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items[0];
-
-        internal void SelectFirstTreeLeaf()
-            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
 
         internal void SetSort(DiffListSortType sortType)
         {
@@ -2522,12 +2527,6 @@ public partial class FileStatusList : GitModuleControl
 
         internal void UpdateToolbar()
             => _fileStatusList.UpdateToolbar();
-
-        internal void OpenSettingsMenu()
-            => _fileStatusList.Settings_DropDownOpening(_fileStatusList.btnSettings, EventArgs.Empty);
-
-        internal void EnableShowDiffForAllParents()
-            => _fileStatusList._enableDisablingShowDiffForAllParents = true;
 
         internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
         {

@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Platform;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
@@ -1236,6 +1239,67 @@ public sealed class FormCommitTests
         {
             form.Close();
             await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(DiffListSortType.FilePath)]
+    [TestCase(DiffListSortType.FilePathFlat)]
+    public async Task FormCommit_should_start_file_drag_only_from_the_file_presenter(DiffListSortType sort)
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        IStorageProvider storage = Substitute.For<IStorageProvider>();
+        storage.TryGetFileFromPathAsync(Arg.Any<Uri>()).Returns(Task.FromResult<IStorageFile?>(null));
+        IStorageProviderFactory factory = Substitute.For<IStorageProviderFactory>();
+        factory.CreateProvider(Arg.Any<TopLevel>()).Returns(storage);
+        using IDisposable storageScope = FileRevealTests.InstallStorageFactory(factory);
+
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = sort;
+        FormCommit form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 800 };
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+            form.UpdateLayout();
+
+            Control files = sort == DiffListSortType.FilePath
+                ? unstaged.FindControl<TreeView>("tvDiffFiles")!
+                : unstaged.FindControl<ListBox>("lstFiles")!;
+            TextBlock row = files.GetVisualDescendants().OfType<TextBlock>().Single(label => label.Text == "tracked.txt");
+            Point rowStart = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(rowStart, Avalonia.Input.RawInputModifiers.None);
+            form.MouseDown(rowStart, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+            form.MouseUp(rowStart, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+            unstaged.SelectedItem!.Item.Name.Should().Be("tracked.txt");
+
+            StackPanel toolbar = unstaged.FindControl<StackPanel>("Toolbar")!;
+            Point toolbarStart = toolbar.TranslatePoint(new Point(toolbar.Bounds.Width - 20, toolbar.Bounds.Height / 2), form)!.Value;
+            form.InputHitTest(toolbarStart).Should().BeSameAs(toolbar);
+            Drag(toolbarStart);
+            await storage.DidNotReceive().TryGetFileFromPathAsync(Arg.Any<Uri>());
+
+            Drag(rowStart);
+            string trackedPath = Path.Combine(_workingDirectory, "tracked.txt");
+            await storage.Received(1).TryGetFileFromPathAsync(Arg.Is<Uri>(uri => uri.LocalPath == trackedPath));
+
+            void Drag(Point start)
+            {
+                Point end = start.WithX(start.X + 10);
+                form.MouseMove(start, Avalonia.Input.RawInputModifiers.None);
+                form.MouseDown(start, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+                form.MouseMove(end, Avalonia.Input.RawInputModifiers.LeftMouseButton);
+                Dispatcher.UIThread.RunJobs();
+                form.MouseUp(end, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+            }
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+            DiffListSortService.Instance.DiffListSorting = previousSort;
         }
     }
 

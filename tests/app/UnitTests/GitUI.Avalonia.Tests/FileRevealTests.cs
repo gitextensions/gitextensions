@@ -311,7 +311,7 @@ public sealed class FileRevealTests
         }
     }
 
-    private static IDisposable InstallStorageFactory(IStorageProviderFactory factory)
+    internal static IDisposable InstallStorageFactory(IStorageProviderFactory factory)
     {
         Type locator = typeof(Avalonia.AvaloniaLocator);
         IDisposable scope = (IDisposable)locator.GetMethod("EnterScope")!.Invoke(null, null)!;

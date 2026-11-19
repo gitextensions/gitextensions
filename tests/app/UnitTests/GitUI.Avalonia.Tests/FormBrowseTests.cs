@@ -1776,23 +1776,39 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_diff_tab_should_keep_the_original_refresh_and_find_toolbar_commands()
+    public async Task Browse_diff_tab_should_keep_the_original_refresh_and_find_toolbar_commands()
     {
+        AppSettings.ShowDiffForAllParents = true;
         GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId head = module.GetCurrentCheckout();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {
-            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
-            form.UpdateLayout();
-            Dispatcher.UIThread.RunJobs();
-
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head);
+            Click(form, form.DiffTabPage, MouseButton.Left);
             FileStatusList files = form.revisionDiff.FindControl<FileStatusList>("DiffFiles")!;
+            IconDropDownButton settings = files.FindControl<IconDropDownButton>("btnSettings")!;
+            await WaitUntilAsync(() =>
+                form.CommitInfoTabControl.SelectedItem == form.DiffTabPage
+                && files.GitItemStatuses.Count > 0
+                && settings.IsEffectivelyVisible);
+            form.UpdateLayout();
+
             files.CanUseFindInCommitFilesGitGrep.Should().BeTrue();
             files.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
             files.FindControl<Separator>("sepRefresh")!.IsVisible.Should().BeTrue();
             files.FindControl<IconSplitButton>("btnFindInFilesGitGrep")!.IsVisible.Should().BeTrue();
             files.FindControl<Separator>("sepOptions")!.IsVisible.Should().BeTrue();
+
+            Click(form, settings, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            WinFormsMenuFlyout menu = settings.Flyout.Should().BeOfType<WinFormsMenuFlyout>().Which;
+            menu.IsOpen.Should().BeTrue();
+            MenuItem showAllParents = files.FindControl<MenuItem>("tsmiShowDiffForAllParents")!;
+            showAllParents.IsVisible.Should().BeTrue();
+            showAllParents.IsChecked.Should().BeTrue();
+            menu.Hide();
         }
         finally
         {

@@ -392,34 +392,84 @@ public sealed class FileStatusListFamilyTests
                 ]),
         ],
         isFileTreeMode: true);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
+        TreeView tree = control.FindControl<TreeView>("tvFiles")!;
+        ContextMenu menu = tree.ContextMenu!;
+        Window window = new() { Width = 680, Height = 460, Content = control };
+        try
+        {
+            window.Show();
+            control.SelectFileOrFolder(RelativePath.From("folder")).Should().BeTrue();
+            window.UpdateLayout();
+            TreeViewItem root = tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which;
+            OpenMenu();
+            MenuItem selectAll = FindMenuItem("S_elect all");
+            MenuItem collapseAll = FindMenuItem("C_ollapse all");
+            MenuItem expandAll = FindMenuItem("E_xpand all");
+            MenuItem collapseRoots = FindMenuItem("Collap_se root folders");
+            expandAll.IsVisible.Should().BeTrue();
+            collapseAll.IsVisible.Should().BeTrue();
+            selectAll.IsVisible.Should().BeTrue();
+            int selectAllIndex = menu.Items.IndexOf(selectAll);
+            menu.Items.IndexOf(collapseAll).Should().Be(selectAllIndex + 1);
+            menu.Items.IndexOf(expandAll).Should().Be(selectAllIndex + 2);
+            selectAll.Icon.Should().BeOfType<Image>();
+            collapseAll.Icon.Should().BeOfType<Image>();
+            expandAll.Icon.Should().BeOfType<Image>();
+            collapseRoots.Icon.Should().BeOfType<Image>();
 
-        accessor.SelectFirstTreeRoot();
-        accessor.UpdateContextMenu().Should().BeFalse();
-        accessor.ExpandAllMenuItem.IsVisible.Should().BeTrue();
-        accessor.CollapseAllMenuItem.IsVisible.Should().BeTrue();
-        accessor.SelectAllMenuItem.IsVisible.Should().BeTrue();
-        int selectAllIndex = menu.Items.IndexOf(accessor.SelectAllMenuItem);
-        menu.Items.IndexOf(accessor.CollapseAllMenuItem).Should().Be(selectAllIndex + 1);
-        menu.Items.IndexOf(accessor.ExpandAllMenuItem).Should().Be(selectAllIndex + 2);
-        accessor.SelectAllMenuItem.Icon.Should().BeOfType<Image>();
-        accessor.CollapseAllMenuItem.Icon.Should().BeOfType<Image>();
-        accessor.ExpandAllMenuItem.Icon.Should().BeOfType<Image>();
-        accessor.CollapseRootFoldersMenuItem.Icon.Should().BeOfType<Image>();
+            ClickMenuItem(expandAll);
+            root.IsExpanded.Should().BeTrue();
+            ClickMenuItem(collapseAll);
+            root.IsExpanded.Should().BeFalse();
 
-        accessor.ExpandAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        accessor.FirstTreeRootExpanded.Should().BeTrue();
-        accessor.CollapseAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        accessor.FirstTreeRootExpanded.Should().BeFalse();
+            ClickMenuItem(expandAll);
+            ClickMenuItem(selectAll);
+            control.SelectedGitItems.Should().HaveCount(2);
 
-        accessor.ExpandAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        accessor.SelectAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        control.SelectedGitItems.Should().HaveCount(2);
+            control.SelectFileOrFolder(RelativePath.From("folder/first.txt")).Should().BeTrue();
+            ClickMenuItem(collapseRoots);
+            root.IsExpanded.Should().BeFalse();
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+        }
 
-        accessor.SelectFirstTreeLeaf();
-        accessor.CollapseRootFoldersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        accessor.FirstTreeRootExpanded.Should().BeFalse();
+        MenuItem FindMenuItem(string header)
+            => menu.Items.OfType<MenuItem>().Single(item => item.Header as string == header);
+
+        void OpenMenu()
+        {
+            if (!menu.IsOpen)
+            {
+                TreeViewItem selected = tree.GetVisualDescendants().OfType<TreeViewItem>()
+                    .First(item => item.IsSelected && item.IsEffectivelyVisible);
+                Control header = selected.GetVisualDescendants().OfType<Control>()
+                    .First(control => control.Name == "PART_HeaderPresenter");
+                Point point = header.TranslatePoint(new Point(header.Bounds.Width / 2, header.Bounds.Height / 2), window)!.Value;
+                window.MouseMove(point, RawInputModifiers.None);
+                window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+                window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            menu.IsOpen.Should().BeTrue();
+        }
+
+        void ClickMenuItem(MenuItem item)
+        {
+            OpenMenu();
+            item.IsEffectivelyVisible.Should().BeTrue();
+            TopLevel popup = TopLevel.GetTopLevel(item)
+                ?? throw new InvalidOperationException("The context menu item must belong to the open popup.");
+            Point point = item.TranslatePoint(new Point(item.Bounds.Width / 2, item.Bounds.Height / 2), popup)!.Value;
+            popup.MouseMove(point, RawInputModifiers.None);
+            popup.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            popup.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            menu.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -808,39 +858,22 @@ public sealed class FileStatusListFamilyTests
     [AvaloniaTest]
     public void FileStatusList_should_restore_refresh_settings_and_file_tree_toolbar_boundaries()
     {
-        bool originalShowAllParents = AppSettings.ShowDiffForAllParents;
-        try
-        {
-            AppSettings.ShowDiffForAllParents = true;
-            FileStatusList control = new();
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-            MenuItem showAllParents = control.FindControl<MenuItem>("tsmiShowDiffForAllParents")!;
+        using FileStatusList control = new();
+        control.Bind(() => { }, canAutoRefresh: false);
 
-            control.Bind(() => { }, canAutoRefresh: false);
+        control.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
+        control.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeFalse();
+        control.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeFalse();
 
-            control.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
-            control.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeFalse();
-            control.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeFalse();
+        control.Bind(() => { }, isFileTreeMode: true);
 
-            accessor.EnableShowDiffForAllParents();
-            accessor.OpenSettingsMenu();
-            showAllParents.IsVisible.Should().BeTrue();
-            showAllParents.IsChecked.Should().BeTrue();
+        control.FindControl<StackPanel>("Toolbar")!.IsVisible.Should().BeFalse();
+        control.FindControl<TextBlock>("lblSplitter")!.Height.Should().Be(1);
 
-            control.SetDiffs([], isFileTreeMode: true);
-
-            control.FindControl<StackPanel>("Toolbar")!.IsVisible.Should().BeFalse();
-            control.FindControl<TextBlock>("lblSplitter")!.Height.Should().Be(1);
-
-            FileStatusList autoRefreshControl = new();
-            autoRefreshControl.Bind(() => { }, canAutoRefresh: true);
-            autoRefreshControl.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeTrue();
-            autoRefreshControl.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeTrue();
-        }
-        finally
-        {
-            AppSettings.ShowDiffForAllParents = originalShowAllParents;
-        }
+        using FileStatusList autoRefreshControl = new();
+        autoRefreshControl.Bind(() => { }, canAutoRefresh: true);
+        autoRefreshControl.FindControl<MenuItem>("tsmiRefreshOnFormFocus")!.IsVisible.Should().BeTrue();
+        autoRefreshControl.FindControl<Separator>("sepToolbar")!.IsVisible.Should().BeTrue();
     }
 
     [AvaloniaTest]
