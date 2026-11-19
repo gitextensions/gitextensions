@@ -35,7 +35,6 @@ public partial class FileStatusList : GitModuleControl
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
     private readonly DispatcherTimer _selectedIndexChangeTimer = new() { Interval = SelectedIndexChangeThrottleDuration };
-    private readonly List<string> _filterHistory = [];
     private readonly List<object?> _gitGrepSearchItems = [];
     private IReadOnlyList<object> _allListItems = [];
     private IReadOnlyList<FileStatusItem> _allTreeItems = [];
@@ -120,6 +119,9 @@ public partial class FileStatusList : GitModuleControl
         };
         tsmiCopyPaths.Initialize(() => UICommands, GetSelectedFilePaths);
 
+        cboFilterComboBox.Items.Add("^(?!.*NotThisWord)");
+        cboFilterComboBox.Items.Add(@"^(?!.*\bg?tests?/)");
+
         lstFiles.ItemTemplate = new FuncDataTemplate<object>(CreateFileRow, supportsRecycling: false);
         tvDiffFiles.ItemTemplate = new FuncTreeDataTemplate<DiffTreeNode>(
             (node, _) => CreateDiffTreeRow(node),
@@ -166,8 +168,7 @@ public partial class FileStatusList : GitModuleControl
         DeleteFilterButton.Click += DeleteFilterButton_Click;
         DeleteSearchButton.Click += DeleteSearchButton_Click;
 
-        // TODO this code is very similar to code in FormCommit
-        _filterTimer.Tick += FilterTimer_Tick;
+        InitialiseFiltering();
         _selectedIndexChangeTimer.Tick += SelectedIndexChangeTimer_Tick;
         KeyDown += FileStatusListView_KeyDown;
         GotFocus += FileStatusList_Enter;
@@ -1095,6 +1096,9 @@ public partial class FileStatusList : GitModuleControl
         DeleteFilterButton.IsVisible = IsFilterActive;
     }
 
+    private void SetDeleteSearchButtonVisibility()
+        => DeleteSearchButton.IsVisible = FindInCommitFilesGitGrepActive;
+
     private void FileStatusListLoading()
     {
         // Show "Files loading" below the filterbox
@@ -1654,12 +1658,47 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
+    private void InitialiseFiltering()
+    {
+        // TODO this code is very similar to code in FormCommit
+        _filterTimer.Tick += FilterTimer_Tick;
+        return;
+
+        void FilterTimer_Tick(object? sender, EventArgs e)
+        {
+            _filterTimer.Stop();
+            int fileCount = FilterFiles(cboFilterComboBox.Text ?? string.Empty);
+            string filterText = cboFilterComboBox.Text ?? string.Empty;
+            if (fileCount > 0 && filterText.Length > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
+            {
+                AddToSelectionFilter(filterText);
+            }
+        }
+
+        void AddToSelectionFilter(string filter)
+        {
+            if (cboFilterComboBox.Items.Cast<string>().Any(candidate => candidate == filter))
+            {
+                return;
+            }
+
+            const int SelectionFilterMaxLength = 10;
+            if (cboFilterComboBox.Items.Count == SelectionFilterMaxLength)
+            {
+                cboFilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
+            }
+
+            cboFilterComboBox.Items.Insert(0, filter);
+        }
+    }
+
     private void FilterComboBox_TextUpdate(object? sender, EventArgs e)
     {
         // show DeleteFilterButton at once
         SetDeleteFilterButtonVisibility();
 
         string filterText = cboFilterComboBox.Text ?? string.Empty;
+        bool strippedWorkingDirectory = false;
         string workingDir = TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : string.Empty;
         if (workingDir.Length > 0 && filterText.Length > workingDir.Length)
         {
@@ -1669,7 +1708,37 @@ public partial class FileStatusList : GitModuleControl
             {
                 filterText = posixFilterText.SubstringAfter(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase);
                 cboFilterComboBox.Text = filterText;
+                strippedWorkingDirectory = true;
             }
+        }
+
+        if (cboFilterComboBox.IsKeyboardFocusWithin)
+        {
+            // The native TextBox completes its input selection after the Text notification.
+            Dispatcher.UIThread.Post(() =>
+            {
+                TextBox? editor = cboFilterComboBox.GetVisualDescendants()
+                    .OfType<TextBox>().FirstOrDefault(control => control.Name == "PART_EditableTextBox");
+                if (editor is not { IsFocused: true } || cboFilterComboBox.Text != filterText)
+                {
+                    return;
+                }
+
+                if (strippedWorkingDirectory && editor.Text != filterText)
+                {
+                    editor.SetCurrentValue(TextBox.TextProperty, filterText);
+                }
+
+                // workaround for text getting selected if it matches the start of the combobox items
+                int selectionStart = Math.Min(editor.SelectionStart, editor.SelectionEnd);
+                int selectionEnd = Math.Max(editor.SelectionStart, editor.SelectionEnd);
+                if (strippedWorkingDirectory || (selectionStart == 0 && selectionEnd == filterText.Length))
+                {
+                    editor.CaretIndex = filterText.Length;
+                    editor.SelectionStart = filterText.Length;
+                    editor.SelectionEnd = filterText.Length;
+                }
+            }, DispatcherPriority.Input);
         }
 
         _filterTimer.Stop();
@@ -1702,7 +1771,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void FindInCommitFilesGitGrep(string search, int delay = 0)
     {
-        DeleteSearchButton.IsVisible = !string.IsNullOrEmpty(search);
+        SetDeleteSearchButtonVisibility();
 
         CancellationToken cancellationToken = _reloadSequence.Next();
         this.InvokeAndForget(async () =>
@@ -2027,34 +2096,6 @@ public partial class FileStatusList : GitModuleControl
                 _formFindInCommitFilesGitGrep.GitGrepExpressionText = search;
             }
         }
-    }
-
-    private void FilterTimer_Tick(object? sender, EventArgs e)
-    {
-        _filterTimer.Stop();
-        int fileCount = FilterFiles(cboFilterComboBox.Text ?? string.Empty);
-        string filterText = cboFilterComboBox.Text ?? string.Empty;
-        if (fileCount > 0 && filterText.Length > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
-        {
-            AddToSelectionFilter(filterText);
-        }
-    }
-
-    private void AddToSelectionFilter(string filter)
-    {
-        if (_filterHistory.Contains(filter, StringComparer.Ordinal))
-        {
-            return;
-        }
-
-        const int SelectionFilterMaxLength = 10;
-        if (_filterHistory.Count == SelectionFilterMaxLength)
-        {
-            _filterHistory.RemoveAt(SelectionFilterMaxLength - 1);
-        }
-
-        _filterHistory.Insert(0, filter);
-        cboFilterComboBox.ItemsSource = _filterHistory;
     }
 
     private int ApplyFilter(bool selectFirstItem)

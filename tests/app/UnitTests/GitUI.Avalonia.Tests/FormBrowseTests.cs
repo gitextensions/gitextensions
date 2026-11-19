@@ -4526,6 +4526,67 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task File_status_list_should_keep_the_end_caret_after_filter_text_is_processed(bool historyPrefix)
+    {
+        AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+        GitModule module = CreateRepositoryWithInitialCommit();
+        File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "changed");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "filter-fixture" }).Should().BeTrue();
+        ObjectId head = module.GetCurrentCheckout();
+
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        form.Show();
+        try
+        {
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head);
+            Click(form, form.DiffTabPage, MouseButton.Left);
+            FileStatusList files = form.fileStatusList;
+            await WaitUntilAsync(() => files.GitItemStatuses.Any(item => item.Name == "tracked.txt"));
+            files.TryGetUICommandsDirect(out IGitUICommands? commands).Should().BeTrue();
+            commands!.Module.Should().BeSameAs(module);
+
+            ComboBox filter = files.FindControl<ComboBox>("cboFilterComboBox")!;
+            TextBox editor = filter.GetVisualDescendants().OfType<TextBox>().Single(control => control.Name == "PART_EditableTextBox");
+            editor.Focus().Should().BeTrue();
+            editor.SelectAll();
+
+            const string HistoryItem = "^(?!.*NotThisWord)";
+            string expected = historyPrefix ? HistoryItem[..^1] : "tracked";
+            if (historyPrefix)
+            {
+                filter.Items.Cast<string>().Should().Equal(HistoryItem, @"^(?!.*\bg?tests?/)");
+            }
+
+            string input = historyPrefix ? expected : Path.Combine(module.WorkingDir, expected);
+            form.KeyTextInput(input);
+            Dispatcher.UIThread.RunJobs();
+            filter.Text.Should().Be(expected);
+            editor.IsFocused.Should().BeTrue();
+            editor.Text.Should().Be(expected);
+            (editor.SelectionStart, editor.SelectionEnd).Should().Be((expected.Length, expected.Length));
+
+            string suffix = historyPrefix ? ")" : ".txt";
+            form.KeyTextInput(suffix);
+            Dispatcher.UIThread.RunJobs();
+            filter.Text.Should().Be(expected + suffix);
+            (editor.SelectionStart, editor.SelectionEnd).Should().Be((expected.Length + suffix.Length, expected.Length + suffix.Length));
+
+            if (!historyPrefix)
+            {
+                await WaitUntilAsync(() => filter.Items.Cast<string>().Contains(expected + suffix));
+                filter.Items.Cast<string>().Should().ContainInOrder(expected + suffix, HistoryItem, @"^(?!.*\bg?tests?/)");
+                (editor.SelectionStart, editor.SelectionEnd).Should().Be((expected.Length + suffix.Length, expected.Length + suffix.Length));
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_diff_should_render_the_original_default_git_background_colors()
     {
         const string Before = "public string value = \"before-value\";\n";
