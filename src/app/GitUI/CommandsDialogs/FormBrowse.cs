@@ -220,6 +220,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly IShellProvider _shellProvider;
+
+    // A per-refresh, lazily-fetched worktree list shared by the left-panel tree and the toolbar
+    // dropdown. Fetched once (off the UI thread, during the tree refresh) and reused, so the
+    // dropdown does not spawn a separate `git worktree list` on the UI thread.
+    private Lazy<IReadOnlyList<GitWorktree>> _worktrees;
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -264,6 +269,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _consoleEmulatorsRegistry = commands.GetRequiredService<IConsoleEmulatorsRegistry>();
         _shellProvider = commands.GetRequiredService<IShellProvider>();
+        _worktrees = new(() => Module.GetWorktrees(), LazyThreadSafetyMode.PublicationOnly);
 
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
@@ -715,6 +721,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _aheadBehindDataProvider?.ResetCache();
+
+        // Reset the shared worktree list so this refresh (and the toolbar dropdown) use a fresh
+        // fetch, taken once off the UI thread by the left-panel tree and reused by the dropdown.
+        _worktrees = new(() => Module.GetWorktrees(), LazyThreadSafetyMode.PublicationOnly);
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
         {
@@ -1335,7 +1345,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh);
+        repoObjectsTree.RefreshRevisionsLoading(getRefs, _worktrees, getStashRevs, forceRefresh);
     }
 
     private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
@@ -2989,7 +2999,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripWorktrees.DropDownItems.Clear();
 
         string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
-        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
+        // Reuse the worktree list fetched during the last refresh (off the UI thread) instead
+        // of spawning `git worktree list` on the UI thread. In-app worktree operations and
+        // external changes trigger a refresh, which resets this cache.
+        IReadOnlyList<GitWorktree> worktrees = _worktrees.Value;
 
         foreach (GitWorktree worktree in worktrees)
         {

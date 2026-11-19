@@ -11,28 +11,34 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
 {
     internal void Refresh()
     {
+        // Fresh fetch, e.g. after a worktree was created in-app.
+        Refresh(new(() => Module.GetWorktrees(), LazyThreadSafetyMode.PublicationOnly));
+    }
+
+    internal void Refresh(Lazy<IReadOnlyList<GitWorktree>> getWorktrees)
+    {
         if (!IsAttached)
         {
             return;
         }
 
-        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(cancellationToken), getRefs: null!);
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(getWorktrees, cancellationToken), getRefs: null!);
     }
 
-    private async Task<Nodes> LoadNodesAsync(CancellationToken token)
+    private async Task<Nodes> LoadNodesAsync(Lazy<IReadOnlyList<GitWorktree>> getWorktrees, CancellationToken token)
     {
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
 
-        return FillWorktreeTree(token);
+        return FillWorktreeTree(getWorktrees, token);
     }
 
-    private Nodes FillWorktreeTree(CancellationToken token)
+    private Nodes FillWorktreeTree(Lazy<IReadOnlyList<GitWorktree>> getWorktrees, CancellationToken token)
     {
         Nodes nodes = new(this);
         string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
-        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+        IReadOnlyList<GitWorktree> worktrees = getWorktrees.Value;
 
         // Use the main worktree's parent as the reference for relative paths.
         // Git always lists the main worktree first. Using the main worktree's parent

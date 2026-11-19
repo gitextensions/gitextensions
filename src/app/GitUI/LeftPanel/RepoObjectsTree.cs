@@ -238,13 +238,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// (Update the objects in the panel.)
     /// </summary>
     /// <param name="getRefs">Function to get refs.</param>
+    /// <param name="getWorktrees">Lazy accessor for the worktree list, shared with the toolbar dropdown.</param>
     /// <param name="getStashRevs">Lazy accessor for stash commits.</param>
     /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-    public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
+    public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyList<GitWorktree>> getWorktrees, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
         _branchesTree.Refresh(getRefs);
         _remotesTree.Refresh(getRefs);
-        _worktreeTree.Refresh();
+        _worktreeTree.Refresh(getWorktrees);
         _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
