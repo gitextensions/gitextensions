@@ -1,5 +1,9 @@
 ﻿using System.Reactive.Concurrency;
+using CommonTestUtils;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.BackgroundFetch;
+using NSubstitute;
 
 namespace BackgroundFetchTests;
 
@@ -19,6 +23,27 @@ public sealed class BackgroundFetchPluginTests
         _scheduler = new HistoricalScheduler(DateTimeOffset.MinValue);
         _triggers = [];
         _isGitRunningCallCount = 0;
+    }
+
+    [Test]
+    public void PostSettings_should_be_ignored_after_the_plugin_was_unregistered()
+    {
+        // StartSettingsDialog raises the subscribers of PostSettings from before the settings dialog was shown,
+        // so the handler of the plugin can still be called after the plugin has been unregistered
+        IGitPluginSettingsContainer settingsContainer = Substitute.For<IGitPluginSettingsContainer>();
+        settingsContainer.GetSettingsSource().Returns(new MemorySettings());
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        EventHandler<GitUIPostActionEventArgs>? postSettings = null;
+        commands.When(c => c.PostSettings += Arg.Any<EventHandler<GitUIPostActionEventArgs>>())
+            .Do(callInfo => postSettings = callInfo.Arg<EventHandler<GitUIPostActionEventArgs>>());
+
+        BackgroundFetchPlugin plugin = new() { SettingsContainer = settingsContainer };
+        plugin.Register(commands);
+        plugin.Unregister(commands);
+
+        postSettings.Should().NotBeNull();
+        postSettings!.Invoking(handler => handler(commands, new GitUIPostActionEventArgs(ownerForm: null, commands, actionDone: true)))
+            .Should().NotThrow();
     }
 
     [Test]
