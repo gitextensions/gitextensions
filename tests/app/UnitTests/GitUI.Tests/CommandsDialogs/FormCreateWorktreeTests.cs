@@ -14,7 +14,7 @@ public sealed class FormCreateWorktreeTests
     {
         IGitModule module = NewModuleWithRelativePathsSet();
 
-        GitArgumentBuilder args = FormCreateWorktree.CreateWorktreeCommand(module, "feature-dir", "origin/feature");
+        GitArgumentBuilder args = FormCreateWorktree.GetTestAccessor().CreateWorktreeCommand(module, "feature-dir", "origin/feature");
 
         args.ToString().Should().Be("worktree add feature-dir origin/feature");
     }
@@ -24,7 +24,7 @@ public sealed class FormCreateWorktreeTests
     {
         IGitModule module = NewModuleWithRelativePathsSet();
 
-        GitArgumentBuilder args = FormCreateWorktree.CreateWorktreeCommand(module, "feature-dir", "feature");
+        GitArgumentBuilder args = FormCreateWorktree.GetTestAccessor().CreateWorktreeCommand(module, "feature-dir", "feature");
 
         args.ToString().Should().Be("worktree add feature-dir feature");
     }
@@ -34,7 +34,7 @@ public sealed class FormCreateWorktreeTests
     {
         IGitModule module = NewModuleWithRelativePathsSet();
 
-        GitArgumentBuilder args = FormCreateWorktree.CreateWorktreeCommand(module, "feature-dir", "-b feature");
+        GitArgumentBuilder args = FormCreateWorktree.GetTestAccessor().CreateWorktreeCommand(module, "feature-dir", "-b feature");
 
         args.ToString().Should().Be("worktree add feature-dir -b feature");
     }
@@ -44,7 +44,7 @@ public sealed class FormCreateWorktreeTests
     {
         IGitModule module = Substitute.For<IGitModule>();
 
-        GitArgumentBuilder args = FormCreateWorktree.CreateWorktreeCommand(module, "feature-dir", "origin/feature");
+        GitArgumentBuilder args = FormCreateWorktree.GetTestAccessor().CreateWorktreeCommand(module, "feature-dir", "origin/feature");
 
         args.ToString().Should().Be("-c worktree.useRelativePaths=true worktree add feature-dir origin/feature");
     }
@@ -52,23 +52,34 @@ public sealed class FormCreateWorktreeTests
     [Test]
     public void GetCheckoutableBranches_should_return_local_branches_followed_by_remote_branches()
     {
-        IReadOnlyList<IGitRef> result = FormCreateWorktree.GetCheckoutableBranches(
+        IReadOnlyList<IGitRef> result = FormCreateWorktree.GetTestAccessor().GetCheckoutableBranches(
             [CreateBranch("master"), CreateBranch("feature")],
-            [CreateBranch("origin/feature"), CreateBranch("origin/master")],
+            [CreateRemoteBranch("origin/remote-only"), CreateRemoteBranch("origin/another-remote")],
             "master");
 
-        result.Select(b => b.Name).Should().ContainInOrder("feature", "origin/feature", "origin/master");
+        result.Select(b => b.Name).Should().ContainInOrder("feature", "origin/remote-only", "origin/another-remote");
     }
 
     [Test]
     public void GetCheckoutableBranches_should_exclude_selected_branch()
     {
-        IReadOnlyList<IGitRef> result = FormCreateWorktree.GetCheckoutableBranches(
+        IReadOnlyList<IGitRef> result = FormCreateWorktree.GetTestAccessor().GetCheckoutableBranches(
             [CreateBranch("master"), CreateBranch("feature")],
             [],
             "master");
 
         result.Select(b => b.Name).Should().ContainInOrder("feature");
+    }
+
+    [Test]
+    public void GetCheckoutableBranches_should_exclude_remote_branches_whose_local_name_conflicts_with_local_branch()
+    {
+        IReadOnlyList<IGitRef> result = FormCreateWorktree.GetTestAccessor().GetCheckoutableBranches(
+            [CreateBranch("master"), CreateBranch("feature")],
+            [CreateRemoteBranch("origin/feature"), CreateRemoteBranch("origin/master"), CreateRemoteBranch("origin/remote-only")],
+            "master");
+
+        result.Select(b => b.Name).Should().ContainInOrder("feature", "origin/remote-only");
     }
 
     private static IGitModule NewModuleWithRelativePathsSet()
@@ -83,6 +94,16 @@ public sealed class FormCreateWorktreeTests
         IGitRef gitRef = Substitute.For<IGitRef>();
         gitRef.Name.Returns(name);
         gitRef.LocalName.Returns(name);
+        return gitRef;
+    }
+
+    private static IGitRef CreateRemoteBranch(string name)
+    {
+        // name is like "origin/feature"; LocalName is the tracking branch name ("feature").
+        string localName = name[(name.IndexOf('/') + 1)..];
+        IGitRef gitRef = Substitute.For<IGitRef>();
+        gitRef.Name.Returns(name);
+        gitRef.LocalName.Returns(localName);
         return gitRef;
     }
 }

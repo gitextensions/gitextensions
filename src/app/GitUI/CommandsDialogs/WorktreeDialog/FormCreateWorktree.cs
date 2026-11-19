@@ -82,16 +82,22 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
     ///  Combines local and remote branches for the checkout list. Local branches come
     ///  first, excluding the branch already checked out in this worktree (git refuses
     ///  to check out a branch in a second worktree), followed by remote branches,
-    ///  which git resolves to a new tracking branch on checkout.
+    ///  which git resolves to a new tracking branch on checkout. Remote branches whose
+    ///  tracking name already exists as a local branch are excluded, as checking them
+    ///  out would fail.
     /// </summary>
-    internal static IReadOnlyList<IGitRef> GetCheckoutableBranches(
+    private static IReadOnlyList<IGitRef> GetCheckoutableBranches(
         IReadOnlyList<IGitRef> localBranches,
         IReadOnlyList<IGitRef> remoteBranches,
         string selectedBranch)
     {
         List<IGitRef> branches = [];
         branches.AddRange(localBranches.Where(b => b.Name != selectedBranch));
-        branches.AddRange(remoteBranches);
+
+        // Exclude remote branches whose local (tracking) name already exists as a local
+        // branch; checking them out would fail, as git cannot create a branch that
+        // already exists.
+        branches.AddRange(remoteBranches.Where(r => !localBranches.Any(l => l.Name == r.LocalName)));
         return branches;
     }
 
@@ -154,7 +160,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         DialogResult = UICommands.StartGitCommandProcessDialog(this, CreateWorktreeCommand(Module, relativePath, newBranchOption!)) ? DialogResult.OK : DialogResult.None;
     }
 
-    internal static GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
+    private static GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
     {
         // https://git-scm.com/docs/git-worktree
 
@@ -254,5 +260,14 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         }
 
         string NormalizeBranchName(string branchName) => string.Join("_", branchName.Split(_invalidCharsInPath, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+    }
+
+    internal static TestAccessor GetTestAccessor() => new();
+
+    internal readonly struct TestAccessor
+    {
+        public IReadOnlyList<IGitRef> GetCheckoutableBranches(IReadOnlyList<IGitRef> localBranches, IReadOnlyList<IGitRef> remoteBranches, string selectedBranch) => FormCreateWorktree.GetCheckoutableBranches(localBranches, remoteBranches, selectedBranch);
+
+        public GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption) => FormCreateWorktree.CreateWorktreeCommand(module, relativePath, newBranchOption);
     }
 }
