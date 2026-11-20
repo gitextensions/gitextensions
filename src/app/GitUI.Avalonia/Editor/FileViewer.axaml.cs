@@ -680,48 +680,21 @@ public partial class FileViewer : GitModuleControl
     /// <param name="text">The patch text.</param>
     /// <param name="line">The line number to display.</param>
     /// <param name="openWithDifftool">The action to open the difftool.</param>
-    public async Task ViewPatchAsync(
+    public Task ViewPatchAsync(
         FileStatusItem item,
         string text,
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        await InvokeOnOwnerMainThreadAsync(() =>
-        {
-            ViewPatchCore(
-                text,
-                PatchUseGitColoring,
-                isCombinedDiff: false,
-                isGitWordDiff: AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff,
-                item.Item.Name,
-                item,
-                openWithDifftool);
-            if (line is not null)
-            {
-                GoToLine(line.Value);
-            }
-        }, cancellationToken);
-    }
+        => ViewPrivateAsync(item, item.Item.Name, text, line, openWithDifftool, ViewMode.Diff, cancellationToken: cancellationToken);
 
-    public async Task ViewCombinedDiffAsync(
+    public Task ViewCombinedDiffAsync(
         FileStatusItem item,
         string text,
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        await InvokeOnOwnerMainThreadAsync(() =>
-        {
-            ViewPatchCore(text, AppSettings.UseGitColoring, isCombinedDiff: true, isGitWordDiff: false, item.Item.Name, item, openWithDifftool);
-            if (line is not null)
-            {
-                GoToLine(line.Value);
-            }
-        }, cancellationToken);
-    }
+        => ViewPrivateAsync(item, item.Item.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring, cancellationToken);
 
     /// <summary>
     /// Present the text as a patch in the file viewer.
@@ -729,17 +702,12 @@ public partial class FileViewer : GitModuleControl
     /// <param name="fileName">The fileName to present.</param>
     /// <param name="text">The patch text.</param>
     /// <param name="openWithDifftool">The action to open the difftool.</param>
-    public async Task ViewFixedPatchAsync(
+    public Task ViewFixedPatchAsync(
         string fileName,
         string text,
         Action? openWithDifftool = null,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        await InvokeOnOwnerMainThreadAsync(
-            () => ViewFixedPatch(fileName, text, openWithDifftool, cancellationToken),
-            cancellationToken);
-    }
+        => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool, ViewMode.FixedDiff, cancellationToken: cancellationToken);
 
     /// <summary>
     ///  Shows a complete patch whose context and whitespace cannot be regenerated.
@@ -750,77 +718,27 @@ public partial class FileViewer : GitModuleControl
         Action? openWithDifftool = null,
         CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-        CancelPendingView();
-        ResetView(ViewMode.FixedDiff, fileName, item: null, openWithDifftool);
-        string parsedText = text;
-        PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
-        if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
-        {
-            internalFileViewer.GoToFirstChange(NumberOfContextLines);
-        }
-
-        TextLoaded?.Invoke(this, EventArgs.Empty);
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => ViewFixedPatchAsync(fileName!, text, openWithDifftool, cancellationToken));
     }
 
     public Task ViewDifftasticAsync(
         string fileName,
         string text,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        CancelPendingView();
-        ResetView(ViewMode.Difftastic, fileName);
-        string parsedText = text;
-        DifftasticHighlightService highlightService = new(
-            ref parsedText,
-            internalFileViewer.LineNumbersControl,
-            out int rightColumnStart);
-
-        // Difftastic set the position (0 to hide)
-        VRulerPosition = rightColumnStart;
-        if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
-        {
-            internalFileViewer.GoToFirstChange(NumberOfContextLines);
-        }
-
-        TextLoaded?.Invoke(this, EventArgs.Empty);
-        return Task.CompletedTask;
-    }
+        => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.Difftastic, useGitColoring: true, cancellationToken);
 
     public Task ViewRangeDiffAsync(
         string fileName,
         string text,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        CancelPendingView();
-        ResetView(ViewMode.RangeDiff, fileName);
-        string parsedText = text;
-        RangeDiffHighlightService highlightService = new(ref parsedText);
-        if (!SetDiffText(parsedText, highlightService, showLeftColumn: false))
-        {
-            internalFileViewer.GoToFirstChange(NumberOfContextLines);
-        }
-
-        TextLoaded?.Invoke(this, EventArgs.Empty);
-        return Task.CompletedTask;
-    }
+        => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring: true, cancellationToken);
 
     public Task ViewGrepAsync(
         FileStatusItem item,
         string text,
         CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        CancelPendingView();
-        ResetView(ViewMode.Grep, item.Item.Name, item);
-        string parsedText = text;
-        GrepHighlightService highlightService = new(ref parsedText, internalFileViewer.LineNumbersControl);
-        SetDiffText(parsedText, highlightService, showLeftColumn: false);
-        TextLoaded?.Invoke(this, EventArgs.Empty);
-        return Task.CompletedTask;
-    }
+        => ViewPrivateAsync(item, item.Item.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: true, cancellationToken);
 
     /// <summary>
     ///  Shows plain text synchronously for WinForms-shaped callers.
@@ -1036,6 +954,63 @@ public partial class FileViewer : GitModuleControl
         encodingToolStripComboBox.ItemsSource = encodings;
         encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
         UpdateEncodingSelection();
+    }
+
+    // Private methods
+    private async Task ViewPrivateAsync(FileStatusItem? item,
+        string? fileName,
+        string text,
+        int? line,
+        Action? openWithDifftool,
+        ViewMode viewMode,
+        bool useGitColoring = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // Read the native menu state and replace the active request on the owning UI thread.
+        (CancellationToken viewToken, bool gitColoring) = await GetOnOwnerMainThreadAsync(
+            () => (BeginView(cancellationToken), viewMode == ViewMode.Diff ? PatchUseGitColoring : useGitColoring),
+            cancellationToken);
+        await ShowOrDeferAsync(
+            text.Length,
+            () => InvokeOnOwnerMainThreadAsync(() =>
+            {
+                viewToken.ThrowIfCancellationRequested();
+                ResetView(viewMode, fileName, item, openWithDifftool, text);
+                string parsedText = text;
+                int rightColumnStart = -1;
+
+                // Get the highlight service, possibly clean escape sequences in the text and create highlight.
+                DiffHighlightService highlightService = viewMode switch
+                {
+                    ViewMode.Diff => new PatchHighlightService(ref parsedText, gitColoring, AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff),
+                    ViewMode.FixedDiff => new PatchHighlightService(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false),
+                    ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref parsedText, gitColoring),
+                    ViewMode.Difftastic => new DifftasticHighlightService(ref parsedText, internalFileViewer.LineNumbersControl, out rightColumnStart),
+                    ViewMode.RangeDiff => new RangeDiffHighlightService(ref parsedText),
+                    ViewMode.Grep => new GrepHighlightService(ref parsedText, internalFileViewer.LineNumbersControl),
+                    _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode)),
+                };
+                if (rightColumnStart >= 0)
+                {
+                    // Difftastic set the position (0 to hide)
+                    VRulerPosition = rightColumnStart;
+                }
+
+                bool positionSet = SetDiffText(parsedText, highlightService, showLeftColumn: viewMode is not (ViewMode.RangeDiff or ViewMode.Grep));
+                if (line is not null)
+                {
+                    GoToLine(line.Value);
+                }
+                else if (!positionSet)
+                {
+                    internalFileViewer.GoToFirstChange(NumberOfContextLines);
+                }
+
+                TextLoaded?.Invoke(this, EventArgs.Empty);
+            }, viewToken),
+            viewToken);
     }
 
     private StagedStatus ViewItemStagedStatus()
@@ -2199,23 +2174,8 @@ public partial class FileViewer : GitModuleControl
     public void ViewPatch(string? text, bool useGitColoring, bool isCombinedDiff = false, bool isGitWordDiff = false)
     {
         CancelPendingView();
-        ViewPatchCore(text, useGitColoring, isCombinedDiff, isGitWordDiff);
-    }
-
-    // Private methods
-    private void ViewPatchCore(
-        string? text,
-        bool useGitColoring,
-        bool isCombinedDiff,
-        bool isGitWordDiff,
-        string? fileName = null,
-        FileStatusItem? item = null,
-        Action? openWithDifftool = null)
-    {
-        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item, openWithDifftool, text);
+        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName: null, text: text);
         string parsedText = text ?? string.Empty;
-
-        // Get the highlight service, possibly clean escape sequences in the text and create highlight.
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
             : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);

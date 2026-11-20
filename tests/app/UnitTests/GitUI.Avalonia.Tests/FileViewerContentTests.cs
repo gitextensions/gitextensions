@@ -794,6 +794,94 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task ViewPatchAsync_should_publish_text_after_applying_the_requested_line()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        GitRevision first = new(ObjectId.Random());
+        GitRevision second = new(ObjectId.Random());
+        FileStatusItem item = new(first, second, new GitItemStatus("sample.txt") { IsChanged = true, IsTracked = true });
+        const string patch = "diff --git a/sample.txt b/sample.txt\n--- a/sample.txt\n+++ b/sample.txt\n"
+            + "@@ -1 +1 @@\n-old\n+first\n@@ -30 +30 @@\n-before\n+target\n";
+        try
+        {
+            editor.Show();
+            List<int> publishedLines = [];
+            viewer.TextLoaded += (_, _) => publishedLines.Add(viewer.TextEditor.TextArea.Caret.Line);
+
+            await viewer.ViewPatchAsync(item, patch, line: 30, openWithDifftool: null);
+
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(9);
+            publishedLines.Should().Equal(9);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewFixedPatchAsync_should_defer_an_oversized_patch()
+    {
+        using FileViewer viewer = CreateViewer();
+        const int lineLength = 1024;
+        const int addedLines = (5 * 1024 * 1024 / lineLength) + 1;
+        string addedLine = "+" + new string('x', lineLength - 2) + "\n";
+        string patch = $"diff --git a/sample.txt b/sample.txt\n--- /dev/null\n+++ b/sample.txt\n@@ -0,0 +1,{addedLines} @@\n"
+            + string.Concat(Enumerable.Repeat(addedLine, addedLines));
+
+        await viewer.ViewFixedPatchAsync("sample.patch", patch);
+
+        viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!.IsVisible.Should().BeTrue();
+        viewer.GetText().Should().BeEmpty();
+
+        const string smallerPatch = "@@ -1 +1 @@\n-before\n+after\n";
+        await viewer.ViewFixedPatchAsync("sample.patch", smallerPatch);
+
+        viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!.IsVisible.Should().BeFalse();
+        viewer.GetText().Should().Be(smallerPatch);
+    }
+
+    [AvaloniaTest]
+    [TestCase(ViewMode.Difftastic)]
+    [TestCase(ViewMode.RangeDiff)]
+    [TestCase(ViewMode.Grep)]
+    public async Task Special_diff_loads_should_publish_on_the_owner_ui_thread(ViewMode viewMode)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        GitRevision revision = new(ObjectId.Random());
+        FileStatusItem item = new(null, revision, new GitItemStatus("sample.txt") { IsTracked = true });
+        try
+        {
+            editor.Show();
+            List<bool> publishThreadAccess = [];
+            viewer.TextLoaded += (_, _) => publishThreadAccess.Add(Dispatcher.UIThread.CheckAccess());
+
+            await Task.Run(() =>
+            {
+                Dispatcher.UIThread.CheckAccess().Should().BeFalse();
+                return viewMode switch
+                {
+                    ViewMode.Difftastic => viewer.ViewDifftasticAsync("sample.txt", "sample.txt --- Text\n1 worker content\n"),
+                    ViewMode.RangeDiff => viewer.ViewRangeDiffAsync("sample.txt", "1: abc1234 = 1: abc1234 worker content\n"),
+                    ViewMode.Grep => viewer.ViewGrepAsync(item, "12:worker content\n"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(viewMode)),
+                };
+            });
+
+            viewer.GetText().Should().Contain("worker content");
+            publishThreadAccess.Should().Equal(true);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task ViewTextAsync_should_defer_large_content_until_the_preview_link_is_clicked()
     {
         FileViewer viewer = CreateViewer();
