@@ -971,7 +971,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     ///  Occurs when a tooltip of the grid is about to be hidden, also if Windows hides it on its own,
     ///  e.g. after <see cref="ToolTip.AutoPopDelay"/>.
     /// </summary>
-    internal event EventHandler? ToolTipHiding;
+    public event EventHandler? ToolTipHiding;
 
     protected override unsafe void WndProc(ref Message m)
     {

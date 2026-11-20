@@ -911,8 +911,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             case Keys.Escape:
                 // Consume Esc only if it has something to close, otherwise let it be handled as hotkey
-                bool quickSearchCancelled = _quickSearchProvider.Cancel();
-                if (_toolTipProvider.Hide() || quickSearchCancelled)
+                if (_toolTipProvider.Hide() || _quickSearchProvider.Cancel())
                 {
                     return true;
                 }
