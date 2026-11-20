@@ -3452,13 +3452,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/GitHighlightingStrategyBase.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same comment-character discovery, original explanatory comments, and line classifiers adapted to AvaloniaEdit's DocumentColorizingTransformer. The 20 visible findings are the framework replacement of IHighlightingStrategy/HighlightColor/IDocument/LineSegment with native line colorization and SetStyle. P8.6i progress 64 restores the original common-member order for every safely movable declaration in this twin; cross-part or preprocessor-guarded order remains measured debt rather than being moved unsafely."
+    "notes": "Same comment-character discovery, original explanatory comments, and line classifiers adapted to AvaloniaEdit's DocumentColorizingTransformer. The 20 visible findings are the framework replacement of IHighlightingStrategy/HighlightColor/IDocument/LineSegment with native line colorization and SetStyle. P8.6i progress 64 restores the original common-member order for every safely movable declaration in this twin; cross-part or preprocessor-guarded order remains measured debt rather than being moved unsafely. Both Git syntax strategies resolve the original WindowText role through the Avalonia theme resources while coloring each line."
   },
   "src/app/GitUI/Editor/RebaseTodoHighlightingStrategy.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/RebaseTodoHighlightingStrategy.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same interactive-rebase command, option, object-id, comment, and theme-aware command-color classification on AvaloniaEdit. The three signature findings are the required HighlightColor-to-Avalonia Color and IDocument/LineSegment-to-TextDocument/DocumentLine substitutions."
+    "notes": "Same interactive-rebase command, option, object-id, comment, and theme-aware command-color classification on AvaloniaEdit. The three signature findings are the required HighlightColor-to-Avalonia Color and IDocument/LineSegment-to-TextDocument/DocumentLine substitutions. The pick and exec entries preserve the original InfoText and GrayText roles. These roles resolve during coloring so an already-loaded todo editor follows theme changes."
   },
   "src/app/GitUI/Editor/RichTextBoxXhtmlSupportExtension.cs": {
     "status": "windowsOnly",

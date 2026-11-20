@@ -3,16 +3,15 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using GitExtensions.Extensibility.Git;
 using GitUI.Compat;
+using GitUI.Theming;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor;
 
 internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransformer
 {
-    protected static MediaColor ColorNormal
-        => Avalonia.Application.Current?.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark
-            ? Colors.White
-            : Colors.Black;
+    // Avalonia resolves the original system role through the shared theme resources.
+    protected static MediaColor ColorNormal => GetSystemColor(System.Drawing.KnownColor.WindowText);
 
     private static MediaColor ColorComment { get; } = Colors.DarkGreen;
 
@@ -62,6 +61,9 @@ internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransfor
     protected abstract void MarkTokens(TextDocument document, DocumentLine line);
 
     public string Name { get; }
+
+    protected static MediaColor GetSystemColor(System.Drawing.KnownColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, name));
 
     protected void SetStyle(int startOffset, int endOffset, MediaColor color, bool bold = false)
     {

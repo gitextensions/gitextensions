@@ -24,6 +24,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
@@ -690,6 +691,60 @@ public sealed class FileViewerContentTests
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlightingToolStripMenuItem", "Text", "Show synta&x highlighting");
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "showNonPrintChars", "ToolTipText", "Show nonprinting characters");
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlighting", "ToolTipText", "Show syntax highlighting");
+    }
+
+    [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", "Summarize the change", "#000000", "#F0F0F0")]
+    [TestCase("git-rebase-todo", "pick 89abcdef Summarize the change", "#000000", "#BEBEBE")]
+    [TestCase("git-rebase-todo", "x deadbeef example", "#6D6D6D", "#969696")]
+    public async Task Git_syntax_should_use_live_source_theme_roles(string fileName, string text, string lightColor, string darkColor)
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            ApplyTheme(ThemeId.DefaultLight);
+            window.Show();
+            await viewer.ViewTextAsync(fileName, text);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            GitHighlightingStrategyBase strategy = textView.LineTransformers.OfType<GitHighlightingStrategyBase>().Single();
+            ReadForeground(textView).Should().Be(Color.Parse(lightColor));
+
+            ApplyTheme(ThemeId.DefaultDark);
+            ReadForeground(textView).Should().Be(Color.Parse(darkColor));
+            textView.LineTransformers.OfType<GitHighlightingStrategyBase>().Should().ContainSingle()
+                .Which.Should().BeSameAs(strategy);
+
+            ApplyTheme(ThemeId.DefaultLight);
+            ReadForeground(textView).Should().Be(Color.Parse(lightColor));
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId);
+        }
+
+        void ApplyTheme(ThemeId theme)
+        {
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        Color ReadForeground(TextView textView)
+        {
+            window.UpdateLayout();
+            return textView.VisualLines.First().Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
     }
 
     [AvaloniaTest]

@@ -19,7 +19,7 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
     d, drop = remove commit
     */
 
-    private readonly Dictionary<char, (string longForm, MediaColor color, string[] options)> _commandByFirstChar;
+    private readonly Dictionary<char, (string longForm, Func<MediaColor> color, string[] options)> _commandByFirstChar;
 
     public RebaseTodoHighlightingStrategy(IGitModule module)
         : base("GitRebaseTodo", module)
@@ -27,13 +27,13 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
         bool isDark = Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
         _commandByFirstChar = new()
         {
-            { 'p', ("pick", ColorNormal, []) },
-            { 'r', ("reword", isDark ? Colors.MediumPurple : Colors.Purple, []) },
-            { 'e', ("edit", isDark ? Colors.LightGray : Colors.DarkGray, []) },
-            { 's', ("squash", isDark ? Colors.CornflowerBlue : Colors.DarkBlue, []) },
-            { 'f', ("fixup", isDark ? Colors.Coral : Colors.LightCoral, new[] { "-C", "-c" }) },
-            { 'x', ("exec", Colors.Gray, []) },
-            { 'd', ("drop", isDark ? Colors.IndianRed : Colors.Red, []) }
+            { 'p', ("pick", static () => GetSystemColor(System.Drawing.KnownColor.InfoText), []) },
+            { 'r', ("reword", () => isDark ? Colors.MediumPurple : Colors.Purple, []) },
+            { 'e', ("edit", () => isDark ? Colors.LightGray : Colors.DarkGray, []) },
+            { 's', ("squash", () => isDark ? Colors.CornflowerBlue : Colors.DarkBlue, []) },
+            { 'f', ("fixup", () => isDark ? Colors.Coral : Colors.LightCoral, new[] { "-C", "-c" }) },
+            { 'x', ("exec", static () => GetSystemColor(System.Drawing.KnownColor.GrayText), []) },
+            { 'd', ("drop", () => isDark ? Colors.IndianRed : Colors.Red, []) }
         };
     }
 
@@ -62,7 +62,7 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
 
         char c = document.GetCharAt(line.Offset);
 
-        if (!_commandByFirstChar.TryGetValue(c, out (string longForm, MediaColor color, string[] options) cmd))
+        if (!_commandByFirstChar.TryGetValue(c, out (string longForm, Func<MediaColor> color, string[] options) cmd))
         {
             return false;
         }
@@ -135,8 +135,10 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
                             return false;
                         }
 
-                        SetStyle(line.Offset, line.Offset + idStartIndex, cmd.color, bold: true);
-                        SetStyle(line.Offset + idStartIndex, line.Offset + index, cmd.color, bold: true);
+                        // Resolve the original named system colors against the active theme at draw time.
+                        MediaColor commandColor = cmd.color();
+                        SetStyle(line.Offset, line.Offset + idStartIndex, commandColor, bold: true);
+                        SetStyle(line.Offset + idStartIndex, line.Offset + index, commandColor, bold: true);
                         SetStyle(line.Offset + index, line.EndOffset, ColorNormal);
                         return true;
                     }
