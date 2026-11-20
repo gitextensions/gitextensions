@@ -602,6 +602,45 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_request_a_diff_only_for_double_clicks_in_the_text_area(bool onScrollBar)
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            int requests = 0;
+            viewer.RequestDiffView += (_, _) => requests++;
+            Control target = onScrollBar
+                ? viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                    .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible)
+                : viewer.TextEditor.TextArea.TextView;
+            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
+
+            window.MouseMove(point, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            Visual hit = window.InputHitTest(point).Should().BeAssignableTo<Visual>().Which;
+            (hit == target || hit.GetVisualAncestors().Contains(target)).Should().BeTrue();
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            requests.Should().Be(onScrollBar ? 0 : 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Binary_preview_should_start_at_the_hex_header_and_keep_its_difftool()
     {
         using FileViewer viewer = CreateViewer();

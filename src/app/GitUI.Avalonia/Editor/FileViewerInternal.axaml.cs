@@ -117,7 +117,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             e.Handled = true;
         }, RoutingStrategies.Tunnel);
         TextEditor.KeyUp += (sender, e) => KeyUp?.Invoke(sender, e);
-        TextEditor.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
+
+        // Avalonia's routed double tap stays on the source text area, outside the scrollbar route.
+        TextEditor.TextArea.DoubleTapped += (s, e) => DoubleClick?.Invoke(s, e);
         TextEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
         {
             int y = (int)e.GetPosition(TextEditor.TextArea.TextView).Y;
