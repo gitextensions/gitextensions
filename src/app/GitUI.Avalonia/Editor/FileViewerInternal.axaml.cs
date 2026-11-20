@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
@@ -376,15 +377,50 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public void SetHighlightingForFile(string filename)
     {
+        bool isRebaseTodo = filename.EndsWith("git-rebase-todo", StringComparison.Ordinal);
+        bool isGitMessage = isRebaseTodo || filename.EndsWith("COMMIT_EDITMSG", StringComparison.Ordinal);
+        IGitUICommands? commands = null;
+
+        // Avalonia's inner editor can apply highlighting before its owning viewer is attached.
+        if (isGitMessage && !TryGetUICommandsDirect(out commands)
+            && this.GetLogicalAncestors().OfType<FileViewer>().FirstOrDefault() is { } viewer)
+        {
+            _ = viewer.TryGetUICommandsDirect(out commands);
+        }
+
+        GitHighlightingStrategyBase? gitHighlightingStrategy = null;
+        if (commands?.Module is { } module)
+        {
+            gitHighlightingStrategy = isRebaseTodo
+                ? new RebaseTodoHighlightingStrategy(module)
+                : new CommitMessageHighlightingStrategy(module);
+        }
+
         string extension = Path.GetExtension(filename);
-        SetHighlightingStrategy(string.IsNullOrEmpty(extension)
+        SetHighlightingStrategy(isGitMessage || string.IsNullOrEmpty(extension)
             ? null
-            : HighlightingManager.Instance.GetDefinitionByExtension(extension));
+            : HighlightingManager.Instance.GetDefinitionByExtension(extension), gitHighlightingStrategy);
     }
 
-    private void SetHighlightingStrategy(IHighlightingDefinition? highlightingStrategy)
+    // Avalonia uses a syntax definition and a separate line transformer for Git files.
+    private void SetHighlightingStrategy(
+        IHighlightingDefinition? highlightingStrategy,
+        GitHighlightingStrategyBase? gitHighlightingStrategy = null)
     {
+        IList<IVisualLineTransformer> transformers = TextEditor.TextArea.TextView.LineTransformers;
+        if (_gitHighlightingStrategy is not null)
+        {
+            transformers.Remove(_gitHighlightingStrategy);
+        }
+
+        _gitHighlightingStrategy = gitHighlightingStrategy;
+        if (_gitHighlightingStrategy is not null)
+        {
+            transformers.Add(_gitHighlightingStrategy);
+        }
+
         TextEditor.SyntaxHighlighting = highlightingStrategy;
+        UpdateValidationMarkers();
         TextEditor.TextArea.TextView.Redraw();
     }
 
@@ -707,7 +743,24 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             return first?.FirstDocumentLine.LineNumber - 1 ?? 0;
         }
 
-        set => TextEditor.ScrollToLine(Math.Max(1, value + 1));
+        set
+        {
+            int documentLine = Math.Max(1, value + 1);
+            if (TextEditor.Document is { } document
+                && TextEditor.TextArea.FindAncestorOfType<ScrollViewer>() is { } scrollViewer)
+            {
+                // AvaloniaEdit's ScrollToLine can center its target. Set the viewport's top directly.
+                TextView textView = TextEditor.TextArea.TextView;
+                double top = textView.GetVisualTopByDocumentLine(Math.Min(documentLine, document.LineCount));
+
+                // AvaloniaEdit includes the previous row at its exact bottom edge.
+                scrollViewer.Offset = new Vector(scrollViewer.Offset.X, top > 0 ? Math.BitIncrement(top) : 0);
+            }
+            else
+            {
+                TextEditor.ScrollToLine(documentLine);
+            }
+        }
     }
 
     public int GetLineFromVisualPosY(int visualPosY)
@@ -1084,7 +1137,6 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         }
 
         public ThemeAwareTextEditor TextEditor => _control.TextEditor;
-        public GitHighlightingStrategyBase? HighlightingStrategy => _control._gitHighlightingStrategy;
         public IReadOnlyList<global::GitUI.TextRange> SelectionOccurrences => _control._selectionOccurrenceRenderer.Markers;
         public bool IsFindAndReplaceFormCreated => _control._findAndReplaceForm is not null;
         public FindAndReplaceForm FindAndReplaceForm => _control.GetOrCreateFindAndReplaceForm();
@@ -1136,29 +1188,6 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _findAndReplaceForm = null;
         form.Closed -= FindAndReplaceForm_Closed;
         form.Close();
-    }
-
-    internal void SetHighlightingForFile(string? filename, IGitModule? module)
-    {
-        if (_gitHighlightingStrategy is not null)
-        {
-            TextEditor.TextArea.TextView.LineTransformers.Remove(_gitHighlightingStrategy);
-        }
-
-        _gitHighlightingStrategy = filename switch
-        {
-            not null when module is not null && filename.EndsWith("git-rebase-todo", StringComparison.Ordinal) => new RebaseTodoHighlightingStrategy(module),
-            not null when module is not null && filename.EndsWith("COMMIT_EDITMSG", StringComparison.Ordinal) => new CommitMessageHighlightingStrategy(module),
-            _ => null,
-        };
-
-        if (_gitHighlightingStrategy is not null)
-        {
-            TextEditor.TextArea.TextView.LineTransformers.Add(_gitHighlightingStrategy);
-        }
-
-        UpdateValidationMarkers();
-        TextEditor.TextArea.TextView.Redraw();
     }
 
     private void UpdateValidationMarkers()

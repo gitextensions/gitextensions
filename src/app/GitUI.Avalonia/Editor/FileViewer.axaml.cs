@@ -13,7 +13,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
-using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitCommands.Git;
@@ -2577,15 +2576,7 @@ public partial class FileViewer : GitModuleControl
         bool shouldHighlight = !string.IsNullOrEmpty(_fileName)
                                && (_viewMode == ViewMode.Text
                                    || (ShowSyntaxHighlightingInDiff && _viewMode.IsPartialTextView()));
-        bool isGitMessage = shouldHighlight
-            && (_fileName!.EndsWith("git-rebase-todo", StringComparison.Ordinal)
-                || _fileName.EndsWith("COMMIT_EDITMSG", StringComparison.Ordinal));
-        internalFileViewer.SetHighlightingForFile(isGitMessage ? _fileName : null, TryGetUICommandsDirect(out _) ? Module : null);
-        string? extension = shouldHighlight && !isGitMessage ? Path.GetExtension(_fileName) : string.Empty;
-        TextEditor.SyntaxHighlighting = string.IsNullOrEmpty(extension)
-            ? null
-            : HighlightingManager.Instance.GetDefinitionByExtension(extension);
-        TextEditor.TextArea.TextView.Redraw();
+        internalFileViewer.SetHighlightingForFile(shouldHighlight ? _fileName! : string.Empty);
     }
 
     private void BindSettingsCommands(IGitUICommands? commands)

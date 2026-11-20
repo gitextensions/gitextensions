@@ -665,6 +665,19 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", typeof(CommitMessageHighlightingStrategy))]
+    [TestCase("git-rebase-todo", typeof(RebaseTodoHighlightingStrategy))]
+    public async Task FileViewer_should_use_its_repository_for_git_specific_syntax(string name, Type expected)
+    {
+        using FileViewer viewer = CreateViewer();
+
+        await viewer.ViewTextAsync(name, "pick fb42c9e example\n");
+
+        viewer.TextEditor.TextArea.TextView.LineTransformers.OfType<GitHighlightingStrategyBase>()
+            .Should().ContainSingle().Which.Should().BeOfType(expected);
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     public async Task Display_options_should_apply_file_syntax_settings_and_independent_diff_rendering()
     {
@@ -1347,6 +1360,49 @@ public sealed class FileViewerContentTests
         finally
         {
             owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewerInternal_should_restore_the_first_visible_line_when_the_caret_is_outside_the_view()
+    {
+        using FileViewerInternal viewer = new();
+        Window window = new() { Width = 480, Height = 250, Content = viewer };
+        try
+        {
+            window.Show();
+            string text = string.Join('\n', Enumerable.Range(1, 90).Select(line => $"line {line:00}"));
+            viewer.Editor.ShowLineNumbers = true;
+            viewer.SetText(text, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            viewer.Editor.TextArea.Caret.Position = new TextViewPosition(11, 3);
+            TextView textView = viewer.Editor.TextArea.TextView;
+            ScrollViewer scrollViewer = viewer.Editor.TextArea.FindAncestorOfType<ScrollViewer>()!;
+            scrollViewer.Offset = new Vector(0, textView.GetVisualTopByDocumentLine(37) + 1);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            viewer.GetLineFromVisualPosY(0).Should().Be(36);
+
+            string refreshed = text.Replace("line 50", "line fifty", StringComparison.Ordinal);
+            bool restored = viewer.SetText(
+                refreshed, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            restored.Should().BeTrue();
+            viewer.Editor.TextArea.Caret.Line.Should().Be(11);
+            viewer.Editor.TextArea.Caret.Column.Should().Be(3);
+            viewer.GetLineFromVisualPosY(0).Should().Be(
+                36,
+                "the scroll position {0:R} must reach the document line starting at {1:R} and the first arranged line is {2}",
+                textView.ScrollOffset.Y,
+                textView.GetVisualTopByDocumentLine(37),
+                textView.VisualLines[0].FirstDocumentLine.LineNumber);
+        }
+        finally
+        {
+            window.Close();
         }
     }
 

@@ -183,16 +183,23 @@ public sealed class EditorCoreTests
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.GetEffectiveSetting("core.commentchar", "#").Returns("#");
-        FileViewerInternal viewer = new();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        using FileViewerInternal viewer = new() { UICommandsSource = source };
 
-        viewer.SetHighlightingForFile("COMMIT_EDITMSG", module);
-        viewer.GetTestAccessor().HighlightingStrategy.Should().BeOfType<CommitMessageHighlightingStrategy>();
+        viewer.SetHighlightingForFile("COMMIT_EDITMSG");
+        viewer.Editor.TextArea.TextView.LineTransformers.OfType<GitHighlightingStrategyBase>()
+            .Should().ContainSingle().Which.Should().BeOfType<CommitMessageHighlightingStrategy>();
 
-        viewer.SetHighlightingForFile("git-rebase-todo", module);
-        viewer.GetTestAccessor().HighlightingStrategy.Should().BeOfType<RebaseTodoHighlightingStrategy>();
+        viewer.SetHighlightingForFile("git-rebase-todo");
+        viewer.Editor.TextArea.TextView.LineTransformers.OfType<GitHighlightingStrategyBase>()
+            .Should().ContainSingle().Which.Should().BeOfType<RebaseTodoHighlightingStrategy>();
 
-        viewer.SetHighlightingForFile("ordinary.cs", module);
-        viewer.GetTestAccessor().HighlightingStrategy.Should().BeNull();
+        viewer.SetHighlightingForFile("ordinary.cs");
+        viewer.Editor.TextArea.TextView.LineTransformers.OfType<GitHighlightingStrategyBase>().Should().BeEmpty();
+        viewer.Editor.SyntaxHighlighting!.Name.Should().Be("C#");
     }
 
     [AvaloniaTest]
