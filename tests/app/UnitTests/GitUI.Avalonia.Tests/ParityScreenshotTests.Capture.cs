@@ -1995,7 +1995,7 @@ public sealed partial class ParityScreenshotTests
             ShellExtensionSettingsPage => view.FindControl<Control>("cbAlwaysShowAllCommands"),
             FormChooseTranslation => view.FindControl<ListBox>("lvTranslations")?
                 .GetLogicalDescendants().OfType<ListBoxItem>().FirstOrDefault(),
-            FormCommitTemplateSettings form => form.GetTestAccessor().Ok,
+            FormCommitTemplateSettings form => form.FindControl<Button>("buttonOk")!,
             FormResetAnotherBranch form => form.GetTestAccessor().Branches,
             _ => null,
         };

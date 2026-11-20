@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -51,16 +52,15 @@ public sealed class CommitDialogExtrasTests
     public void FormCommitTemplateSettings_should_construct_with_the_original_controls()
     {
         FormCommitTemplateSettings form = new();
-        FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.CommitTemplates.Should().NotBeNull();
-        accessor.TemplateName.Should().NotBeNull();
-        accessor.TemplateText.Should().NotBeNull();
-        accessor.RegexEnabled.Should().NotBeNull();
-        accessor.AutoWrap.Should().NotBeNull();
-        accessor.MaxFirstLineLength.Should().NotBeNull();
-        accessor.Ok.Should().NotBeNull();
-        accessor.Cancel.Should().NotBeNull();
+        form.FindControl<ComboBox>("_NO_TRANSLATE_comboBoxCommitTemplates")!.Should().NotBeNull();
+        form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.Should().NotBeNull();
+        form.FindControl<TextBox>("_NO_TRANSLATE_textCommitTemplateText")!.Should().NotBeNull();
+        form.FindControl<CheckBox>("checkBoxRegexEnabled")!.Should().NotBeNull();
+        form.FindControl<CheckBox>("checkBoxAutoWrap")!.Should().NotBeNull();
+        form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxFirstLineLength")!.Should().NotBeNull();
+        form.FindControl<Button>("buttonOk")!.Should().NotBeNull();
+        form.FindControl<Button>("buttonCancel")!.Should().NotBeNull();
     }
 
     [AvaloniaTest]
@@ -77,7 +77,16 @@ public sealed class CommitDialogExtrasTests
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "tabPage1", "Text", "Commit templates");
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "tabPage2", "Text", "Commit validation");
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "checkBoxRegexEnabled", "Text", "Enable regex");
-        translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "checkBoxRegexEnabled", "toolTipRegex", Arg.Any<string>());
+        string regexTooltip = """
+            Use {{regex}}[regex group number] to extract branch name part
+            Group number is optional, default is 1
+
+            Examples on branch name: "feature/ABC-4587-commitMessageRegex"
+            "Commit from: {{^feature/(.*)$}} branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
+            "{{([A-Z]+-\d+)}}: My message is" -> "ABC-4587: My message is "
+            "Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]" -> "Name: commitMessageRegex, issue: ABC-4587"
+            """.ReplaceLineEndings("\r\n");
+        translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "checkBoxRegexEnabled", "toolTipRegex", regexTooltip);
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "labelAutoWrap", "Text", "Auto-wrap commit message (except subject line)");
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "labelMaxFirstLineLength", "Text", "Maximum number of characters in the first line (0 = check disabled):");
         translation.Received(1).AddTranslationItem(nameof(FormCommitTemplateSettings), "labelSecondLineEmpty", "Text", "Second line must be empty:");
@@ -96,13 +105,12 @@ public sealed class CommitDialogExtrasTests
         commands.Module.Returns(module);
 
         FormCommitTemplateSettings form = new(commands);
-        FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.CommitTemplates.ItemCount.Should().Be(10);
-        accessor.CommitTemplates.SelectedIndex.Should().Be(0);
+        form.FindControl<ComboBox>("_NO_TRANSLATE_comboBoxCommitTemplates")!.ItemCount.Should().Be(10);
+        form.FindControl<ComboBox>("_NO_TRANSLATE_comboBoxCommitTemplates")!.SelectedIndex.Should().Be(0);
 
         // The template-name box keeps the original 80-character cap.
-        accessor.TemplateName.MaxLength.Should().Be(80);
+        form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.MaxLength.Should().Be(80);
 
         Dispatcher.UIThread.RunJobs();
     }
@@ -111,31 +119,30 @@ public sealed class CommitDialogExtrasTests
     public void FormCommitTemplateSettings_should_match_native_96_dpi_designer_geometry()
     {
         FormCommitTemplateSettings form = new(CreateCommands());
-        FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
         form.Show();
         Dispatcher.UIThread.RunJobs();
 
         form.ClientSize.Should().Be(new Size(698, 361));
-        accessor.ControlsPanel.Bounds.Should().Be(new Rect(0, 320, 698, 41));
-        accessor.Ok.Bounds.Should().Be(new Rect(529, 8, 75, 25));
-        accessor.Cancel.Bounds.Should().Be(new Rect(610, 8, 75, 25));
-        accessor.Tabs.Bounds.Should().Be(new Rect(9, 9, 680, 302));
-        accessor.TemplateLayout.Bounds.Should().Be(new Rect(3, 3, 666, 262));
-        accessor.CommitTemplates.Bounds.Should().Be(new Rect(3, 3, 660, 23));
-        accessor.TemplateName.Bounds.Should().Be(new Rect(113, 32, 550, 23));
-        accessor.TemplateText.Bounds.Should().Be(new Rect(113, 61, 550, 198));
-        accessor.RegexEnabled.Bounds.Should().Be(new Rect(3, 243, 92, 19));
+        form.FindControl<Grid>("ControlsPanel")!.Bounds.Should().Be(new Rect(0, 320, 698, 41));
+        form.FindControl<Button>("buttonOk")!.Bounds.Should().Be(new Rect(529, 8, 75, 25));
+        form.FindControl<Button>("buttonCancel")!.Bounds.Should().Be(new Rect(610, 8, 75, 25));
+        form.FindControl<TabControl>("tabControl1")!.Bounds.Should().Be(new Rect(9, 9, 680, 302));
+        form.FindControl<Grid>("tableLayoutPanel5")!.Bounds.Should().Be(new Rect(3, 3, 666, 262));
+        form.FindControl<ComboBox>("_NO_TRANSLATE_comboBoxCommitTemplates")!.Bounds.Should().Be(new Rect(3, 3, 660, 23));
+        form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.Bounds.Should().Be(new Rect(113, 32, 550, 23));
+        form.FindControl<TextBox>("_NO_TRANSLATE_textCommitTemplateText")!.Bounds.Should().Be(new Rect(113, 61, 550, 198));
+        form.FindControl<CheckBox>("checkBoxRegexEnabled")!.Bounds.Should().Be(new Rect(3, 243, 92, 19));
 
-        accessor.Tabs.SelectedItem = accessor.ValidationTab;
+        form.FindControl<TabControl>("tabControl1")!.SelectedItem = form.FindControl<TabItem>("tabPage2")!;
         Dispatcher.UIThread.RunJobs();
 
-        accessor.ValidationLayout.Bounds.Should().Be(new Rect(3, 3, 666, 262));
-        accessor.MaxFirstLineLength.Bounds.Should().Be(new Rect(377, 3, 60, 23));
-        accessor.MaxLineLength.Bounds.Should().Be(new Rect(377, 32, 60, 23));
-        accessor.AutoWrap.Bounds.Should().Be(new Rect(377, 65, 15, 14));
-        accessor.ValidationRegex.Bounds.Should().Be(new Rect(377, 89, 286, 23));
-        accessor.UseIndent.Bounds.Should().Be(new Rect(377, 122, 15, 14));
-        accessor.SecondLineEmpty.Bounds.Should().Be(new Rect(377, 150, 15, 14));
+        form.FindControl<Grid>("tableLayoutPanel3")!.Bounds.Should().Be(new Rect(3, 3, 666, 262));
+        form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxFirstLineLength")!.Bounds.Should().Be(new Rect(377, 3, 60, 23));
+        form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxLineLength")!.Bounds.Should().Be(new Rect(377, 32, 60, 23));
+        form.FindControl<CheckBox>("checkBoxAutoWrap")!.Bounds.Should().Be(new Rect(377, 65, 15, 14));
+        form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitValidationRegex")!.Bounds.Should().Be(new Rect(377, 89, 286, 23));
+        form.FindControl<CheckBox>("checkBoxUseIndent")!.Bounds.Should().Be(new Rect(377, 122, 15, 14));
+        form.FindControl<CheckBox>("checkBoxSecondLineEmpty")!.Bounds.Should().Be(new Rect(377, 150, 15, 14));
         form.Close();
     }
 
@@ -147,33 +154,39 @@ public sealed class CommitDialogExtrasTests
         {
             CommitTemplateItem.SaveToSettings([new CommitTemplateItem("Release", "release text", icon: null, isRegex: true)]);
             FormCommitTemplateSettings form = new(CreateCommands());
-            FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
+            ComboBox commitTemplates = form.FindControl<ComboBox>("_NO_TRANSLATE_comboBoxCommitTemplates")!;
+            TextBox templateName = form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!;
+            TextBox templateText = form.FindControl<TextBox>("_NO_TRANSLATE_textCommitTemplateText")!;
+            CheckBox regexEnabled = form.FindControl<CheckBox>("checkBoxRegexEnabled")!;
             form.Show();
             Dispatcher.UIThread.RunJobs();
 
-            accessor.Templates.Should().HaveCount(10);
-            accessor.Templates[0].Name.Should().Be("Release");
-            accessor.TemplateName.Text.Should().Be("Release");
-            accessor.TemplateText.Text.Should().Be("release text");
-            accessor.RegexEnabled.IsChecked.Should().BeTrue();
+            commitTemplates.ItemCount.Should().Be(10);
+            commitTemplates.Items[0].Should().Be("1 : Release");
+            templateName.Text.Should().Be("Release");
+            templateText.Text.Should().Be("release text");
+            regexEnabled.IsChecked.Should().BeTrue();
 
-            accessor.CommitTemplates.SelectedItem = accessor.CommitTemplates.Items[1];
+            commitTemplates.SelectedItem = commitTemplates.Items[1];
             Dispatcher.UIThread.RunJobs();
-            accessor.CommitTemplates.SelectedIndex.Should().Be(1);
+            commitTemplates.SelectedIndex.Should().Be(1);
             string longName = new('x', 60);
-            accessor.TemplateName.Text = longName;
-            accessor.TemplateName.RaiseEvent(new Avalonia.Controls.TextChangedEventArgs(Avalonia.Controls.TextBox.TextChangedEvent));
-            accessor.TemplateText.Text = "second text";
-            accessor.TemplateText.RaiseEvent(new Avalonia.Controls.TextChangedEventArgs(Avalonia.Controls.TextBox.TextChangedEvent));
-            accessor.RegexEnabled.IsChecked = true;
+            templateName.Text = longName;
+            templateName.RaiseEvent(new TextChangedEventArgs(TextBox.TextChangedEvent));
+            templateText.Text = "second text";
+            templateText.RaiseEvent(new TextChangedEventArgs(TextBox.TextChangedEvent));
+            regexEnabled.IsChecked = true;
             Dispatcher.UIThread.RunJobs();
 
-            accessor.Templates[0].Name.Should().Be("Release");
-            accessor.Templates[1].Name.Should().Be(longName);
-            accessor.Templates[1].Text.Should().Be("second text");
-            accessor.Templates[1].IsRegex.Should().BeTrue();
-            accessor.CommitTemplates.Items[1].Should().Be($"2 : {new string('x', 47)}...");
-            form.Close();
+            commitTemplates.Items[1].Should().Be($"2 : {new string('x', 47)}...");
+            form.FindControl<Button>("buttonOk")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            CommitTemplateItem[] templates = CommitTemplateItem.LoadFromSettings()!;
+            templates.Should().HaveCount(10);
+            templates[0].Name.Should().Be("Release");
+            templates[1].Name.Should().Be(longName);
+            templates[1].Text.Should().Be("second text");
+            templates[1].IsRegex.Should().BeTrue();
         }
         finally
         {
@@ -189,19 +202,19 @@ public sealed class CommitDialogExtrasTests
         {
             AppSettings.CommitTemplates = string.Empty;
             FormCommitTemplateSettings form = new(CreateCommands());
-            FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
-            accessor.TemplateName.Text = "Feature";
-            accessor.TemplateText.Text = "feature text";
-            accessor.RegexEnabled.IsChecked = true;
-            accessor.MaxFirstLineLength.Value = 52;
-            accessor.MaxLineLength.Value = 72;
-            accessor.ValidationRegex.Text = "^[A-Z]+-[0-9]+";
-            accessor.AutoWrap.IsChecked = false;
-            accessor.UseIndent.IsChecked = false;
-            accessor.SecondLineEmpty.IsChecked = true;
+            form.Show();
+            form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.Text = "Feature";
+            form.FindControl<TextBox>("_NO_TRANSLATE_textCommitTemplateText")!.Text = "feature text";
+            form.FindControl<CheckBox>("checkBoxRegexEnabled")!.IsChecked = true;
+            form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxFirstLineLength")!.Value = 52;
+            form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxLineLength")!.Value = 72;
+            form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitValidationRegex")!.Text = "^[A-Z]+-[0-9]+";
+            form.FindControl<CheckBox>("checkBoxAutoWrap")!.IsChecked = false;
+            form.FindControl<CheckBox>("checkBoxUseIndent")!.IsChecked = false;
+            form.FindControl<CheckBox>("checkBoxSecondLineEmpty")!.IsChecked = true;
             Dispatcher.UIThread.RunJobs();
 
-            accessor.SaveSettings();
+            form.FindControl<Button>("buttonOk")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             AppSettings.CommitValidationMaxCntCharsFirstLine.Should().Be(52);
             AppSettings.CommitValidationMaxCntCharsPerLine.Should().Be(72);
@@ -213,7 +226,7 @@ public sealed class CommitDialogExtrasTests
             templates[0].Name.Should().Be("Feature");
             templates[0].Text.Should().Be("feature text");
             templates[0].IsRegex.Should().BeTrue();
-            form.Close();
+            form.IsVisible.Should().BeFalse();
         }
         finally
         {
@@ -230,12 +243,11 @@ public sealed class CommitDialogExtrasTests
             AppSettings.CommitTemplates = string.Empty;
             AppSettings.CommitValidationMaxCntCharsFirstLine = 50;
             FormCommitTemplateSettings form = new(CreateCommands());
-            FormCommitTemplateSettings.TestAccessor accessor = form.GetTestAccessor();
             form.Show();
-            accessor.TemplateName.Text = "unsaved";
-            accessor.MaxFirstLineLength.Value = 99;
+            form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.Text = "unsaved";
+            form.FindControl<NumericUpDown>("_NO_TRANSLATE_numericMaxFirstLineLength")!.Value = 99;
 
-            accessor.Cancel.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+            form.FindControl<Button>("buttonCancel")!.RaiseEvent(new RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
 
             form.IsVisible.Should().BeFalse();
             AppSettings.CommitTemplates.Should().BeEmpty();
