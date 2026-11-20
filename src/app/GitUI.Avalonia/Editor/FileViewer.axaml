@@ -211,12 +211,11 @@
                            ToolTip.Tip="Ignore all whitespace changes"
                            Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.WhitespaceIgnoreAll}" />
-        <ComboBox x:Name="encodingToolStripComboBox"
-                  Classes="gitextensions-toolbar-input"
-                  Width="140"
-                  Height="25"
-                  MinHeight="25"
-                  Margin="1,0" />
+        <compat:ToolbarComboBox x:Name="encodingToolStripComboBox"
+                                Width="140"
+                                Height="25"
+                                MinHeight="25"
+                                Margin="1,0" />
         <compat:IconButton x:Name="settingsButton"
                            compat:TranslationCompat.TranslateToolTip="False"
                            ToolTip.Tip="Settings"

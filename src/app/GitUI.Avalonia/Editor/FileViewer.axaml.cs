@@ -50,7 +50,7 @@ public partial class FileViewer : GitModuleControl
     private bool _hotkeysLoaded;
     private bool _isDisposed;
     private bool _runtimeStateApplied;
-    private bool _runtimeFontApplied;
+    private bool _runtimeLoadInvoked;
     private Bitmap? _image;
     private Action? _openWithDifftool;
     private string? _fileName;
@@ -247,7 +247,6 @@ public partial class FileViewer : GitModuleControl
         AttachedToVisualTree += (_, _) => ApplyRuntimeStateIfVisible();
         LayoutUpdated += (_, _) => ApplyRuntimeStateIfVisible();
 
-        PopulateEncodings();
         _showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(
             reload: !AppSettings.RememberShowNonPrintingCharsPreference);
         ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(
@@ -278,21 +277,16 @@ public partial class FileViewer : GitModuleControl
 
     internal void InitializeRuntimeState()
     {
-        if (_isDisposed)
+        if (Design.IsDesignMode || _isDisposed || _runtimeStateApplied)
         {
             return;
         }
 
-        if (!_runtimeFontApplied)
+        bool runtimeLoadInvoked = _runtimeLoadInvoked;
+        if (!runtimeLoadInvoked)
         {
-            // The font setting does not depend on a commands owner becoming available first.
-            Font = AppSettings.FixedWidthFont;
-            _runtimeFontApplied = true;
-        }
-
-        if (_runtimeStateApplied)
-        {
-            return;
+            OnRuntimeLoad();
+            _runtimeLoadInvoked = true;
         }
 
         _ = TryGetUICommandsDirect(out IGitUICommands? commands)
@@ -303,7 +297,11 @@ public partial class FileViewer : GitModuleControl
         }
 
         BindSettingsCommands(commands);
-        ReloadHotkeys();
+        if (runtimeLoadInvoked)
+        {
+            ReloadHotkeys();
+        }
+
         _runtimeStateApplied = true;
     }
 
@@ -1004,6 +1002,20 @@ public partial class FileViewer : GitModuleControl
         UICommandsSource.UICommandsChanged -= OnUICommandsChanged;
         _commandsSource = null;
         base.DisposeUICommandsSource();
+    }
+
+    protected override void OnRuntimeLoad()
+    {
+        base.OnRuntimeLoad();
+
+        ReloadHotkeys();
+
+        Font = AppSettings.FixedWidthFont;
+
+        string[] encodings = [.. GetAvailableEncodings().Select(encoding => encoding.EncodingName)];
+        encodingToolStripComboBox.ItemsSource = encodings;
+        encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
+        UpdateEncodingSelection();
     }
 
     private StagedStatus ViewItemStagedStatus()
@@ -2103,8 +2115,6 @@ public partial class FileViewer : GitModuleControl
 
         public FindAndReplaceForm FindAndReplaceForm => _fileViewer.internalFileViewer.GetTestAccessor().FindAndReplaceForm;
 
-        public ComboBox EncodingToolStripComboBox => _fileViewer.encodingToolStripComboBox;
-
         public Border FileViewerToolbar => _fileViewer.fileviewerToolbar;
 
         public Separator ContextLinesSeparator => _fileViewer.toolStripSeparator4;
@@ -2871,22 +2881,6 @@ public partial class FileViewer : GitModuleControl
         resetSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
         replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
         goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
-    }
-
-    private void PopulateEncodings()
-    {
-        _updatingEncoding = true;
-        try
-        {
-            encodingToolStripComboBox.ItemsSource = GetAvailableEncodings()
-                .Select(encoding => encoding.EncodingName)
-                .ToArray();
-            encodingToolStripComboBox.SelectedIndex = -1;
-        }
-        finally
-        {
-            _updatingEncoding = false;
-        }
     }
 
     private void ShowFileViewerToolbar()

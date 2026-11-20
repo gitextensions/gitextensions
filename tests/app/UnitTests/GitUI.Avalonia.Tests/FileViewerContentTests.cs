@@ -125,6 +125,29 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public void FileViewer_should_populate_encoding_choices_and_size_the_dropdown_on_runtime_load()
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+        encodings.Items.Should().BeEmpty("the original adds the choices in OnRuntimeLoad");
+
+        try
+        {
+            editor.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            encodings.Items.Should().Contain(Encoding.Unicode.EncodingName);
+            encodings.SelectedItem.Should().BeNull();
+            encodings.Should().BeOfType<ToolbarComboBox>().Which.DropDownWidth.Should().BeInRange(50, 250);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task ViewTextAsync_should_select_fixed_diff_and_bounded_binary_hex_modes()
     {
         FileViewer viewer = CreateViewer();
@@ -367,31 +390,41 @@ public sealed class FileViewerContentTests
     [AvaloniaTest]
     public async Task Encoding_selector_should_use_the_shared_available_encodings_and_request_a_reload()
     {
-        FileViewer viewer = CreateViewer();
-        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
-        Encoding initial = Encoding.UTF8;
-        Encoding replacement = Encoding.Unicode;
-        int reloadRequests = 0;
-        viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 640, Height = 360, Content = viewer };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+            Encoding initial = Encoding.UTF8;
+            Encoding replacement = Encoding.Unicode;
+            int reloadRequests = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
 
-        viewer.Encoding = initial;
-        accessor.EncodingToolStripComboBox.SelectedItem.Should().Be(initial.EncodingName);
-        accessor.EncodingToolStripComboBox.SelectedItem = replacement.EncodingName;
+            viewer.Encoding = initial;
+            encodings.SelectedItem.Should().Be(initial.EncodingName);
+            encodings.SelectedItem = replacement.EncodingName;
 
-        viewer.Encoding.Should().Be(replacement);
-        reloadRequests.Should().Be(1);
+            viewer.Encoding.Should().Be(replacement);
+            reloadRequests.Should().Be(1);
 
-        accessor.FileViewerToolbar.IsVisible = true;
-        await CaptureModeIfRequestedAsync(viewer, "EncodingToolbar");
+            viewer.GetTestAccessor().FileViewerToolbar.IsVisible = true;
+            await CaptureModeIfRequestedAsync(viewer, "EncodingToolbar", window);
 
-        File.WriteAllBytes(
-            Path.Combine(_workingDirectory, "legacy.txt"),
-            Encoding.Latin1.GetBytes("café!"));
-        viewer.Encoding = Encoding.Latin1;
-        await viewer.ViewFileAsync("legacy.txt");
+            File.WriteAllBytes(
+                Path.Combine(_workingDirectory, "legacy.txt"),
+                Encoding.Latin1.GetBytes("café!"));
+            viewer.Encoding = Encoding.Latin1;
+            await viewer.ViewFileAsync("legacy.txt");
 
-        viewer.TextEditor.Text.Should().Be("café!");
-        viewer.FilePreamble.Should().BeEmpty();
+            viewer.TextEditor.Text.Should().Be("café!");
+            viewer.FilePreamble.Should().BeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -765,7 +798,7 @@ public sealed class FileViewerContentTests
         }
     }
 
-    private static async Task CaptureModeIfRequestedAsync(FileViewer viewer, string mode)
+    private static async Task CaptureModeIfRequestedAsync(FileViewer viewer, string mode, Window? owner = null)
     {
         if (Environment.GetEnvironmentVariable("GITEXT_CAPTURE_FILE_VIEWER_MODES") != "1")
         {
@@ -774,13 +807,17 @@ public sealed class FileViewerContentTests
 
         string outputDirectory = Path.Combine(GetRepositoryRoot(), "eng", "avalonia", "parity-shots", "FileViewerModes");
         Directory.CreateDirectory(outputDirectory);
-        Window window = new()
+        Window window = owner ?? new Window
         {
             Width = 640,
             Height = 360,
             Content = viewer,
         };
-        window.Show();
+        if (owner is null)
+        {
+            window.Show();
+        }
+
         try
         {
             foreach ((string themeName, ThemeVariant theme) in new[]
@@ -807,7 +844,10 @@ public sealed class FileViewerContentTests
         }
         finally
         {
-            window.Close();
+            if (owner is null)
+            {
+                window.Close();
+            }
         }
 
         await Task.CompletedTask;
