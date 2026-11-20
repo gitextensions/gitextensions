@@ -476,6 +476,24 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         LoadCustomDifftools();
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _viewChangesSequence.Dispose();
+            _setDiffSequence.Dispose();
+
+            // Avalonia also queues selection work before switching to the UI thread.
+            _showSelectedFileSequence.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
     private string DescribeRevision(ObjectId objectId, int maxLength = 0)
     {
         if (objectId.IsZero)

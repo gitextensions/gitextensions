@@ -707,6 +707,11 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         revisionDiff.CancelBackgroundTasks();
         fileTree.CancelBackgroundTasks();
         _loadOperations.JoinPendingOperations();
+
+        // Avalonia does not dispose the child controls when the owner closes.
+        ((IDisposable)revisionDiff).Dispose();
+        ((IDisposable)fileTree).Dispose();
+
         _loadOperationsCancellationTokenSource.Dispose();
         (_terminal as IDisposable)?.Dispose();
         _terminal = null;

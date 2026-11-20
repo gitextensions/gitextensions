@@ -225,6 +225,84 @@ public sealed class RevisionDiffThreadingTests
     }
 
     [AvaloniaTest]
+    public async Task Dispose_should_cancel_an_in_flight_revision_diff_calculation()
+    {
+        TaskCompletionSource<CancellationToken> calculationStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim finishCalculation = new();
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_repository.Module.WorkingDir);
+        module.IsValidGitWorkingDir().Returns(true);
+        module.GetDiffFilesWithSubmodulesStatus(
+                _parent.ObjectId, _head.ObjectId, _parent.ObjectId, Arg.Any<bool>(),
+                Arg.Any<UntrackedFilesMode>(), Arg.Any<CancellationToken>())
+            .Returns(call =>
+            {
+                calculationStarted.TrySetResult(call.Arg<CancellationToken>());
+                finishCalculation.Wait(TimeSpan.FromSeconds(10));
+                return [];
+            });
+        RevisionDiffControl control = CreateControl(fileTreeMode: false, module: module);
+
+        try
+        {
+            control.DisplayDiffTab([_head]);
+            CancellationToken calculation = await calculationStarted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            calculation.IsCancellationRequested.Should().BeFalse();
+
+            ((IDisposable)control).Dispose();
+            _controls.Remove(control);
+
+            calculation.IsCancellationRequested.Should().BeTrue();
+        }
+        finally
+        {
+            finishCalculation.Set();
+            await JoinAsync(control);
+        }
+
+        control.DisplayedRevision.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    public async Task Dispose_should_cancel_an_in_flight_selected_file_load()
+    {
+        TaskCompletionSource<CancellationToken> loadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using SemaphoreSlim finishLoad = new(0);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_repository.Module.WorkingDir);
+        module.GetSingleDiffAsync(
+                _parent.ObjectId, _head.ObjectId, FirstFile, Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<System.Text.Encoding>(),
+                Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<IGitCommandConfiguration>(), Arg.Any<CancellationToken>())
+            .Returns(async call =>
+            {
+                loadStarted.TrySetResult(call.Arg<CancellationToken>());
+                await finishLoad.WaitAsync(TimeSpan.FromSeconds(10));
+                return ((Patch?)null, (string?)SamplePatch);
+            });
+        RevisionDiffControl control = CreateControl(fileTreeMode: false, module: module);
+        SeedFiles(control, fileTreeMode: false);
+
+        try
+        {
+            control.SelectFileOrFolder(() => { }, RelativePath.From(FirstFile));
+            CancellationToken load = await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            load.IsCancellationRequested.Should().BeFalse();
+
+            ((IDisposable)control).Dispose();
+            _controls.Remove(control);
+
+            load.IsCancellationRequested.Should().BeTrue();
+        }
+        finally
+        {
+            finishLoad.Release();
+            await JoinAsync(control);
+        }
+
+        control.GetTestAccessor().DiffText.GetText().Should().NotContain("+changed first");
+    }
+
+    [AvaloniaTest]
     public async Task DisplayDiffTab_should_select_and_render_real_calculated_changes_on_the_owner_thread()
     {
         RevisionDiffControl control = CreateControl(fileTreeMode: false);
@@ -378,9 +456,9 @@ public sealed class RevisionDiffThreadingTests
     private void Application_ThreadException(object? sender, ThreadExceptionEventArgs e)
         => _exceptions.Enqueue(e.Exception);
 
-    private RevisionDiffControl CreateControl(bool fileTreeMode, IReadOnlyList<GitRevision>? selectedRevisions = null)
+    private RevisionDiffControl CreateControl(bool fileTreeMode, IReadOnlyList<GitRevision>? selectedRevisions = null, IGitModule? module = null)
     {
-        GitUICommands commands = new(_serviceContainer, _repository.Module);
+        GitUICommands commands = new(_serviceContainer, module ?? _repository.Module);
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
         RevisionDiffControl control = new() { UICommandsSource = source };
