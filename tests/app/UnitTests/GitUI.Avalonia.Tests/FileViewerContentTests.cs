@@ -795,7 +795,7 @@ public sealed class FileViewerContentTests
         FileViewer viewer = CreateViewer();
         FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
         Border pictureBox = viewer.FindControl<Border>("PictureBox")!;
-        Image imagePreview = viewer.FindControl<Image>("ImagePreview")!;
+        PictureBoxEx imagePreview = viewer.FindControl<PictureBoxEx>("ImagePreview")!;
 
         await viewer.ViewGitItemAsync(item, revision);
 
@@ -811,6 +811,54 @@ public sealed class FileViewerContentTests
 
         accessor.ViewMode.Should().Be(ViewMode.Image);
         imagePreview.Source.Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_report_a_rendering_failure_for_the_current_image(bool replaceSource)
+    {
+        using FileViewer viewer = CreateViewer();
+        string iconPath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        await viewer.ViewFileAsync(iconPath);
+        Border pictureBox = viewer.FindControl<Border>("PictureBox")!;
+        PictureBoxEx preview = viewer.FindControl<PictureBoxEx>("ImagePreview")!;
+        pictureBox.IsVisible.Should().BeTrue();
+        viewer.TextEditor.IsVisible.Should().BeFalse();
+
+        IImage failingImage = Substitute.For<IImage>();
+        failingImage.Size.Returns(new Size(16, 16));
+        failingImage.When(image => image.Draw(Arg.Any<DrawingContext>(), Arg.Any<Rect>(), Arg.Any<Rect>()))
+            .Do(_ => throw new InvalidOperationException("Image could not be drawn."));
+        preview.Source = failingImage;
+        preview.Measure(new Size(32, 32));
+        preview.Arrange(new Rect(0, 0, 32, 32));
+        DrawingGroup drawing = new();
+        using (DrawingContext context = drawing.Open())
+        {
+            preview.Render(context);
+        }
+
+        IImage? replacement = null;
+        if (replaceSource)
+        {
+            replacement = new DrawingImage();
+            preview.Source = replacement;
+        }
+
+        Dispatcher.UIThread.RunJobs();
+
+        pictureBox.IsVisible.Should().Be(replaceSource);
+        viewer.TextEditor.IsVisible.Should().Be(!replaceSource);
+        if (replaceSource)
+        {
+            preview.Source.Should().BeSameAs(replacement);
+            viewer.GetText().Should().BeEmpty();
+        }
+        else
+        {
+            viewer.GetText().Should().Be("Cannot view image \nInvalidOperationException: Image could not be drawn.");
+        }
     }
 
     [AvaloniaTest]

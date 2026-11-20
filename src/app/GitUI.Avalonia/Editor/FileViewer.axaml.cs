@@ -218,6 +218,23 @@ public partial class FileViewer : GitModuleControl
             AllowCancel = true,
         };
 
+        ImagePreview.PaintFailed += (_, ex) =>
+        {
+            IImage? source = ImagePreview.Source;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (_isDisposed || !PictureBox.IsVisible || !ReferenceEquals(ImagePreview.Source, source))
+                {
+                    return;
+                }
+
+                // No further service for users who handle invalid image files. We have no info other than the bad Image in Render.
+                internalFileViewer.SetText($"{string.Format(_cannotViewImage.Text, "")}\n{ex.GetType().Name}: {ex.Message}", openWithDifftool: null);
+                TextEditor.IsVisible = true;
+                PictureBox.IsVisible = false;
+            });
+        };
+
         stageSelectedLinesToolStripMenuItem.Click += stageSelectedLinesToolStripMenuItem_Click;
         unstageSelectedLinesToolStripMenuItem.Click += unstageSelectedLinesToolStripMenuItem_Click;
         resetSelectedLinesToolStripMenuItem.Click += resetSelectedLinesToolStripMenuItem_Click;

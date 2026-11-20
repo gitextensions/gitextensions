@@ -4,6 +4,7 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:editor="using:GitUI.Editor"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:userControls="using:GitUI.UserControls"
              x:Class="GitUI.Editor.FileViewer">
   <UserControl.Styles>
     <Style Selector="Button.fileviewer-toolbar-button">
@@ -129,11 +130,11 @@
     <Border x:Name="PictureBox"
             IsVisible="False"
             Background="{DynamicResource GitExtensionsKnownColorControlLightLightBrush}">
-      <Image x:Name="ImagePreview"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center"
-             Stretch="Uniform"
-             StretchDirection="DownOnly" />
+      <userControls:PictureBoxEx x:Name="ImagePreview"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Stretch="Uniform"
+                                 StretchDirection="DownOnly" />
     </Border>
 
     <HyperlinkButton x:Name="_NO_TRANSLATE_lblShowPreview"

@@ -51152,6 +51152,83 @@
           "note": "New Windows taskbar progress mapping. Headless Windows/Linux tests use a recording shell and a native main-window fixture; native taskbar display, macOS and Linux substitutes are pending; no six-axis completion claimed."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/PictureBoxEx.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/PictureBoxEx.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 1,
+          "note": "The same-named control delegates to a native Image. The source OnPaint declaration remains actionable because Avalonia uses Render."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "The native drawing callback catches a failing current image and FileViewer displays the exception through the original text fallback. Headless Windows Edit verification is recorded in the report."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Native clear and first-frame error display need a paired comparison."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The render catch resolves Window through the existing system-color theme boundary. Native theme comparison is pending."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "Two headless cases exercise the current failure and a replacement before the deferred FileViewer callback. Native compositor presentation is pending."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-20",
+          "commit": "861ccdbb4f7c1d2f20febc8c15580b87592aa79d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Native renderer effects and all desktop platform states remain pending."
+        }
+      }
     }
   ]
 }
