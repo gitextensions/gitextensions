@@ -82,6 +82,49 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public void FileViewer_should_resume_post_settings_after_reattachment_and_unsubscribe_on_dispose()
+    {
+        using AppSettingsTestScope settings = new();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(_module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _commands.GetService(call.Arg<Type>()));
+        using FormEditor editor = new(commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        Grid layout = editor.FindControl<Grid>("tableLayoutPanel1")!;
+        try
+        {
+            editor.Show();
+            PublishRuler(89);
+            viewer.VRulerPosition.Should().Be(89);
+
+            layout.Children.Remove(viewer);
+            Dispatcher.UIThread.RunJobs();
+            PublishRuler(90);
+            viewer.VRulerPosition.Should().Be(89);
+
+            layout.Children.Add(viewer);
+            Dispatcher.UIThread.RunJobs();
+            PublishRuler(103);
+            viewer.VRulerPosition.Should().Be(103);
+
+            ((IDisposable)viewer).Dispose();
+            PublishRuler(105);
+            viewer.VRulerPosition.Should().Be(103);
+        }
+        finally
+        {
+            editor.Close();
+        }
+
+        void PublishRuler(int position)
+        {
+            AppSettings.DiffVerticalRulerPosition = position;
+            commands.PostSettings += Raise.Event<EventHandler<GitUIPostActionEventArgs>>(commands, new GitUIPostActionEventArgs(null, commands, actionDone: true));
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task ViewTextAsync_should_select_fixed_diff_and_bounded_binary_hex_modes()
     {
         FileViewer viewer = CreateViewer();
@@ -215,7 +258,7 @@ public sealed class FileViewerContentTests
             accessor.ShowSyntaxHighlightingMenuItem.IsVisible.Should().BeTrue();
             accessor.ShowSyntaxHighlightingMenuItem.IsChecked.Should().BeTrue();
             accessor.ShowSyntaxHighlightingButton.Classes.Should().Contain("checked");
-            accessor.VRulerPosition.Should().Be(88);
+            viewer.VRulerPosition.Should().Be(88);
             viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
 
             accessor.ShowNonprintingCharactersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
@@ -676,10 +719,10 @@ public sealed class FileViewerContentTests
             window = new Window { Width = 700, Height = 400, Content = viewer };
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            await WaitUntilAsync(() => viewer.GetTestAccessor().VRulerPosition == 88);
+            await WaitUntilAsync(() => viewer.VRulerPosition == 88);
             string text = "sample.cs --- Text\n" + (sideBySide ? "1 before".PadRight(40) + "1 after" : "1 before") + "\n";
             await viewer.ViewDifftasticAsync("sample.cs", text);
-            viewer.GetTestAccessor().VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+            viewer.VRulerPosition.Should().Be(sideBySide ? 38 : 0);
             viewer.TextEditor.Options.ShowColumnRulers.Should().Be(sideBySide);
 
             if (patch)
@@ -691,10 +734,10 @@ public sealed class FileViewerContentTests
                 await viewer.ViewTextAsync("plain.cs", "ordinary text", CancellationToken.None);
             }
 
-            viewer.GetTestAccessor().VRulerPosition.Should().Be(88);
+            viewer.VRulerPosition.Should().Be(88);
             viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
             await viewer.ViewDifftasticAsync("sample.cs", text);
-            viewer.GetTestAccessor().VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+            viewer.VRulerPosition.Should().Be(sideBySide ? 38 : 0);
         }
         finally
         {

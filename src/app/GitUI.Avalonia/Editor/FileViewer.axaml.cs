@@ -43,8 +43,12 @@ public partial class FileViewer : GitModuleControl
     private readonly DiffTextColorizer _diffTextColorizer;
     private CancellationTokenRegistration _externalCancellationRegistration;
     private bool _allowLinePatching;
+
+    // The commands source is assigned once, but Avalonia can reattach the same live control.
     private IGitUICommandsSource? _commandsSource;
+
     private bool _hotkeysLoaded;
+    private bool _isDisposed;
     private bool _runtimeStateApplied;
     private bool _runtimeFontApplied;
     private Bitmap? _image;
@@ -158,15 +162,23 @@ public partial class FileViewer : GitModuleControl
         TextEditor.PointerMoved += (_, _) => ShowFileViewerToolbar();
         PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
         PictureBox.PointerWheelChanged += PictureBox_MouseWheel;
+        AttachedToLogicalTree += (_, _) =>
+        {
+            if (!_isDisposed && _commandsSource is null && TryGetUICommandsDirect(out _))
+            {
+                OnUICommandsSourceSet(this, new GitUICommandsSourceEventArgs(UICommandsSource));
+            }
+        };
         DetachedFromLogicalTree += (_, _) =>
         {
             BindSettingsCommands(commands: null);
             if (_commandsSource is not null)
             {
-                _commandsSource.UICommandsChanged -= OnUICommandsChanged;
+                UICommandsSource.UICommandsChanged -= OnUICommandsChanged;
                 _commandsSource = null;
             }
 
+            _runtimeStateApplied = false;
             CancelPendingView();
             ClearImage();
         };
@@ -266,6 +278,11 @@ public partial class FileViewer : GitModuleControl
 
     internal void InitializeRuntimeState()
     {
+        if (_isDisposed)
+        {
+            return;
+        }
+
         if (!_runtimeFontApplied)
         {
             // The font setting does not depend on a commands owner becoming available first.
@@ -962,6 +979,33 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    // Protected
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _isDisposed = true;
+            UICommandsSourceSet -= OnUICommandsSourceSet;
+            CancelPendingView();
+            ClearImage();
+            BindSettingsCommands(commands: null);
+        }
+
+        base.Dispose(disposing);
+    }
+
+    protected override void DisposeUICommandsSource()
+    {
+        UICommandsSource.UICommandsChanged -= OnUICommandsChanged;
+        _commandsSource = null;
+        base.DisposeUICommandsSource();
+    }
+
     private StagedStatus ViewItemStagedStatus()
     {
         StagedStatus stagedStatus = _viewItem?.Item.Staged ?? StagedStatus.Unknown;
@@ -1256,7 +1300,13 @@ public partial class FileViewer : GitModuleControl
     // Event handlers
     private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
     {
-        BindSettingsCommands((sender as IGitUICommandsSource)?.UICommands);
+        IGitUICommands? commands = (sender as IGitUICommandsSource)?.UICommands;
+        BindSettingsCommands(commands);
+        if (commands is not null)
+        {
+            UICommands_PostSettings(commands, null);
+        }
+
         Encoding = null;
     }
 
@@ -1362,14 +1412,9 @@ public partial class FileViewer : GitModuleControl
 
     private void OnUICommandsSourceSet(object? sender, GitUICommandsSourceEventArgs e)
     {
-        if (_commandsSource is not null)
-        {
-            _commandsSource.UICommandsChanged -= OnUICommandsChanged;
-        }
-
         _commandsSource = e.GitUICommandsSource;
-        _commandsSource.UICommandsChanged += OnUICommandsChanged;
-        OnUICommandsChanged(_commandsSource, null);
+        UICommandsSource.UICommandsChanged += OnUICommandsChanged;
+        OnUICommandsChanged(UICommandsSource, null);
         ApplyRuntimeStateIfVisible();
     }
 
@@ -1921,7 +1966,6 @@ public partial class FileViewer : GitModuleControl
         IgnoreAllWhitespace = 15,
     }
 
-    // Protected
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -2092,8 +2136,6 @@ public partial class FileViewer : GitModuleControl
         public Button NextChangeButton => _fileViewer.nextChangeButton;
 
         public MenuItem FindMenuItem => _fileViewer.findToolStripMenuItem;
-
-        public int VRulerPosition => _fileViewer.VRulerPosition;
 
         public bool HasDiffHighlighting => _fileViewer.internalFileViewer.DiffHighlightService is not null;
 
@@ -2620,9 +2662,6 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
     private void ClearImage()
     {
         ImagePreview.Source = null;
