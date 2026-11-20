@@ -62,11 +62,13 @@ public sealed class FileStatusSelectAllTests
                 menu.Close();
             }
 
+            tree.Focus().Should().BeTrue();
             Dispatcher.UIThread.RunJobs();
             ScrollViewer scroll = tree.GetVisualDescendants().OfType<ScrollViewer>().First();
             var offset = scroll.Offset;
             bool autoScroll = tree.AutoScrollToSelectedItem;
-            control.SelectAll();
+            window.KeyPress(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
+            window.KeyRelease(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
             Dispatcher.UIThread.RunJobs();
             using var after = window.CaptureRenderedFrame();
 

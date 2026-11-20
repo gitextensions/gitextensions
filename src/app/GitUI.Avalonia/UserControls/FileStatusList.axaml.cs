@@ -415,7 +415,7 @@ public partial class FileStatusList : GitModuleControl
                 ? tvDiffFiles.Items.Cast<DiffTreeNode>().Take(1)
                 : tvDiffFiles.Items.Cast<DiffTreeNode>();
             DiffTreeNode? diffNode = roots
-                .SelectMany(Flatten)
+                .SelectMany(DescendantsAndSelf)
                 .FirstOrDefault(candidate => candidate.Item?.Item.Name == relativePath.Value
                                              || candidate.FolderPath?.Value == relativePath.Value);
             if (diffNode is null)
@@ -441,7 +441,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         FileTreeNode? node = tvFiles.Items.Cast<FileTreeNode>()
-            .SelectMany(Flatten)
+            .SelectMany(DescendantsAndSelf)
             .FirstOrDefault(candidate => candidate.FullPath == relativePath.Value);
         if (node is null)
         {
@@ -492,9 +492,9 @@ public partial class FileStatusList : GitModuleControl
 
     public IEnumerable<FileStatusItem> AllItems
         => _isFileTreeMode
-            ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
+            ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf).Select(node => node.Item).OfType<FileStatusItem>()
             : ShowDiffTree
-                ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
+                ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(DescendantsAndSelf).Select(node => node.Item).OfType<FileStatusItem>()
                 : lstFiles.Items.Cast<object>().Select(GetFileStatusItem).OfType<FileStatusItem>();
 
     public int AllItemsCount => AllItems.Count();
@@ -666,9 +666,9 @@ public partial class FileStatusList : GitModuleControl
                 }
 
                 IEnumerable<object> items = _isFileTreeMode
-                    ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten)
+                    ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf)
                     : ShowDiffTree
-                        ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)
+                        ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(DescendantsAndSelf)
                         : lstFiles.Items.Cast<object>();
                 object? newSelected = null;
                 foreach (object node in items)
@@ -738,7 +738,7 @@ public partial class FileStatusList : GitModuleControl
             {
                 FileTreeNode[] selected = [.. tvFiles.SelectedItems?.OfType<FileTreeNode>() ?? []];
                 return selected.Length == 1
-                    ? Flatten(selected[0]).Select(node => node.Item).OfType<FileStatusItem>()
+                    ? DescendantsAndSelf(selected[0]).Select(node => node.Item).OfType<FileStatusItem>()
                     : selected.Select(node => node.Item).OfType<FileStatusItem>();
             }
 
@@ -746,7 +746,7 @@ public partial class FileStatusList : GitModuleControl
             {
                 DiffTreeNode[] selected = [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>() ?? []];
                 return selected.Length == 1
-                    ? Flatten(selected[0]).Select(node => node.Item).OfType<FileStatusItem>().Where(item => item.Item != _noItemStatuses[0])
+                    ? DescendantsAndSelf(selected[0]).Select(node => node.Item).OfType<FileStatusItem>().Where(item => item.Item != _noItemStatuses[0])
                     : selected.Select(node => node.Item).OfType<FileStatusItem>();
             }
 
@@ -770,7 +770,7 @@ public partial class FileStatusList : GitModuleControl
 
     public IEnumerable<FileStatusItem> FirstGroupItems
         => _showDiffGroups && tvDiffFiles.Items.Cast<DiffTreeNode>().FirstOrDefault() is DiffTreeNode first
-            ? first.Children.SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
+            ? first.Children.SelectMany(DescendantsAndSelf).Select(node => node.Item).OfType<FileStatusItem>()
             : AllItems;
 
     public bool SelectFirstItemOnSetItems { get; set; } = true;
@@ -862,7 +862,7 @@ public partial class FileStatusList : GitModuleControl
                 }
 
                 tvFiles.SelectedItems?.Clear();
-                foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
+                foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf).Where(node => node.Item is not null))
                 {
                     tvFiles.SelectedItems?.Add(node);
                 }
@@ -875,7 +875,7 @@ public partial class FileStatusList : GitModuleControl
                 }
 
                 tvDiffFiles.SelectedItems?.Clear();
-                foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
+                foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(DescendantsAndSelf).Where(node => node.Item is not null))
                 {
                     tvDiffFiles.SelectedItems?.Add(node);
                 }
@@ -920,7 +920,7 @@ public partial class FileStatusList : GitModuleControl
 
             // Descend
             FileTreeNode? first = tvFiles.Items.Cast<FileTreeNode>()
-                .SelectMany(Flatten)
+                .SelectMany(DescendantsAndSelf)
                 .FirstOrDefault(node => !node.IsFolder);
             if (first is not null)
             {
@@ -1188,7 +1188,7 @@ public partial class FileStatusList : GitModuleControl
         ClearSelected();
         if (ShowDiffTree)
         {
-            foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten))
+            foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(DescendantsAndSelf))
             {
                 if (node.Item is not null && predicate(node.Item))
                 {
@@ -1198,7 +1198,7 @@ public partial class FileStatusList : GitModuleControl
         }
         else if (_isFileTreeMode)
         {
-            foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten))
+            foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf))
             {
                 if (node.Item is not null && predicate(node.Item))
                 {
@@ -1334,7 +1334,7 @@ public partial class FileStatusList : GitModuleControl
             DiffTreeNode[] roots = [.. nodes.Select(info => info.Node)];
             _gitItemFilteredStatuses =
             [
-                .. roots.SelectMany(Flatten)
+                .. roots.SelectMany(DescendantsAndSelf)
                     .Select(node => node.Item?.Item)
                     .OfType<GitItemStatus>(),
             ];
@@ -1349,7 +1349,7 @@ public partial class FileStatusList : GitModuleControl
             {
                 List<object> visibleItems =
                 [
-                    .. roots.SelectMany(Flatten)
+                    .. roots.SelectMany(DescendantsAndSelf)
                         .Where(node => node.Item is not null)
                         .Select(node => (object)node.Item!),
                 ];
@@ -1911,13 +1911,7 @@ public partial class FileStatusList : GitModuleControl
             // Set e.Handled = true; Avalonia has no TreeView Ding sound
             Control? focusedElement = e.Source as Control;
             TreeViewItem? focusedRow = focusedElement?.FindAncestorOfType<TreeViewItem>(includeSelf: true);
-            object? focusedNode = focusedRow?.DataContext ?? tree.SelectedItem;
-            if (focusedNode is not null)
-            {
-                SetExpansion(focusedNode, expanded: true);
-                focusedRow?.BringIntoView();
-            }
-
+            ExpandAll(focusedRow?.DataContext ?? tree.SelectedItem, focusedRow);
             e.Handled = true;
         }
     }
@@ -2487,7 +2481,7 @@ public partial class FileStatusList : GitModuleControl
         if (ShowDiffTree)
         {
             DiffTreeNode? node = tvDiffFiles.Items.Cast<DiffTreeNode>()
-                .SelectMany(Flatten)
+                .SelectMany(DescendantsAndSelf)
                 .FirstOrDefault(candidate => ReferenceEquals(candidate.Item?.Item, item.Item));
             if (node is null)
             {
@@ -2501,7 +2495,7 @@ public partial class FileStatusList : GitModuleControl
         if (_isFileTreeMode)
         {
             FileTreeNode? node = tvFiles.Items.Cast<FileTreeNode>()
-                .SelectMany(Flatten)
+                .SelectMany(DescendantsAndSelf)
                 .FirstOrDefault(candidate => ReferenceEquals(candidate.Item?.Item, item.Item));
             if (node is null)
             {
@@ -2577,7 +2571,7 @@ public partial class FileStatusList : GitModuleControl
     {
         FileTreeNode[] files =
         [
-            .. tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Where(node => !node.IsFolder),
+            .. tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf).Where(node => !node.IsFolder),
         ];
         if (files.Length == 0)
         {
@@ -2668,24 +2662,6 @@ public partial class FileStatusList : GitModuleControl
             }
 
             return node;
-        }
-    }
-
-    private static IEnumerable<FileTreeNode> Flatten(FileTreeNode node)
-    {
-        yield return node;
-        foreach (FileTreeNode child in node.Children.SelectMany(Flatten))
-        {
-            yield return child;
-        }
-    }
-
-    private static IEnumerable<DiffTreeNode> Flatten(DiffTreeNode node)
-    {
-        yield return node;
-        foreach (DiffTreeNode child in node.Children.SelectMany(Flatten))
-        {
-            yield return child;
         }
     }
 

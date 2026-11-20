@@ -34,6 +34,7 @@ partial class FileStatusList
         items.Add(_collapseRootFolders);
     }
 
+    // Framework constraint: Avalonia assigns the header and icon separately.
     private static MenuItem CreateMenuItem(string header, Avalonia.Media.IImage image)
         => new()
         {
@@ -88,7 +89,7 @@ partial class FileStatusList
     {
         foreach (object node in GetSelectedTreeNodes())
         {
-            SetExpansion(node, expanded: true);
+            ExpandAll(node);
         }
     }
 
@@ -99,7 +100,7 @@ partial class FileStatusList
         HashSet<object> selectedItems = [];
         foreach (object node in selectedNodes)
         {
-            SetExpansion(node, expanded: true);
+            ExpandAll(node);
             foreach (object leaf in DescendantsAndSelf(node).Where(IsFileNode))
             {
                 selectedItems.Add(leaf);
@@ -136,7 +137,8 @@ partial class FileStatusList
             _ => false
         };
 
-    private static IEnumerable<object> DescendantsAndSelf(object node)
+    private static IEnumerable<TNode> DescendantsAndSelf<TNode>(TNode node)
+        where TNode : class
     {
         yield return node;
         IEnumerable<object> children = node switch
@@ -145,9 +147,9 @@ partial class FileStatusList
             DiffTreeNode diffNode => diffNode.Children,
             _ => []
         };
-        foreach (object child in children)
+        foreach (TNode child in children)
         {
-            foreach (object descendant in DescendantsAndSelf(child))
+            foreach (TNode descendant in DescendantsAndSelf(child))
             {
                 yield return descendant;
             }

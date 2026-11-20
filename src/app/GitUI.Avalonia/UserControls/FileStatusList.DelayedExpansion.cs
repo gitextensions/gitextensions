@@ -1,32 +1,18 @@
+using Avalonia.Controls;
+
 namespace GitUI;
 
 partial class FileStatusList
 {
-    private static void ExpandAll(DiffTreeNode? node)
+    // Framework constraint: the expandable data node and the realized focus row are separate.
+    private static void ExpandAll(object? node, TreeViewItem? focusedRow = null)
     {
         if (node is null)
         {
             return;
         }
 
-        node.IsExpanded = true;
-        foreach (DiffTreeNode child in node.Children)
-        {
-            ExpandAll(child);
-        }
-    }
-
-    private static void ExpandAll(FileTreeNode? node)
-    {
-        if (node is null)
-        {
-            return;
-        }
-
-        node.IsExpanded = true;
-        foreach (FileTreeNode child in node.Children)
-        {
-            ExpandAll(child);
-        }
+        SetExpansion(node, expanded: true);
+        focusedRow?.BringIntoView();
     }
 }
