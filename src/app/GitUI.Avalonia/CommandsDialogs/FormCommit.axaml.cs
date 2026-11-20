@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Config;
@@ -1489,7 +1490,10 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void CommitMessageToolStripMenuItemDropDownOpening(object? sender, EventArgs e)
     {
+        string msg = AppSettings.LastCommitMessage;
+        int maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
         string authorPattern = string.Empty;
+
         if (ShowOnlyMyMessagesToolStripMenuItem.IsChecked == true)
         {
             string userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
@@ -1497,43 +1501,72 @@ public sealed partial class FormCommit : GitModuleForm
             authorPattern = $"^{Regex.Escape(userName)} <{Regex.Escape(userEmail)}>$";
         }
 
-        int maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
-        List<string> messages = [.. Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
+        List<string> prevMessages = [.. Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
             .WhereNotNull()
             .Select(message => message.TrimEnd('\n'))
             .Where(message => !string.IsNullOrWhiteSpace(message))];
-        string lastMessage = AppSettings.LastCommitMessage;
-        if (!string.IsNullOrWhiteSpace(lastMessage) && !messages.Contains(lastMessage))
+
+        if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
         {
             // If the list is already full
-            if (messages.Count == maxCount && maxCount > 0)
+            if (prevMessages.Count == maxCount && maxCount > 0)
             {
                 // Remove the last item
-                messages.RemoveAt(maxCount - 1);
+                prevMessages.RemoveAt(maxCount - 1);
             }
 
             // Insert the last commit message as the first entry
-            messages.Insert(0, lastMessage);
+            prevMessages.Insert(0, msg);
         }
 
+        // Avalonia's flyout lays out its item collection when it opens.
         MenuFlyout flyout = (MenuFlyout)commitMessageToolStripMenuItem.Flyout!;
         flyout.Items.Clear();
-        foreach (string commitMessage in messages)
+
+        foreach (string prevMsg in prevMessages)
         {
-            string label = commitMessage.Split('\n')[0].ShortenTo(72);
-            MenuItem item = new() { Header = label, Tag = commitMessage };
-            item.Click += (_, _) => ReplaceMessage((string)item.Tag!);
+            AddCommitMessageToMenu(prevMsg);
+        }
+
+        flyout.Items.Add(toolStripMenuItem1);
+        flyout.Items.Add(generateListOfChangesInSubmodulesChangesToolStripMenuItem);
+        flyout.Items.Add(ShowOnlyMyMessagesToolStripMenuItem);
+
+        void AddCommitMessageToMenu(string commitMessage)
+        {
+            const int maxLabelLength = 72;
+
+            string label = commitMessage;
+            int newlineIndex = label.IndexOf('\n');
+
+            if (newlineIndex != -1)
+            {
+                label = label[..newlineIndex];
+            }
+
+            if (label.Length > maxLabelLength)
+            {
+                label = label.ShortenTo(maxLabelLength);
+            }
+
+            MenuItem item = new()
+            {
+                Tag = commitMessage,
+                Header = label,
+            };
+
+            // Avalonia MenuFlyout exposes the click on the item itself.
+            item.Click += CommitMessageToolStripMenuItemDropDownItemClicked;
             flyout.Items.Add(item);
         }
+    }
 
-        if (messages.Count > 0)
+    private void CommitMessageToolStripMenuItemDropDownItemClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: string commitMessage })
         {
-            flyout.Items.Add(new Separator());
+            ReplaceMessage(commitMessage.Trim());
         }
-
-        flyout.Items.Add(generateListOfChangesInSubmodulesChangesToolStripMenuItem);
-        flyout.Items.Add(new Separator());
-        flyout.Items.Add(ShowOnlyMyMessagesToolStripMenuItem);
     }
 
     private void generateListOfChangesInSubmodulesChangesToolStripMenuItem_Click(object? sender, EventArgs e)

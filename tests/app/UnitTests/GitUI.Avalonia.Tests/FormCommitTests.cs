@@ -809,6 +809,50 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_apply_the_original_message_from_the_history_flyout()
+    {
+        const string previous = "  Restored subject  \n\n  body \t  ";
+        AppSettings.CommitDialogShowOnlyMyMessages = false;
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateCleanRepository()));
+        try
+        {
+            form.Show();
+            AppSettings.LastCommitMessage = previous;
+            DropDownButton history = form.FindControl<DropDownButton>("commitMessageToolStripMenuItem")!;
+            form.UpdateLayout();
+            Click(history);
+            Dispatcher.UIThread.RunJobs();
+
+            MenuFlyout flyout = (MenuFlyout)history.Flyout!;
+            flyout.IsOpen.Should().BeTrue();
+            MenuItem saved = flyout.Items.OfType<MenuItem>().Single(item => Equals(item.Tag, previous));
+            Click(saved);
+            Dispatcher.UIThread.RunJobs();
+
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            form.GetTestAccessor().Message.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Should().Be("Restored subject  \n\n  body");
+            flyout.Items.OfType<Control>().TakeLast(3).Select(item => item.Name).Should().Equal(
+                "toolStripMenuItem1", "generateListOfChangesInSubmodulesChangesToolStripMenuItem", "ShowOnlyMyMessagesToolStripMenuItem");
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+
+        static void Click(Control target)
+        {
+            TopLevel root = TopLevel.GetTopLevel(target)
+                ?? throw new InvalidOperationException("The visible item must belong to a top level.");
+            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), root)!.Value;
+            root.MouseMove(point, RawInputModifiers.None);
+            root.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            root.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_load_message_history_and_saved_templates()
     {
         string lastCommitMessage = AppSettings.LastCommitMessage;
