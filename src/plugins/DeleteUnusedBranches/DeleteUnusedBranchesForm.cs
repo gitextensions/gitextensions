@@ -117,11 +117,14 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
                 "--"
             };
 
-            string[] commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
-            if (!DateTime.TryParse(commitLog[0], out DateTime commitDate))
+            // A ref which cannot be resolved, e.g. a dangling session ref, fails "git log" without aborting the whole listing
+            ExecutionResult logResult = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
+            string[] commitLog = logResult.StandardOutput.Split('\n', StringSplitOptions.TrimEntries);
+
+            DateTime commitDate = DateTime.MinValue;
+            if (logResult.ExitedSuccessfully && commitLog.Length > 0 && !DateTime.TryParse(commitLog[0], out commitDate))
             {
                 Trace.WriteLine($"Failed to parse commit date from git log output: '{commitLog[0]}' from {commitLog}");
-                commitDate = DateTime.MinValue;
             }
 
             string authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
