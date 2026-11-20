@@ -434,6 +434,118 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_use_F3_to_search_when_a_query_exists(bool hasQuery)
+    {
+        using AppSettingsTestScope settings = new();
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            int difftoolRequests = 0;
+            await viewer.ViewTextAsync("search.txt", "first target last", openWithDifftool: () => difftoolRequests++);
+
+            if (hasQuery)
+            {
+                viewer.Find(replace: false);
+                FindAndReplaceForm find = viewer.GetTestAccessor().FindAndReplaceForm;
+                find.FindControl<TextBox>("txtLookFor")!.Text = "target";
+                find.FindControl<Button>("btnCancel")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                find.IsVisible.Should().BeFalse();
+            }
+
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(5, 8), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            editor.KeyPress(Key.F3, RawInputModifiers.None, PhysicalKey.F3, keySymbol: null);
+            editor.KeyRelease(Key.F3, RawInputModifiers.None, PhysicalKey.F3, keySymbol: null);
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(timeout.Token);
+
+            difftoolRequests.Should().Be(hasQuery ? 0 : 1);
+            viewer.TextEditor.SelectedText.Should().Be(hasQuery ? "target" : string.Empty);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false, true)]
+    [TestCase(false, true, true)]
+    [TestCase(true, false, true)]
+    [TestCase(true, true, true)]
+    [TestCase(true, false, false)]
+    public async Task FileViewer_should_handle_change_hotkeys_only_when_the_action_is_available(bool showPatch, bool backward, bool actionEnabled)
+    {
+        using AppSettingsTestScope settings = new();
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            if (showPatch)
+            {
+                viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,2 +1,2 @@\n-old\n+new\n context\n@@ -8,2 +8,2 @@\n-before\n+after\n context\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("file.txt", "first\nsecond");
+            }
+
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(5, 8), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            Key key = backward ? Key.Up : Key.Down;
+            PhysicalKey physicalKey = backward ? PhysicalKey.ArrowUp : PhysicalKey.ArrowDown;
+            Button changeButton = viewer.FindControl<Button>(backward ? "previousChangeButton" : "nextChangeButton")!;
+            changeButton.IsEnabled = actionEnabled;
+            int bubbledKeys = 0;
+            editor.KeyDown += (_, e) =>
+            {
+                if (e.Key == key)
+                {
+                    bubbledKeys++;
+                }
+            };
+            int initialLine = backward ? 9 : 5;
+            if (showPatch)
+            {
+                viewer.TextEditor.TextArea.Caret.Position = new TextViewPosition(initialLine, 1);
+            }
+
+            editor.KeyPress(key, RawInputModifiers.Alt, physicalKey, keySymbol: null);
+            editor.KeyRelease(key, RawInputModifiers.Alt, physicalKey, keySymbol: null);
+
+            bool actionAvailable = showPatch && actionEnabled;
+            bubbledKeys.Should().Be(actionAvailable ? 0 : 1);
+            if (showPatch)
+            {
+                int finalLine = viewer.TextEditor.TextArea.Caret.Line;
+                if (actionAvailable)
+                {
+                    (backward ? finalLine < initialLine : finalLine > initialLine).Should().BeTrue();
+                }
+                else
+                {
+                    finalLine.Should().Be(initialLine);
+                }
+            }
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
     {
         using FormEditor editor = new(_commands, fileName: null, showWarning: false);

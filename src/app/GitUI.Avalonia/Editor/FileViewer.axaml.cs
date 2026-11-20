@@ -512,12 +512,12 @@ public partial class FileViewer : GitModuleControl
         return separator;
     }
 
-    public MenuItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
+    public MenuItem AddContextMenuEntry(string text, EventHandler<RoutedEventArgs> toolStripItem_Click)
     {
         // Avalonia context menus use Control items rather than WinForms ToolStripItem objects.
         MenuItem toolStripItem = new() { Header = text };
         contextMenu.Items.Add(toolStripItem);
-        toolStripItem.Click += (sender, e) => toolStripItem_Click(sender, e);
+        toolStripItem.Click += toolStripItem_Click;
         return toolStripItem;
     }
 
@@ -2010,25 +2010,16 @@ public partial class FileViewer : GitModuleControl
             case Command.Replace:
                 if (TextEditor.IsReadOnly)
                 {
-                    // Don't handle the hotkey to let the control handle it if an action is bound to it
                     return false;
                 }
 
                 Find(replace: true);
                 break;
             case Command.FindNextOrOpenWithDifftool:
-                if (_openWithDifftool is not null)
-                {
-                    _openWithDifftool();
-                }
-                else
-                {
-                    this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: true));
-                }
-
+                internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true));
                 break;
             case Command.FindPrevious:
-                this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: false));
+                internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false));
                 break;
             case Command.GoToLine:
                 goToLineToolStripMenuItem_Click(this, EventArgs.Empty);
@@ -2090,11 +2081,9 @@ public partial class FileViewer : GitModuleControl
                 TreatAllFilesAsTextToolStripMenuItemClick(this, EventArgs.Empty);
                 break;
             case Command.NextChange:
-                internalFileViewer.GoToNextChange(NumberOfContextLines);
-                break;
+                return PerformClickIfAvailable(nextChangeButton);
             case Command.PreviousChange:
-                internalFileViewer.GoToPreviousChange(NumberOfContextLines);
-                break;
+                return PerformClickIfAvailable(previousChangeButton);
             case Command.NextOccurrence:
                 GoToNextOccurrence();
                 break;
@@ -2120,6 +2109,19 @@ public partial class FileViewer : GitModuleControl
         }
 
         return true;
+
+        static bool PerformClickIfAvailable(Button item)
+        {
+            if (item.IsEnabled && item.IsVisible)
+            {
+                // Avalonia uses local visibility and the native routed Click for toolbar availability and activation.
+                item.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                return true;
+            }
+
+            // Don't handle the hotkey to let the control handle it if an action is bound to it
+            return false;
+        }
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
