@@ -2,6 +2,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -187,7 +188,7 @@ public partial class FileStatusList : GitModuleControl
             }
         };
         GotFocus += FileStatusList_Enter;
-        LostFocus += FileStatusList_LostFocus;
+        PropertyChanged += FileStatusList_LostFocus;
         Control[] fileStatusListViews = [lstFiles, tvDiffFiles, tvFiles];
         foreach (Control fileStatusListView in fileStatusListViews)
         {
@@ -1912,7 +1913,6 @@ public partial class FileStatusList : GitModuleControl
 
     private void FileStatusListView_MouseDown(object? sender, PointerPressedEventArgs e)
     {
-        FileStatusList_PointerPressed(sender, e);
         PointerPoint point = e.GetCurrentPoint(this);
 
         // SELECT
@@ -1993,7 +1993,8 @@ public partial class FileStatusList : GitModuleControl
         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void FileStatusList_Enter(object? sender, EventArgs e)
+    // Avalonia reports the activation's input origin on the routed focus event.
+    private void FileStatusList_Enter(object? sender, FocusChangedEventArgs e)
     {
         if (_hasKeyboardFocus)
         {
@@ -2001,6 +2002,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         _hasKeyboardFocus = true;
+        _mouseEntered = e.NavigationMethod == NavigationMethod.Pointer;
         Enter?.Invoke(this, new EnterEventArgs(_mouseEntered));
         _mouseEntered = false;
     }
@@ -2444,11 +2446,6 @@ public partial class FileStatusList : GitModuleControl
         FileStatusListView_SelectedIndexChanged();
     }
 
-    private void FileStatusList_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        _mouseEntered = !IsKeyboardFocusWithin;
-    }
-
     private async Task StartFileDragAsync(PointerPressedEventArgs pressedEventArgs)
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
@@ -2484,9 +2481,13 @@ public partial class FileStatusList : GitModuleControl
         _dragPointerPressedEventArgs = null;
     }
 
-    private void FileStatusList_LostFocus(object? sender, EventArgs e)
+    // The native focus-within property changes as soon as focus leaves the whole list.
+    private void FileStatusList_LostFocus(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        Dispatcher.UIThread.Post(() => _hasKeyboardFocus = IsKeyboardFocusWithin);
+        if (e.Property == IsKeyboardFocusWithinProperty && !IsKeyboardFocusWithin)
+        {
+            _hasKeyboardFocus = false;
+        }
     }
 
     private bool SelectFileStatusItem(FileStatusItem item, bool notify)

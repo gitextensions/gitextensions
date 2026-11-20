@@ -15,6 +15,7 @@ using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.LeftPanel;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -50,6 +51,65 @@ public sealed class FileStatusListTests
         control.GitItemStatuses.Should().BeEmpty();
         control.SelectedGitItems.Should().BeEmpty();
         notifications.Should().Equal(nameof(control.DataSourceChanged));
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FileStatusList_should_publish_each_entry_when_focus_leaves_and_returns(bool byMouse)
+    {
+        using FileStatusList control = new();
+        GitItemStatus item = new("tracked.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+        Button outside = new() { Content = "Outside the file list" };
+        Grid content = new() { RowDefinitions = new RowDefinitions("Auto,*") };
+        content.Children.Add(outside);
+        content.Children.Add(control);
+        Grid.SetRow(control, 1);
+        Window window = new() { Width = 720, Height = 360, Content = content };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            outside.Focus().Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            List<bool> enterOrigins = [];
+            control.Enter += (_, e) => enterOrigins.Add(e.ByMouse);
+
+            control.Focus();
+            control.IsKeyboardFocusWithin.Should().BeTrue();
+            enterOrigins.Should().Equal(false);
+
+            control.FindControl<Control>("btnSettings")!.Focus().Should().BeTrue();
+            enterOrigins.Should().Equal(false);
+
+            outside.Focus().Should().BeTrue();
+            control.IsKeyboardFocusWithin.Should().BeFalse();
+            if (byMouse)
+            {
+                TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+                Control row = tree.IsEffectivelyVisible
+                    ? tree.GetVisualDescendants().OfType<TreeViewItem>()
+                        .Single(row => row.DataContext is FileStatusList.DiffTreeNode node && node.Item?.Item.Name == item.Name)
+                    : control.FindControl<ListBox>("lstFiles")!.GetVisualDescendants().OfType<ListBoxItem>()
+                        .Single(row => row.DataContext is FileStatusItem status && status.Item.Name == item.Name);
+                Point point = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), window)!.Value;
+                window.MouseMove(point, RawInputModifiers.None);
+                window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+                window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            }
+            else
+            {
+                control.Focus();
+            }
+
+            control.IsKeyboardFocusWithin.Should().BeTrue();
+            enterOrigins.Should().Equal(false, byMouse);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
