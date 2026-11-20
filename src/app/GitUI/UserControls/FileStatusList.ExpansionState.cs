@@ -14,6 +14,7 @@ partial class FileStatusList
     private string? _rememberedExpansionStatesWorkingDir;
     private string? _displayedNodesWorkingDir;
     private bool _isExpansionStateOfDisplayedNodesRemembered;
+    private string? _displayedRevisionsKey;
 
     private bool IsExpansionStateRemembered => _filter is null && !FindInCommitFilesGitGrepActive;
 
@@ -103,6 +104,24 @@ partial class FileStatusList
         _isExpansionStateOfDisplayedNodesRemembered = false;
 
         FileStatusListView.CollapseAll();
+    }
+
+    /// <summary>
+    ///  Discards the stored expanded state when the displayed commit changes, so that the default
+    ///  state of the diff groups applies to the new commit instead of the state of the previous one.
+    /// </summary>
+    private void SetDisplayedRevisions(IReadOnlyList<FileStatusWithDescription> items)
+    {
+        string key = string.Join(";", items
+            .Select(i => $"{i.FirstRev?.ObjectId}:{i.SecondRev.ObjectId}")
+            .OrderBy(x => x));
+
+        if (key != _displayedRevisionsKey)
+        {
+            _displayedRevisionsKey = key;
+            _rememberedExpansionStates.Clear();
+            _isExpansionStateOfDisplayedNodesRemembered = false;
+        }
     }
 
     private string? GetWorkingDir() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : null;

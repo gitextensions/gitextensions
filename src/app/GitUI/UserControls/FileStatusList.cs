@@ -1169,6 +1169,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             FileStatusListView.BeginUpdate();
 
+            SetDisplayedRevisions(items);
             RememberExpansionStates();
             FileStatusListView.Nodes.Clear();
 

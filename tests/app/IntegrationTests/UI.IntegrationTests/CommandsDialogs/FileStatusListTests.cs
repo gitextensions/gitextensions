@@ -439,6 +439,30 @@ public class FileStatusListTests
         TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
     }
 
+    [Test]
+    public void SetDiffs_should_not_apply_the_expanded_state_to_another_commit()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision secondRevA = new(ObjectId.Random());
+        GitRevision secondRevB = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+
+        // firstRev is null, like the "BASE" group in the commit dialog, so the group key is the same for all commits
+        _fileStatusList.SetDiffs(null, secondRevA, items);
+        GetFolder("b").Collapse();
+
+        // switch to another commit
+        _fileStatusList.SetDiffs(null, secondRevB, items);
+
+        // the state of the previous commit must not be applied; the default state applies
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeTrue();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
     [TestCase(DiffListSortType.FileExtension)]
     [TestCase(DiffListSortType.FileStatus)]
     [TestCase(DiffListSortType.FilePathFlat)]
