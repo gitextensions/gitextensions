@@ -841,6 +841,20 @@ public partial class FileStatusList : GitModuleControl
 
             (prefix, text, suffix) = formatter.FormatTextForDrawing(itemWidth, name, gitItemStatus.OldName);
         }
+        else
+        {
+            if (gitItemStatus.OldName is { Length: > 0 } oldName)
+            {
+                string oldNameSuffix = $" ({oldName})";
+                if (nodeText.EndsWith(oldNameSuffix, StringComparison.Ordinal))
+                {
+                    text = nodeText[..^oldNameSuffix.Length];
+                    suffix = oldNameSuffix;
+                }
+            }
+
+            text = text.TrimEnd('/');
+        }
 
         return (prefix, AppendItemSubmoduleStatus(text ?? string.Empty, gitItemStatus), suffix);
     }

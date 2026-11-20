@@ -1054,6 +1054,7 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [TestCase(TruncatePathMethod.None)]
     [TestCase(TruncatePathMethod.FileNameOnly)]
     [TestCase(TruncatePathMethod.TrimStart)]
     public void FileStatusList_should_place_submodule_counts_before_the_old_name(TruncatePathMethod pathMethod)
@@ -1094,6 +1095,35 @@ public sealed class FileStatusListTests
             window.Close();
             DiffListSortService.Instance.DiffListSorting = previousSort;
             ThreadHelper.JoinableTaskContext = previousContext!;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_trim_a_directory_separator_only_from_the_display_label()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.TruncatePathMethod = TruncatePathMethod.None;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        using FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Content = control, Width = 500, Height = 250 };
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            GitItemStatus item = new("folder/") { IsTracked = true, IsChanged = true };
+            window.Show();
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            ListBox list = control.FindControl<ListBox>("lstFiles")!;
+            ListBoxItem row = list.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
+            row.GetVisualDescendants().OfType<TextBlock>().Single().Text.Should().Be("folder");
+            control.GitItemFilteredStatuses.Should().ContainSingle().Which.Name.Should().Be("folder/");
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
         }
     }
 
