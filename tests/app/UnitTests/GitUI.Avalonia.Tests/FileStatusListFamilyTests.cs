@@ -608,6 +608,65 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles")]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles")]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles")]
+    public void FileStatusList_should_refresh_realized_file_names_on_the_settings_event(
+        DiffListSortType sortType, bool isFileTreeMode, string presentationName)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.TruncatePathMethod = TruncatePathMethod.None;
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        FileStatusList control = new() { GroupByRevision = false, UICommandsSource = source };
+        Window window = new() { Width = 600, Height = 360, Content = control };
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = sortType;
+            window.Show();
+            GitItemStatus rename = new("new-folder/new.txt") { OldName = "old-folder/old.txt", IsTracked = true, IsRenamed = true };
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, new GitRevision(ObjectId.Random()), "files", [rename])],
+                isFileTreeMode);
+            Dispatcher.UIThread.RunJobs();
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+            window.UpdateLayout();
+            ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
+            TextBlock row = presentation.GetVisualDescendants().OfType<TextBlock>()
+                .Single(label => label.Text?.Contains("old-folder/old.txt") == true);
+            string? originalText = row.Text;
+
+            PublishSetting(TruncatePathMethod.FileNameOnly);
+
+            row.Text.Should().Be("new.txt (old.txt)");
+            presentation.GetVisualDescendants().Should().Contain(row);
+            control.SelectedGitItem.Should().BeSameAs(rename);
+
+            PublishSetting(TruncatePathMethod.None);
+            row.Text.Should().Be(originalText);
+            presentation.GetVisualDescendants().Should().Contain(row);
+            control.SelectedGitItem.Should().BeSameAs(rename);
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+
+        void PublishSetting(TruncatePathMethod method)
+        {
+            AppSettings.TruncatePathMethod = method;
+            commands.PostSettings += Raise.Event<EventHandler<GitUIPostActionEventArgs>>(
+                commands, new GitUIPostActionEventArgs(null, commands, actionDone: true));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_apply_the_current_sort_when_the_view_reattaches()
     {
         using GitExtensionsTests.AppSettingsTestScope settings = new();

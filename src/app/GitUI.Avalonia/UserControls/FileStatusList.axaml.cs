@@ -361,6 +361,15 @@ public partial class FileStatusList : GitModuleControl
                 {
                     InitializeContextMenuAndToolbar();
                     SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
+
+                    // Native item templates keep their text until explicitly refreshed.
+                    foreach (TextBlock label in this.GetVisualDescendants().OfType<TextBlock>())
+                    {
+                        if (label.Tag is (string nodeText, GitItemStatus item))
+                        {
+                            label.Text = FormatListViewItem(nodeText, item);
+                        }
+                    }
                 }
             });
         }
@@ -2748,6 +2757,7 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
+            text.Tag = (node.Text, node.Item.Item);
             AutomationProperties.SetName(text, node.Text);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Text);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
@@ -2789,6 +2799,7 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
+            text.Tag = (node.Name, node.Item.Item);
             AutomationProperties.SetName(text, node.Name);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Name);
             if (!node.Item.Item.IsSubmodule
@@ -2885,6 +2896,7 @@ public partial class FileStatusList : GitModuleControl
             Text = FormatListViewItem(itemText, gitItemStatus),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
+        text.Tag = (itemText, gitItemStatus);
         AutomationProperties.SetName(text, itemText);
         UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus, itemText);
         if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
