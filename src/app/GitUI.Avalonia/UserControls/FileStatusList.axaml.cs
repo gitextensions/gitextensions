@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
@@ -214,6 +215,7 @@ public partial class FileStatusList : GitModuleControl
             }
         };
         DetachedFromLogicalTree += (_, _) => DisposeCustomResources();
+        LayoutUpdated += (_, _) => RefreshFileStatusLabels(layoutChanged: true);
 
         InitializeComplete();
 
@@ -361,16 +363,9 @@ public partial class FileStatusList : GitModuleControl
                 {
                     InitializeContextMenuAndToolbar();
                     SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
-
-                    // Native item templates keep their text until explicitly refreshed.
-                    foreach (TextBlock label in this.GetVisualDescendants().OfType<TextBlock>())
-                    {
-                        if (label.Tag is (string nodeText, GitItemStatus item))
-                        {
-                            label.Text = FormatListViewItem(nodeText, item);
-                        }
-                    }
                 }
+
+                RefreshFileStatusLabels();
             });
         }
     }
@@ -821,20 +816,33 @@ public partial class FileStatusList : GitModuleControl
     }
 
     // Avalonia's item templates pass the native row label and status directly.
-    private static string FormatListViewItem(string nodeText, GitItemStatus? gitItemStatus)
+    private static (string? prefix, string text, string? suffix) FormatListViewItem(
+        string nodeText, GitItemStatus? gitItemStatus, string? parentPath = null, PathFormatter? formatter = null, int itemWidth = 0)
     {
         if (gitItemStatus is null || gitItemStatus.IsRangeDiff)
         {
-            return nodeText;
+            return (prefix: null, text: nodeText, suffix: null);
         }
 
+        string? prefix = null;
+        string? text = nodeText;
+        string? suffix = null;
         if (AppSettings.TruncatePathMethod == TruncatePathMethod.FileNameOnly)
         {
-            (string text, string? suffix) = PathFormatter.FormatTextForFileNameOnly(gitItemStatus.Name, gitItemStatus.OldName);
-            nodeText = text + suffix;
+            (text, suffix) = PathFormatter.FormatTextForFileNameOnly(gitItemStatus.Name, gitItemStatus.OldName);
+        }
+        else if (formatter is not null)
+        {
+            string name = gitItemStatus.Name.TrimEnd('/');
+            if (!string.IsNullOrEmpty(parentPath) && name.StartsWith(parentPath + "/", StringComparison.Ordinal))
+            {
+                name = name[(parentPath.Length + 1)..];
+            }
+
+            (prefix, text, suffix) = formatter.FormatTextForDrawing(itemWidth, name, gitItemStatus.OldName);
         }
 
-        return AppendItemSubmoduleStatus(nodeText, gitItemStatus);
+        return (prefix, AppendItemSubmoduleStatus(text ?? string.Empty, gitItemStatus), suffix);
     }
 
     public FileStatusItem? SelectNextItem(bool backwards, bool loop, bool notify = true)
@@ -2740,7 +2748,7 @@ public partial class FileStatusList : GitModuleControl
         TextBlock text = new()
         {
             // Also set .Text in order to provide accessibility information
-            Text = FormatListViewItem(node.Text, node.Item?.Item),
+            Text = GetFileStatusLabelText(node.Text, node.Item?.Item),
             FontWeight = FontWeight.Normal,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -2757,9 +2765,9 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
-            text.Tag = (node.Text, node.Item.Item);
+            text.Tag = new FileStatusLabel(node.Text, node.Item.Item, node.Parent?.FolderPath?.Value);
             AutomationProperties.SetName(text, node.Text);
-            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Text);
+            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
             {
                 LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
@@ -2781,7 +2789,7 @@ public partial class FileStatusList : GitModuleControl
     {
         TextBlock text = new()
         {
-            Text = FormatListViewItem(node.Name, node.Item?.Item),
+            Text = GetFileStatusLabelText(node.Name, node.Item?.Item),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
         };
@@ -2799,9 +2807,9 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
-            text.Tag = (node.Name, node.Item.Item);
+            text.Tag = new FileStatusLabel(node.Name, node.Item.Item, node.Parent?.FullPath);
             AutomationProperties.SetName(text, node.Name);
-            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Name);
+            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item);
             if (!node.Item.Item.IsSubmodule
                 && (_isFileTreeMode || !string.IsNullOrWhiteSpace(node.Item.Item.GrepString)))
             {
@@ -2893,12 +2901,12 @@ public partial class FileStatusList : GitModuleControl
             : $"{gitItemStatus.Name} ({gitItemStatus.OldName})";
         TextBlock text = new()
         {
-            Text = FormatListViewItem(itemText, gitItemStatus),
+            Text = GetFileStatusLabelText(itemText, gitItemStatus),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
-        text.Tag = (itemText, gitItemStatus);
+        text.Tag = new FileStatusLabel(itemText, gitItemStatus, parentPath: null);
         AutomationProperties.SetName(text, itemText);
-        UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus, itemText);
+        UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus);
         if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
         {
             LoadFileIcons([(image, gitItemStatus.Name)], CancellationToken.None);
@@ -2910,7 +2918,7 @@ public partial class FileStatusList : GitModuleControl
         return row;
     }
 
-    private static void UpdateSubmoduleVisualWhenReady(Image image, TextBlock text, GitItemStatus item, string itemText)
+    private static void UpdateSubmoduleVisualWhenReady(Image image, TextBlock text, GitItemStatus item)
     {
         if (!item.IsSubmodule)
         {
@@ -2927,9 +2935,72 @@ public partial class FileStatusList : GitModuleControl
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 image.Source = _imageListData.ImageList[GetSubmoduleItemImageKey(item, status)];
-                text.Text = FormatListViewItem(itemText, item);
+                if (text.Tag is FileStatusLabel label)
+                {
+                    RefreshFileStatusLabel(text, label, layoutChanged: false);
+                }
             });
         });
+    }
+
+    // Avalonia computes row and viewport bounds during layout instead of owner drawing.
+    private void RefreshFileStatusLabels(bool layoutChanged = false)
+    {
+        if (layoutChanged && (!IsEffectivelyVisible || AppSettings.TruncatePathMethod is not (TruncatePathMethod.Compact or TruncatePathMethod.TrimStart)))
+        {
+            return;
+        }
+
+        foreach (TextBlock text in this.GetVisualDescendants().OfType<TextBlock>())
+        {
+            if (text.Tag is FileStatusLabel label)
+            {
+                RefreshFileStatusLabel(text, label, layoutChanged);
+            }
+        }
+    }
+
+    private static void RefreshFileStatusLabel(TextBlock text, FileStatusLabel label, bool layoutChanged)
+    {
+        TruncatePathMethod mode = AppSettings.TruncatePathMethod;
+        if (mode is (TruncatePathMethod.Compact or TruncatePathMethod.TrimStart)
+            && text.FindAncestorOfType<ScrollContentPresenter>() is { Bounds.Width: > 0 } viewport
+            && text.TranslatePoint(default, viewport) is Avalonia.Point origin)
+        {
+            int width = (int)Math.Max(0, Math.Floor(viewport.Bounds.Width - origin.X));
+            Typeface typeface = new(text.FontFamily, text.FontStyle, text.FontWeight, text.FontStretch);
+            var format = (mode, width, typeface, text.FontSize);
+            if (!layoutChanged || label.LastFormat != format)
+            {
+                label.LastFormat = format;
+                PathFormatter formatter = new(typeface, text.FontSize);
+                text.Text = GetFileStatusLabelText(label.NodeText, label.Item, label.ParentPath, formatter, width);
+            }
+
+            return;
+        }
+
+        if (!layoutChanged)
+        {
+            label.LastFormat = null;
+            text.Text = GetFileStatusLabelText(label.NodeText, label.Item);
+        }
+    }
+
+    // The native TextBlock receives the source prefix, item text and suffix as one label.
+    private static string GetFileStatusLabelText(
+        string nodeText, GitItemStatus? gitItemStatus, string? parentPath = null, PathFormatter? formatter = null, int itemWidth = 0)
+    {
+        (string? prefix, string text, string? suffix) = FormatListViewItem(nodeText, gitItemStatus, parentPath, formatter, itemWidth);
+        return prefix + text + suffix;
+    }
+
+    private sealed class FileStatusLabel(string nodeText, GitItemStatus item, string? parentPath)
+    {
+        public string NodeText { get; } = nodeText;
+        public GitItemStatus Item { get; } = item;
+        public string? ParentPath { get; } = parentPath;
+        public (TruncatePathMethod Mode, int Width, Typeface Typeface, double FontSize)? LastFormat { get; set; }
     }
 
     private enum FilterState

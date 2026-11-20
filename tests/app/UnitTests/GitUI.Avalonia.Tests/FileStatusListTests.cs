@@ -1054,6 +1054,50 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [TestCase(TruncatePathMethod.FileNameOnly)]
+    [TestCase(TruncatePathMethod.TrimStart)]
+    public void FileStatusList_should_place_submodule_counts_before_the_old_name(TruncatePathMethod pathMethod)
+    {
+        using AppSettingsTestScope settings = new();
+        using JoinableTaskContext context = new(Thread.CurrentThread, SynchronizationContext.Current);
+        JoinableTaskContext? previousContext = ThreadHelper.HasJoinableTaskContext ? ThreadHelper.JoinableTaskContext : null;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        using FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Content = control, Width = 500, Height = 250 };
+        try
+        {
+            ThreadHelper.JoinableTaskContext = context;
+            AppSettings.TruncatePathMethod = pathMethod;
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            GitItemStatus item = new("new-submodule")
+            {
+                OldName = "prior/old-submodule",
+                IsSubmodule = true,
+                IsTracked = true,
+                IsRenamed = true,
+            };
+            GitSubmoduleStatus status = new(item.Name, item.OldName, isDirty: false, commit: default, oldCommit: default,
+                addedCommits: 2, removedCommits: 1, getCommitData: null, _ => SubmoduleStatus.NewerTime);
+            item.SetSubmoduleStatus(context.Factory.RunAsync(() => Task.FromResult<GitSubmoduleStatus?>(status)));
+            window.Show();
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            ListBox list = control.FindControl<ListBox>("lstFiles")!;
+            ListBoxItem row = list.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
+            string oldName = pathMethod == TruncatePathMethod.FileNameOnly ? "old-submodule" : "prior/old-submodule";
+            row.GetVisualDescendants().OfType<TextBlock>().Single().Text.Should().Be($"new-submodule (+2-1) ({oldName})");
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+            ThreadHelper.JoinableTaskContext = previousContext!;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_emit_existing_translation_keys_once()
     {
         FileStatusList control = new();

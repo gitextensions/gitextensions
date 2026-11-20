@@ -608,11 +608,14 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
-    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles")]
-    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles")]
-    [TestCase(DiffListSortType.FilePath, true, "tvFiles")]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles", false)]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles", false)]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles", false)]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles", true)]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles", true)]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles", true)]
     public void FileStatusList_should_refresh_realized_file_names_on_the_settings_event(
-        DiffListSortType sortType, bool isFileTreeMode, string presentationName)
+        DiffListSortType sortType, bool isFileTreeMode, string presentationName, bool hideWhileUpdating)
     {
         using GitExtensionsTests.AppSettingsTestScope settings = new();
         AppSettings.TruncatePathMethod = TruncatePathMethod.None;
@@ -639,7 +642,11 @@ public sealed class FileStatusListFamilyTests
                 .Single(label => label.Text?.Contains("old-folder/old.txt") == true);
             string? originalText = row.Text;
 
+            control.IsVisible = !hideWhileUpdating;
             PublishSetting(TruncatePathMethod.FileNameOnly);
+            control.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
 
             row.Text.Should().Be("new.txt (old.txt)");
             presentation.GetVisualDescendants().Should().Contain(row);
@@ -663,6 +670,75 @@ public sealed class FileStatusListFamilyTests
                 commands, new GitUIPostActionEventArgs(null, commands, actionDone: true));
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles", TruncatePathMethod.TrimStart)]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles", TruncatePathMethod.TrimStart)]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles", TruncatePathMethod.TrimStart)]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles", TruncatePathMethod.Compact)]
+    public void FileStatusList_should_trim_long_paths_to_the_native_viewport(
+        DiffListSortType sortType, bool isFileTreeMode, string presentationName, TruncatePathMethod pathMethod)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.TruncatePathMethod = pathMethod;
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 1300, Height = 360, Content = control };
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = sortType;
+            window.Show();
+            string originalDirectory = new('q', 70);
+            string newDirectory = new('x', 70);
+            GitItemStatus rename = new($"{newDirectory}/new.txt")
+            {
+                OldName = $"{originalDirectory}/old.txt",
+                IsTracked = true,
+                IsRenamed = true,
+            };
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, new GitRevision(ObjectId.Random()), "files", [rename])],
+                isFileTreeMode);
+            Dispatcher.UIThread.RunJobs();
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+            window.UpdateLayout();
+
+            ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
+            TextBlock row = presentation.GetVisualDescendants().OfType<TextBlock>()
+                .Single(label => label.Text?.Contains("old.txt") == true);
+            string? wideLabel = row.Text;
+            wideLabel.Should().Contain(originalDirectory);
+
+            Resize(250);
+            if (pathMethod == TruncatePathMethod.Compact && !OperatingSystem.IsWindows())
+            {
+                row.Text.Should().Be(wideLabel);
+            }
+            else
+            {
+                row.Text.Should().Contain("new.txt").And.Contain("...").And.NotContain(originalDirectory);
+            }
+
+            control.SelectedGitItem.Should().BeSameAs(rename);
+
+            Resize(1300);
+            row.Text.Should().Be(wideLabel);
+            control.SelectedGitItem.Should().BeSameAs(rename);
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+
+        void Resize(double width)
+        {
+            window.Width = width;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
         }
     }
 
