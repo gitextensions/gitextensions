@@ -243,7 +243,7 @@ public sealed class FileStatusListFamilyTests
         int showInTreeCalls = 0;
         control.BindContextMenu(
             blame: null,
-            cherryPickChanges: null,
+            cherryPickChanges: () => Assert.Fail("A working-tree item cannot be cherry-picked."),
             filterFileInGrid: () => filterCalls++,
             refreshParent: () => { },
             openInFileTreeTab_AsBlame: _ => showInTreeCalls++,

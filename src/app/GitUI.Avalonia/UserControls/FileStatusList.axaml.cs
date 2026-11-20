@@ -941,16 +941,14 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(IReadOnlyList<GitRevision> revisions)
     {
+        CancellationToken cancellationToken = _reloadSequence.Next();
         FileStatusListLoading();
         UpdateToolbar(revisions);
         _enableDisablingShowDiffForAllParents = true;
         _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
-        IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
-            prevList: [],
-            refreshDiff: true,
-            refreshGrep: false,
-            CancellationToken.None);
-        SetDiffs(groups, isFileTreeMode: false);
+        UpdateFileStatusListView(
+            _diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken),
+            cancellationToken: cancellationToken);
     }
 
     public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId headId, CancellationToken cancellationToken)
@@ -1025,12 +1023,11 @@ public partial class FileStatusList : GitModuleControl
     {
         FileStatusListLoading();
         UpdateToolbar([workTreeRev, indexRev]);
-        SetDiffs(
+        UpdateFileStatusListView(
         [
             new FileStatusWithDescription(indexRev, workTreeRev, workTreeDesc, workTreeItems),
             new FileStatusWithDescription(headRev, indexRev, indexDesc, indexItems),
-        ],
-        isFileTreeMode: false);
+        ]);
     }
 
     /// <summary>
@@ -1040,33 +1037,21 @@ public partial class FileStatusList : GitModuleControl
     {
         FileStatusListLoading();
         UpdateToolbar([secondRev]);
-        SetDiffs(
+        UpdateFileStatusListView(
         [
             new(
                 firstRev: firstRev,
                 secondRev: secondRev,
                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId ?? default(ObjectId)),
                 statuses: items),
-        ],
-        isFileTreeMode: false);
+        ]);
     }
 
     public void ClearDiffs()
     {
         _reloadSequence.CancelCurrent();
-        ClearSelected();
         UpdateToolbar([]);
-        GitItemStatusesWithDescription = [];
-        _allTreeItems = [];
-        _gitItemFilteredStatuses = [];
-        _gitItemStatuses = [];
-        _showDiffGroups = false;
-        ShowDiffTree = false;
-        lstFiles.ItemsSource = null;
-        tvDiffFiles.ItemsSource = null;
-        tvFiles.ItemsSource = null;
-        SetFileStatusListVisibility(showNoFiles: true);
-        UpdateToolbar();
+        UpdateFileStatusListView([]);
     }
 
     private string? GetDescriptionForRevision(ObjectId objectId)
@@ -1268,7 +1253,14 @@ public partial class FileStatusList : GitModuleControl
         };
         _flatList = sortType is DiffListSortType.FilePathFlat or DiffListSortType.FileExtensionFlat or DiffListSortType.FileStatusFlat;
 
-        if (!ReferenceEquals(items, GitItemStatusesWithDescription))
+        if (items.Count == 0)
+        {
+            // Avalonia can retain the selection after replacing the tree's items.
+            ClearSelected();
+            _showDiffGroups = false;
+        }
+
+        if (items.Count == 0 || !ReferenceEquals(items, GitItemStatusesWithDescription))
         {
             FileStatusItem[] statusItems =
             [
@@ -1359,7 +1351,6 @@ public partial class FileStatusList : GitModuleControl
         }
 
         DataSourceChanged?.Invoke(this, EventArgs.Empty);
-        FilterChanged?.Invoke(this, EventArgs.Empty);
         return;
 
         static string GetExtensionImageKey(IGrouping<GroupKey, GitItemStatus> group)
@@ -1963,6 +1954,7 @@ public partial class FileStatusList : GitModuleControl
 
         // Feed back the current list of files
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+        FilterChanged?.Invoke(this, EventArgs.Empty);
         return _gitItemFilteredStatuses.Count;
     }
 
@@ -2308,13 +2300,6 @@ public partial class FileStatusList : GitModuleControl
         }
 
         SetFileTreeMode(isFileTreeMode);
-        if (groups.Count == 0)
-        {
-            _gitItemStatuses = [];
-            _allTreeItems = [];
-            _showDiffGroups = false;
-        }
-
         UpdateFileStatusListView(groups);
     }
 

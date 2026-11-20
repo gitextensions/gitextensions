@@ -6543,6 +6543,53 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Browse_folder_history_should_start_at_checkout_when_viewing_an_older_diff()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        string folder = Directory.CreateDirectory(Path.Combine(_workingDirectory, "folder")).FullName;
+        string firstFile = Path.Combine(folder, "first.txt");
+        File.WriteAllText(firstFile, "first");
+        File.WriteAllText(Path.Combine(folder, "second.txt"), "second");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "folder" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "folder-added" }).Should().BeTrue();
+        ObjectId older = module.GetCurrentCheckout();
+        File.WriteAllText(firstFile, "updated");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "folder-updated" }).Should().BeTrue();
+        ObjectId checkout = module.GetCurrentCheckout();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.UseBrowseForFileHistory.Value = false;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        FormFileHistory? history = null;
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == checkout);
+            form.RevisionGrid.SetSelectedRevision(older).Should().BeTrue();
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == older);
+
+            FileStatusList files = form.revisionDiff.FileStatusList;
+            files.SelectFileOrFolder(RelativePath.From("folder")).Should().BeTrue();
+            files.SelectedFolder.Should().Be(RelativePath.From("folder"));
+            files.ExecuteCommand(RevisionDiffControl.Command.ShowHistory).Should().BeTrue();
+
+            history = form.OwnedWindows.OfType<FormFileHistory>().Should().ContainSingle().Which;
+            RevisionGridControl historyGrid = history.FindControl<RevisionGridControl>("RevisionGrid")!;
+            await WaitUntilAsync(() => historyGrid.GetSelectedRevisions().Count == 1);
+            historyGrid.GetSelectedRevisions().Single().ObjectId.Should().Be(checkout);
+        }
+        finally
+        {
+            history?.Close();
+            form.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Browse_git_grep_should_publish_results_for_the_current_revision_after_the_diff()
     {
         GitModule module = CreateRepositoryWithInitialCommit();

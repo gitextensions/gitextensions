@@ -146,7 +146,7 @@ partial class FileStatusList
     /// </summary>
     public void BindContextMenu(
         Action? blame,
-        Action? cherryPickChanges,
+        Action cherryPickChanges,
         Action filterFileInGrid,
         Action refreshParent,
         Action<bool>? openInFileTreeTab_AsBlame,
@@ -157,13 +157,13 @@ partial class FileStatusList
     {
         _blame = blame;
         _cherryPickChanges = cherryPickChanges;
-        _getSupportLinePatching = getSupportLinePatching;
         _filterFileInGrid = filterFileInGrid;
         _openInFileTreeTab_AsBlame = openInFileTreeTab_AsBlame;
         _refreshParent = refreshParent;
         _getCurrentRevision = getCurrentRevision;
         _getLineNumber = getLineNumber;
         _getSelectedText = getSelectedText;
+        _getSupportLinePatching = getSupportLinePatching;
     }
 
     private void Blame_Click(object sender, EventArgs e)

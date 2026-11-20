@@ -24,6 +24,67 @@ namespace GitExtensionsTests;
 public sealed class FileStatusListTests
 {
     [AvaloniaTest]
+    public void FileStatusList_should_publish_data_and_filter_changes_from_the_original_operations()
+    {
+        using FileStatusList control = new();
+        List<string> notifications = [];
+        control.DataSourceChanged += (_, _) => notifications.Add(nameof(control.DataSourceChanged));
+        control.FilterChanged += (_, _) => notifications.Add(nameof(control.FilterChanged));
+        GitItemStatus item = new("tracked.txt") { IsChanged = true, IsTracked = true };
+
+        control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+
+        control.GitItemStatuses.Should().Equal(item);
+        notifications.Should().Equal(nameof(control.DataSourceChanged));
+        notifications.Clear();
+
+        control.SetFilter("nomatch");
+
+        control.GitItemFilteredStatuses.Should().BeEmpty();
+        notifications.Should().Equal(nameof(control.DataSourceChanged), nameof(control.FilterChanged));
+        notifications.Clear();
+
+        control.ClearDiffs();
+
+        control.GitItemStatuses.Should().BeEmpty();
+        control.SelectedGitItems.Should().BeEmpty();
+        notifications.Should().Equal(nameof(control.DataSourceChanged));
+    }
+
+    [AvaloniaTest]
+    public void SetDiffs_should_cancel_the_previous_synchronous_revision_load()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.IsValidGitWorkingDir().Returns(true);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        using FileStatusList control = new() { UICommandsSource = source };
+        ObjectId parent = ObjectId.Random();
+        GitRevision revision = new(ObjectId.Random()) { ParentIds = [parent] };
+        GitItemStatus item = new("tracked.txt") { IsChanged = true, IsTracked = true };
+        CancellationToken previousLoad = default;
+        module.GetDiffFilesWithSubmodulesStatus(parent, revision.ObjectId, parent, true, Arg.Any<UntrackedFilesMode>(), Arg.Any<CancellationToken>())
+            .Returns(call =>
+            {
+                previousLoad = call.Arg<CancellationToken>();
+                return [item];
+            });
+
+        control.SetDiffs([revision]);
+
+        control.GitItemStatuses.Should().Equal(item);
+        previousLoad.CanBeCanceled.Should().BeTrue();
+        previousLoad.IsCancellationRequested.Should().BeFalse();
+
+        control.SetDiffs([]);
+
+        previousLoad.IsCancellationRequested.Should().BeTrue();
+        control.GitItemStatuses.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_filter_names_and_old_names_and_retain_results_for_invalid_regex()
     {
         FileStatusList control = new();

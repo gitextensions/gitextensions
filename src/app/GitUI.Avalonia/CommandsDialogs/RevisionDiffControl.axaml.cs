@@ -451,7 +451,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             filterFileInGrid: FilterFileInGrid,
             refreshParent: RequestRefresh,
             openInFileTreeTab_AsBlame: revisionFileTree is null ? null : OpenInFileTreeTab,
-            getCurrentRevision: () => DisplayedRevision,
+            getCurrentRevision: () => _revisionGridInfo?.GetRevision(_revisionGridInfo.CurrentCheckout),
             getLineNumber: () => BlameControl.IsVisible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
             getSelectedText: DiffText.GetSelectedText,
             getSupportLinePatching: () => DiffText.SupportLinePatching);
