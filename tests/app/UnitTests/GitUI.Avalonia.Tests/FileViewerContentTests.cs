@@ -601,6 +601,34 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task Binary_preview_should_start_at_the_hex_header_and_keep_its_difftool()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 480, Height = 260, Content = viewer };
+        try
+        {
+            window.Show();
+            string bytes = new('\0', 256);
+            int difftoolRequests = 0;
+            await viewer.ViewTextAsync("payload.bin", bytes, line: 10, openWithDifftool: () => difftoolRequests++);
+            viewer.TextEditor.Text.Should().Contain("Binary file: payload.bin");
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+
+            viewer.TextEditor.TextArea.Caret.Line = 10;
+            await viewer.ViewTextAsync("payload.bin", bytes, openWithDifftool: () => difftoolRequests++);
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            await editor.FindNextAsync(searchForwardOrOpenWithDifftool: true);
+            difftoolRequests.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task ViewChangesAsync_should_marshal_rendering_from_a_worker_thread()
     {
         string filePath = Path.Combine(_workingDirectory, "worker-thread.txt");

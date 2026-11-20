@@ -802,10 +802,10 @@ public partial class FileViewer : GitModuleControl
             viewToken);
     }
 
-    private void DisplayAsHexDump(string fileNameFormat, string fileName, string data)
+    private void DisplayAsHexDump(string fileNameFormat, string filename, string data, Action? openWithDifftool)
     {
         StringBuilder summary = new StringBuilder()
-            .AppendLine(string.Format(fileNameFormat, fileName))
+            .AppendLine(string.Format(fileNameFormat, filename))
             .AppendLine();
 
         double mb = data.Length / (1024d * 1024);
@@ -816,7 +816,10 @@ public partial class FileViewer : GitModuleControl
 
         summary.Append($"{data.Length:N0}").Append(' ').Append(_bytes.Text).AppendLine(":")
             .AppendLine();
-        SetText(ToHexDump(data, summary));
+
+        string hexData = ToHexDump(data, summary);
+
+        internalFileViewer.SetText(hexData, openWithDifftool);
     }
 
     /// <summary>
@@ -2416,11 +2419,11 @@ public partial class FileViewer : GitModuleControl
             {
                 try
                 {
-                    DisplayAsHexDump(_binaryFile.Text, fileName ?? string.Empty, text);
+                    DisplayAsHexDump(_binaryFile.Text, fileName ?? string.Empty, text, openWithDifftool);
                 }
                 catch
                 {
-                    SetText(string.Format(_binaryFileDetected.Text, fileName));
+                    internalFileViewer.SetText(string.Format(_binaryFileDetected.Text, fileName), openWithDifftool);
                 }
             }
 
@@ -2439,7 +2442,7 @@ public partial class FileViewer : GitModuleControl
                 SetText(text);
             }
 
-            if (line is not null)
+            if (!isBinary && line is not null)
             {
                 GoToLine(line.Value);
             }
@@ -2458,7 +2461,7 @@ public partial class FileViewer : GitModuleControl
         await InvokeOnOwnerMainThreadAsync(() =>
         {
             ResetView(ViewMode.Text, fileName, item: null, openWithDifftool);
-            DisplayAsHexDump(fileNameFormat, fileName, text);
+            DisplayAsHexDump(fileNameFormat, fileName, text, openWithDifftool);
             TextLoaded?.Invoke(this, EventArgs.Empty);
         }, cancellationToken);
     }

@@ -22,6 +22,20 @@ namespace GitExtensionsTests;
 public sealed class FileViewerSearchTests
 {
     [AvaloniaTest]
+    public void FileViewer_should_emit_no_separate_translation_for_the_continuous_scroll_caption()
+    {
+        using FileViewer viewer = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        viewer.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "copyToolStripMenuItem", "Text", Arg.Any<string>());
+        translation.DidNotReceive().AddTranslationItem(nameof(FileViewer), "automaticContinuousScrollToolStripMenuItem", "Text", Arg.Any<string>());
+        viewer.FindControl<MenuItem>("automaticContinuousScrollToolStripMenuItem")!.Header
+            .Should().Be(GitUI.TranslatedStrings.ContScrollToNextFileOnlyWithAlt);
+    }
+
+    [AvaloniaTest]
     public void FileViewer_should_create_the_find_window_only_when_requested()
     {
         FileViewer viewer = new();

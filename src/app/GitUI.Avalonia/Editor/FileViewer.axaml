@@ -109,7 +109,7 @@
                     Header="_Treat all files as text"
                     ToggleType="CheckBox" />
           <MenuItem x:Name="automaticContinuousScrollToolStripMenuItem"
-                    Header=""
+                    compat:TranslationCompat.TranslateText="False"
                     ToggleType="CheckBox">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.UiScrollBar}" /></MenuItem.Icon>
           </MenuItem>
