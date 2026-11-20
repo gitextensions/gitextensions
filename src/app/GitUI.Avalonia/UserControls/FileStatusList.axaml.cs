@@ -811,6 +811,23 @@ public partial class FileStatusList : GitModuleControl
         Control GetTarget() => _isFileTreeMode ? tvFiles : ShowDiffTree ? tvDiffFiles : lstFiles;
     }
 
+    // Avalonia's item templates pass the native row label and status directly.
+    private static string FormatListViewItem(string nodeText, GitItemStatus? gitItemStatus)
+    {
+        if (gitItemStatus is null || gitItemStatus.IsRangeDiff)
+        {
+            return nodeText;
+        }
+
+        if (AppSettings.TruncatePathMethod == TruncatePathMethod.FileNameOnly)
+        {
+            (string text, string? suffix) = PathFormatter.FormatTextForFileNameOnly(gitItemStatus.Name, gitItemStatus.OldName);
+            nodeText = text + suffix;
+        }
+
+        return AppendItemSubmoduleStatus(nodeText, gitItemStatus);
+    }
+
     public FileStatusItem? SelectNextItem(bool backwards, bool loop, bool notify = true)
     {
         FileStatusItem[] items = [.. AllItems.Where(item => !item.Item.IsStatusOnly && !item.Item.IsRangeDiff)];
@@ -2714,7 +2731,7 @@ public partial class FileStatusList : GitModuleControl
         TextBlock text = new()
         {
             // Also set .Text in order to provide accessibility information
-            Text = node.Item is null ? node.Text : AppendItemSubmoduleStatus(node.Text, node.Item.Item),
+            Text = FormatListViewItem(node.Text, node.Item?.Item),
             FontWeight = FontWeight.Normal,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -2731,6 +2748,7 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
+            AutomationProperties.SetName(text, node.Text);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Text);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
             {
@@ -2753,7 +2771,7 @@ public partial class FileStatusList : GitModuleControl
     {
         TextBlock text = new()
         {
-            Text = node.Item is null ? node.Name : AppendItemSubmoduleStatus(node.Name, node.Item.Item),
+            Text = FormatListViewItem(node.Name, node.Item?.Item),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
         };
@@ -2771,6 +2789,7 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
+            AutomationProperties.SetName(text, node.Name);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Name);
             if (!node.Item.Item.IsSubmodule
                 && (_isFileTreeMode || !string.IsNullOrWhiteSpace(node.Item.Item.GrepString)))
@@ -2863,9 +2882,10 @@ public partial class FileStatusList : GitModuleControl
             : $"{gitItemStatus.Name} ({gitItemStatus.OldName})";
         TextBlock text = new()
         {
-            Text = AppendItemSubmoduleStatus(itemText, gitItemStatus),
+            Text = FormatListViewItem(itemText, gitItemStatus),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
+        AutomationProperties.SetName(text, itemText);
         UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus, itemText);
         if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
         {
@@ -2895,7 +2915,7 @@ public partial class FileStatusList : GitModuleControl
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 image.Source = _imageListData.ImageList[GetSubmoduleItemImageKey(item, status)];
-                text.Text = AppendItemSubmoduleStatus(itemText, item);
+                text.Text = FormatListViewItem(itemText, item);
             });
         });
     }

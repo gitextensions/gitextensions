@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
@@ -548,6 +549,56 @@ public sealed class FileStatusListFamilyTests
             string[] expected = [.. new[] { ".cs", ".CS" }.OrderBy(FileStatusList.GroupKey.From)];
             headings.Should().Equal(expected, "the original groups and orders by GroupKey");
             control.GitItemFilteredStatuses.Should().HaveCount(4);
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles")]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles")]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles")]
+    public void FileStatusList_should_display_file_names_only_in_each_file_presentation(
+        DiffListSortType sortType, bool isFileTreeMode, string presentationName)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.TruncatePathMethod = TruncatePathMethod.None;
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 600, Height = 360, Content = control };
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = sortType;
+            window.Show();
+            GitItemStatus rename = new("new-folder/new.txt") { OldName = "old-folder/old.txt", IsTracked = true, IsRenamed = true };
+            GitItemStatus move = new("new-folder/same.txt") { OldName = "old-folder/same.txt", IsTracked = true, IsRenamed = true };
+            FileStatusWithDescription[] groups = [new(null, new GitRevision(ObjectId.Random()), "files", [rename, move])];
+            control.SetDiffs(groups, isFileTreeMode);
+            Dispatcher.UIThread.RunJobs();
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+            window.UpdateLayout();
+
+            ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
+            presentation.IsVisible.Should().BeTrue();
+            presentation.GetVisualDescendants().OfType<TextBlock>()
+                .Should().Contain(row => row.Text != null && row.Text.Contains("old-folder/old.txt"));
+
+            AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
+            control.SetDiffs(groups, isFileTreeMode);
+            Dispatcher.UIThread.RunJobs();
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+            window.UpdateLayout();
+
+            TextBlock[] rows = [.. presentation.GetVisualDescendants().OfType<TextBlock>()];
+            TextBlock renamedRow = rows.Should().ContainSingle(row => row.Text == "new.txt (old.txt)").Which;
+            AutomationProperties.GetName(renamedRow).Should().Contain("old-folder/old.txt");
+            string?[] labels = [.. rows.Select(row => row.Text)];
+            labels.Should().Contain("same.txt");
+            labels.Should().NotContain(label => label != null && label.Contains("old-folder/"));
+            control.GitItemFilteredStatuses.Select(item => item.Name).Should().BeEquivalentTo([rename.Name, move.Name]);
         }
         finally
         {
