@@ -1,7 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Highlighting;
@@ -74,12 +77,21 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         };
         TextEditor.LayoutUpdated += (_, _) => UpdateScrollBelowDocument();
         TextEditor.TextArea.SelectionChanged += SelectionManagerSelectionChanged;
-        TextEditor.TextArea.Caret.PositionChanged += (_, _) =>
-            SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(TextEditor.TextArea.Caret.Line - 1));
+        Vector lastScrollOffset = TextEditor.TextArea.TextView.ScrollOffset;
         TextEditor.TextArea.TextView.ScrollOffsetChanged += (_, _) =>
         {
-            HScrollPositionChanged?.Invoke(this, EventArgs.Empty);
-            VScrollPositionChanged?.Invoke(this, EventArgs.Empty);
+            Vector previousOffset = lastScrollOffset;
+            Vector scrollOffset = TextEditor.TextArea.TextView.ScrollOffset;
+            lastScrollOffset = scrollOffset;
+            if (previousOffset.X != scrollOffset.X)
+            {
+                OnHScrollPositionChanged(EventArgs.Empty);
+            }
+
+            if (previousOffset.Y != scrollOffset.Y)
+            {
+                OnVScrollPositionChanged(EventArgs.Empty);
+            }
         };
         TextEditor.PointerMoved += (sender, e) => MouseMove?.Invoke(sender, e);
         TextEditor.PointerEntered += (sender, e) => MouseEnter?.Invoke(sender, e);
@@ -93,6 +105,11 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         };
         TextEditor.KeyUp += (sender, e) => KeyUp?.Invoke(sender, e);
         TextEditor.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
+        TextEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
+        {
+            int y = (int)e.GetPosition(TextEditor.TextArea.TextView).Y;
+            SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(GetLineFromVisualPosY(y)));
+        }, RoutingStrategies.Tunnel);
         TextEditor.PointerWheelChanged += TextArea_MouseWheel;
         AttachedToVisualTree += (_, _) => TextEditor.ContextMenu = ContextMenu;
         DetachedFromVisualTree += (_, _) =>
@@ -594,16 +611,29 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
     }
 
+    // The AvaloniaEdit offset methods only apply the template.
     public int HScrollPosition
     {
         get => (int)TextEditor.TextArea.TextView.ScrollOffset.X;
-        set => TextEditor.ScrollToHorizontalOffset(value);
+        set
+        {
+            if (TextEditor.TextArea.FindAncestorOfType<ScrollViewer>() is { } scrollViewer)
+            {
+                scrollViewer.Offset = new Vector(value, scrollViewer.Offset.Y);
+            }
+        }
     }
 
     public int VScrollPosition
     {
         get => (int)TextEditor.TextArea.TextView.ScrollOffset.Y;
-        set => TextEditor.ScrollToVerticalOffset(value);
+        set
+        {
+            if (TextEditor.TextArea.FindAncestorOfType<ScrollViewer>() is { } scrollViewer)
+            {
+                scrollViewer.Offset = new Vector(scrollViewer.Offset.X, value);
+            }
+        }
     }
 
     public EolMarkerStyle EolMarkerStyle

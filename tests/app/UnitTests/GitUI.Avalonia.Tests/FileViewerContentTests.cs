@@ -14,6 +14,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using AvaloniaEdit;
+using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
@@ -183,6 +184,99 @@ public sealed class FileViewerContentTests
             copyEnabledOnOpening.Should().Be(selectText);
             openingSender.Should().BeSameAs(menu);
             menu.IsOpen.Should().BeFalse();
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public async Task FileViewer_should_publish_only_the_scroll_axis_that_changes(bool horizontal, bool useWheel)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        string text = string.Join('\n', Enumerable.Repeat(new string('w', 300), 100));
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("scroll.txt", text);
+            editor.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.Text.Should().Be(text);
+            viewer.HScrollPosition.Should().Be(0);
+            viewer.VScrollPosition.Should().Be(0);
+            int horizontalChanges = 0;
+            int verticalChanges = 0;
+            viewer.HScrollPositionChanged += (_, _) => horizontalChanges++;
+            viewer.VScrollPositionChanged += (_, _) => verticalChanges++;
+
+            if (useWheel)
+            {
+                Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(20, 8), editor)!.Value;
+                editor.MouseWheel(point, horizontal ? new Vector(-1, 0) : new Vector(0, -1), RawInputModifiers.None);
+            }
+            else if (horizontal)
+            {
+                viewer.HScrollPosition = 48;
+            }
+            else
+            {
+                viewer.VScrollPosition = 48;
+            }
+
+            editor.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            int changedOffset = horizontal ? viewer.HScrollPosition : viewer.VScrollPosition;
+            if (useWheel)
+            {
+                changedOffset.Should().BePositive();
+            }
+            else
+            {
+                changedOffset.Should().Be(48);
+            }
+
+            (horizontal ? viewer.VScrollPosition : viewer.HScrollPosition).Should().Be(0);
+            horizontalChanges.Should().Be(horizontal ? 1 : 0);
+            verticalChanges.Should().Be(horizontal ? 0 : 1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "first\nsecond\nthird");
+            Dispatcher.UIThread.RunJobs();
+
+            List<int> selected = [];
+            viewer.SelectedLineChanged += (_, args) => selected.Add(args.SelectedLine);
+            viewer.GoToLine(2);
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(2);
+            selected.Should().BeEmpty("the source reports a mouse selection, not a caret move");
+
+            TextView view = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = view.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == 2);
+            Point point = view.TranslatePoint(new Point(8, line.VisualTop + (line.Height / 2)), editor)!.Value;
+            editor.MouseMove(point, RawInputModifiers.None);
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            selected.Should().Equal(1);
         }
         finally
         {

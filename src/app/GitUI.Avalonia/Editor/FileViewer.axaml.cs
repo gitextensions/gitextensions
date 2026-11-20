@@ -58,7 +58,6 @@ public partial class FileViewer : GitModuleControl
     private bool _showNonPrintingChars;
     private IGitUICommands? _settingsCommands;
     private bool _updatingEncoding;
-    private int _lastCaretLine = -1;
 
     /// <summary>
     /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
@@ -152,10 +151,11 @@ public partial class FileViewer : GitModuleControl
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
         TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
         TextEditor.TextChanged += (sender, e) => TextChanged?.Invoke(sender, e);
-        TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
-        TextEditor.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
-        TextEditor.DoubleTapped += (_, _) => RequestDiffView?.Invoke(this, EventArgs.Empty);
+        internalFileViewer.HScrollPositionChanged += (sender, e) => HScrollPositionChanged?.Invoke(sender, e);
+        internalFileViewer.VScrollPositionChanged += (sender, e) => VScrollPositionChanged?.Invoke(sender, e);
+        internalFileViewer.SelectedLineChanged += (sender, e) => SelectedLineChanged?.Invoke(sender, e);
+        internalFileViewer.DoubleClick += (_, _) => RequestDiffView?.Invoke(this, EventArgs.Empty);
         _continuousScrollEventManager.TopScrollReached += _continuousScrollEventManager_TopScrollReached;
         _continuousScrollEventManager.BottomScrollReached += _continuousScrollEventManager_BottomScrollReached;
         internalFileViewer.SetContinuousScrollManager(_continuousScrollEventManager);
@@ -2743,25 +2743,6 @@ public partial class FileViewer : GitModuleControl
     {
         TextEditor.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
         internalFileViewer.LineNumbersControl.InvalidateVisual();
-    }
-
-    private void Caret_PositionChanged(object? sender, EventArgs e)
-    {
-        int line = TextEditor.TextArea.Caret.Line - 1;
-        if (line == _lastCaretLine)
-        {
-            return;
-        }
-
-        _lastCaretLine = line;
-        internalFileViewer.LineNumbersControl.InvalidateVisual();
-        SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(CurrentFileLine - 1));
-    }
-
-    private void TextView_ScrollOffsetChanged(object? sender, EventArgs e)
-    {
-        HScrollPositionChanged?.Invoke(this, EventArgs.Empty);
-        VScrollPositionChanged?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
