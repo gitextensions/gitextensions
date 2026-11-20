@@ -91,6 +91,25 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    [TestCase(WindowState.Normal)]
+    [TestCase(WindowState.Maximized)]
+    public void Commit_should_request_the_saved_bounds_before_opening(WindowState state)
+    {
+        GitModule module = CreateCleanRepository();
+        WindowPositionList positions = WindowPositionList.Load()!;
+        positions.AddOrUpdate(new WindowPosition(new System.Drawing.Rectangle(20, 30, 1420, 810), 96, state, nameof(FormCommit)));
+        positions.Save();
+        _settingsScope.ReloadWindowPositions();
+
+        using FormCommit form = new(new GitUICommands(_serviceContainer, module));
+
+        form.IsVisible.Should().BeFalse();
+        form.Width.Should().Be(1420);
+        form.Height.Should().Be(810);
+        form.WindowState.Should().Be(state);
+    }
+
+    [AvaloniaTest]
     public async Task Commit_splitter_should_retry_saved_distance_after_the_real_window_reaches_its_final_size()
     {
         GitModule module = CreateCleanRepository();
@@ -131,10 +150,10 @@ public sealed class FormCommitTests
             await first.GetTestAccessor().ClosePersistenceTask;
             settings.GetValue("splitMain_Distance").Should().Be("1000");
 
-            FormCommit restored = new(new GitUICommands(_serviceContainer, module));
             File.Exists(_settingsScope.WindowPositionPath).Should().BeTrue();
             File.Delete(_settingsScope.WindowPositionPath);
             _settingsScope.ReloadWindowPositions();
+            FormCommit restored = new(new GitUICommands(_serviceContainer, module));
             try
             {
                 restored.Show();
@@ -814,9 +833,11 @@ public sealed class FormCommitTests
             AppSettings.LastCommitMessage = "Last message from another repository";
             AppSettings.CommitDialogShowOnlyMyMessages = false;
             CommitTemplateItem.SaveToSettings([new CommitTemplateItem("Saved template", "Template body", icon: null, isRegex: false)]);
+            MenuFlyout messageHistory = (MenuFlyout)form.FindControl<DropDownButton>("commitMessageToolStripMenuItem")!.Flyout!;
+            MenuFlyout templates = (MenuFlyout)form.FindControl<DropDownButton>("commitTemplatesToolStripMenuItem")!.Flyout!;
 
             accessor.PopulateCommitMessageHistory();
-            MenuItem lastMessage = accessor.CommitMessageFlyout.Items
+            MenuItem lastMessage = messageHistory.Items
                 .OfType<MenuItem>()
                 .First(item => Equals(item.Header, "Last message from another repository"));
             lastMessage.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
@@ -824,18 +845,18 @@ public sealed class FormCommitTests
             form.GetTestAccessor().Message.Text.Should().Be("Last message from another repository");
 
             accessor.PopulateCommitTemplates();
-            MenuItem savedTemplate = accessor.CommitTemplatesFlyout.Items
+            MenuItem savedTemplate = templates.Items
                 .OfType<MenuItem>()
                 .First(item => Equals(item.Header, "Saved template"));
             savedTemplate.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             form.GetTestAccessor().Message.Text.Should().Be("Template body");
 
-            MenuItem conventional = accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last(item => item.Items.OfType<MenuItem>().Any());
+            MenuItem conventional = templates.Items.OfType<MenuItem>().Last(item => item.Items.OfType<MenuItem>().Any());
             conventional.Items.OfType<MenuItem>().Select(item => item.Header).Should().Contain(FeatCommitTypeForTest);
 
             // The commit-message settings entry follows the conventional-commits submenu.
-            accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last().Header
+            templates.Items.OfType<MenuItem>().Last().Header
                 .Should().Be("_Edit commit message templates and settings...");
         }
         finally
@@ -945,24 +966,26 @@ public sealed class FormCommitTests
             {
                 form.Show();
                 FormCommit.TestAccessor accessor = form.GetTestAccessor();
+                ComboBox selectionFilter = form.FindControl<ComboBox>("selectionFilter")!;
+                StackPanel toolbarSelectionFilter = form.FindControl<StackPanel>("toolbarSelectionFilter")!;
                 FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
                 await WaitUntilAsync(() => unstaged.GitItemStatuses.Count == 2);
 
-                accessor.SelectionFilterVisible.Should().BeTrue();
+                toolbarSelectionFilter.IsVisible.Should().BeTrue();
                 form.FindControl<Button>("btnResetAllChanges")!.IsVisible.Should().BeFalse();
                 form.FindControl<Button>("btnResetUnstagedChanges")!.IsVisible.Should().BeFalse();
                 form.FindControl<Button>("CommitAndPush")!.IsVisible.Should().BeFalse();
 
-                accessor.SelectionFilter.Text = "tracked";
+                selectionFilter.Text = "tracked";
                 accessor.ApplySelectionFilter();
                 unstaged.SelectedGitItems.Should().ContainSingle(item => item.Name == "tracked.txt");
 
-                accessor.SelectionFilter.Text = "[";
+                selectionFilter.Text = "[";
                 accessor.ApplySelectionFilter();
-                accessor.SelectionFilter.Classes.Should().Contain("file-filter-invalid");
+                selectionFilter.Classes.Should().Contain("file-filter-invalid");
 
                 accessor.ExecuteCommand(FormCommit.Command.ToggleSelectionFilter).Should().BeTrue();
-                accessor.SelectionFilterVisible.Should().BeFalse();
+                toolbarSelectionFilter.IsVisible.Should().BeFalse();
             }
             finally
             {

@@ -204,11 +204,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// The Amend checkbox is disabled after soft reset.
     private bool PushForced => (Amend.IsChecked == true || !Amend.IsEnabled) && AppSettings.CommitAndPushForcedWhenAmend;
 
-    public FormCommit(
-        IGitUICommands commands,
-        CommitKind commitKind = CommitKind.Normal,
-        GitRevision? editedCommit = null,
-        string? commitMessage = null)
+    public FormCommit(IGitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision? editedCommit = null, string? commitMessage = null)
         : base(commands, enablePositionRestore: true)
     {
         _commitKind = commitKind;
@@ -315,6 +311,10 @@ public sealed partial class FormCommit : GitModuleForm
         selectionFilter.PropertyChanged += OnSelectionFilterTextChanged;
         selectionFilter.SelectionChanged += OnSelectionFilterIndexChanged;
 
+        // By calling this in the constructor, we prevent flickering caused by resizing the
+        // form, for example when it is restored to maximised, but first drawn as a smaller window.
+        RestorePosition();
+
         // TODO this code is very similar to code in FileStatusList
         _selectionFilterSubscription = _selectionFilterSubject
             .Throttle(TimeSpan.FromMilliseconds(250))
@@ -366,7 +366,7 @@ public sealed partial class FormCommit : GitModuleForm
         UpdateLayout();
 
         // The distances which did not fit the initial size of the form are retried now:
-        // the bounds and window state which RestorePosition() requests in base.OnLoad are
+        // the bounds and window state which RestorePosition() requests in the constructor are
         // applied during opening. Retry here, and on subsequent layout changes, so that
         // the distances survive until the splitters have their final size.
         _splitterManager.RestorePendingSplitters();
@@ -2683,11 +2683,7 @@ public sealed partial class FormCommit : GitModuleForm
         internal void RaiseUnstagedEnter(bool byMouse) => _formCommit.Unstaged_Enter(_formCommit.Unstaged, new EnterEventArgs(byMouse));
         internal FileStatusList CurrentFilesList => _formCommit._currentFilesList;
         internal void RaiseStagedEnter(bool byMouse) => _formCommit.Staged_Enter(_formCommit.Staged, new EnterEventArgs(byMouse));
-        internal MenuFlyout CommitMessageFlyout => (MenuFlyout)_formCommit.commitMessageToolStripMenuItem.Flyout!;
-        internal MenuFlyout CommitTemplatesFlyout => (MenuFlyout)_formCommit.commitTemplatesToolStripMenuItem.Flyout!;
         internal Task ClosePersistenceTask => _formCommit._closePersistenceTask;
-        internal ComboBox SelectionFilter => _formCommit.selectionFilter;
-        internal bool SelectionFilterVisible => _formCommit.toolbarSelectionFilter.IsVisible;
 
         internal SpellChecker.EditNetSpell Message => _formCommit.Message;
         internal bool ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
