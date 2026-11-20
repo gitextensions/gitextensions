@@ -403,11 +403,11 @@ public sealed class RepositoryHostPullRequestTests
             node => node.Name == "FindInCommitFilesGitGrepPanel" || node.Name == "ImagePreview");
         hiddenNodes.Should().NotContain(node => node.Type == "GitUI.SpellChecker.SpellCheckAdorner");
 
-        GitUI.Editor.FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
-        accessor.FileViewerToolbar.IsVisible = true;
+        Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+        toolbar.IsVisible = true;
         Dispatcher.UIThread.RunJobs();
 
-        BoundsInViewer(accessor.FileViewerToolbar).Should().Be(new Rect(292, 0, 410, 25));
+        BoundsInViewer(toolbar).Should().Be(new Rect(292, 0, 410, 25));
         BoundsInToolbar(viewer.FindControl<Control>("nextChangeButton")!).Should().Be(new Rect(0, 1, 23, 22));
         BoundsInToolbar(viewer.FindControl<Control>("previousChangeButton")!).Should().Be(new Rect(23, 1, 23, 22));
         BoundsInToolbar(viewer.FindControl<Separator>("toolStripSeparator3")!).Should().Be(new Rect(46, 0, 6, 25));
@@ -418,7 +418,7 @@ public sealed class RepositoryHostPullRequestTests
             => new(control.TranslatePoint(default, viewer)!.Value, control.Bounds.Size);
 
         Rect BoundsInToolbar(Control control)
-            => new(control.TranslatePoint(default, accessor.FileViewerToolbar)!.Value, control.Bounds.Size);
+            => new(control.TranslatePoint(default, toolbar)!.Value, control.Bounds.Size);
     }
 
     [AvaloniaTest]

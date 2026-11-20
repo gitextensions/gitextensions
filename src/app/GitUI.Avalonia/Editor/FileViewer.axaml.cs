@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -154,6 +155,14 @@ public partial class FileViewer : GitModuleControl
         TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
         internalFileViewer.AddHandler(InputElement.KeyDownEvent, TextEditor_KeyDown, RoutingStrategies.Tunnel);
         internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
+        internalFileViewer.MouseMove += (_, _) =>
+        {
+            if (!fileviewerToolbar.IsVisible)
+            {
+                fileviewerToolbar.IsVisible = true;
+            }
+        };
+        PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
         internalFileViewer.TextChanged += (sender, e) =>
         {
             internalFileViewer.AddTextHighlighting();
@@ -167,8 +176,6 @@ public partial class FileViewer : GitModuleControl
         _continuousScrollEventManager.TopScrollReached += _continuousScrollEventManager_TopScrollReached;
         _continuousScrollEventManager.BottomScrollReached += _continuousScrollEventManager_BottomScrollReached;
         internalFileViewer.SetContinuousScrollManager(_continuousScrollEventManager);
-        TextEditor.PointerMoved += (_, _) => ShowFileViewerToolbar();
-        PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
         PictureBox.PointerWheelChanged += PictureBox_MouseWheel;
         AttachedToLogicalTree += (_, _) =>
         {
@@ -232,6 +239,7 @@ public partial class FileViewer : GitModuleControl
         goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
         showNonPrintChars.Click += ShowNonprintableCharactersToolStripMenuItemClick;
         showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
+        fileviewerToolbar.PropertyChanged += fileviewerToolbar_VisibleChanged;
         nextChangeButton.Click += NextChangeButtonClick;
         previousChangeButton.Click += PreviousChangeButtonClick;
         increaseNumberOfLines.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
@@ -1069,6 +1077,7 @@ public partial class FileViewer : GitModuleControl
         toolStripSeparator2.IsVisible = isPartialTextView;
         treatAllFilesAsTextToolStripMenuItem.IsVisible = isPartialTextView;
 
+        // toolbar
         nextChangeButton.IsVisible = isPartialTextView;
         previousChangeButton.IsVisible = isPartialTextView;
         increaseNumberOfLines.IsVisible = isPartialFlexibleView;
@@ -1936,6 +1945,16 @@ public partial class FileViewer : GitModuleControl
         OnExtraDiffArgumentsChanged();
     }
 
+    // Avalonia reports visibility changes through PropertyChanged.
+    private void fileviewerToolbar_VisibleChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == IsVisibleProperty && fileviewerToolbar.IsVisible && TryGetUICommandsDirect(out _))
+        {
+            _ = Encoding;
+            UpdateEncodingSelection();
+        }
+    }
+
     private void goToLineToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         using FormGoToLine formGoToLine = new();
@@ -2114,33 +2133,13 @@ public partial class FileViewer : GitModuleControl
 
         public FindAndReplaceForm FindAndReplaceForm => _fileViewer.internalFileViewer.GetTestAccessor().FindAndReplaceForm;
 
-        public Border FileViewerToolbar => _fileViewer.fileviewerToolbar;
-
-        public MenuItem ShowNonprintingCharactersMenuItem => _fileViewer.showNonprintableCharactersToolStripMenuItem;
-
-        public Button ShowNonprintingCharactersButton => _fileViewer.showNonPrintChars;
-
-        public MenuItem ShowSyntaxHighlightingMenuItem => _fileViewer.showSyntaxHighlightingToolStripMenuItem;
-
-        public Button ShowSyntaxHighlightingButton => _fileViewer.showSyntaxHighlighting;
-
         public bool ShowSyntaxHighlightingInDiff => _fileViewer.ShowSyntaxHighlightingInDiff;
 
-        public Button NextChangeButton => _fileViewer.nextChangeButton;
-
-        public bool HasDiffHighlighting => _fileViewer.internalFileViewer.DiffHighlightService is not null;
-
         public HyperlinkButton ShowPreviewLink => _fileViewer._NO_TRANSLATE_lblShowPreview;
-
-        public Image ImagePreview => _fileViewer.ImagePreview;
-
-        public Border PictureBox => _fileViewer.PictureBox;
 
         public ViewMode ViewMode => _fileViewer._viewMode;
 
         public FileStatusItem? ViewItem => _fileViewer._viewItem;
-
-        public Action? OpenWithDifftool => _fileViewer._openWithDifftool;
 
         public bool RaiseContinuousScroll(double delta, KeyModifiers keyModifiers)
             => _fileViewer.RaiseContinuousScroll(delta, keyModifiers);
@@ -2762,9 +2761,6 @@ public partial class FileViewer : GitModuleControl
         return await Dispatcher.InvokeAsync(action, DispatcherPriority.Normal, cancellationToken);
     }
 
-    /// <summary>Gets the retained external-difftool action.</summary>
-    public Action? OpenWithDifftool => _openWithDifftool;
-
     /// <summary>Gets the number of document lines.</summary>
     public int TotalNumberOfLines => internalFileViewer.TotalNumberOfLines;
 
@@ -2799,17 +2795,6 @@ public partial class FileViewer : GitModuleControl
         if (ProcessHotkey(KeysMapper.ToKeys(e)))
         {
             e.Handled = true;
-        }
-    }
-
-    private void ShowFileViewerToolbar()
-    {
-        // toolbar
-        fileviewerToolbar.IsVisible = true;
-        if (TryGetUICommandsDirect(out _))
-        {
-            _ = Encoding;
-            UpdateEncodingSelection();
         }
     }
 

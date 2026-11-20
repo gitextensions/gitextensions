@@ -499,7 +499,8 @@ public sealed class FileViewerSearchTests
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
         FileViewer viewer = new() { UICommandsSource = source };
-        ToolTip.SetTip(viewer.GetTestAccessor().NextChangeButton, "Next change");
+        Button nextChangeButton = viewer.FindControl<Button>("nextChangeButton")!;
+        ToolTip.SetTip(nextChangeButton, "Next change");
         ITranslation translation = Substitute.For<ITranslation>();
         translation.TranslateItem(
                 nameof(FileViewer),
@@ -511,9 +512,8 @@ public sealed class FileViewerSearchTests
         viewer.ReloadHotkeys();
         viewer.TranslateItems(translation);
 
-        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
         viewer.FindControl<MenuItem>("findToolStripMenuItem")!.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));
-        ToolTip.GetTip(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
+        ToolTip.GetTip(nextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
     }
 
     [AvaloniaTest]
@@ -537,19 +537,19 @@ public sealed class FileViewerSearchTests
         {
             AppSettings.FixedWidthFont = new WinFormsShims.Font("Consolas", 10);
             FileViewer viewer = new() { UICommandsSource = source, IsVisible = false };
-            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            Button nextChangeButton = viewer.FindControl<Button>("nextChangeButton")!;
             owner.Content = viewer;
             owner.Show();
             Dispatcher.UIThread.RunJobs();
 
-            GetToolTipText(accessor.NextChangeButton).Should().Be("Next change");
+            GetToolTipText(nextChangeButton).Should().Be("Next change");
             viewer.Font.Name.Should().Be("Courier New");
             _ = loader.DidNotReceive().LoadHotkeys(FileViewer.HotkeySettingsName);
 
             viewer.IsVisible = true;
             Dispatcher.UIThread.RunJobs();
 
-            GetToolTipText(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
+            GetToolTipText(nextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
             viewer.Font.Name.Should().Be("Consolas");
             viewer.Font.Size.Should().Be(10);
             _ = loader.Received(1).LoadHotkeys(FileViewer.HotkeySettingsName);

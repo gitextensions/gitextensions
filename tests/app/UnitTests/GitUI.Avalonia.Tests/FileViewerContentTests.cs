@@ -699,6 +699,11 @@ public sealed class FileViewerContentTests
             FileStatusItem item = new(firstRevision, secondRevision, status);
             FileViewer viewer = CreateViewer();
             FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            MenuItem showSyntaxHighlightingMenuItem = viewer.FindControl<MenuItem>("showSyntaxHighlightingToolStripMenuItem")!;
+            Button showSyntaxHighlighting = viewer.FindControl<Button>("showSyntaxHighlighting")!;
+            MenuItem showNonprintableCharactersMenuItem = viewer.FindControl<MenuItem>("showNonprintableCharactersToolStripMenuItem")!;
+            Button showNonPrintChars = viewer.FindControl<Button>("showNonPrintChars")!;
             int reloadRequests = 0;
             viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
 
@@ -707,36 +712,36 @@ public sealed class FileViewerContentTests
             accessor.ViewMode.Should().Be(ViewMode.Diff);
             viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
             viewer.TextEditor.SyntaxHighlighting!.Name.Should().Be("C#");
-            accessor.HasDiffHighlighting.Should().BeTrue();
+            (editor.DiffHighlightService is not null).Should().BeTrue();
             viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
-            accessor.ShowSyntaxHighlightingMenuItem.IsVisible.Should().BeTrue();
-            accessor.ShowSyntaxHighlightingMenuItem.IsChecked.Should().BeTrue();
-            accessor.ShowSyntaxHighlightingButton.Classes.Should().Contain("checked");
+            showSyntaxHighlightingMenuItem.IsVisible.Should().BeTrue();
+            showSyntaxHighlightingMenuItem.IsChecked.Should().BeTrue();
+            showSyntaxHighlighting.Classes.Should().Contain("checked");
             viewer.VRulerPosition.Should().Be(88);
             viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
 
-            accessor.ShowNonprintingCharactersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            showNonprintableCharactersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             viewer.TextEditor.Options.ShowSpaces.Should().BeTrue();
             viewer.TextEditor.Options.ShowTabs.Should().BeTrue();
             viewer.TextEditor.Options.ShowEndOfLine.Should().BeTrue();
             viewer.TextEditor.Options.EndOfLineCRLFGlyph.Should().Be("\\r\\n");
-            accessor.ShowNonprintingCharactersButton.Classes.Should().Contain("checked");
+            showNonPrintChars.Classes.Should().Contain("checked");
             AppSettings.ShowNonPrintingChars.Value.Should().BeTrue();
 
-            accessor.ShowSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            showSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             viewer.TextEditor.SyntaxHighlighting.Should().BeNull();
-            accessor.HasDiffHighlighting.Should().BeTrue();
+            (editor.DiffHighlightService is not null).Should().BeTrue();
             AppSettings.ShowSyntaxHighlightingInDiff.Value.Should().BeFalse();
             reloadRequests.Should().Be(1);
 
-            accessor.ShowSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            showSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
-            accessor.HasDiffHighlighting.Should().BeTrue();
+            (editor.DiffHighlightService is not null).Should().BeTrue();
             reloadRequests.Should().Be(2);
-            accessor.FileViewerToolbar.IsVisible = true;
+            viewer.FindControl<Border>("fileviewerToolbar")!.IsVisible = true;
             await CaptureModeIfRequestedAsync(viewer, "DisplayOptions");
 
             viewer.ShowLineNumbers = false;
@@ -744,7 +749,7 @@ public sealed class FileViewerContentTests
             viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
             viewer.ShowLineNumbers = null;
             viewer.TextEditor.ShowLineNumbers.Should().BeTrue();
-            accessor.ShowSyntaxHighlightingButton.IsVisible.Should().BeFalse();
+            showSyntaxHighlighting.IsVisible.Should().BeFalse();
         }
         finally
         {
@@ -776,13 +781,15 @@ public sealed class FileViewerContentTests
         GitItemStatus item = new("tiny.png") { TreeId = blob };
         FileViewer viewer = CreateViewer();
         FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        Border pictureBox = viewer.FindControl<Border>("PictureBox")!;
+        Image imagePreview = viewer.FindControl<Image>("ImagePreview")!;
 
         await viewer.ViewGitItemAsync(item, revision);
 
         accessor.ViewMode.Should().Be(ViewMode.Image);
-        accessor.PictureBox.IsVisible.Should().BeTrue();
+        pictureBox.IsVisible.Should().BeTrue();
         viewer.TextEditor.IsVisible.Should().BeFalse();
-        accessor.ImagePreview.Source.Should().NotBeNull();
+        imagePreview.Source.Should().NotBeNull();
 
         await CaptureModeIfRequestedAsync(viewer, "Image");
 
@@ -790,7 +797,7 @@ public sealed class FileViewerContentTests
         await viewer.ViewFileAsync(iconPath);
 
         accessor.ViewMode.Should().Be(ViewMode.Image);
-        accessor.ImagePreview.Source.Should().NotBeNull();
+        imagePreview.Source.Should().NotBeNull();
     }
 
     [AvaloniaTest]
@@ -907,6 +914,31 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public void FileViewer_should_show_the_current_encoding_when_the_toolbar_becomes_visible()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 640, Height = 360, Content = viewer };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+
+            toolbar.IsVisible.Should().BeFalse();
+            encodings.SelectedItem.Should().BeNull();
+
+            toolbar.IsVisible = true;
+
+            encodings.SelectedItem.Should().Be(_module.FilesEncoding.EncodingName);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Encoding_selector_should_use_the_shared_available_encodings_and_request_a_reload()
     {
         using FileViewer viewer = CreateViewer();
@@ -928,7 +960,7 @@ public sealed class FileViewerContentTests
             viewer.Encoding.Should().Be(replacement);
             reloadRequests.Should().Be(1);
 
-            viewer.GetTestAccessor().FileViewerToolbar.IsVisible = true;
+            viewer.FindControl<Border>("fileviewerToolbar")!.IsVisible = true;
             await CaptureModeIfRequestedAsync(viewer, "EncodingToolbar", window);
 
             File.WriteAllBytes(

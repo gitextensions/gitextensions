@@ -1512,7 +1512,8 @@ public sealed class FormCommitTests
                 () => $"staged current={ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)}; selected={staged.SelectedItem}; diff={diffEditor.Document?.Text}");
             staged.SelectedItem.Should().NotBeNull();
             unstaged.SelectedItem.Should().BeNull();
-            selectedDiff.GetTestAccessor().OpenWithDifftool.Should().NotBeNull(
+            FileViewerInternal selectedEditor = selectedDiff.FindControl<FileViewerInternal>("internalFileViewer")!;
+            selectedEditor.OpenWithDifftool.Should().NotBeNull(
                 "FormCommit should retain its external-difftool consumer action in FileViewer");
 
             Border toolbar = selectedDiff.FindControl<Border>("fileviewerToolbar")
