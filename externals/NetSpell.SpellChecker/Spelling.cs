@@ -333,9 +333,12 @@ public partial class Spelling : Component
         string tryme = Dictionary.TryCharacters;
         Span<char> tempWord = CurrentWord.Length <= 256 ? stackalloc char[CurrentWord.Length] : new char[CurrentWord.Length];
 
+        CurrentWord.CopyTo(tempWord);
+
         for (int i = 0; i < CurrentWord.Length; i++)
         {
-            CurrentWord.CopyTo(tempWord);
+            char original = tempWord[i];
+
             for (int x = 0; x < tryme.Length; x++)
             {
                 tempWord[i] = tryme[x];
@@ -344,6 +347,8 @@ public partial class Spelling : Component
                     SuggestWord(word, tempSuggestion);
                 }
             }
+
+            tempWord[i] = original;
         }
     }
 
