@@ -6,6 +6,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -259,30 +260,59 @@ public sealed class FileStatusListTests
     [AvaloniaTest]
     public void FileStatusList_should_preserve_children_while_delaying_visual_expansion()
     {
-        FileStatusList control = new() { GroupByRevision = true };
-        GitRevision revision = new(ObjectId.Random());
-        control.SetDiffs(
-        [
-            new FileStatusWithDescription(
-                null,
-                revision,
-                "Files",
-                [new GitItemStatus("one/two/three.txt") { IsChanged = true, IsTracked = true }]),
-        ],
-        isFileTreeMode: false);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        int actions = 0;
+        using AppSettingsTestScope settings = new();
+        using FileStatusList control = new() { GroupByRevision = true };
+        Window window = new() { Content = control, Width = 650, Height = 400 };
+        TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+        ContextMenu menu = tree.ContextMenu!;
+        GitItemStatus file = new("one/two/three.txt") { IsChanged = true, IsTracked = true };
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
 
-        accessor.RestoreDiffTreeChildrenForTesting(delayExpansion: false, () => actions++);
-        (int expandedDescendants, bool allExpanded) = accessor.GetDiffTreeExpansionForTesting();
-        expandedDescendants.Should().BeGreaterThan(2);
-        allExpanded.Should().BeTrue();
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = false;
+            window.Show();
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()), [file]);
+            window.UpdateLayout();
+            TreeViewItem group = tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which;
+            FileStatusList.DiffTreeNode node = group.DataContext.Should().BeOfType<FileStatusList.DiffTreeNode>().Which;
+            FileStatusList.DiffTreeNode[] children = Flatten(node).ToArray();
+            children.Length.Should().BeGreaterThan(2);
+            children.Where(child => child.Children.Count > 0).Should().OnlyContain(child => child.IsExpanded);
 
-        accessor.RestoreDiffTreeChildrenForTesting(delayExpansion: true, () => actions++);
-        (int delayedDescendants, bool delayedAllExpanded) = accessor.GetDiffTreeExpansionForTesting();
-        delayedDescendants.Should().Be(expandedDescendants);
-        delayedAllExpanded.Should().BeFalse();
-        actions.Should().Be(2);
+            Control header = group.GetVisualDescendants().OfType<Control>()
+                .Single(item => item.Name == "PART_HeaderPresenter" && item.FindAncestorOfType<TreeViewItem>() == group);
+            Point point = header.TranslatePoint(new Point(header.Bounds.Width / 2, header.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            MenuItem collapse = menu.Items.OfType<MenuItem>().Single(item => item.Header as string == "C_ollapse all");
+            collapse.IsVisible.Should().BeTrue();
+            collapse.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            menu.Close();
+            node.IsExpanded.Should().BeFalse();
+
+            group.Focus().Should().BeTrue();
+            window.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, keySymbol: null);
+            window.KeyRelease(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            group.IsExpanded.Should().BeTrue();
+            group.IsKeyboardFocusWithin.Should().BeTrue();
+            group.GetVisualDescendants().OfType<TreeViewItem>().Where(item => item.IsEffectivelyVisible)
+                .Should().ContainSingle().Which.IsExpanded.Should().BeFalse();
+            Flatten(node).Should().Equal(children);
+            control.GitItemStatuses.Should().Equal(file);
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
     }
 
     [AvaloniaTest]
@@ -868,35 +898,30 @@ public sealed class FileStatusListTests
     [AvaloniaTest]
     public void FileStatusList_should_use_the_complete_primary_status_icon_matrix()
     {
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("added") { IsNew = true })
-            .Should().BeSameAs(Images.FileStatusAdded);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("removed") { IsDeleted = true })
-            .Should().BeSameAs(Images.FileStatusRemoved);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("modified") { IsChanged = true, IsTracked = true })
-            .Should().BeSameAs(Images.FileStatusModified);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("renamed") { IsRenamed = true, IsTracked = true, RenameCopyPercentage = "100" })
-            .Should().BeSameAs(Images.FileStatusRenamed);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("copied") { IsCopied = true, IsTracked = true })
-            .Should().BeSameAs(Images.FileStatusCopied);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("unmerged") { IsUnmerged = true, IsTracked = true })
-            .Should().BeSameAs(Images.Unmerged);
-        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("range") { IsRangeDiff = true })
-            .Should().BeSameAs(Images.DiffR);
-
         GitItemStatus branchDiff = new("branch-diff")
         {
             IsChanged = true,
             IsTracked = true,
             DiffStatus = DiffBranchStatus.UnequalChange,
         };
-        FileStatusList.TestAccessor.GetItemImageForTesting(branchDiff).Should().BeSameAs(Images.FileStatusModifiedUnequal);
+        AssertRenderedIcons(
+        [
+            (new GitItemStatus("added") { IsNew = true }, Images.FileStatusAdded),
+            (new GitItemStatus("removed") { IsDeleted = true }, Images.FileStatusRemoved),
+            (new GitItemStatus("modified") { IsChanged = true, IsTracked = true }, Images.FileStatusModified),
+            (new GitItemStatus("renamed") { IsRenamed = true, IsTracked = true, RenameCopyPercentage = "100" }, Images.FileStatusRenamed),
+            (new GitItemStatus("copied") { IsCopied = true, IsTracked = true }, Images.FileStatusCopied),
+            (new GitItemStatus("unmerged") { IsUnmerged = true, IsTracked = true }, Images.Unmerged),
+            (new GitItemStatus("range") { IsRangeDiff = true }, Images.DiffR),
+            (branchDiff, Images.FileStatusModifiedUnequal),
+        ]);
     }
 
     [AvaloniaTest]
     public void FileStatusList_should_use_the_complete_resolved_submodule_icon_matrix()
     {
-        GitItemStatus item = new("submodule") { IsSubmodule = true, IsTracked = true };
-        (SubmoduleStatus Status, bool Dirty, object Expected)[] cases =
+        using JoinableTaskContext context = new();
+        (SubmoduleStatus Status, bool Dirty, IImage Expected)[] cases =
         [
             (SubmoduleStatus.FastForward, false, Images.SubmoduleRevisionUp),
             (SubmoduleStatus.FastForward, true, Images.SubmoduleRevisionUpDirty),
@@ -910,8 +935,10 @@ public sealed class FileStatusListTests
             (SubmoduleStatus.SameCommit, true, Images.SubmoduleDirty),
         ];
 
-        foreach ((SubmoduleStatus status, bool dirty, object expected) in cases)
+        List<(GitItemStatus Item, IImage Expected)> icons = [];
+        foreach ((SubmoduleStatus status, bool dirty, IImage expected) in cases)
         {
+            GitItemStatus item = new("submodule") { IsSubmodule = true, IsTracked = true };
             GitSubmoduleStatus resolved = new(
                 item.Name,
                 oldName: null,
@@ -922,7 +949,19 @@ public sealed class FileStatusListTests
                 removedCommits: null,
                 getCommitData: null,
                 _ => status);
-            FileStatusList.TestAccessor.GetSubmoduleImageForTesting(item, resolved).Should().BeSameAs(expected);
+            item.SetSubmoduleStatus(context.Factory.RunAsync(() => Task.FromResult<GitSubmoduleStatus?>(resolved)));
+            icons.Add((item, expected));
+        }
+
+        JoinableTaskContext? previous = ThreadHelper.HasJoinableTaskContext ? ThreadHelper.JoinableTaskContext : null;
+        ThreadHelper.JoinableTaskContext = context;
+        try
+        {
+            AssertRenderedIcons(icons);
+        }
+        finally
+        {
+            ThreadHelper.JoinableTaskContext = previous!;
         }
     }
 
@@ -1037,6 +1076,33 @@ public sealed class FileStatusListTests
         finally
         {
             window.Close();
+        }
+    }
+
+    private static void AssertRenderedIcons(IReadOnlyList<(GitItemStatus Item, IImage Expected)> cases)
+    {
+        using AppSettingsTestScope settings = new();
+        using FileStatusList control = new();
+        Window window = new() { Content = control, Width = 400, Height = 250 };
+        ListBox files = control.FindControl<ListBox>("lstFiles")!;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            window.Show();
+            foreach ((GitItemStatus item, IImage expected) in cases)
+            {
+                control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+                window.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                ListBoxItem row = files.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
+                row.GetVisualDescendants().OfType<Image>().Single().Source.Should().BeSameAs(expected);
+            }
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
         }
     }
 

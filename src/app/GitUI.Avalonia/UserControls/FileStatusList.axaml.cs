@@ -2510,22 +2510,6 @@ public partial class FileStatusList : GitModuleControl
             _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
             return eventArgs.Cancel;
         }
-
-        internal static IImage GetItemImageForTesting(GitItemStatus item)
-            => FileStatusList.GetItemImage(item);
-
-        // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
-        internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
-            => RestoreChildrenOfFolderNodes(_fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
-
-        internal (int descendants, bool allExpanded) GetDiffTreeExpansionForTesting()
-        {
-            DiffTreeNode[] nodes = [.. _fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
-            return (nodes.Length, nodes.All(node => node.IsExpanded));
-        }
-
-        internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
-            => _imageListData.ImageList[FileStatusList.GetSubmoduleItemImageKey(item, status)];
     }
 
     private static IReadOnlyList<DiffTreeNode> BuildPathNodes(
