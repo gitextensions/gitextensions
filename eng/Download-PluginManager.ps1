@@ -42,7 +42,13 @@ if (!($null -eq $AssetToDownload))
         Write-Host "Downloading '$DownloadName'.";
 
         Invoke-WebRequest -Uri $AssetUrl -OutFile $DownloadFilePath;
-        Expand-Archive $DownloadFilePath -DestinationPath $ExtractPath -Force
+
+        Add-Type -AssemblyName System.IO.Compression.FileSystem;
+        if (Test-Path $ExtractPath)
+        {
+            Remove-Item -Path $ExtractPath -Recurse -Force;
+        }
+        [System.IO.Compression.ZipFile]::ExtractToDirectory($DownloadFilePath, $ExtractPath);
     }
     else 
     {
