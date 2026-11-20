@@ -1210,6 +1210,52 @@ public partial class FileViewer : GitModuleControl
         ApplySyntaxHighlighting();
     }
 
+    // Avalonia uses cancellable asynchronous loaders and applies the result on the owning dispatcher.
+    private async Task ViewItemAsync(string fileName,
+        bool isSubmodule,
+        Func<Task<Bitmap?>> getImage,
+        Func<Task<(string Text, byte[] Preamble)>> getFileText,
+        Func<string> getSubmoduleText,
+        FileStatusItem? item,
+        int? line,
+        Action? openWithDifftool,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        await InvokeOnOwnerMainThreadAsync(() => FilePreamble = null, cancellationToken);
+
+        if (isSubmodule)
+        {
+            string text = await Task.Run(getSubmoduleText, cancellationToken);
+            await ShowOrDeferAsync(
+                text.Length,
+                () => ShowTextAsync(fileName, text, item, line: null, openWithDifftool, checkGitAttributes: false, cancellationToken),
+                cancellationToken);
+        }
+        else if (FileHelper.IsImage(fileName))
+        {
+            Bitmap? image = await getImage();
+            if (image is not null)
+            {
+                await ShowImageAsync(fileName, item, image, openWithDifftool, cancellationToken);
+                return;
+            }
+
+            (string text, byte[] preamble) = await getFileText();
+            await InvokeOnOwnerMainThreadAsync(() => FilePreamble = preamble, cancellationToken);
+            await ShowHexDumpAsync(_cannotViewImage.Text, fileName, text, openWithDifftool, cancellationToken);
+        }
+        else
+        {
+            (string text, byte[] preamble) = await getFileText();
+            await InvokeOnOwnerMainThreadAsync(() => FilePreamble = preamble, cancellationToken);
+            await ShowOrDeferAsync(
+                text.Length,
+                () => ShowTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true, cancellationToken),
+                cancellationToken);
+        }
+    }
+
     private static string ToHexDump(string text, StringBuilder str, int columnWidth = 8, int columnCount = 2)
     {
         if (text.Length == 0)
@@ -2234,35 +2280,16 @@ public partial class FileViewer : GitModuleControl
             return;
         }
 
-        FilePreamble = [];
-        if (file.IsSubmodule)
-        {
-            string text = await Task.Run(
-                () => SubmoduleResources.GetSubmoduleText(Module, file.Name.TrimEnd('/'), blobId.ToString()),
-                viewToken);
-            await ShowTextAsync(file.Name, text, item, line: null, openWithDifftool, checkGitAttributes: false, viewToken);
-            return;
-        }
-
-        if (FileHelper.IsImage(file.Name))
-        {
-            Bitmap? image = await LoadBlobImageAsync(blobId, viewToken);
-            if (image is not null)
-            {
-                await ShowImageAsync(file.Name, item, image, openWithDifftool, viewToken);
-                return;
-            }
-
-            string failedImageText = await LoadBlobTextAsync(file.Name, blobId, viewToken);
-            await ShowHexDumpAsync(_cannotViewImage.Text, file.Name, failedImageText, openWithDifftool, viewToken);
-            return;
-        }
-
-        string textContent = await LoadBlobTextAsync(file.Name, blobId, viewToken);
-        await ShowOrDeferAsync(
-            textContent.Length,
-            () => ShowTextAsync(file.Name, textContent, item, line, openWithDifftool, checkGitAttributes: true, viewToken),
-            viewToken);
+        await ViewItemAsync(
+            file.Name,
+            file.IsSubmodule,
+            getImage: () => LoadBlobImageAsync(blobId, viewToken),
+            getFileText: async () => (await LoadBlobTextAsync(file.Name, blobId, viewToken), []),
+            getSubmoduleText: () => SubmoduleResources.GetSubmoduleText(Module, file.Name.TrimEnd('/'), blobId.ToString()),
+            item: item,
+            line: line,
+            openWithDifftool: openWithDifftool,
+            cancellationToken: viewToken);
     }
 
     private async Task ViewFileCoreAsync(
@@ -2288,7 +2315,11 @@ public partial class FileViewer : GitModuleControl
         {
             if (!GitModule.IsValidGitWorkingDir(fullPath))
             {
-                await ShowTextAsync(fileName, "Directory: " + fileName, item, line, openWithDifftool, checkGitAttributes: false, viewToken);
+                string text = "Directory: " + fileName;
+                await ShowOrDeferAsync(
+                    text.Length,
+                    () => ShowTextAsync(fileName, text, item: null, line: null, openWithDifftool: null, checkGitAttributes: false, viewToken),
+                    viewToken);
                 return;
             }
 
@@ -2297,43 +2328,27 @@ public partial class FileViewer : GitModuleControl
 
         if (!isSubmodule && !File.Exists(fullPath))
         {
-            await ShowTextAsync(fileName, $"File {fullPath} does not exist", item, line, openWithDifftool, checkGitAttributes: false, viewToken);
+            string text = $"File {fullPath} does not exist";
+            await ShowOrDeferAsync(
+                text.Length,
+                () => ShowTextAsync(fileName, text, item: null, line: null, openWithDifftool: null, checkGitAttributes: false, viewToken),
+                viewToken);
             return;
         }
 
         long contentLength = GetFileLength(fullPath);
         await ShowOrDeferAsync(
             contentLength,
-            async () =>
-            {
-                if (isSubmodule)
-                {
-                    string text = await Task.Run(
-                        () => SubmoduleResources.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
-                        viewToken);
-                    await ShowTextAsync(fileName, text, item, line: null, openWithDifftool, checkGitAttributes: false, viewToken);
-                    return;
-                }
-
-                if (FileHelper.IsImage(fileName))
-                {
-                    Bitmap? image = await LoadFileImageAsync(fullPath, viewToken);
-                    if (image is not null)
-                    {
-                        await ShowImageAsync(fileName, item, image, openWithDifftool, viewToken);
-                        return;
-                    }
-
-                    (string failedImageText, byte[] preamble) = await LoadFileTextAsync(fullPath, viewToken);
-                    FilePreamble = preamble;
-                    await ShowHexDumpAsync(_cannotViewImage.Text, fileName, failedImageText, openWithDifftool, viewToken);
-                    return;
-                }
-
-                (string textContent, byte[] filePreamble) = await LoadFileTextAsync(fullPath, viewToken);
-                FilePreamble = filePreamble;
-                await ShowTextAsync(fileName, textContent, item, line, openWithDifftool, checkGitAttributes: true, viewToken);
-            },
+            () => ViewItemAsync(
+                fileName,
+                isSubmodule,
+                getImage: () => LoadFileImageAsync(fullPath, viewToken),
+                getFileText: () => LoadFileTextAsync(fullPath, viewToken),
+                getSubmoduleText: () => SubmoduleResources.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
+                item: item,
+                line: line,
+                openWithDifftool: openWithDifftool,
+                cancellationToken: viewToken),
             viewToken);
     }
 

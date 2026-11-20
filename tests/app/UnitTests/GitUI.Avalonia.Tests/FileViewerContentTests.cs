@@ -801,6 +801,90 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task ViewGitItemAsync_should_show_a_large_committed_blob_without_deferring_after_preview_is_requested()
+    {
+        const string fileName = "large.bin";
+        byte[] content = new byte[(5 * 1024 * 1024) + 1];
+        content[0] = 0xFF;
+        File.WriteAllBytes(Path.Combine(_workingDirectory, fileName), content);
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName });
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "large blob".Quote() });
+        ObjectId revision = _module.GetCurrentCheckout();
+        GitItemStatus item = new(fileName) { TreeId = _module.GetFileBlobHash(fileName, revision) };
+        using FileViewer viewer = CreateViewer();
+        HyperlinkButton previewLink = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+
+        await viewer.ViewFileAsync(fileName);
+        previewLink.IsVisible.Should().BeTrue();
+
+        await viewer.ViewGitItemAsync(item, revision);
+
+        previewLink.IsVisible.Should().BeTrue();
+        viewer.TextEditor.Text.Should().BeEmpty();
+        previewLink.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        await WaitUntilAsync(() => viewer.TextEditor.Text.Contains(fileName, StringComparison.Ordinal));
+
+        previewLink.IsVisible.Should().BeFalse();
+        viewer.TextEditor.Text.Should().Contain(fileName);
+        viewer.FilePreamble.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Viewing_an_image_should_clear_the_previous_text_preamble(bool useBlob)
+    {
+        const string imageName = "sample.ico";
+        const string textName = "previous.txt";
+        string imagePath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        File.Copy(imagePath, Path.Combine(_workingDirectory, imageName));
+        File.WriteAllText(Path.Combine(_workingDirectory, textName), "previous text", Encoding.Unicode);
+        using FileViewer viewer = CreateViewer();
+        await viewer.ViewFileAsync(textName);
+        viewer.FilePreamble.Should().Equal(Encoding.Unicode.GetPreamble());
+
+        if (useBlob)
+        {
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", imageName });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "image blob".Quote() });
+            ObjectId revision = _module.GetCurrentCheckout();
+            GitItemStatus item = new(imageName) { TreeId = _module.GetFileBlobHash(imageName, revision) };
+            await viewer.ViewGitItemAsync(item, revision);
+        }
+        else
+        {
+            await viewer.ViewFileAsync(imageName);
+        }
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Image);
+        viewer.FilePreamble.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task ViewFileAsync_should_show_path_errors_without_diff_actions(bool isDirectory)
+    {
+        const string path = "unavailable";
+        string fullPath = Path.Combine(_workingDirectory, path);
+        if (isDirectory)
+        {
+            Directory.CreateDirectory(fullPath);
+        }
+
+        GitItemStatus status = new(path) { IsNew = true, Staged = StagedStatus.WorkTree };
+        FileStatusItem item = new(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), status);
+        using FileViewer viewer = CreateViewer();
+        FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+
+        await viewer.ViewFileAsync(path, item: item, line: 10, openWithDifftool: () => { });
+
+        viewer.TextEditor.Text.Should().Be(isDirectory ? $"Directory: {path}" : $"File {fullPath} does not exist");
+        viewer.SupportLinePatching.Should().BeFalse();
+        editor.OpenWithDifftool.Should().BeNull();
+    }
+
+    [AvaloniaTest]
     public async Task ViewPatchAsync_should_publish_text_after_applying_the_requested_line()
     {
         using AppSettingsTestScope settings = new();
