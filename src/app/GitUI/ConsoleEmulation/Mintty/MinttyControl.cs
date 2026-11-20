@@ -12,8 +12,9 @@ internal sealed class MinttyControl : Panel
     private MinttySession? _runningSession;
     private CancellationTokenSource? _sessionCts;
     private HANDLE _jobHandle = NativeMethods.CreateKillOnCloseJob();
+    private readonly MinttyKeyboardHook _keyboardHook;
 
-    public MinttyControl()
+    public MinttyControl(bool interceptTabPress)
     {
         // Make the panel focusable so Focus() works programmatically and
         // OnGotFocus runs whenever WinForms restores focus here (e.g. after
@@ -21,6 +22,23 @@ internal sealed class MinttyControl : Panel
         // to the embedded mintty hwnd — centralising what used to be scattered
         // FocusWindowWithAttachedInput calls at every entry point.
         SetStyle(ControlStyles.Selectable, true);
+
+        _keyboardHook = new MinttyKeyboardHook(
+            () => FindForm() is { IsHandleCreated: true } form ? (HWND)form.Handle : HWND.Null,
+            () => _runningSession?.WindowHandle ?? HWND.Null,
+            interceptTabPress);
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        _keyboardHook.Install();
+    }
+
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+        _keyboardHook.Uninstall();
+        base.OnHandleDestroyed(e);
     }
 
     internal MinttySession? RunningSession => _runningSession;
@@ -321,6 +339,7 @@ internal sealed class MinttyControl : Panel
     {
         if (disposing)
         {
+            _keyboardHook.Dispose();
             _sessionCts?.Cancel();
             _sessionCts?.Dispose();
             _sessionCts = null;
