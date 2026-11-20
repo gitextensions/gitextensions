@@ -1,4 +1,4 @@
-﻿using System.Buffers.Binary;
+using System.Buffers.Binary;
 using System.Security.Cryptography;
 using System.Text;
 using CommonTestUtils;
@@ -108,45 +108,47 @@ public sealed class IndexWatcherContentTests
     [Test]
     public void Notification_of_the_index_refresh_should_not_mark_the_index_as_changed()
     {
-        using GitModuleTestHelper repo = new();
-        string file = repo.CreateRepoFile("a.txt", "a");
-        repo.Module.GitExecutable.GetOutput("add a.txt");
-        repo.Module.GitExecutable.GetOutput("commit -m initial");
-        IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-        uiCommandsSource.UICommands.Module.Returns(repo.Module);
-        using IndexWatcher indexWatcher = new(uiCommandsSource);
-        IndexWatcher.TestAccessor accessor = indexWatcher.GetTestAccessor();
-        string indexPath = Path.Join(repo.Module.WorkingDirGitDir, "index");
+        SelfInducedIndexRewrite setup = CreateSelfInducedIndexRewrite();
+        using (setup.Repo)
+        using (setup.IndexWatcher)
+        {
+            setup.Accessor.RaiseIndexChanged();
+            setup.Accessor.IndexChanged.Should().BeFalse();
 
-        indexWatcher.Reset();
-        accessor.WaitForIndexContentHashAtReset(TimeSpan.FromSeconds(10)).Should().BeTrue();
+            File.WriteAllText(setup.File, "changed");
+            setup.Repo.Module.GitExecutable.GetOutput("add a.txt");
 
-        // Like after "git stash": the file times do not match the index, so the next status refreshes and rewrites the index
-        DateTime indexTimeBefore = File.GetLastWriteTimeUtc(indexPath);
-        File.SetLastWriteTimeUtc(file, DateTime.UtcNow.AddHours(1));
-        repo.Module.GitExecutable.GetOutput("update-index --refresh");
-        File.GetLastWriteTimeUtc(indexPath).Should().NotBe(indexTimeBefore, "the index refresh must have rewritten the index");
-
-        accessor.RaiseIndexChanged();
-        accessor.IndexChanged.Should().BeFalse();
-
-        File.WriteAllText(file, "changed");
-        repo.Module.GitExecutable.GetOutput("add a.txt");
-
-        accessor.RaiseIndexChanged();
-        accessor.IndexChanged.Should().BeTrue();
+            setup.Accessor.RaiseIndexChanged();
+            setup.Accessor.IndexChanged.Should().BeTrue();
+        }
     }
 
     [Test]
     public void Notification_should_re_capture_the_baseline_if_the_initial_capture_raced_with_a_rewrite()
     {
-        using GitModuleTestHelper repo = new();
+        SelfInducedIndexRewrite setup = CreateSelfInducedIndexRewrite();
+        using (setup.Repo)
+        using (setup.IndexWatcher)
+        {
+            // Simulate the initial capture racing with the index rewrite: the baseline is null
+            setup.Accessor.SimulateCaptureRacedWithRewrite();
+
+            setup.Accessor.RaiseIndexChanged();
+            setup.Accessor.IndexChanged.Should().BeFalse("the re-captured baseline matches the index, so the self-induced rewrite is ignored");
+        }
+    }
+
+    private sealed record SelfInducedIndexRewrite(GitModuleTestHelper Repo, string File, IndexWatcher IndexWatcher, IndexWatcher.TestAccessor Accessor);
+
+    private static SelfInducedIndexRewrite CreateSelfInducedIndexRewrite()
+    {
+        GitModuleTestHelper repo = new();
         string file = repo.CreateRepoFile("a.txt", "a");
         repo.Module.GitExecutable.GetOutput("add a.txt");
         repo.Module.GitExecutable.GetOutput("commit -m initial");
         IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
         uiCommandsSource.UICommands.Module.Returns(repo.Module);
-        using IndexWatcher indexWatcher = new(uiCommandsSource);
+        IndexWatcher indexWatcher = new(uiCommandsSource);
         IndexWatcher.TestAccessor accessor = indexWatcher.GetTestAccessor();
         string indexPath = Path.Join(repo.Module.WorkingDirGitDir, "index");
 
@@ -159,11 +161,7 @@ public sealed class IndexWatcherContentTests
         repo.Module.GitExecutable.GetOutput("update-index --refresh");
         File.GetLastWriteTimeUtc(indexPath).Should().NotBe(indexTimeBefore, "the index refresh must have rewritten the index");
 
-        // Simulate the initial capture racing with the index rewrite: the baseline is null
-        accessor.SimulateCaptureRacedWithRewrite();
-
-        accessor.RaiseIndexChanged();
-        accessor.IndexChanged.Should().BeFalse("the re-captured baseline matches the index, so the self-induced rewrite is ignored");
+        return new(repo, file, indexWatcher, accessor);
     }
 
     private static byte[] CreateIndex(uint version, uint statData, params Entry[] entries)
