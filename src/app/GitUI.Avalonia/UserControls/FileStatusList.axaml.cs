@@ -137,7 +137,11 @@ public partial class FileStatusList : GitModuleControl
         {
             Name = "sortListByContextMenuItem",
         };
-        tsmiCopyPaths.Initialize(() => UICommands, GetSelectedFilePaths);
+        tsmiCopyPaths.Initialize(
+            getUICommands: () => UICommands,
+            getSelectedFilePaths: () => SelectedFolder is RelativePath relativePath
+                ? [relativePath.Value]
+                : SelectedItems.Select(fsi => fsi.Item.Name));
         tsmiFilterFileInGrid.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.FilterFileInGrid);
 
         cboFilterComboBox.Items.Add("^(?!.*NotThisWord)");
@@ -202,15 +206,14 @@ public partial class FileStatusList : GitModuleControl
         WireToolbar();
         WireContextMenu();
         WinFormsAutoSizeTextBlock.Attach(NoFiles, includePadding: true);
-        AttachedToLogicalTree += (_, _) =>
+        AttachedToLogicalTree += (_, e) =>
         {
             SetupUnifiedDiffListSorting();
 
             if (TryGetUICommandsDirect(out IGitUICommands? commands))
             {
                 BindCommands(commands);
-                OnRuntimeLoad();
-                LoadCustomDifftools();
+                OnLoad(e);
                 SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
             }
         };
@@ -244,6 +247,13 @@ public partial class FileStatusList : GitModuleControl
             item.Click += (_, _) => this.InvokeAndForget(OpenSubmoduleAsync);
             return item;
         }
+    }
+
+    // Framework constraint: logical attachment supplies the original Load boundary.
+    protected void OnLoad(EventArgs e)
+    {
+        OnRuntimeLoad();
+        LoadCustomDifftools();
     }
 
     private static ImageListData CreateImageListData()
@@ -2232,11 +2242,6 @@ public partial class FileStatusList : GitModuleControl
         tsmiCopyPaths.TranslateControlItems(translation);
         ToolTip.SetTip(btnSettings, btnSettings.Content);
     }
-
-    private IEnumerable<string?> GetSelectedFilePaths()
-        => SelectedFolder is RelativePath folder
-            ? [folder.Value]
-            : SelectedGitItems.Select(item => item.Name);
 
     public delegate void EnterEventHandler(object? sender, EnterEventArgs e);
 

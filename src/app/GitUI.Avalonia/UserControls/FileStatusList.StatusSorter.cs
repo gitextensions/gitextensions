@@ -49,16 +49,16 @@ partial class FileStatusList
                     node.Text = node.Text[(parentPath.Length + 1)..];
                 }
             }
-        }
 
-        private static IEnumerable<StatusNode> Items(StatusNode node)
-        {
-            foreach (StatusNode child in node.Nodes)
+            static IEnumerable<StatusNode> Items(StatusNode node)
             {
-                yield return child;
-                foreach (StatusNode descendant in Items(child))
+                yield return node;
+                foreach (StatusNode child in node.Nodes)
                 {
-                    yield return descendant;
+                    foreach (StatusNode descendant in Items(child))
+                    {
+                        yield return descendant;
+                    }
                 }
             }
         }
@@ -171,28 +171,28 @@ partial class FileStatusList
                         return l.IsEmpty && r.IsEmpty ? 0 : l.IsEmpty ? -1 : 1;
                     }
 
-                    SplitPath(l, out ReadOnlySpan<char> topL, out ReadOnlySpan<char> subL);
-                    SplitPath(r, out ReadOnlySpan<char> topR, out ReadOnlySpan<char> subR);
+                    Split(l, out ReadOnlySpan<char> topL, out ReadOnlySpan<char> subL);
+                    Split(r, out ReadOnlySpan<char> topR, out ReadOnlySpan<char> subR);
                     return topL.CompareTo(topR, StringComparison.InvariantCulture) switch
                     {
                         -1 => -1,
                         +1 => +1,
                         _ => ComparePath(subL, subR)
                     };
-                }
 
-                static void SplitPath(ReadOnlySpan<char> path, out ReadOnlySpan<char> top, out ReadOnlySpan<char> sub)
-                {
-                    int separatorIndex = path.IndexOf('/');
-                    if (separatorIndex == -1)
+                    static void Split(ReadOnlySpan<char> path, out ReadOnlySpan<char> top, out ReadOnlySpan<char> sub)
                     {
-                        top = path;
-                        sub = ReadOnlySpan<char>.Empty;
-                        return;
-                    }
+                        int separatorIndex = path.IndexOf('/');
+                        if (separatorIndex == -1)
+                        {
+                            top = path;
+                            sub = ReadOnlySpan<char>.Empty;
+                            return;
+                        }
 
-                    top = path[..separatorIndex];
-                    sub = path[(separatorIndex + 1)..];
+                        top = path[..separatorIndex];
+                        sub = path[(separatorIndex + 1)..];
+                    }
                 }
 
                 static bool StartsWith(RelativePath longPath, RelativePath shortPath)

@@ -13,6 +13,7 @@ partial class FileStatusList
             Func<GitItemStatus, StatusNode> createNode);
     }
 
+    // Framework constraint: the sorter needs a data tree before Avalonia realizes any row containers.
     internal sealed class StatusNode(string text)
     {
         public string Text { get; set; } = text;
