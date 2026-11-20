@@ -1034,6 +1034,37 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormEditor_should_keep_the_document_clean_when_a_large_preview_replaces_it(bool fromDisk)
+    {
+        using FormEditor form = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = form.FindControl<FileViewer>("fileViewer")!;
+        await viewer.ViewTextAsync("initial.txt", "initial content");
+        form.GetTestAccessor().HasChanges.Should().BeFalse();
+
+        HyperlinkButton preview = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+        List<(string Text, bool PreviewVisible)> loadedStates = [];
+        viewer.TextLoaded += (_, _) => loadedStates.Add((viewer.GetText(), preview.IsVisible));
+        string oversized = new('x', (5 * 1024 * 1024) + 1);
+
+        if (fromDisk)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, "large.txt"), oversized);
+            await viewer.ViewFileAsync("large.txt");
+        }
+        else
+        {
+            await viewer.ViewTextAsync("large.txt", oversized);
+        }
+
+        viewer.GetText().Should().BeEmpty();
+        preview.IsVisible.Should().BeTrue();
+        form.GetTestAccessor().HasChanges.Should().BeFalse();
+        loadedStates.Should().Equal((string.Empty, false));
+    }
+
+    [AvaloniaTest]
     public async Task ViewTextAsync_should_defer_large_content_until_the_preview_link_is_clicked()
     {
         FileViewer viewer = CreateViewer();

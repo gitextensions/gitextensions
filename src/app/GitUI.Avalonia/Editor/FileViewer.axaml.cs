@@ -37,7 +37,6 @@ namespace GitUI.Editor;
 
 public partial class FileViewer : GitModuleControl
 {
-    private const long MaximumAutomaticPreviewLength = 5 * 1024 * 1024;
     private const string EndOfLineGlyph = "¶";
 
     private readonly CancellationTokenSequence _viewSequence = new();
@@ -1135,14 +1134,41 @@ public partial class FileViewer : GitModuleControl
         ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    // The native viewer carries the request token through preview publication.
+    private Task ShowOrDeferAsync(string fullPath, Func<Task> showFunc, CancellationToken cancellationToken)
+    {
+        return ShowOrDeferAsync(GetFileLength(), showFunc, cancellationToken);
+
+        long GetFileLength()
+        {
+            try
+            {
+                if (File.Exists(fullPath))
+                {
+                    return new FileInfo(fullPath).Length;
+                }
+            }
+            catch
+            {
+            }
+
+            // If the file does not exist, it doesn't matter what size we
+            // return as nothing will be shown anyway.
+            return 0;
+        }
+    }
+
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc, CancellationToken cancellationToken)
     {
-        if (contentLength > MaximumAutomaticPreviewLength)
+        const long maxLength = 5 * 1024 * 1024;
+
+        if (contentLength > maxLength)
         {
+            await ShowTextAsync(
+                fileName: null, string.Empty, item: null, line: null, openWithDifftool: null, checkGitAttributes: false, cancellationToken);
             await InvokeOnOwnerMainThreadAsync(() =>
             {
-                ResetView(ViewMode.Text, fileName: null);
-                SetText(string.Empty);
+                Refresh();
                 _NO_TRANSLATE_lblShowPreview.Content = string.Format(
                     _largeFileSizeWarning.Text,
                     contentLength / (1024d * 1024));
@@ -2352,9 +2378,8 @@ public partial class FileViewer : GitModuleControl
             return;
         }
 
-        long contentLength = GetFileLength(fullPath);
         await ShowOrDeferAsync(
-            contentLength,
+            fullPath,
             () => ViewItemAsync(
                 fileName,
                 isSubmodule,
@@ -2524,20 +2549,6 @@ public partial class FileViewer : GitModuleControl
         using StreamReader reader = EncodingFileReader.OpenStream(stream, Encoding);
         string content = await reader.ReadToEndAsync(cancellationToken);
         return (content, reader.CurrentEncoding.GetPreamble());
-    }
-
-    private static long GetFileLength(string fullPath)
-    {
-        try
-        {
-            // If the file does not exist, it doesn't matter what size we
-            // return as nothing will be shown anyway.
-            return File.Exists(fullPath) ? new FileInfo(fullPath).Length : 0;
-        }
-        catch
-        {
-            return 0;
-        }
     }
 
     private async Task LoadWithErrorHandlingAsync(Func<Task> load, CancellationToken cancellationToken)
