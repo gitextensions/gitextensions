@@ -186,7 +186,7 @@ public sealed class DiffRenderingTests
     }
 
     [AvaloniaTest]
-    public void FileViewer_should_navigate_by_the_right_then_left_file_line()
+    public void FileViewer_should_navigate_by_the_right_side_and_report_deleted_line_numbers()
     {
         FileViewer viewer = new();
         viewer.ViewPatch("@@ -10,2 +20,2 @@\n-old\n+new\n context\n");
@@ -195,6 +195,9 @@ public sealed class DiffRenderingTests
         viewer.CurrentFileLine.Should().Be(20);
 
         viewer.GoToLine(10);
+        viewer.CurrentFileLine.Should().Be(20);
+
+        viewer.TextEditor.TextArea.Caret.Position = new TextViewPosition(2, 1);
         viewer.CurrentFileLine.Should().Be(10);
     }
 

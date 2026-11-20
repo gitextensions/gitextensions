@@ -376,6 +376,64 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_clear_a_selection_before_raising_EscapePressed()
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "first\nsecond");
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(8, 6), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            viewer.TextEditor.Select(0, 5);
+            viewer.TextEditor.SelectedText.Should().Be("first");
+            int escapeCount = 0;
+            viewer.EscapePressed += () => escapeCount++;
+
+            editor.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            editor.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            escapeCount.Should().Be(0);
+            viewer.TextEditor.SelectionLength.Should().Be(0);
+
+            editor.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            editor.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            escapeCount.Should().Be(1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(12, 6)]
+    [TestCase(30, 6)]
+    [TestCase(200, 1)]
+    public void FileViewer_should_navigate_to_the_first_right_side_diff_line_at_or_after_the_requested_line(int requestedLine, int expectedDocumentLine)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -30,2 +30,2 @@\n-before\n+after\n context\n");
+
+            viewer.GoToLine(requestedLine);
+
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(expectedDocumentLine);
+            viewer.TextEditor.TextArea.Caret.Column.Should().Be(1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
     {
         using FormEditor editor = new(_commands, fileName: null, showWarning: false);

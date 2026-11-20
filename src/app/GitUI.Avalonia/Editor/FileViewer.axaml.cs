@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -29,6 +30,7 @@ using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.Hotkey;
+using Color = System.Drawing.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Editor;
@@ -117,7 +119,7 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     ///  Raised after a selected-line or whole-file patch has been applied.
     /// </summary>
-    public event EventHandler? PatchApplied;
+    public event EventHandler<EventArgs>? PatchApplied;
     private readonly IFullPathResolver _fullPathResolver;
     private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
     private readonly ContinuousScrollEventManager _continuousScrollEventManager = new();
@@ -150,8 +152,14 @@ public partial class FileViewer : GitModuleControl
         _diffTextColorizer = new DiffTextColorizer(this);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
         TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
-        TextEditor.TextChanged += (sender, e) => TextChanged?.Invoke(sender, e);
-        TextEditor.KeyDown += TextEditor_KeyDown;
+        internalFileViewer.AddHandler(InputElement.KeyDownEvent, TextEditor_KeyDown, RoutingStrategies.Tunnel);
+        internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
+        internalFileViewer.TextChanged += (sender, e) =>
+        {
+            internalFileViewer.AddTextHighlighting();
+
+            TextChanged?.Invoke(sender, e);
+        };
         internalFileViewer.HScrollPositionChanged += (sender, e) => HScrollPositionChanged?.Invoke(sender, e);
         internalFileViewer.VScrollPositionChanged += (sender, e) => VScrollPositionChanged?.Invoke(sender, e);
         internalFileViewer.SelectedLineChanged += (sender, e) => SelectedLineChanged?.Invoke(sender, e);
@@ -603,18 +611,9 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     ///  Moves the caret to the given one-based line and scrolls it into view.
     /// </summary>
-    public void GoToLine(int lineNumber)
+    public void GoToLine(int line)
     {
-        TextDocument? document = TextEditor.Document;
-        if (document is null || document.LineCount == 0)
-        {
-            return;
-        }
-
-        int documentLine = FindDocumentLine(lineNumber);
-        documentLine = Math.Clamp(documentLine, 1, document.LineCount);
-        TextEditor.TextArea.Caret.Position = new TextViewPosition(documentLine, column: 1);
-        TextEditor.ScrollToLine(documentLine);
+        internalFileViewer.GoToLine(line);
     }
 
     /// <summary>
@@ -653,7 +652,7 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     ///  Adds a background highlight for an inclusive range of zero-based lines.
     /// </summary>
-    public void HighlightLines(int startLine, int endLine, System.Drawing.Color color)
+    public void HighlightLines(int startLine, int endLine, Color color)
     {
         internalFileViewer.HighlightLines(startLine, endLine, color);
     }
@@ -1999,9 +1998,11 @@ public partial class FileViewer : GitModuleControl
         IgnoreAllWhitespace = 15,
     }
 
-    protected override bool ExecuteCommand(int command)
+    protected override bool ExecuteCommand(int cmd)
     {
-        switch ((Command)command)
+        Command command = (Command)cmd;
+
+        switch (command)
         {
             case Command.Find:
                 Find(replace: false);
@@ -2115,7 +2116,7 @@ public partial class FileViewer : GitModuleControl
                 IgnoreAllWhitespaceChangesToolStripMenuItem_Click(this, EventArgs.Empty);
                 break;
             default:
-                return base.ExecuteCommand(command);
+                return base.ExecuteCommand(cmd);
         }
 
         return true;
@@ -2737,20 +2738,6 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
-    private int FindDocumentLine(int fileLine)
-    {
-        if (internalFileViewer.DiffHighlightService is null)
-        {
-            return fileLine;
-        }
-
-        DiffLineInfo? mapped = internalFileViewer.DiffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
-            info => info.RightLineNumber == fileLine);
-        mapped ??= internalFileViewer.DiffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
-            info => info.LeftLineNumber == fileLine);
-        return mapped?.LineNumInDiff ?? fileLine;
-    }
-
     /// <summary>
     ///  Redraws the text view, like the WinForms control method.
     /// </summary>
@@ -2839,6 +2826,7 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    // Avalonia's tunnel preserves WinForms ProcessCmdKey precedence over editor input.
     private void TextEditor_KeyDown(object? sender, KeyEventArgs e)
     {
         if (!_hotkeysLoaded)
@@ -2848,13 +2836,6 @@ public partial class FileViewer : GitModuleControl
 
         if (ProcessHotkey(KeysMapper.ToKeys(e)))
         {
-            e.Handled = true;
-            return;
-        }
-
-        if (e.Key == Key.Escape)
-        {
-            EscapePressed?.Invoke();
             e.Handled = true;
         }
     }

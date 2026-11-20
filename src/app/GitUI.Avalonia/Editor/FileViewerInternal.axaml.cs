@@ -96,13 +96,25 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.PointerMoved += (sender, e) => MouseMove?.Invoke(sender, e);
         TextEditor.PointerEntered += (sender, e) => MouseEnter?.Invoke(sender, e);
         TextEditor.PointerExited += (sender, e) => MouseLeave?.Invoke(sender, e);
-        TextEditor.KeyDown += (sender, e) =>
+        TextEditor.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
-            if (e.Key == Key.Escape && TextEditor.SelectionLength == 0)
+            if (e.Key != Key.Escape)
+            {
+                return;
+            }
+
+            if (TextEditor.SelectionLength == 0)
             {
                 EscapePressed?.Invoke();
             }
-        };
+            else
+            {
+                // AvaloniaEdit has no default Escape action for clearing the editor selection.
+                TextEditor.TextArea.ClearSelection();
+            }
+
+            e.Handled = true;
+        }, RoutingStrategies.Tunnel);
         TextEditor.KeyUp += (sender, e) => KeyUp?.Invoke(sender, e);
         TextEditor.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
         TextEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
