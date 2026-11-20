@@ -53,6 +53,34 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_should_preserve_a_programmatically_supplied_filename_expression()
+    {
+        const string workingDir = "/repository/";
+        const string expression = workingDir + "tracked.txt";
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(workingDir);
+        module.IsValidGitWorkingDir().Returns(true);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        using FileStatusList control = new() { UICommandsSource = source };
+        GitItemStatus item = new("tracked.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.Random()), [item]);
+
+        ComboBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!;
+        control.SetFilter(expression);
+
+        filter.Text.Should().Be(expression);
+        control.GitItemFilteredStatuses.Should().BeEmpty();
+
+        control.SetFilter("tracked");
+
+        filter.Text.Should().Be("tracked");
+        control.GitItemFilteredStatuses.Should().Equal(item);
+    }
+
+    [AvaloniaTest]
     public void SetDiffs_should_cancel_the_previous_synchronous_revision_load()
     {
         IGitModule module = Substitute.For<IGitModule>();

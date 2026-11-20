@@ -167,13 +167,7 @@ public partial class FileStatusList : GitModuleControl
         // Avalonia tree rows handle the double tap for expansion before it bubbles to the list.
         tvDiffFiles.AddHandler(InputElement.DoubleTappedEvent, FileStatusListView_DoubleClick, RoutingStrategies.Bubble, handledEventsToo: true);
         tvFiles.DoubleTapped += FileStatusListView_DoubleClick;
-        cboFilterComboBox.PropertyChanged += (_, e) =>
-        {
-            if (e.Property == ComboBox.TextProperty)
-            {
-                FilterComboBox_TextUpdate(this, EventArgs.Empty);
-            }
-        };
+        cboFilterComboBox.PropertyChanged += FilterComboBox_TextUpdate;
         cboFilterComboBox.PointerEntered += FilterComboBox_MouseEnter;
         cboFilterComboBox.SelectionChanged += FilterComboBox_SelectedIndexChanged;
         cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
@@ -2018,8 +2012,22 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetFilter(string value)
     {
-        cboFilterComboBox.Text = value;
+        SetFilterText(value);
         FilterFiles(value);
+    }
+
+    // Avalonia reports programmatic text assignments through the same property notification.
+    private void SetFilterText(string value)
+    {
+        cboFilterComboBox.PropertyChanged -= FilterComboBox_TextUpdate;
+        try
+        {
+            cboFilterComboBox.Text = value;
+        }
+        finally
+        {
+            cboFilterComboBox.PropertyChanged += FilterComboBox_TextUpdate;
+        }
     }
 
     private void DeleteFilterButton_Click(object? sender, EventArgs e)
@@ -2032,7 +2040,7 @@ public partial class FileStatusList : GitModuleControl
     {
         if (!string.Equals(cboFilterComboBox.Text, value, StringComparison.Ordinal))
         {
-            cboFilterComboBox.Text = value;
+            SetFilterText(value);
         }
 
         _filterTimer.Stop();
@@ -2113,8 +2121,13 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    private void FilterComboBox_TextUpdate(object? sender, EventArgs e)
+    private void FilterComboBox_TextUpdate(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
     {
+        if (e.Property != ComboBox.TextProperty)
+        {
+            return;
+        }
+
         // show DeleteFilterButton at once
         SetDeleteFilterButtonVisibility();
 
@@ -2128,7 +2141,7 @@ public partial class FileStatusList : GitModuleControl
             if (posixFilterText.StartsWith(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase))
             {
                 filterText = posixFilterText.SubstringAfter(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase);
-                cboFilterComboBox.Text = filterText;
+                SetFilterText(filterText);
                 strippedWorkingDirectory = true;
             }
         }
