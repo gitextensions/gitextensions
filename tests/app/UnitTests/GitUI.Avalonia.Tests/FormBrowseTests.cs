@@ -6598,12 +6598,17 @@ public sealed class FormBrowseTests
         ObjectId first = module.GetCurrentCheckout();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("rm") { "--", "tracked.txt" }).Should().BeTrue();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "remove" }).Should().BeTrue();
-        File.WriteAllText(Path.Combine(_workingDirectory, "later.txt"), "content in a different file");
-        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "later.txt" }).Should().BeTrue();
+        const string laterPath = "folder/later.txt";
+        Directory.CreateDirectory(Path.Combine(_workingDirectory, "folder"));
+        File.WriteAllText(Path.Combine(_workingDirectory, laterPath), "content in a different file");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", laterPath }).Should().BeTrue();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "later" }).Should().BeTrue();
         ObjectId second = module.GetCurrentCheckout();
         AppSettings.RevisionGraphShowArtificialCommits = false;
         AppSettings.ShowFindInCommitFilesGitGrep.Value = true;
+        AppSettings.FileStatusMergeSingleItemWithFolder.Value = false;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
 
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
         try
@@ -6635,7 +6640,7 @@ public sealed class FormBrowseTests
                 "the original publishes both the ordinary diff and the git-grep group");
 
             List<int> published = [];
-            files.DataSourceChanged += (_, _) => published.Add(files.GitItemStatuses.Count(item => item.Name == "later.txt"));
+            files.DataSourceChanged += (_, _) => published.Add(files.GitItemStatuses.Count(item => item.Name == laterPath));
             grid.SetSelectedRevision(second).Should().BeTrue();
             await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == second);
             published.Where(count => count > 0).Should().Equal(1, 2);
@@ -6643,12 +6648,23 @@ public sealed class FormBrowseTests
 
             form.UpdateLayout();
             TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
-            tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeFalse();
+            TreeViewItem diffGroup = tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which;
+            diffGroup.IsExpanded.Should().BeFalse();
             tree.ContainerFromIndex(tree.ItemCount - 1).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeTrue();
+
+            diffGroup.Focus().Should().BeTrue();
+            form.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, keySymbol: null);
+            form.KeyRelease(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            diffGroup.IsExpanded.Should().BeTrue();
+            diffGroup.GetVisualDescendants().OfType<TreeViewItem>().Single(item => item.Level == 1)
+                .IsExpanded.Should().BeTrue("the original expands child folders before showing a collapsed diff group");
         }
         finally
         {
             form.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
         }
     }
 

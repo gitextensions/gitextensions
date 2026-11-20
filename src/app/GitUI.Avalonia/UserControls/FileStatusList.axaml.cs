@@ -2,6 +2,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
@@ -1282,11 +1283,13 @@ public partial class FileStatusList : GitModuleControl
             GitItemStatusesWithDescription = items;
         }
 
+        bool filesPresent;
         if (_isFileTreeMode)
         {
             FileStatusItem[] visibleItems = [.. _allTreeItems.Where(item => IsFilterMatch(item.Item))];
             _gitItemFilteredStatuses = [.. visibleItems.Select(item => item.Item)];
             tvFiles.ItemsSource = BuildFileTree(visibleItems);
+            filesPresent = items.Any(group => group.Statuses.Count > 0);
         }
         else if (items.Count > 0)
         {
@@ -1294,10 +1297,41 @@ public partial class FileStatusList : GitModuleControl
                 .Cast<DiffTreeNode>()
                 .Where(node => node.GroupIndex is not null)
                 .ToDictionary(node => node.GroupIndex!.Value, node => node.IsExpanded);
-            IReadOnlyList<DiffTreeNode> roots = GetNodes(items, expansion, gitGrepState, cancellationToken);
-            _showDiffGroups = items.Count > 1
-                              || (GroupByRevision
-                              && !(items.Count == 1 && items[0].Statuses.Count == 0));
+            (List<TreeNodeInfo> nodes, _showDiffGroups, filesPresent) = GetNodes(
+                items,
+                GroupByRevision,
+                item => IsFilterMatch(item) && IsDiffStatusMatch(item.DiffStatus),
+                _groupBy,
+                _flatList,
+                expandIfFewFiles: true,
+                gitGrepState,
+                _noItemStatuses,
+                expansion,
+                cancellationToken);
+
+            foreach ((DiffTreeNode node, ExpandCollapseState state) in nodes)
+            {
+                switch (state)
+                {
+                    case ExpandCollapseState.Collapsed:
+                        foreach (DiffTreeNode child in node.Children)
+                        {
+                            SetExpansion(child, expanded: true);
+                        }
+
+                        break;
+
+                    case ExpandCollapseState.Expanded:
+                        SetExpansion(node, expanded: true);
+                        break;
+
+                    case ExpandCollapseState.PartiallyExpanded:
+                        node.IsExpanded = true;
+                        break;
+                }
+            }
+
+            DiffTreeNode[] roots = [.. nodes.Select(info => info.Node)];
             _gitItemFilteredStatuses =
             [
                 .. roots.SelectMany(Flatten)
@@ -1328,13 +1362,13 @@ public partial class FileStatusList : GitModuleControl
         }
         else
         {
+            filesPresent = false;
             ShowDiffTree = false;
             _gitItemFilteredStatuses = [];
             lstFiles.ItemsSource = null;
             tvDiffFiles.ItemsSource = null;
         }
 
-        bool filesPresent = items.Any(group => group.Statuses.Count > 0);
         SetFileStatusListVisibility(showNoFiles: !filesPresent && items.Count <= 1 && !_isFileTreeMode);
         UpdateToolbar();
         bool selectionRestored = false;
@@ -1379,27 +1413,35 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    private IReadOnlyList<DiffTreeNode> GetNodes(
-        IReadOnlyList<FileStatusWithDescription> groups,
-        IReadOnlyDictionary<int, bool> previousExpansion,
+    private record struct TreeNodeInfo(DiffTreeNode Node, ExpandCollapseState State);
+
+    private static (List<TreeNodeInfo> Nodes, bool ShowDiffGroups, bool FilesPresent) GetNodes(
+        IReadOnlyList<FileStatusWithDescription> items,
+        bool groupByRevision,
+        Func<GitItemStatus, bool> isFilterMatch,
+        GroupBy? groupBy,
+        bool flatList,
+        bool expandIfFewFiles,
         GitGrepState gitGrepState,
+        IReadOnlyList<GitItemStatus> noItemStatuses,
+        IReadOnlyDictionary<int, bool> previousExpansion,
         CancellationToken cancellationToken)
     {
-        bool showDiffGroups = groups.Count > 1
-                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0));
+        bool showDiffGroups = items.Count > 1
+                              || (groupByRevision && !(items.Count == 1 && items[0].Statuses.Count == 0));
         bool hasGrepGroup = gitGrepState != GitGrepState.None
-                            && (gitGrepState != GitGrepState.Unknown || groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
-        bool filesPresent = groups.Any(group => group.Statuses.Count > 0);
-        bool showGroupLabel = (filesPresent && (groups.Count > 1 || GroupByRevision)) || hasGrepGroup;
-        List<DiffTreeNode> roots = [];
-        for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
+                            && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
+        bool filesPresent = items.Any(group => group.Statuses.Count > 0);
+        bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
+        List<TreeNodeInfo> rootNodes = [];
+        for (int groupIndex = 0; groupIndex < items.Count; groupIndex++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            FileStatusWithDescription group = groups[groupIndex];
+            FileStatusWithDescription group = items[groupIndex];
             bool emptyGroup = showGroupLabel && group.Statuses.Count == 0;
             IEnumerable<GitItemStatus> statuses = emptyGroup
-                ? _noItemStatuses
-                : group.Statuses.Where(item => IsFilterMatch(item) && IsDiffStatusMatch(item.DiffStatus));
+                ? noItemStatuses
+                : group.Statuses.Where(isFilterMatch);
             FileStatusItem[] visibleItems =
             [
                 .. statuses.Select(item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB)),
@@ -1409,7 +1451,7 @@ public partial class FileStatusList : GitModuleControl
             {
                 if (visibleItems.Length == 1)
                 {
-                    roots.Add(CreateDiffFileNode(visibleItems[0], parent: null));
+                    rootNodes.Add(new TreeNodeInfo(CreateDiffFileNode(visibleItems[0], parent: null), ExpandCollapseState.LeafNode));
                 }
 
                 continue;
@@ -1417,18 +1459,22 @@ public partial class FileStatusList : GitModuleControl
 
             // Always expand grep results
             // Collapse some groups for diffs with common BASE
+            bool isGrepGroup = FileStatusDiffCalculator.IsGrepItemStatuses(group);
             bool defaultExpanded = hasGrepGroup
-                ? FileStatusDiffCalculator.IsGrepItemStatuses(group)
+                ? isGrepGroup
                 : ((group.Statuses.Count <= 7 && group.IconName == nameof(Images.Diff))
-                   || groups.Count < 3
+                   || items.Count < 3
                    || groupIndex == 0)
                   && group.Statuses.Count > 0;
             bool expanded = !emptyGroup
                 && (gitGrepState == GitGrepState.Unknown && previousExpansion.TryGetValue(groupIndex, out bool wasExpanded)
                     ? wasExpanded
                     : defaultExpanded);
-            bool expandFolders = expanded
-                                 && (!FileStatusDiffCalculator.IsGrepItemStatuses(group) || visibleItems.Length < 100);
+            ExpandCollapseState state = !expanded
+                ? ExpandCollapseState.Collapsed
+                : isGrepGroup && (!expandIfFewFiles || visibleItems.Length >= 100)
+                    ? ExpandCollapseState.PartiallyExpanded
+                    : ExpandCollapseState.Expanded;
 
             if (showDiffGroups)
             {
@@ -1441,37 +1487,41 @@ public partial class FileStatusList : GitModuleControl
                     folderPath: null,
                     parent: null,
                     isGroupHeader: true,
-                    groupIndex)
-                {
-                    IsExpanded = expanded,
-                };
-                header.Children.AddRange(CreateGroup(visibleItems, header, expandFolders));
-                roots.Add(header);
+                    groupIndex);
+                header.Children.AddRange(CreateGroup(visibleItems, header));
+                rootNodes.Add(new TreeNodeInfo(header, state));
             }
             else
             {
                 // Add nodes of single group as root nodes
-                roots.AddRange(CreateGroup(visibleItems, parent: null, expandFolders));
+                if (state == ExpandCollapseState.PartiallyExpanded)
+                {
+                    state = ExpandCollapseState.Collapsed;
+                }
+
+                foreach (DiffTreeNode node in CreateGroup(visibleItems, parent: null))
+                {
+                    rootNodes.Add(new TreeNodeInfo(node, state));
+                }
             }
         }
 
-        return roots;
+        return (rootNodes, showDiffGroups, filesPresent);
 
-        IReadOnlyList<DiffTreeNode> CreateGroup(IReadOnlyList<FileStatusItem> items, DiffTreeNode? parent, bool expanded)
+        IReadOnlyList<DiffTreeNode> CreateGroup(IReadOnlyList<FileStatusItem> fileItems, DiffTreeNode? parent)
         {
-            GroupBy? groupBy = _groupBy;
             if (groupBy is null)
             {
-                return BuildPathNodes(items, parent, expanded, _flatList);
+                return BuildPathNodes(fileItems, parent, flatList);
             }
 
             Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
-            foreach (FileStatusItem item in items)
+            foreach (FileStatusItem item in fileItems)
             {
                 itemsByStatus[item.Item] = item;
             }
 
-            IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = items
+            IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = fileItems
                 .Select(item => item.Item)
                 .GroupBy(groupBy.GetGroupKey)
                 .OrderBy(group => group.Key);
@@ -1479,11 +1529,11 @@ public partial class FileStatusList : GitModuleControl
             foreach (IGrouping<GroupKey, GitItemStatus> group in grouped)
             {
                 FileStatusItem[] groupItems = [.. group.Select(status => itemsByStatus[status])];
-                IReadOnlyList<DiffTreeNode> children = BuildPathNodes(groupItems, parent: null, expanded, _flatList);
-                bool showGroupNode = !_flatList || AppSettings.FileStatusShowGroupNodesInFlatList;
+                IReadOnlyList<DiffTreeNode> children = BuildPathNodes(groupItems, parent: null, flatList);
+                bool showGroupNode = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList;
                 if (!showGroupNode || (children.Count == 1 && children[0].Children.Count == 0))
                 {
-                    groupRoots.AddRange(BuildPathNodes(groupItems, parent, expanded, _flatList));
+                    groupRoots.AddRange(BuildPathNodes(groupItems, parent, flatList));
                     continue;
                 }
 
@@ -1494,15 +1544,55 @@ public partial class FileStatusList : GitModuleControl
                     folderPath: null,
                     parent,
                     isGroupHeader: true,
-                    groupIndex: null)
-                {
-                    IsExpanded = expanded,
-                };
-                groupNode.Children.AddRange(BuildPathNodes(groupItems, groupNode, expanded, _flatList));
+                    groupIndex: null);
+                groupNode.Children.AddRange(BuildPathNodes(groupItems, groupNode, flatList));
                 groupRoots.Add(groupNode);
             }
 
             return groupRoots;
+        }
+
+        static IReadOnlyList<DiffTreeNode> BuildPathNodes(
+            IReadOnlyList<FileStatusItem> items,
+            DiffTreeNode? parent,
+            bool flat)
+        {
+            Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
+            foreach (FileStatusItem item in items)
+            {
+                itemsByStatus[item.Item] = item;
+            }
+
+            StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
+                items.Select(item => item.Item),
+                flat,
+                AppSettings.FileStatusMergeSingleItemWithFolder,
+                status =>
+                {
+                    FileStatusItem item = itemsByStatus[status];
+                    string oldName = status.OldName is null ? string.Empty : $" ({status.OldName})";
+                    return new StatusNode($"{status.Name}{oldName}") { Tag = item };
+                });
+            return [.. statusRoot.Nodes.Select(node => Convert(node, parent))];
+
+            DiffTreeNode Convert(StatusNode statusNode, DiffTreeNode? currentParent)
+            {
+                FileStatusItem? item = statusNode.Tag as FileStatusItem;
+                DiffTreeNode node = new(
+                    statusNode.Text,
+                    item is null ? Images.FolderClosed : GetItemImage(item.Item),
+                    item,
+                    statusNode.Tag is RelativePath folderPath ? folderPath : null,
+                    currentParent,
+                    isGroupHeader: false,
+                    groupIndex: null);
+                foreach (StatusNode child in statusNode.Nodes)
+                {
+                    node.Children.Add(Convert(child, node));
+                }
+
+                return node;
+            }
         }
     }
 
@@ -2514,53 +2604,6 @@ public partial class FileStatusList : GitModuleControl
             CancelEventArgs eventArgs = new();
             _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
             return eventArgs.Cancel;
-        }
-    }
-
-    private static IReadOnlyList<DiffTreeNode> BuildPathNodes(
-        IReadOnlyList<FileStatusItem> items,
-        DiffTreeNode? parent,
-        bool expanded,
-        bool flat)
-    {
-        Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
-        foreach (FileStatusItem item in items)
-        {
-            itemsByStatus[item.Item] = item;
-        }
-
-        StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
-            items.Select(item => item.Item),
-            flat,
-            AppSettings.FileStatusMergeSingleItemWithFolder,
-            status =>
-            {
-                FileStatusItem item = itemsByStatus[status];
-                string oldName = status.OldName is null ? string.Empty : $" ({status.OldName})";
-                return new StatusNode($"{status.Name}{oldName}") { Tag = item };
-            });
-        return [.. statusRoot.Nodes.Select(node => Convert(node, parent))];
-
-        DiffTreeNode Convert(StatusNode statusNode, DiffTreeNode? currentParent)
-        {
-            FileStatusItem? item = statusNode.Tag as FileStatusItem;
-            DiffTreeNode node = new(
-                statusNode.Text,
-                item is null ? Images.FolderClosed : GetItemImage(item.Item),
-                item,
-                statusNode.Tag is RelativePath folderPath ? folderPath : null,
-                currentParent,
-                isGroupHeader: false,
-                groupIndex: null)
-            {
-                IsExpanded = expanded,
-            };
-            foreach (StatusNode child in statusNode.Nodes)
-            {
-                node.Children.Add(Convert(child, node));
-            }
-
-            return node;
         }
     }
 
