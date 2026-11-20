@@ -12,8 +12,10 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -583,8 +585,8 @@ public sealed class FileStatusListFamilyTests
 
             ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
             presentation.IsVisible.Should().BeTrue();
-            presentation.GetVisualDescendants().OfType<TextBlock>()
-                .Should().Contain(row => row.Text != null && row.Text.Contains("old-folder/old.txt"));
+            presentation.GetVisualDescendants().OfType<TextBlock>().Select(ReadLabelText)
+                .Should().Contain(label => label != null && label.Contains("old-folder/old.txt"));
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
             control.SetDiffs(groups, isFileTreeMode);
@@ -593,9 +595,9 @@ public sealed class FileStatusListFamilyTests
             window.UpdateLayout();
 
             TextBlock[] rows = [.. presentation.GetVisualDescendants().OfType<TextBlock>()];
-            TextBlock renamedRow = rows.Should().ContainSingle(row => row.Text == "new.txt (old.txt)").Which;
+            TextBlock renamedRow = rows.Should().ContainSingle(row => ReadLabelText(row) == "new.txt (old.txt)").Which;
             AutomationProperties.GetName(renamedRow).Should().Contain("old-folder/old.txt");
-            string?[] labels = [.. rows.Select(row => row.Text)];
+            string?[] labels = [.. rows.Select(ReadLabelText)];
             labels.Should().Contain("same.txt");
             labels.Should().NotContain(label => label != null && label.Contains("old-folder/"));
             control.GitItemFilteredStatuses.Select(item => item.Name).Should().BeEquivalentTo([rename.Name, move.Name]);
@@ -639,8 +641,8 @@ public sealed class FileStatusListFamilyTests
             window.UpdateLayout();
             ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
             TextBlock row = presentation.GetVisualDescendants().OfType<TextBlock>()
-                .Single(label => label.Text?.Contains("old-folder/old.txt") == true);
-            string? originalText = row.Text;
+                .Single(label => ReadLabelText(label)?.Contains("old-folder/old.txt") == true);
+            string? originalText = ReadLabelText(row);
 
             control.IsVisible = !hideWhileUpdating;
             PublishSetting(TruncatePathMethod.FileNameOnly);
@@ -648,12 +650,12 @@ public sealed class FileStatusListFamilyTests
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
 
-            row.Text.Should().Be("new.txt (old.txt)");
+            ReadLabelText(row).Should().Be("new.txt (old.txt)");
             presentation.GetVisualDescendants().Should().Contain(row);
             control.SelectedGitItem.Should().BeSameAs(rename);
 
             PublishSetting(TruncatePathMethod.None);
-            row.Text.Should().Be(originalText);
+            ReadLabelText(row).Should().Be(originalText);
             presentation.GetVisualDescendants().Should().Contain(row);
             control.SelectedGitItem.Should().BeSameAs(rename);
         }
@@ -707,24 +709,24 @@ public sealed class FileStatusListFamilyTests
 
             ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
             TextBlock row = presentation.GetVisualDescendants().OfType<TextBlock>()
-                .Single(label => label.Text?.Contains("old.txt") == true);
-            string? wideLabel = row.Text;
+                .Single(label => ReadLabelText(label)?.Contains("old.txt") == true);
+            string? wideLabel = ReadLabelText(row);
             wideLabel.Should().Contain(originalDirectory);
 
             Resize(250);
             if (pathMethod == TruncatePathMethod.Compact && !OperatingSystem.IsWindows())
             {
-                row.Text.Should().Be(wideLabel);
+                ReadLabelText(row).Should().Be(wideLabel);
             }
             else
             {
-                row.Text.Should().Contain("new.txt").And.Contain("...").And.NotContain(originalDirectory);
+                ReadLabelText(row).Should().Contain("new.txt").And.Contain("...").And.NotContain(originalDirectory);
             }
 
             control.SelectedGitItem.Should().BeSameAs(rename);
 
             Resize(1300);
-            row.Text.Should().Be(wideLabel);
+            ReadLabelText(row).Should().Be(wideLabel);
             control.SelectedGitItem.Should().BeSameAs(rename);
         }
         finally
@@ -739,6 +741,113 @@ public sealed class FileStatusListFamilyTests
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(DiffListSortType.FilePathFlat, false, "lstFiles")]
+    [TestCase(DiffListSortType.FilePath, false, "tvDiffFiles")]
+    [TestCase(DiffListSortType.FilePath, true, "tvFiles")]
+    public void FileStatusList_should_color_rename_labels_for_the_current_selection_and_theme(
+        DiffListSortType sortType, bool isFileTreeMode, string presentationName)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        ThemeId originalTheme = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        using FileStatusList control = new() { GroupByRevision = false };
+        Button outside = new() { Content = "Outside" };
+        DockPanel root = new() { Children = { outside, control } };
+        DockPanel.SetDock(outside, Dock.Bottom);
+        Window window = new() { Width = 640, Height = 340, Content = root };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            AppSettings.TruncatePathMethod = TruncatePathMethod.None;
+            DiffListSortService.Instance.DiffListSorting = sortType;
+            ApplyTheme(ThemeId.DefaultLight);
+            window.Show();
+            GitItemStatus rename = new("src/new.txt") { OldName = "old/old.txt", IsTracked = true, IsRenamed = true };
+            GitItemStatus other = new("src/other.txt") { IsTracked = true, IsChanged = true };
+            control.SetDiffs([new FileStatusWithDescription(null, new GitRevision(ObjectId.Random()), "Files", [rename, other])], isFileTreeMode);
+            Dispatcher.UIThread.RunJobs();
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+            window.UpdateLayout();
+
+            ItemsControl presentation = control.FindControl<ItemsControl>(presentationName)!;
+            TextBlock label = presentation.GetVisualDescendants().OfType<TextBlock>()
+                .Single(block => AutomationProperties.GetName(block)?.Contains("new.txt", StringComparison.Ordinal) == true);
+            PixelSize size = new((int)Math.Ceiling(label.Bounds.Width), (int)Math.Ceiling(label.Bounds.Height));
+            new GitExtensionsTests.AvaloniaControlTreeReader(label, renderScale: 1).ReadPrimary(label, size).Root.Text
+                .Should().EndWith("new.txt (old/old.txt)");
+            outside.Focus().Should().BeTrue();
+            presentation.IsKeyboardFocusWithin.Should().BeFalse();
+            ReadColor("new.txt").Should().Be(Color.Parse("#000000"));
+            ReadColor("old.txt").Should().Be(Color.Parse("#6D6D6D"));
+            if (sortType == DiffListSortType.FilePathFlat)
+            {
+                ReadColor("src/").Should().Be(Color.Parse("#6D6D6D"));
+            }
+
+            presentation.Focus().Should().BeTrue();
+            presentation.IsKeyboardFocusWithin.Should().BeTrue();
+            ReadColor("new.txt").Should().Be(Color.Parse("#FFFFFF"));
+            ReadColor("old.txt").Should().Be(Color.Parse("#C0C0C0"));
+            control.SelectFileOrFolder(RelativePath.From(other.Name)).Should().BeTrue();
+            ReadColor("new.txt").Should().Be(Color.Parse("#000000"));
+            ReadColor("old.txt").Should().Be(Color.Parse("#6D6D6D"));
+
+            if (presentation is TreeView)
+            {
+                TreeViewItem fileRow = label.FindAncestorOfType<TreeViewItem>()!;
+                TreeViewItem folderRow = fileRow.FindAncestorOfType<TreeViewItem>()!;
+                control.SelectFileOrFolder(RelativePath.From("src")).Should().BeTrue();
+                Dispatcher.UIThread.RunJobs();
+                folderRow.IsSelected.Should().BeTrue();
+                folderRow.IsExpanded.Should().BeTrue();
+                fileRow.IsSelected.Should().BeFalse();
+                ReadColor("new.txt").Should().Be(Color.Parse("#000000"));
+                ReadColor("old.txt").Should().Be(Color.Parse("#6D6D6D"));
+            }
+
+            control.SelectFileOrFolder(RelativePath.From(rename.Name)).Should().BeTrue();
+
+            ApplyTheme(ThemeId.DefaultDark);
+            ReadColor("new.txt").Should().Be(Color.Parse("#FFFFFF"));
+            ReadColor("old.txt").Should().Be(Color.Parse("#969696"));
+
+            outside.Focus().Should().BeTrue();
+            ReadColor("new.txt").Should().Be(Color.Parse("#F0F0F0"));
+            ReadColor("old.txt").Should().Be(Color.Parse("#969696"));
+            control.SelectedGitItem.Should().BeSameAs(rename);
+
+            Color ReadColor(string segment)
+            {
+                Dispatcher.UIThread.RunJobs();
+                window.UpdateLayout();
+                return label.TextLayout.TextLines.SelectMany(line => line.TextRuns)
+                    .OfType<global::Avalonia.Media.TextFormatting.ShapedTextRun>()
+                    .Single(run => run.Text.ToString().Contains(segment, StringComparison.Ordinal))
+                    .Properties.ForegroundBrush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            }
+        }
+        finally
+        {
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalTheme);
+        }
+
+        void ApplyTheme(ThemeId theme)
+        {
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
         }
     }
 
@@ -1156,4 +1265,6 @@ public sealed class FileStatusListFamilyTests
 
         control.FindControl<Button>("btnCollapseGroups")!.IsVisible.Should().BeTrue();
     }
+
+    private static string? ReadLabelText(TextBlock label) => label.Text ?? label.Inlines?.Text;
 }

@@ -317,6 +317,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsHighlightForegroundBrush", highlightText);
         SetBrush(resources, "GitExtensionsDataGridViewSelectionBackgroundBrush", dataGridViewSelectionBackground);
         SetBrush(resources, "GitExtensionsFileStatusSelectionForegroundBrush", isDark ? controlText : highlightText);
+        SetBrush(resources, "GitExtensionsFileStatusSelectionDecorationBrush", isDark ? grayText : DrawingColor.Silver);
         SetBrush(resources, "GitExtensionsInactiveSelectionForegroundBrush", inactiveSelectionText);
         SetBrush(resources, "GitExtensionsSystemInactiveSelectionBackgroundBrush", inactiveSelection);
         SetBrush(resources, "GitExtensionsToolTipBackgroundBrush", info);

@@ -255,6 +255,12 @@ internal sealed class AvaloniaControlTreeReader
             return GetXhtmlText(xhtmlTextBlock);
         }
 
+        if (control is TextBlock fileLabel && fileLabel.Classes.Contains("filestatus-item-label"))
+        {
+            // parity-scaffolding: Read the source caption across the native file label's inline runs.
+            return NormalizeText(fileLabel.Text ?? fileLabel.Inlines?.Text) ?? string.Empty;
+        }
+
         object? content = GetPropertyValue(control, "Content");
         object? header = GetPropertyValue(control, "Header");
         string? text = control.Name == "btnRemoteColor"

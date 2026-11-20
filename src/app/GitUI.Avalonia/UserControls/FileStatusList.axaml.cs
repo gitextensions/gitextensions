@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
@@ -1940,6 +1941,37 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
+    // Avalonia TextBlock inlines carry the source drawing colors through the native row styles.
+    private static void FileStatusListView_DrawNodeImpl(TextBlock label, (string? prefix, string text, string? suffix) parts)
+    {
+        (string? prefix, string text, string? suffix) = parts;
+        if (string.IsNullOrEmpty(text) || (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix)))
+        {
+            label.Inlines?.Clear();
+            label.Text = text;
+            return;
+        }
+
+        label.Text = null;
+        InlineCollection inlines = label.Inlines ??= new InlineCollection();
+        inlines.Clear();
+        AddGrayText(prefix);
+        inlines.Add(new Run(text));
+        AddGrayText(suffix);
+
+        return;
+
+        void AddGrayText(string? value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                Run run = new(value);
+                run.Classes.Add("filestatus-label-decoration");
+                inlines.Add(run);
+            }
+        }
+    }
+
     private void FileStatusListView_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.A)
@@ -2761,8 +2793,7 @@ public partial class FileStatusList : GitModuleControl
     {
         TextBlock text = new()
         {
-            // Also set .Text in order to provide accessibility information
-            Text = GetFileStatusLabelText(node.Text, node.Item?.Item),
+            Text = node.Text,
             FontWeight = FontWeight.Normal,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -2779,7 +2810,12 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
-            text.Tag = new FileStatusLabel(node.Text, node.Item.Item, node.Parent?.FolderPath?.Value);
+            FileStatusLabel label = new(node.Text, node.Item.Item, node.Parent?.FolderPath?.Value);
+            text.Tag = label;
+            text.Classes.Add("filestatus-item-label");
+            RefreshFileStatusLabel(text, label, layoutChanged: false);
+
+            // Also set the automation name in order to provide accessibility information
             AutomationProperties.SetName(text, node.Text);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
@@ -2803,7 +2839,7 @@ public partial class FileStatusList : GitModuleControl
     {
         TextBlock text = new()
         {
-            Text = GetFileStatusLabelText(node.Name, node.Item?.Item),
+            Text = node.Name,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
         };
@@ -2821,7 +2857,10 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
-            text.Tag = new FileStatusLabel(node.Name, node.Item.Item, node.Parent?.FullPath);
+            FileStatusLabel label = new(node.Name, node.Item.Item, node.Parent?.FullPath);
+            text.Tag = label;
+            text.Classes.Add("filestatus-item-label");
+            RefreshFileStatusLabel(text, label, layoutChanged: false);
             AutomationProperties.SetName(text, node.Name);
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item);
             if (!node.Item.Item.IsSubmodule
@@ -2915,10 +2954,12 @@ public partial class FileStatusList : GitModuleControl
             : $"{gitItemStatus.Name} ({gitItemStatus.OldName})";
         TextBlock text = new()
         {
-            Text = GetFileStatusLabelText(itemText, gitItemStatus),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
-        text.Tag = new FileStatusLabel(itemText, gitItemStatus, parentPath: null);
+        FileStatusLabel label = new(itemText, gitItemStatus, parentPath: null);
+        text.Tag = label;
+        text.Classes.Add("filestatus-item-label");
+        RefreshFileStatusLabel(text, label, layoutChanged: false);
         AutomationProperties.SetName(text, itemText);
         UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus);
         if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
@@ -2988,7 +3029,7 @@ public partial class FileStatusList : GitModuleControl
             {
                 label.LastFormat = format;
                 PathFormatter formatter = new(typeface, text.FontSize);
-                text.Text = GetFileStatusLabelText(label.NodeText, label.Item, label.ParentPath, formatter, width);
+                FileStatusListView_DrawNodeImpl(text, FormatListViewItem(label.NodeText, label.Item, label.ParentPath, formatter, width));
             }
 
             return;
@@ -2997,16 +3038,11 @@ public partial class FileStatusList : GitModuleControl
         if (!layoutChanged)
         {
             label.LastFormat = null;
-            text.Text = GetFileStatusLabelText(label.NodeText, label.Item);
+            PathFormatter? formatter = mode == TruncatePathMethod.None
+                ? new PathFormatter(new Typeface(text.FontFamily, text.FontStyle, text.FontWeight, text.FontStretch), text.FontSize)
+                : null;
+            FileStatusListView_DrawNodeImpl(text, FormatListViewItem(label.NodeText, label.Item, label.ParentPath, formatter));
         }
-    }
-
-    // The native TextBlock receives the source prefix, item text and suffix as one label.
-    private static string GetFileStatusLabelText(
-        string nodeText, GitItemStatus? gitItemStatus, string? parentPath = null, PathFormatter? formatter = null, int itemWidth = 0)
-    {
-        (string? prefix, string text, string? suffix) = FormatListViewItem(nodeText, gitItemStatus, parentPath, formatter, itemWidth);
-        return prefix + text + suffix;
     }
 
     private sealed class FileStatusLabel(string nodeText, GitItemStatus item, string? parentPath)

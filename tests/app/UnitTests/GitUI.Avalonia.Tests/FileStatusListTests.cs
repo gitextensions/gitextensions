@@ -1088,7 +1088,8 @@ public sealed class FileStatusListTests
             ListBox list = control.FindControl<ListBox>("lstFiles")!;
             ListBoxItem row = list.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
             string oldName = pathMethod == TruncatePathMethod.FileNameOnly ? "old-submodule" : "prior/old-submodule";
-            row.GetVisualDescendants().OfType<TextBlock>().Single().Text.Should().Be($"new-submodule (+2-1) ({oldName})");
+            TextBlock label = row.GetVisualDescendants().OfType<TextBlock>().Single();
+            (label.Text ?? label.Inlines?.Text).Should().Be($"new-submodule (+2-1) ({oldName})");
         }
         finally
         {

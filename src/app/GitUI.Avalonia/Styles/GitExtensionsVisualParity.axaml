@@ -454,6 +454,7 @@
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
           <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionDecorationBrush" Color="#C0C0C0" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#BFCDDB" />
           <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#FFFFE1" />
@@ -665,6 +666,7 @@
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
           <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionDecorationBrush" Color="#969696" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#BEBEBE" />
           <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#374B5A" />
           <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#50503C" />
