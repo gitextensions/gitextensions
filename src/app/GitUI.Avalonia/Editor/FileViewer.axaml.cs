@@ -621,11 +621,9 @@ public partial class FileViewer : GitModuleControl
     ///  Gets the zero-based line index at a y position relative to this control,
     ///  or a value past the last line when no line is there (like WinForms).
     /// </summary>
-    public int GetLineFromVisualPosY(double visualPosY)
+    public int GetLineFromVisualPosY(int visualPosY)
     {
-        AvaloniaEdit.Rendering.TextView textView = TextEditor.TextArea.TextView;
-        VisualLine? visualLine = textView.GetVisualLineFromVisualTop(visualPosY + textView.ScrollOffset.Y);
-        return visualLine is null ? int.MaxValue : visualLine.FirstDocumentLine.LineNumber - 1;
+        return internalFileViewer.GetLineFromVisualPosY(visualPosY);
     }
 
     /// <summary>Gets the one-based column number of the caret.</summary>
@@ -758,8 +756,11 @@ public partial class FileViewer : GitModuleControl
         ResetView(ViewMode.FixedDiff, fileName, item: null, openWithDifftool);
         string parsedText = text;
         PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
-        SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
+        {
+            internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        }
+
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -779,8 +780,11 @@ public partial class FileViewer : GitModuleControl
 
         // Difftastic set the position (0 to hide)
         VRulerPosition = rightColumnStart;
-        SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
+        {
+            internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        }
+
         TextLoaded?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
     }
@@ -795,8 +799,11 @@ public partial class FileViewer : GitModuleControl
         ResetView(ViewMode.RangeDiff, fileName);
         string parsedText = text;
         RangeDiffHighlightService highlightService = new(ref parsedText);
-        SetDiffText(parsedText, highlightService, showLeftColumn: false);
-        internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        if (!SetDiffText(parsedText, highlightService, showLeftColumn: false))
+        {
+            internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        }
+
         TextLoaded?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
     }
@@ -2209,8 +2216,11 @@ public partial class FileViewer : GitModuleControl
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
             : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);
-        SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
+        {
+            internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        }
+
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -2223,8 +2233,11 @@ public partial class FileViewer : GitModuleControl
         ResetView(ViewMode.RangeDiff, fileName: null);
         string parsedText = text ?? string.Empty;
         RangeDiffHighlightService highlightService = new(ref parsedText);
-        SetDiffText(parsedText, highlightService, showLeftColumn: false);
-        internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        if (!SetDiffText(parsedText, highlightService, showLeftColumn: false))
+        {
+            internalFileViewer.GoToFirstChange(NumberOfContextLines);
+        }
+
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -2234,9 +2247,9 @@ public partial class FileViewer : GitModuleControl
     public Task ViewTextAsync(string? fileName, string text, CancellationToken cancellationToken)
         => ViewTextAsync(fileName, text, item: null, line: null, openWithDifftool: null, checkGitAttributes: false, cancellationToken);
 
-    private void SetText(string? text)
+    private bool SetText(string? text)
     {
-        internalFileViewer.SetText(
+        return internalFileViewer.SetText(
             text ?? string.Empty,
             _openWithDifftool,
             _viewMode,
@@ -2398,8 +2411,10 @@ public partial class FileViewer : GitModuleControl
             {
                 string parsedText = text;
                 PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
-                SetDiffText(parsedText, highlightService, showLeftColumn: true);
-                internalFileViewer.GoToFirstChange(NumberOfContextLines);
+                if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
+                {
+                    internalFileViewer.GoToFirstChange(NumberOfContextLines);
+                }
             }
             else
             {
@@ -2687,14 +2702,14 @@ public partial class FileViewer : GitModuleControl
         return internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool);
     }
 
-    private void SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
+    private bool SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
     {
         internalFileViewer.SetTextHighlightService(highlightService);
         _diffBackgroundRenderer.SetHighlightService(highlightService);
         _diffTextColorizer.SetHighlightService(highlightService);
         internalFileViewer.LineNumbersControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
         UpdateLineNumberVisibility();
-        SetText(text);
+        return SetText(text);
     }
 
     private void ClearDiffHighlighting()

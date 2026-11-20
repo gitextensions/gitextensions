@@ -332,20 +332,26 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             TextEditor.ScrollToHome();
         }
 
-        if (_shouldScrollToBottom)
+        if (_shouldScrollToTop || _shouldScrollToBottom)
         {
-            TextEditor.ScrollToEnd();
-            TextEditor.ScrollToVerticalOffset(Math.Max(0, VScrollPosition - _bottomBlankHeight));
-            positionSet = true;
-        }
-        else if (_shouldScrollToTop)
-        {
-            TextEditor.ScrollToHome();
-            positionSet = true;
+            // Avalonia measures scroll extents during layout and allows more travel below the document.
+            TextEditor.UpdateLayout();
+            if (TextEditor.TextArea.FindAncestorOfType<ScrollViewer>() is { } scrollViewer && scrollViewer.ScrollBarMaximum.Y > 0)
+            {
+                TextView textView = TextEditor.TextArea.TextView;
+                double viewportHeight = scrollViewer.Viewport.Height;
+                double lineHeight = textView.DefaultLineHeight;
+                int visibleLineCount = 1 + (int)(viewportHeight / lineHeight);
+                double maximum = textView.DocumentHeight + ((visibleLineCount * 2 / 3) * lineHeight);
+                double offset = _shouldScrollToTop ? 0 : Math.Max(0, maximum - viewportHeight - _bottomBlankHeight);
+                scrollViewer.Offset = new Vector(scrollViewer.Offset.X, offset);
+                positionSet = true;
+            }
+
+            _shouldScrollToTop = false;
+            _shouldScrollToBottom = false;
         }
 
-        _shouldScrollToTop = false;
-        _shouldScrollToBottom = false;
         return positionSet;
     }
 
@@ -694,9 +700,10 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public int GetLineFromVisualPosY(int visualPosY)
     {
+        // Avalonia can publish a scroll offset before realizing the new viewport's visual lines.
         TextView textView = TextEditor.TextArea.TextView;
-        VisualLine? visualLine = textView.GetVisualLineFromVisualTop(visualPosY + textView.ScrollOffset.Y);
-        return visualLine is null ? int.MaxValue : visualLine.FirstDocumentLine.LineNumber - 1;
+        double documentY = Math.Max(0, visualPosY + textView.ScrollOffset.Y);
+        return documentY < textView.DocumentHeight ? textView.GetDocumentLineByVisualTop(documentY).LineNumber - 1 : int.MaxValue;
     }
 
     private string GetLineText(int line)

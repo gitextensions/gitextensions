@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -47,6 +47,9 @@ public sealed partial class BlameControl : GitModuleControl
     private ObjectId? _blameId;
     private string? _fileName;
     private Encoding? _encoding;
+
+    // Avalonia supplies pointer coordinates on input events rather than through a global MousePosition.
+    private int? _lastAuthorPointerY;
     private GitBlameCommit? _tooltipCommit;
     private bool _changingScrollPosition;
     private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous revision");
@@ -305,10 +308,19 @@ public sealed partial class BlameControl : GitModuleControl
 
     private void BlameAuthor_MouseLeave(object? sender, PointerEventArgs e)
     {
+        _lastAuthorPointerY = null;
         _tooltipCommit = null;
     }
 
     private void BlameAuthor_MouseMove(object? sender, PointerEventArgs e)
+    {
+        int pointerY = (int)e.GetPosition(BlameAuthor).Y;
+        _lastAuthorPointerY = pointerY;
+        UpdateBlameAuthorHover(pointerY);
+    }
+
+    // Native pointer movement and scrolling share hover behavior without synthesizing a pointer event.
+    private void UpdateBlameAuthorHover(int pointerY)
     {
         if (!BlameFile.IsKeyboardFocusWithin)
         {
@@ -320,7 +332,7 @@ public sealed partial class BlameControl : GitModuleControl
             return;
         }
 
-        _lineIndex = BlameAuthor.GetLineFromVisualPosY(e.GetPosition(BlameAuthor).Y);
+        _lineIndex = BlameAuthor.GetLineFromVisualPosY(pointerY);
 
         GitBlameCommit? blameCommit = _lineIndex < _blame.Lines.Count
             ? _blame.Lines[_lineIndex].Commit
@@ -347,7 +359,7 @@ public sealed partial class BlameControl : GitModuleControl
             return;
         }
 
-        int lineIndex = BlameFile.GetLineFromVisualPosY(e.GetPosition(BlameFile).Y);
+        int lineIndex = BlameFile.GetLineFromVisualPosY((int)e.GetPosition(BlameFile).Y);
 
         // Track the hovered line for the context menu too (there is no MousePosition
         // to query when the menu opens).
@@ -441,14 +453,17 @@ public sealed partial class BlameControl : GitModuleControl
 
     private void BlameAuthor_VScrollPositionChanged(object? sender, EventArgs e)
     {
-        if (_changingScrollPosition)
+        if (!_changingScrollPosition)
         {
-            return;
+            _changingScrollPosition = true;
+            BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
+            _changingScrollPosition = false;
         }
 
-        _changingScrollPosition = true;
-        BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
-        _changingScrollPosition = false;
+        if (BlameAuthor.IsPointerOver && _lastAuthorPointerY is int pointerY)
+        {
+            UpdateBlameAuthorHover(pointerY);
+        }
     }
 
     private void BlameFile_VScrollPositionChanged(object? sender, EventArgs e)

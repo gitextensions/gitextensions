@@ -13,6 +13,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using AvaloniaEdit.Rendering;
 using GitCommands;
@@ -24,6 +25,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
+using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
@@ -248,6 +250,128 @@ public sealed class FileViewerContentTests
         finally
         {
             editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task FileViewer_should_land_at_the_source_offset_when_scrolling_to_the_previous_file(bool longPatch)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.AutomaticContinuousScroll = false;
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        File.WriteAllText(Path.Combine(_workingDirectory, "first.txt"),
+            string.Concat(Enumerable.Range(1, 100).Select(line => $"first file line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "first.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "first" }).Should().BeTrue();
+        ObjectId first = _module.GetCurrentCheckout();
+
+        int addedLines = longPatch ? 100 : 1;
+        string lastLine = $"+first file line {100 + addedLines}";
+        File.AppendAllText(Path.Combine(_workingDirectory, "first.txt"),
+            string.Concat(Enumerable.Range(101, addedLines).Select(line => $"first file line {line}\n")));
+        File.WriteAllText(Path.Combine(_workingDirectory, "second.txt"), "second file\n");
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "." }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second" }).Should().BeTrue();
+
+        using FormDiff form = new(_commands, first, _module.GetCurrentCheckout(), "Base", "Compare");
+        FileStatusList files = form.FindControl<FileStatusList>("DiffFiles")!;
+        FileViewer viewer = form.FindControl<FileViewer>("DiffText")!;
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => viewer.GetText().Contains(lastLine, StringComparison.Ordinal));
+            files.SelectNextVisibleItem();
+            await WaitUntilAsync(() => viewer.GetText().Contains("second file", StringComparison.Ordinal));
+            form.UpdateLayout();
+            viewer.VScrollPosition.Should().Be(0);
+
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Point point = textView.TranslatePoint(new Point(20, 8), form)!.Value;
+            form.MouseWheel(point, new Vector(0, 1), RawInputModifiers.Alt);
+            await WaitUntilAsync(() => viewer.GetText().Contains(lastLine, StringComparison.Ordinal));
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            files.SelectedFileStatusItem!.Item.Name.Should().Be("first.txt");
+            ScrollViewer scrollViewer = textView.FindAncestorOfType<ScrollViewer>()!;
+            if (longPatch)
+            {
+                double viewport = scrollViewer.Viewport.Height;
+                double lineHeight = textView.DefaultLineHeight;
+                int extraLines = (1 + (int)(viewport / lineHeight)) * 2 / 3;
+                double expectedOffset = textView.DocumentHeight + (extraLines * lineHeight) - viewport - 300;
+                expectedOffset.Should().BePositive();
+                scrollViewer.Offset.Y.Should().BeApproximately(expectedOffset, 1);
+                textView.VisualLines.Should().Contain(line => line.FirstDocumentLine.LineNumber == textView.Document.LineCount - 1);
+            }
+            else
+            {
+                scrollViewer.ScrollBarMaximum.Y.Should().Be(0);
+                scrollViewer.Offset.Y.Should().Be(0);
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task BlameControl_should_refresh_the_author_tip_under_a_stationary_pointer(bool scrollAuthorPane)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.BlameShowAuthorAvatar = false;
+        string path = Path.Combine(_workingDirectory, "blame.txt");
+        File.WriteAllText(path, string.Concat(Enumerable.Range(1, 4).Select(line => $"original line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "blame.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "original-author-change" }).Should().BeTrue();
+        File.AppendAllText(path, string.Concat(Enumerable.Range(5, 96).Select(line => $"new line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "blame.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "later-author-change" }).Should().BeTrue();
+
+        using FormBlame form = new(_commands, "blame.txt", _module.GetRevision(), initialLine: 1);
+        BlameControl control = form.FindControl<BlameControl>("blameControl1")!;
+        FileViewer author = control.BlameAuthor;
+        FileViewer file = control.BlameFile;
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => file.GetText().Contains("new line 100", StringComparison.Ordinal));
+            form.UpdateLayout();
+            TextView textView = author.TextEditor.TextArea.TextView;
+            Point textPoint = new(2, textView.DefaultLineHeight * 3.5);
+            Point point = textView.TranslatePoint(textPoint, form)!.Value;
+            int authorY = (int)textView.TranslatePoint(textPoint, author)!.Value.Y;
+            form.MouseMove(point, RawInputModifiers.None);
+            author.IsPointerOver.Should().BeTrue();
+            author.GetLineFromVisualPosY(authorY).Should().Be(3);
+            ToolTip.GetTip(author).Should().BeOfType<string>().Which.Should().Contain("original-author-change");
+
+            if (scrollAuthorPane)
+            {
+                form.MouseWheel(point, new Vector(0, -4), RawInputModifiers.None);
+            }
+            else
+            {
+                file.VScrollPosition = (int)Math.Ceiling(textView.Bounds.Height + textView.DefaultLineHeight);
+            }
+
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            author.IsPointerOver.Should().BeTrue();
+            author.VScrollPosition.Should().BePositive();
+            file.VScrollPosition.Should().Be(author.VScrollPosition);
+            author.GetLineFromVisualPosY(authorY).Should().BeInRange(4, 99);
+            ToolTip.GetTip(author).Should().BeOfType<string>().Which.Should().Contain("later-author-change");
+        }
+        finally
+        {
+            form.Close();
         }
     }
 
