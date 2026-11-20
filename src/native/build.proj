@@ -1,4 +1,6 @@
 <Project DefaultTargets="Build">
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
   <PropertyGroup>
     <!-- Keep Sdk.targets happy -->
     <TargetFrameworkIdentifier>net</TargetFrameworkIdentifier>
