@@ -245,7 +245,7 @@ public sealed class BlameControlTests
     public async Task BlameAuthorMargin_should_reject_stale_avatars_and_clear_owned_images()
     {
         BlameAuthorMargin margin = new(new Avalonia.Media.Typeface("Segoe UI"), 9);
-        byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author1@mail.fake", "author1", margin.AvatarSize))!;
+        byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author1@mail.fake", "author1", margin.LineHeight))!;
         GitBlameEntry entry = new() { AgeBucketColor = Color.Green };
 
         int staleVersion = margin.Initialize("first", [entry], showAvatars: true);
@@ -255,7 +255,7 @@ public sealed class BlameControlTests
         margin.GetAvatarPixelSize(0).Should().BeNull();
 
         margin.SetAvatar(0, imageData, currentVersion);
-        margin.GetAvatarPixelSize(0).Should().Be(new Avalonia.PixelSize(margin.AvatarSize, margin.AvatarSize));
+        margin.GetAvatarPixelSize(0).Should().Be(new Avalonia.PixelSize(margin.LineHeight, margin.LineHeight));
 
         margin.Clear();
         margin.GetAvatarPixelSize(0).Should().BeNull();

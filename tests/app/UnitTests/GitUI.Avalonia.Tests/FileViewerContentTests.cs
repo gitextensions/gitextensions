@@ -1443,6 +1443,52 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_blame_avatar_gutter_should_keep_its_width_on_pointer_drag()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.BlameShowAuthorAvatar = true;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 480, Height = 260, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", "first\nsecond");
+            GitBlameEntry[] entries =
+            [
+                new() { AgeBucketColor = System.Drawing.Color.Green },
+                new() { AgeBucketColor = System.Drawing.Color.Green },
+            ];
+            viewer.SetGitBlameGutter(entries);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            BlameAuthorMargin margin = viewer.TextEditor.TextArea.LeftMargins.OfType<BlameAuthorMargin>().Single();
+            double width = margin.Bounds.Width;
+            width.Should().BeGreaterThan(5);
+            Point start = margin.TranslatePoint(new Point(width - 2, 7), window)!.Value;
+            Point end = start + new Vector(38, 0);
+
+            window.MouseMove(start, RawInputModifiers.None);
+            window.MouseDown(start, MouseButton.Left, RawInputModifiers.None);
+            window.MouseMove(end, RawInputModifiers.LeftMouseButton);
+            window.MouseUp(end, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            margin.Bounds.Width.Should().Be(width);
+            viewer.ClearBlameGutter();
+            margin.IsVisible.Should().BeFalse();
+            viewer.SetGitBlameGutter(entries);
+            viewer.TextEditor.TextArea.LeftMargins.OfType<BlameAuthorMargin>().Should().ContainSingle()
+                .Which.Should().BeSameAs(margin);
+            margin.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileViewerInternal_should_restore_the_first_visible_line_when_the_caret_is_outside_the_view()
     {
         using FileViewerInternal viewer = new();

@@ -943,10 +943,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             _showGutterAvatars = value;
             if (!_showGutterAvatars)
             {
-                if (_authorsAvatarMargin is not null)
-                {
-                    _authorsAvatarMargin.IsVisible = false;
-                }
+                _authorsAvatarMargin?.SetVisiblity(false);
 
                 return;
             }
@@ -960,7 +957,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             }
             else
             {
-                _authorsAvatarMargin.IsVisible = true;
+                _authorsAvatarMargin.SetVisiblity(true);
             }
         }
     }
