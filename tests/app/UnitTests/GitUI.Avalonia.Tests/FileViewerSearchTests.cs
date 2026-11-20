@@ -403,16 +403,17 @@ public sealed class FileViewerSearchTests
             AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
             AppSettings.AutomaticContinuousScroll = false;
             FileViewer viewer = new();
-            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
             int reloadRequests = 0;
             viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
 
-            accessor.ShowGitWordColoringMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            viewer.FindControl<MenuItem>("showGitWordColoringToolStripMenuItem")!
+                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
 
             AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
             viewer.GetExtraDiffArguments().ToString().Should().Contain("--word-diff=color");
 
-            accessor.TreatAllFilesAsTextMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            viewer.FindControl<MenuItem>("treatAllFilesAsTextToolStripMenuItem")!
+                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
 
             viewer.GetExtraDiffArguments().ToString().Should().Contain("--text");
             viewer.GetExtraGrepArguments().ToString().Should().Contain("--text");
@@ -422,7 +423,8 @@ public sealed class FileViewerSearchTests
             extraCacheKey.Should().Contain(";DFT_COLOR=always").And.Contain(";DFT_BACKGROUND=light");
             Environment.GetEnvironmentVariable("DFT_WIDTH").Should().Be("88");
 
-            accessor.AutomaticContinuousScrollMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            viewer.FindControl<MenuItem>("automaticContinuousScrollToolStripMenuItem")!
+                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
 
             AppSettings.AutomaticContinuousScroll.Should().BeTrue();
             reloadRequests.Should().Be(2);
@@ -510,7 +512,7 @@ public sealed class FileViewerSearchTests
         viewer.TranslateItems(translation);
 
         FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
-        accessor.FindMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));
+        viewer.FindControl<MenuItem>("findToolStripMenuItem")!.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));
         ToolTip.GetTip(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
     }
 

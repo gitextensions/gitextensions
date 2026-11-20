@@ -892,11 +892,12 @@ public sealed class ViewConstructionTests
     public void FileViewer_should_construct_and_view_a_patch()
     {
         FileViewer control = new();
+        Separator separator = control.FindControl<Separator>("toolStripSeparator4")!;
         control.ViewPatch("@@ -1,1 +1,1 @@\n-old\n+new\n");
-        control.GetTestAccessor().ContextLinesSeparator.IsVisible.Should().BeTrue();
+        separator.IsVisible.Should().BeTrue();
 
         control.ViewText("file.txt", "text");
-        control.GetTestAccessor().ContextLinesSeparator.IsVisible.Should().BeFalse();
+        separator.IsVisible.Should().BeFalse();
     }
 
     [AvaloniaTest]

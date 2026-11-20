@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
@@ -140,6 +141,48 @@ public sealed class FileViewerContentTests
             encodings.Items.Should().Contain(Encoding.Unicode.EncodingName);
             encodings.SelectedItem.Should().BeNull();
             encodings.Should().BeOfType<ToolbarComboBox>().Which.DropDownWidth.Should().BeInRange(50, 250);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_publish_copy_availability_before_its_context_menu_opens(bool selectText)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        ContextMenu menu = viewer.FindControl<ContextMenu>("contextMenu")!;
+        MenuItem copy = viewer.FindControl<MenuItem>("copyToolStripMenuItem")!;
+        object? openingSender = null;
+        bool? copyEnabledOnOpening = null;
+        viewer.ContextMenuOpening += (sender, args) =>
+        {
+            openingSender = sender;
+            copyEnabledOnOpening = copy.IsEnabled;
+            args.Cancel = true;
+        };
+
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "some selected text");
+            viewer.TextEditor.Select(0, selectText ? 4 : 0);
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.ContextMenu.Should().BeSameAs(menu);
+
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(20, 8), editor)!.Value;
+            editor.MouseMove(point, RawInputModifiers.None);
+            editor.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            copyEnabledOnOpening.Should().Be(selectText);
+            openingSender.Should().BeSameAs(menu);
+            menu.IsOpen.Should().BeFalse();
         }
         finally
         {

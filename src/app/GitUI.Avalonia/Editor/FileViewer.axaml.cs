@@ -238,7 +238,21 @@ public partial class FileViewer : GitModuleControl
         treatAllFilesAsTextToolStripMenuItem.Click += TreatAllFilesAsTextToolStripMenuItemClick;
         automaticContinuousScrollToolStripMenuItem.Click += ContinuousScrollToolStripMenuItemClick;
         settingsButton.Click += settingsButton_Click;
-        contextMenu.Opening += contextMenu_Opening;
+        contextMenu.Opening += (sender, e) =>
+        {
+            copyToolStripMenuItem.IsEnabled = internalFileViewer.GetSelectionLength() > 0;
+            ContextMenuOpening?.Invoke(sender, e);
+            if (e.Cancel)
+            {
+                return;
+            }
+
+            stageSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
+            unstageSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
+            resetSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
+            replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
+            goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
+        };
         _NO_TRANSLATE_lblShowPreview.Click += llShowPreview_LinkClicked;
         encodingToolStripComboBox.SelectionChanged += encodingToolStripComboBox_SelectedIndexChanged;
 
@@ -2117,8 +2131,6 @@ public partial class FileViewer : GitModuleControl
 
         public Border FileViewerToolbar => _fileViewer.fileviewerToolbar;
 
-        public Separator ContextLinesSeparator => _fileViewer.toolStripSeparator4;
-
         public MenuItem ShowNonprintingCharactersMenuItem => _fileViewer.showNonprintableCharactersToolStripMenuItem;
 
         public Button ShowNonprintingCharactersButton => _fileViewer.showNonPrintChars;
@@ -2129,23 +2141,7 @@ public partial class FileViewer : GitModuleControl
 
         public bool ShowSyntaxHighlightingInDiff => _fileViewer.ShowSyntaxHighlightingInDiff;
 
-        public MenuItem DiffAppearanceMenuItem => _fileViewer.diffAppearanceToolStripMenuItem;
-
-        public MenuItem ShowPatchMenuItem => _fileViewer.showPatchToolStripMenuItem;
-
-        public MenuItem ShowGitWordColoringMenuItem => _fileViewer.showGitWordColoringToolStripMenuItem;
-
-        public MenuItem ShowDifftasticMenuItem => _fileViewer.showDifftasticToolStripMenuItem;
-
-        public MenuItem TreatAllFilesAsTextMenuItem => _fileViewer.treatAllFilesAsTextToolStripMenuItem;
-
-        public MenuItem AutomaticContinuousScrollMenuItem => _fileViewer.automaticContinuousScrollToolStripMenuItem;
-
-        public Button SettingsButton => _fileViewer.settingsButton;
-
         public Button NextChangeButton => _fileViewer.nextChangeButton;
-
-        public MenuItem FindMenuItem => _fileViewer.findToolStripMenuItem;
 
         public bool HasDiffHighlighting => _fileViewer.internalFileViewer.DiffHighlightService is not null;
 
@@ -2865,22 +2861,6 @@ public partial class FileViewer : GitModuleControl
             EscapePressed?.Invoke();
             e.Handled = true;
         }
-    }
-
-    private void contextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
-    {
-        ContextMenuOpening?.Invoke(this, e);
-        if (e.Cancel)
-        {
-            return;
-        }
-
-        copyToolStripMenuItem.IsEnabled = TextEditor.SelectionLength > 0;
-        stageSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
-        unstageSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
-        resetSelectedLinesToolStripMenuItem.IsEnabled = AllowLinePatching;
-        replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
-        goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
     }
 
     private void ShowFileViewerToolbar()
