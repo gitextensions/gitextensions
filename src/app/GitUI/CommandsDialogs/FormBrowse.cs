@@ -220,6 +220,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly IShellProvider _shellProvider;
+
+    // An asynchronously-populated worktree list for the toolbar dropdown. The refresh starts the
+    // fetch off the UI thread (independent of the left panel being visible); the dropdown reuses
+    // the last completed value so it never runs `git worktree list` on the UI thread (see #13059).
+    // The left-panel tree fetches its own list off the UI thread, so the two are independent.
+    private Task<IReadOnlyList<GitWorktree>>? _worktreesTask;
+    private IReadOnlyList<GitWorktree> _worktrees = [];
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -715,6 +722,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _aheadBehindDataProvider?.ResetCache();
+
+        // Start a fresh worktree fetch off the UI thread (independent of the left panel being
+        // visible), so a dead UNC path never blocks the UI. The dropdown reuses the last
+        // completed value; while the fetch is in flight it shows the previous value (see #13059).
+        // The left-panel tree fetches its own list off the UI thread.
+        _worktreesTask = Task.Run(() => Module.GetWorktrees());
+        _worktreesTask.ContinueWith(
+            t => _worktrees = t.IsFaulted ? _worktrees : t.Result,
+            TaskScheduler.FromCurrentSynchronizationContext());
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
         {
@@ -2989,7 +3005,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripWorktrees.DropDownItems.Clear();
 
         string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
-        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
+        // Reuse the last completed worktree fetch (taken off the UI thread during the refresh)
+        // instead of spawning `git worktree list` on the UI thread. In-app worktree operations
+        // and external changes trigger a refresh, which starts a new fetch; while it is in
+        // flight this shows the previous value.
+        IReadOnlyList<GitWorktree> worktrees = _worktrees;
 
         foreach (GitWorktree worktree in worktrees)
         {

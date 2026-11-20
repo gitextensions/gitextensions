@@ -2243,7 +2243,10 @@ public sealed partial class GitModule : IGitModule
         };
 
         string output = GitExecutable.GetOutput(args);
-        List<GitWorktree> worktrees = [];
+
+        // Parse all records first, then check existence in parallel: a single dead UNC path
+        // must not serialize N blocking Directory.Exists probes (see #13059).
+        List<(string FullPath, GitWorktreeHeadType HeadType, string? Sha1, string? Branch)> records = [];
 
         string? path = null;
         string? sha1 = null;
@@ -2261,9 +2264,7 @@ public sealed partial class GitModule : IGitModule
             {
                 if (path is not null)
                 {
-                    string fullPath = GetWindowsPath(path);
-                    bool isDeleted = !Directory.Exists(fullPath);
-                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
+                    records.Add((GetWindowsPath(path), headType, sha1, branch));
                 }
 
                 path = null;
@@ -2298,12 +2299,41 @@ public sealed partial class GitModule : IGitModule
 
         if (path is not null)
         {
-            string fullPath = GetWindowsPath(path);
-            bool isDeleted = !Directory.Exists(fullPath);
-            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
+            records.Add((GetWindowsPath(path), headType, sha1, branch));
+        }
+
+        bool[] exists = CheckExistsInParallel(records.Select(record => record.FullPath), Directory.Exists);
+
+        List<GitWorktree> worktrees = [];
+        for (int i = 0; i < records.Count; i++)
+        {
+            worktrees.Add(new GitWorktree(
+                records[i].FullPath,
+                records[i].HeadType,
+                records[i].Sha1,
+                records[i].Branch,
+                IsDeleted: !exists[i]) { IsMain = i == 0 });
         }
 
         return worktrees;
+    }
+
+    /// <summary>
+    /// Checks <paramref name="checkExists"/> for every path concurrently, so a single
+    /// slow or dead path (e.g. a disconnected mapped drive) does not serialize the
+    /// blocking checks for all the others.
+    /// </summary>
+    internal static bool[] CheckExistsInParallel(IEnumerable<string> paths, Func<string, bool> checkExists)
+    {
+        string[] pathArray = paths.ToArray();
+        bool[] exists = new bool[pathArray.Length];
+        if (pathArray.Length == 0)
+        {
+            return exists;
+        }
+
+        Parallel.For(0, pathArray.Length, i => exists[i] = checkExists(pathArray[i]));
+        return exists;
     }
 
     public async Task<ExecutionResult> GetSingleDifftoolAsync(

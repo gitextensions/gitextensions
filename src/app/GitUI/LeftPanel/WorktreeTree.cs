@@ -24,15 +24,15 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
 
-        return FillWorktreeTree(token);
+        // Fetched off the UI thread so the (potentially slow) git call never blocks the UI.
+        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+        return FillWorktreeTree(worktrees, token);
     }
 
-    private Nodes FillWorktreeTree(CancellationToken token)
+    private Nodes FillWorktreeTree(IReadOnlyList<GitWorktree> worktrees, CancellationToken token)
     {
         Nodes nodes = new(this);
         string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
-
-        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
 
         // Use the main worktree's parent as the reference for relative paths.
         // Git always lists the main worktree first. Using the main worktree's parent
