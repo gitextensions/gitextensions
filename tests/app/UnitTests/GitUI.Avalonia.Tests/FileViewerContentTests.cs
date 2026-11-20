@@ -379,8 +379,9 @@ public sealed class FileViewerContentTests
     [AvaloniaTest]
     public async Task FileViewer_should_clear_a_selection_before_raising_EscapePressed()
     {
-        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
-        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window editor = new() { Width = 500, Height = 270, Content = viewer };
         try
         {
             editor.Show();

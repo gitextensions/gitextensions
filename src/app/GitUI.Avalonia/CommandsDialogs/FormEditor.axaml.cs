@@ -1,6 +1,8 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Editor;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -62,6 +64,9 @@ public sealed partial class FormEditor : GitModuleForm
         toolStripSaveButton.Click += toolStripSaveButton_Click;
         fileViewer.TextChanged += (_, _) => HasChanges = true;
         fileViewer.TextLoaded += (_, _) => HasChanges = false;
+
+        // Avalonia's tunnel runs the source form commands before FileViewer handles editor keys.
+        AddHandler(KeyDownEvent, (_, e) => e.Handled = ProcessCmdKey(KeysMapper.ToKeys(e)), RoutingStrategies.Tunnel);
     }
 
     private void OpenFile(string fileName, int? line = null)
@@ -186,6 +191,20 @@ public sealed partial class FormEditor : GitModuleForm
         }
 
         return base.ProcessHotkey(keyData);
+    }
+
+    private bool ProcessCmdKey(WinFormsShims.Keys keyData)
+    {
+        switch (keyData)
+        {
+            case WinFormsShims.Keys.Escape:
+                Close();
+                return true;
+            case WinFormsShims.Keys.Control | WinFormsShims.Keys.S:
+                return ProcessHotkey(keyData);
+            default:
+                return false;
+        }
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

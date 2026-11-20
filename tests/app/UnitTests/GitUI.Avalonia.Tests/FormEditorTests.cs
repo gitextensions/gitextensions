@@ -1,7 +1,9 @@
 using System.ComponentModel.Design;
 using System.Text;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -94,6 +96,80 @@ public sealed class FormEditorTests
         accessor.HasChanges.Should().BeFalse();
         accessor.IsSaveEnabled.Should().BeFalse();
         File.ReadAllBytes(filePath).Should().Equal([.. encoding.GetPreamble(), .. encoding.GetBytes(initialText + "edited")]);
+    }
+
+    [AvaloniaTest]
+    public async Task FormEditor_should_save_and_close_from_the_focused_editor()
+    {
+        string filePath = Path.Combine(_workingDirectory, "keyboard.txt");
+        File.WriteAllText(filePath, "initial text", _commands.Module.FilesEncoding);
+        using FormEditor form = new(_commands, filePath, showWarning: false);
+        FormEditor.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => accessor.FileViewer.GetText() == "initial text");
+            AvaloniaEdit.TextEditor editor = accessor.FileViewer.TextEditor;
+            editor.TextArea.Focus().Should().BeTrue();
+            editor.Text += " edited";
+            form.KeyPress(Key.S, RawInputModifiers.Control, PhysicalKey.S, keySymbol: null);
+            form.KeyRelease(Key.S, RawInputModifiers.Control, PhysicalKey.S, keySymbol: null);
+            File.ReadAllText(filePath, _commands.Module.FilesEncoding).Should().Be("initial text edited");
+
+            editor.Select(0, 4);
+            editor.SelectionLength.Should().Be(4);
+            form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            form.IsVisible.Should().BeFalse();
+            form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+        }
+        finally
+        {
+            if (form.IsVisible)
+            {
+                _stubMessageBoxHost.Result = WinFormsShims.DialogResult.No;
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormEditor_escape_should_run_the_close_prompt_before_editor_selection_input()
+    {
+        string filePath = Path.Combine(_workingDirectory, "unsaved.txt");
+        File.WriteAllText(filePath, "initial text", _commands.Module.FilesEncoding);
+        using FormEditor form = new(_commands, filePath, showWarning: false);
+        FormEditor.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => accessor.FileViewer.GetText() == "initial text");
+            AvaloniaEdit.TextEditor editor = accessor.FileViewer.TextEditor;
+            editor.TextArea.Focus().Should().BeTrue();
+            editor.Text += " edited";
+            editor.Select(0, 4);
+            _stubMessageBoxHost.Result = WinFormsShims.DialogResult.Cancel;
+            form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            form.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+
+            _stubMessageBoxHost.Messages.Should().ContainSingle();
+            form.IsVisible.Should().BeTrue();
+            editor.SelectionLength.Should().Be(4);
+
+            _stubMessageBoxHost.Result = WinFormsShims.DialogResult.No;
+            form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            _stubMessageBoxHost.Messages.Should().HaveCount(2);
+            form.IsVisible.Should().BeFalse();
+            form.DialogResult.Should().Be(WinFormsShims.DialogResult.Cancel);
+            File.ReadAllText(filePath, _commands.Module.FilesEncoding).Should().Be("initial text");
+        }
+        finally
+        {
+            if (form.IsVisible)
+            {
+                _stubMessageBoxHost.Result = WinFormsShims.DialogResult.No;
+                form.Close();
+            }
+        }
     }
 
     [AvaloniaTest]
