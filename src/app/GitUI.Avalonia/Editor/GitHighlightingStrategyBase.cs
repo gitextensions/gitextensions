@@ -2,8 +2,10 @@ using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
 using GitUI.Theming;
+using DrawingColor = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor;
@@ -13,9 +15,12 @@ internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransfor
     // Avalonia resolves the original system role through the shared theme resources.
     protected static MediaColor ColorNormal => GetSystemColor(System.Drawing.KnownColor.WindowText);
 
-    private static MediaColor ColorComment { get; } = Colors.DarkGreen;
+    private static DrawingColor ColorComment { get; } = DrawingColor.DarkGreen;
 
     private readonly char _commentChar;
+
+    // AvaloniaEdit's native Git transformer carries the source strategy's theme wrapper choice.
+    private readonly bool _useSystemVisualStyle = ThemeModule.Settings.UseSystemVisualStyle;
 
     protected GitHighlightingStrategyBase(string name, IGitModule module)
     {
@@ -45,7 +50,10 @@ internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransfor
     {
         if (IsComment(document, line))
         {
-            SetStyle(line.Offset, line.EndOffset, ColorComment);
+            DrawingColor color = _useSystemVisualStyle
+                ? ColorComment
+                : ColorComment.AdaptForeColor(AppColor.EditorBackground.GetThemeColor());
+            SetStyle(line.Offset, line.EndOffset, AvaloniaThemeResources.ToMediaColor(color));
             return true;
         }
 

@@ -24385,13 +24385,17 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-11-21",
+          "commit": "82210310c20fec7e749718720f9338a307d83bbb",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Headless FileViewer tests exercise system-style and theme-adapted Git comment colors through both concrete highlighters in the default dark theme. Native appearance and remaining theme combinations are pending."
         },
         "behavioralState": {
           "status": "unverified",

@@ -1118,6 +1118,56 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", false)]
+    [TestCase("COMMIT_EDITMSG", true)]
+    [TestCase("git-rebase-todo", false)]
+    [TestCase("git-rebase-todo", true)]
+    public async Task Git_comment_foreground_should_follow_the_original_system_style_choice(string fileName, bool useSystemVisualStyle)
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+            ApplyTheme(ThemeId.DefaultDark);
+            ThemeModule.Settings.UseSystemVisualStyle.Should().Be(useSystemVisualStyle);
+            System.Drawing.Color sourceColor = System.Drawing.Color.DarkGreen;
+            System.Drawing.Color editorBackground = AppColor.EditorBackground.GetThemeColor();
+            Color adapted = AvaloniaThemeResources.ToMediaColor(sourceColor.AdaptForeColor(editorBackground));
+            adapted.Should().NotBe(Colors.DarkGreen);
+
+            _module.SetSetting("core.commentchar", "#");
+            window.Show();
+            await viewer.ViewTextAsync(fileName, "  # Git comment");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Color actual = textView.VisualLines.First().Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            actual.Should().Be(useSystemVisualStyle ? Colors.DarkGreen : adapted);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId);
+        }
+
+        void ApplyTheme(ThemeId theme)
+        {
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase("COMMIT_EDITMSG", "Summarize the change", "#000000", "#F0F0F0")]
     [TestCase("git-rebase-todo", "pick 89abcdef Summarize the change", "#000000", "#BEBEBE")]
     [TestCase("git-rebase-todo", "x deadbeef example", "#6D6D6D", "#969696")]
