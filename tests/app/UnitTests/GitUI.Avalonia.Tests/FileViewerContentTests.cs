@@ -548,6 +548,108 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_consume_replace_hotkey_in_the_focused_editor(bool readOnly)
+    {
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            await viewer.ViewTextAsync("replace.txt", "first\nsecond");
+            viewer.IsReadOnly = readOnly;
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            int editorKeys = 0;
+            viewer.TextEditor.TextArea.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.H)
+                {
+                    editorKeys++;
+                }
+            }, RoutingStrategies.Tunnel);
+
+            owner.KeyPress(Key.H, RawInputModifiers.Control, PhysicalKey.H, keySymbol: null);
+            owner.KeyRelease(Key.H, RawInputModifiers.Control, PhysicalKey.H, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            editorKeys.Should().Be(0);
+            viewer.GetTestAccessor().IsFindAndReplaceFormCreated.Should().Be(!readOnly);
+            if (!readOnly)
+            {
+                viewer.GetTestAccessor().FindAndReplaceForm.IsVisible.Should().BeTrue();
+            }
+        }
+        finally
+        {
+            if (viewer.GetTestAccessor().IsFindAndReplaceFormCreated)
+            {
+                viewer.GetTestAccessor().FindAndReplaceForm.Close();
+            }
+
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(true, true)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    public async Task FileViewer_should_follow_menu_availability_for_the_go_to_line_hotkey(bool enabled, bool visible)
+    {
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            await viewer.ViewTextAsync("lines.txt", "first\nsecond\nthird");
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>("goToLineToolStripMenuItem")!;
+            action.IsEnabled = enabled;
+            action.IsVisible = visible;
+
+            int editorKeys = 0;
+            viewer.TextEditor.TextArea.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.G)
+                {
+                    editorKeys++;
+                }
+            }, RoutingStrategies.Tunnel);
+
+            int opened = 0;
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+            {
+                if (window is FormGoToLine dialog)
+                {
+                    dialog.Opened += (_, _) =>
+                    {
+                        opened++;
+                        dialog.FindControl<NumericUpDown>("_NO_TRANSLATE_LineNumberUpDown")!.Value = 2;
+                        Button accept = dialog.FindControl<Button>("okBtn")!;
+                        Dispatcher.UIThread.Post(() => accept.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
+                    };
+                }
+            });
+
+            owner.KeyPress(Key.G, RawInputModifiers.Control, PhysicalKey.G, keySymbol: null);
+            owner.KeyRelease(Key.G, RawInputModifiers.Control, PhysicalKey.G, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            bool available = enabled && visible;
+            editorKeys.Should().Be(available ? 0 : 1);
+            opened.Should().Be(available ? 1 : 0);
+            viewer.CurrentFileLine.Should().Be(available ? 2 : 1);
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
     {
         using FormEditor editor = new(_commands, fileName: null, showWarning: false);

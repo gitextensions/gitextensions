@@ -2093,12 +2093,11 @@ public partial class FileViewer : GitModuleControl
                 Find(replace: false);
                 break;
             case Command.Replace:
-                if (TextEditor.IsReadOnly)
+                if (!IsReadOnly)
                 {
-                    return false;
+                    Find(replace: true);
                 }
 
-                Find(replace: true);
                 break;
             case Command.FindNextOrOpenWithDifftool:
                 internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true));
@@ -2107,8 +2106,7 @@ public partial class FileViewer : GitModuleControl
                 internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false));
                 break;
             case Command.GoToLine:
-                goToLineToolStripMenuItem_Click(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(goToLineToolStripMenuItem);
             case Command.IncreaseNumberOfVisibleLines:
                 if (!increaseNumberOfLines.IsVisible || !increaseNumberOfLines.IsEnabled)
                 {
@@ -2195,12 +2193,12 @@ public partial class FileViewer : GitModuleControl
 
         return true;
 
-        static bool PerformClickIfAvailable(Button item)
+        static bool PerformClickIfAvailable(Control item)
         {
             if (item.IsEnabled && item.IsVisible)
             {
-                // Avalonia uses local visibility and the native routed Click for toolbar availability and activation.
-                item.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                // Avalonia uses local visibility and the native routed Click for menu and toolbar availability.
+                item.RaiseEvent(new RoutedEventArgs(item is MenuItem ? MenuItem.ClickEvent : Button.ClickEvent));
                 return true;
             }
 
