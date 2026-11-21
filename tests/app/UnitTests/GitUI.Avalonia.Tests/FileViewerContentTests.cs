@@ -30,6 +30,7 @@ using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
+using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -727,6 +728,67 @@ public sealed class FileViewerContentTests
             clicks.Should().Be(1);
             notifications.Should().Be(1);
             viewer.GetExtraDiffArguments().ToString().Should().NotBe(originalArguments);
+        }
+        finally
+        {
+            owner.Close();
+        }
+
+        void PressShortcut()
+        {
+            owner.KeyPress(key, modifiers, physicalKey, keySymbol: null);
+            owner.KeyRelease(key, modifiers, physicalKey, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("showSyntaxHighlightingToolStripMenuItem", Key.X, PhysicalKey.X, RawInputModifiers.None, false)]
+    [TestCase("showDifftasticToolStripMenuItem", Key.T, PhysicalKey.T, RawInputModifiers.Control, false)]
+    [TestCase("treatAllFilesAsTextToolStripMenuItem", Key.B, PhysicalKey.B, RawInputModifiers.Control, true)]
+    public async Task FileViewer_display_shortcut_should_invoke_the_available_context_menu_action(
+        string menuItemName, Key key, PhysicalKey physicalKey, RawInputModifiers modifiers, bool configureTreatAsText)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        AppSettings.SerializedHotkeys = string.Empty;
+        if (configureTreatAsText)
+        {
+            HotkeyCommand command = new((int)FileViewer.Command.TreatFileAsText, nameof(FileViewer.Command.TreatFileAsText))
+            {
+                KeyData = GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.B,
+            };
+            new HotkeySettingsManager().SaveSettings([new HotkeySettings(FileViewer.HotkeySettingsName, command)]);
+        }
+
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(timeout.Token);
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>(menuItemName)!;
+            action.IsVisible.Should().BeTrue();
+            bool initialChecked = action.IsChecked;
+            int clicks = 0;
+            int notifications = 0;
+            action.Click += (_, _) => clicks++;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+
+            action.IsEnabled = false;
+            PressShortcut();
+            clicks.Should().Be(0);
+            notifications.Should().Be(0);
+            action.IsChecked.Should().Be(initialChecked);
+
+            action.IsEnabled = true;
+            PressShortcut();
+            clicks.Should().Be(1);
+            notifications.Should().Be(1);
+            action.IsChecked.Should().Be(!initialChecked);
         }
         finally
         {

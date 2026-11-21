@@ -2114,31 +2114,13 @@ public partial class FileViewer : GitModuleControl
             case Command.ShowEntireFile:
                 return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
             case Command.ShowSyntaxHighlighting:
-                if (!showSyntaxHighlightingToolStripMenuItem.IsVisible)
-                {
-                    return false;
-                }
-
-                ShowSyntaxHighlighting_Click(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
             case Command.ShowGitWordColoring:
                 return PerformClickIfAvailable(showGitWordColoringToolStripMenuItem);
             case Command.ShowDifftastic:
-                if (!showDifftasticToolStripMenuItem.IsVisible || !showDifftasticToolStripMenuItem.IsEnabled)
-                {
-                    return false;
-                }
-
-                ToggleDifftasticToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(showDifftasticToolStripMenuItem);
             case Command.TreatFileAsText:
-                if (!treatAllFilesAsTextToolStripMenuItem.IsVisible)
-                {
-                    return false;
-                }
-
-                TreatAllFilesAsTextToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
             case Command.NextChange:
                 return PerformClickIfAvailable(nextChangeButton);
             case Command.PreviousChange:
