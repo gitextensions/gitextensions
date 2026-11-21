@@ -1,11 +1,14 @@
-﻿using Avalonia.Media;
-using AvaloniaEdit.Document;
+﻿using AvaloniaEdit.Document;
 using GitExtensions.Extensibility.Git;
+using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor;
 
 internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrategyBase
 {
+    // Avalonia passes the original summary color and font weight separately to the text run.
+    private static (MediaColor Color, bool Bold) ColorSummary => (ColorNormal, true);
+
     private const int MaxSummaryLength = 50;
     private const int MaxDescriptionLength = 80;
 
@@ -68,7 +71,8 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
         }
 
         (int summaryLineNumber, _, _) = Classify(document);
-        SetStyle(line.Offset, line.EndOffset, ColorNormal, bold: line.LineNumber == summaryLineNumber);
+        (MediaColor color, bool bold) = line.LineNumber == summaryLineNumber ? ColorSummary : (ColorNormal, false);
+        SetStyle(line.Offset, line.EndOffset, color, bold);
     }
 
     private (int SummaryLineNumber, bool SeenDividingSpace, int DescriptionStartLineNumber) Classify(TextDocument document)
@@ -98,10 +102,13 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
                     break;
                 }
             }
-            else if (!IsEmptyOrWhiteSpace(document, line) && !IsComment(document, line))
+            else if (descriptionStartLineNumber != -1)
             {
-                descriptionStartLineNumber = line.LineNumber;
-                break;
+                if (!IsEmptyOrWhiteSpace(document, line) && !IsComment(document, line))
+                {
+                    descriptionStartLineNumber = line.LineNumber;
+                    break;
+                }
             }
         }
 

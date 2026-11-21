@@ -990,6 +990,44 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_follow_the_original_commit_message_description_marker_rule(bool hasBlankSeparator)
+    {
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 600, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            const string summary = "Short summary";
+            string description = new('a', 81);
+            string separator = hasBlankSeparator ? "\n\n" : "\n";
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", summary + separator + description);
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            CommitMessageHighlightingStrategy strategy = textView.LineTransformers.OfType<CommitMessageHighlightingStrategy>().Single();
+            textView.VisualLines.First().Elements.First().TextRunProperties.Typeface.Weight.Should().Be(FontWeight.Bold);
+
+            if (hasBlankSeparator)
+            {
+                strategy.ValidationMarkers.Should().BeEmpty();
+            }
+            else
+            {
+                int descriptionOffset = summary.Length + separator.Length;
+                strategy.ValidationMarkers.Should().Equal(
+                    new CommitMessageValidationMarker(descriptionOffset, description.Length, "There must be a blank line after the summary."),
+                    new CommitMessageValidationMarker(descriptionOffset + 80, 1, "Line is too long."));
+            }
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase("COMMIT_EDITMSG", "Summarize the change", "#000000", "#F0F0F0")]
     [TestCase("git-rebase-todo", "pick 89abcdef Summarize the change", "#000000", "#BEBEBE")]
     [TestCase("git-rebase-todo", "x deadbeef example", "#6D6D6D", "#969696")]

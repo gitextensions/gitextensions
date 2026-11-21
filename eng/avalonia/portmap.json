@@ -3374,7 +3374,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/CommitMessageHighlightingStrategy.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "AvaloniaEdit colorizer preserves comment-character discovery, bold summary rendering, 50/80-column validation, missing-spacer detection, red wave markers, and the original TODO/marker-lifecycle rationale. The 15 visible member/comment-anchor findings are the required DocumentColorizingTransformer and native validation-marker representation."
+    "notes": "AvaloniaEdit colorizer preserves comment-character discovery, bold summary rendering, 50/80-column validation, missing-spacer detection, red wave markers, and the original TODO/marker-lifecycle rationale. The 15 visible member/comment-anchor findings are the required DocumentColorizingTransformer and native validation-marker representation. The source description classification reports description markers when the summary divider is missing. The named ColorSummary property supplies the WindowText role and bold weight through the native text-run API."
   },
   "src/app/GitUI/Editor/Diff/AnsiEscapeUtilities.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/AnsiEscapeUtilities.cs",
