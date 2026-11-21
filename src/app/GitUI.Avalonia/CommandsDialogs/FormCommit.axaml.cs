@@ -27,6 +27,7 @@ using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ContextMenuStrip = GitUI.Compat.WinFormsControls.ContextMenuStrip;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -158,7 +159,7 @@ public sealed partial class FormCommit : GitModuleForm
     private bool _initialized;
     private IReadOnlyList<GitItemStatus>? _currentSelection;
     private int _alreadyLoadedTemplatesCount = -1;
-    private EventHandler? _branchNameLabelOnClick;
+    private EventHandler<RoutedEventArgs>? _branchNameLabelOnClick;
     private MenuItem? _conventionalCommitItem;
 
     /// <summary>
@@ -292,8 +293,6 @@ public sealed partial class FormCommit : GitModuleForm
         commitTemplatesOverflowMenuItem.Click += (_, _) => commitTemplatesToolStripMenuItem.Flyout!.ShowAt(toolbarCommitOverflow);
         createBranchOverflowMenuItem.Click += createBranchToolStripButton_Click;
         toolbarCommit.SizeChanged += (_, _) => UpdateToolbarCommitOverflow();
-        _branchNameLabelOnClick = (_, _) => UICommands.StartRemotesDialog(this, preselectLocal: Module.GetSelectedBranch());
-        remoteNameLabel.Click += (_, _) => _branchNameLabelOnClick(remoteNameLabel, EventArgs.Empty);
         _commitMessageManagerOwner = new WinFormsShims.Control();
         _commitMessageManager = new CommitMessageManager(
             _commitMessageManagerOwner,
@@ -796,8 +795,31 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         await this.SwitchToMainThreadAsync();
-        branchNameLabel.Text = string.IsNullOrEmpty(pushTo) ? currentBranchName : $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
+
+        // Avalonia updates the routed click subscription on the window's UI thread.
+        if (_branchNameLabelOnClick is not null)
+        {
+            remoteNameLabel.Click -= _branchNameLabelOnClick;
+            _branchNameLabelOnClick = null;
+        }
+
+        if (currentBranch is null)
+        {
+            branchNameLabel.Text = currentBranchName;
+            remoteNameLabel.Content = string.Empty;
+            return;
+        }
+
+        branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
         remoteNameLabel.Content = pushTo;
+
+        _branchNameLabelOnClick = (_, _) => this.InvokeAndForget(async () =>
+        {
+            UICommands.StartRemotesDialog(this, null, currentBranchName);
+            await TaskScheduler.Default;
+            await UpdateBranchNameDisplayAsync();
+        });
+        remoteNameLabel.Click += _branchNameLabelOnClick;
         Title = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
     }
 

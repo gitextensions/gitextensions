@@ -809,6 +809,96 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_keep_the_existing_title_when_HEAD_becomes_detached()
+    {
+        GitModule module = CreateCleanRepository();
+        GitUICommands commands = new(_serviceContainer, module);
+        FormCommit form = new(commands);
+        try
+        {
+            form.Show();
+            TextBlock branch = form.FindControl<TextBlock>("branchNameLabel")!;
+            HyperlinkButton remote = form.FindControl<HyperlinkButton>("remoteNameLabel")!;
+            await WaitUntilAsync(() => branch.Text?.EndsWith("\u2192", StringComparison.Ordinal) == true);
+            string? trackedTitle = form.Title;
+            trackedTitle.Should().Contain(module.GetSelectedBranch());
+            (remote.Content as string).Should().NotBeNullOrEmpty();
+
+            commands.DoActionOnRepo(() =>
+            {
+                module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "--detach", "HEAD" });
+                return true;
+            }).Should().BeTrue();
+
+            string detachedName = module.GetSelectedBranch();
+            await WaitUntilAsync(() => branch.Text == detachedName && Equals(remote.Content, string.Empty));
+            form.Title.Should().Be(trackedTitle);
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_refresh_the_remote_label_after_the_remotes_dialog()
+    {
+        GitModule module = CreateCleanRepository();
+        string currentBranch = module.GetSelectedBranch();
+        string remoteDirectory = Path.Combine(_workingDirectory, "remote");
+        Directory.CreateDirectory(remoteDirectory);
+        module.AddRemote("origin", remoteDirectory).Should().BeEmpty();
+        GitUICommands commands = new(_serviceContainer, module);
+        FormCommit form = new(commands);
+        try
+        {
+            form.Show();
+            HyperlinkButton remote = form.FindControl<HyperlinkButton>("remoteNameLabel")!;
+            await WaitUntilAsync(() => (remote.Content as string)?.StartsWith($"origin/{currentBranch}", StringComparison.Ordinal) == true);
+
+            string? preselectedBranch = null;
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+            {
+                if (window is FormRemotes dialog)
+                {
+                    dialog.Opened += (_, _) =>
+                    {
+                        preselectedBranch = dialog.PreselectLocalOnLoad;
+                        module.SetSetting($"branch.{currentBranch}.remote", "origin");
+                        module.SetSetting($"branch.{currentBranch}.merge", "refs/heads/integration");
+                        Dispatcher.UIThread.Post(dialog.Close);
+                    };
+                }
+            });
+
+            commands.RepoChangedNotifier.Lock();
+            try
+            {
+                form.UpdateLayout();
+                Point point = remote.TranslatePoint(new Point(remote.Bounds.Width / 2, remote.Bounds.Height / 2), form)!.Value;
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+
+                await WaitUntilAsync(() => preselectedBranch is not null);
+                preselectedBranch.Should().Be(currentBranch);
+                await WaitUntilAsync(() => Equals(remote.Content, "origin/integration"),
+                    () => "closing the remotes dialog refreshes the label while notification is deferred");
+            }
+            finally
+            {
+                commands.RepoChangedNotifier.UnLock(requestNotify: false);
+            }
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_apply_the_original_message_from_the_history_flyout()
     {
         const string previous = "  Restored subject  \n\n  body \t  ";
