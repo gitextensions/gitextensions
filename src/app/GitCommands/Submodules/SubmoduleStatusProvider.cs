@@ -275,9 +275,37 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
     private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = Commands.GetSelectedBranch(_executorProvider.GetExecutor(path));
-        string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
+        IGitExecutor executor = _executorProvider.GetExecutor(path);
+        string branch = Commands.GetSelectedBranch(executor);
+        string text = DetachedHeadParser.IsDetachedHead(branch)
+            ? GetDetachedHeadDescription() ?? noBranchText
+            : branch;
         return $"({text})";
+
+        // Describes a detached HEAD by the first tag or branch pointing at it, or by the abbreviated commit id if there is no such tag.
+        string? GetDetachedHeadDescription()
+        {
+            try
+            {
+                if (executor.GitExecutable.GetFirstTagPointingAtHead() is string tag)
+                {
+                    return tag;
+                }
+
+                if (executor.GitExecutable.GetFirstBranchPointingAtHead() is string branchAtHead)
+                {
+                    return branchAtHead;
+                }
+
+                ObjectId currentCheckout = executor.GitExecutable.GetCurrentCheckout();
+                return currentCheckout.IsZero ? null : currentCheckout.ToShortString();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Failed to describe detached HEAD of '{path}': {ex.Message}");
+                return null;
+            }
+        }
     }
 
     /// <summary>
