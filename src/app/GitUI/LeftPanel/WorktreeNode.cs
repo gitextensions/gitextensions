@@ -57,7 +57,7 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
     {
         base.ApplyStyle();
 
-        if (Worktree.IsDeleted)
+        if (Worktree.IsDeleted || Worktree.IsPrunable)
         {
             TreeViewNode.ForeColor = SystemColors.GrayText;
         }
@@ -79,9 +79,21 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
                 : Worktree.HeadType is GitWorktreeHeadType.Detached ? $"detached at {shortSha}"
                 : Worktree.Branch ?? "unknown";
 
-            return shortSha is not null
+            string toolTip = shortSha is not null
                 ? $"{Worktree.Path}{status}\nBranch: {branchLine}\nHEAD: {shortSha}"
                 : $"{Worktree.Path}{status}\nBranch: {branchLine}";
+
+            if (Worktree.IsLocked)
+            {
+                toolTip += Worktree.LockReason is not null ? $"\nLocked: {Worktree.LockReason}" : "\nLocked";
+            }
+
+            if (Worktree.IsPrunable)
+            {
+                toolTip += $"\nPrunable: {Worktree.PrunableReason}";
+            }
+
+            return toolTip;
         }
     }
 

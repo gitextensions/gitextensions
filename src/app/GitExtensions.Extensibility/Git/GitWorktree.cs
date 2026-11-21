@@ -33,6 +33,27 @@ public sealed record GitWorktree(
     public bool IsMain { get; init; }
 
     /// <summary>
+    /// <see langword="true"/> if the worktree is locked by <c>git worktree lock</c>, which keeps
+    /// <c>git worktree prune</c> and <c>git worktree remove</c> from removing it.
+    /// </summary>
+    public bool IsLocked { get; init; }
+
+    /// <summary>
+    /// The reason given to <c>git worktree lock --reason</c>, or <see langword="null"/> if none was given.
+    /// </summary>
+    public string? LockReason { get; init; }
+
+    /// <summary>
+    /// <see langword="true"/> if <c>git worktree prune</c> would remove the worktree, e.g. because its directory is missing.
+    /// </summary>
+    public bool IsPrunable { get; init; }
+
+    /// <summary>
+    /// Why git considers the worktree prunable, or <see langword="null"/> if it is not.
+    /// </summary>
+    public string? PrunableReason { get; init; }
+
+    /// <summary>
     /// Formats a display name by combining <paramref name="name"/> with the branch, detached HEAD, or bare status.
     /// </summary>
     /// <param name="name">The name portion to display (e.g. directory name or relative path).</param>
