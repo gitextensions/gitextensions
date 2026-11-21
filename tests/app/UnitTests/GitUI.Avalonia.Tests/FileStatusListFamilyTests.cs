@@ -1230,6 +1230,53 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FileStatusList_should_place_commit_search_above_the_filename_filter(bool showSearch)
+    {
+        bool originalShowSearch = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = showSearch;
+        using FileStatusList control = new() { CanUseFindInCommitFilesGitGrep = true, GroupByRevision = false };
+        Window window = new() { Width = 560, Height = 300, Content = control };
+        try
+        {
+            window.Show();
+            GitItemStatus item = new("sample.txt") { IsTracked = true, IsChanged = true };
+            control.Bind(static () => { }, isFileTreeMode: true);
+            control.SetDiffs(firstRev: null, new GitRevision(ObjectId.Random()), [item]);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            Control splitter = control.FindControl<Control>("lblSplitter")!;
+            Control search = control.FindControl<Control>("cboFindInCommitFilesGitGrep")!;
+            Control filter = control.FindControl<Control>("cboFilterComboBox")!;
+            Control files = control.FindControl<Control>("tvFiles")!;
+            search.IsEffectivelyVisible.Should().Be(showSearch);
+            filter.IsEffectivelyVisible.Should().BeTrue();
+            files.IsEffectivelyVisible.Should().BeTrue();
+            Position(files).Should().BeGreaterThanOrEqualTo(Position(filter) + filter.Bounds.Height);
+
+            if (showSearch)
+            {
+                Position(search).Should().BeApproximately(Position(splitter) + splitter.Bounds.Height, 1);
+                Position(filter).Should().BeGreaterThanOrEqualTo(Position(search) + search.Bounds.Height);
+            }
+            else
+            {
+                Position(filter).Should().BeApproximately(Position(splitter) + splitter.Bounds.Height, 1);
+            }
+        }
+        finally
+        {
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = originalShowSearch;
+            window.Close();
+        }
+
+        double Position(Control child) => child.TranslatePoint(default, control)!.Value.Y;
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_restore_refresh_settings_and_file_tree_toolbar_boundaries()
     {
         using FileStatusList control = new();
