@@ -2364,7 +2364,7 @@ public partial class FileViewer : GitModuleControl
 
         await InvokeOnOwnerMainThreadAsync(() =>
         {
-            ResetView(ViewMode.Text, fileName, item, openWithDifftool, text);
+            ResetView(ViewMode.Text, fileName, item, openWithDifftool);
             if (isBinary)
             {
                 try
@@ -2382,10 +2382,7 @@ public partial class FileViewer : GitModuleControl
             {
                 string parsedText = text;
                 PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
-                if (!SetDiffText(parsedText, highlightService, showLeftColumn: true))
-                {
-                    internalFileViewer.GoToFirstChange(NumberOfContextLines);
-                }
+                SetDiffText(parsedText, highlightService, showLeftColumn: true);
             }
             else
             {

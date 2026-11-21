@@ -1925,6 +1925,61 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_keep_file_open_and_explicit_patch_navigation_distinct(bool explicitPatch)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 450, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            const string fileName = "review.patch";
+            string context = string.Concat(Enumerable.Range(1, 35).Select(line => $" context {line}\n"));
+            string patch = "diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,36 +1,36 @@\n"
+                + context + "-before\n+after\n";
+            File.WriteAllText(Path.Combine(_workingDirectory, fileName), patch);
+            if (explicitPatch)
+            {
+                await viewer.ViewFixedPatchAsync(fileName, patch);
+            }
+            else
+            {
+                await viewer.ViewFileAsync(fileName);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            viewer.GetText().Should().Contain("+after");
+            viewer.SupportLinePatching.Should().Be(explicitPatch);
+            viewer.FindControl<MenuItem>("resetSelectedLinesToolStripMenuItem")!.IsVisible.Should().Be(explicitPatch);
+
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            if (explicitPatch)
+            {
+                viewer.TextEditor.TextArea.Caret.Line.Should().BeGreaterThan(1);
+                textView.ScrollOffset.Y.Should().BeGreaterThan(0);
+            }
+            else
+            {
+                viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+                textView.ScrollOffset.Y.Should().Be(0);
+            }
+        }
+        finally
+        {
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileViewer_should_scroll_to_a_first_change_below_the_measured_viewport()
     {
         FileViewer viewer = new();
