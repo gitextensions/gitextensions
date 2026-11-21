@@ -1277,6 +1277,181 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public void FileStatusList_should_focus_commit_search_only_when_a_list_child_is_active(bool visitList, bool leaveList)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
+        using FileStatusList control = new() { CanUseFindInCommitFilesGitGrep = true, GroupByRevision = false };
+        TextBox other = new();
+        Grid host = new() { RowDefinitions = new RowDefinitions("Auto,*") };
+        Grid.SetRow(control, 1);
+        host.Children.Add(other);
+        host.Children.Add(control);
+        Window window = new() { Width = 560, Height = 300, Content = host };
+        try
+        {
+            window.Show();
+            other.Focus().Should().BeTrue();
+            control.Bind(static () => { }, isFileTreeMode: true);
+            control.SetDiffs(firstRev: null, new GitRevision(ObjectId.Random()), [new GitItemStatus("sample.txt") { IsTracked = true, IsChanged = true }]);
+            window.UpdateLayout();
+
+            if (visitList)
+            {
+                control.Focus();
+                control.IsKeyboardFocusWithin.Should().BeTrue();
+            }
+
+            if (leaveList)
+            {
+                other.Focus().Should().BeTrue();
+            }
+
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = true;
+            control.Bind(static () => { }, isFileTreeMode: true);
+            window.UpdateLayout();
+
+            control.FindInCommitFilesGitGrepVisible.Should().BeTrue();
+            control.FindInCommitFilesGitGrepFocused.Should().Be(visitList && !leaveList);
+            other.IsKeyboardFocusWithin.Should().Be(!visitList || leaveList);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_focus_commit_search_enabled_from_its_file_context_menu()
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
+        using FileStatusList control = new() { CanUseFindInCommitFilesGitGrep = true, GroupByRevision = false };
+        Window window = new() { Width = 650, Height = 400, Content = control };
+        TreeView files = control.FindControl<TreeView>("tvFiles")!;
+        ContextMenu menu = files.ContextMenu!;
+        try
+        {
+            window.Show();
+            control.Bind(static () => { }, isFileTreeMode: true);
+            GitItemStatus item = new("sample.txt") { IsTracked = true, IsChanged = true };
+            control.SetDiffs(firstRev: null, new GitRevision(ObjectId.Random()), [item]);
+            control.SelectFileOrFolder(RelativePath.From(item.Name)).Should().BeTrue();
+            control.Focus();
+            window.UpdateLayout();
+            control.IsKeyboardFocusWithin.Should().BeTrue();
+
+            ClickSearchToggle();
+            control.FindInCommitFilesGitGrepVisible.Should().BeTrue();
+            control.FindInCommitFilesGitGrepFocused.Should().BeTrue();
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeTrue();
+
+            ClickSearchToggle();
+            control.FindInCommitFilesGitGrepVisible.Should().BeFalse();
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeFalse();
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+        }
+
+        return;
+
+        void ClickSearchToggle()
+        {
+            TreeViewItem row = files.GetVisualDescendants().OfType<TreeViewItem>().Single();
+            Control header = row.GetVisualDescendants().OfType<Control>().First(child => child.Name == "PART_HeaderPresenter");
+            RightClick(window, header);
+            menu.IsOpen.Should().BeTrue();
+            MenuItem toggle = control.FindControl<MenuItem>("tsmiShowFindInCommitFilesGitGrep")!;
+            toggle.IsEffectivelyVisible.Should().BeTrue();
+            TopLevel popup = TopLevel.GetTopLevel(toggle)!;
+            Point point = toggle.TranslatePoint(new Point(toggle.Bounds.Width / 2, toggle.Bounds.Height / 2), popup)!.Value;
+            popup.MouseMove(point, RawInputModifiers.None);
+            popup.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            popup.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            menu.IsOpen.Should().BeFalse();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileStatusList_should_restore_the_filename_filter_while_loading_an_empty_file_tree(bool showSearch)
+    {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        using GitExtensionsTests.JoinableTaskContextTestScope context = new();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = showSearch;
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus item = new("sample.txt") { IsTracked = true };
+        using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
+        using ManualResetEventSlim releaseFiles = new();
+        TaskCompletionSource started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.IsValidGitWorkingDir().Returns(true);
+        module.GetTreeFiles(revision.ObjectId, full: true, Arg.Any<CancellationToken>()).Returns(_ =>
+        {
+            started.TrySetResult();
+            releaseFiles.Wait(deadline.Token);
+            return [item];
+        });
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        using FileStatusList control = new() { CanUseFindInCommitFilesGitGrep = true, UICommandsSource = source };
+        Window window = new() { Width = 560, Height = 300, Content = control };
+        try
+        {
+            window.Show();
+            control.Bind(static () => { }, isFileTreeMode: true);
+            window.UpdateLayout();
+
+            Control filenameFilter = control.FindControl<Control>("cboFilterComboBox")!;
+            Control search = control.FindControl<Control>("cboFindInCommitFilesGitGrep")!;
+            Control noFiles = control.FindControl<Control>("NoFiles")!;
+            Control loading = control.FindControl<Control>("LoadingFiles")!;
+            filenameFilter.IsEffectivelyVisible.Should().BeFalse();
+            noFiles.IsEffectivelyVisible.Should().BeTrue();
+
+            Task load = control.SetDiffsAsync([revision], revision.ObjectId, deadline.Token);
+            try
+            {
+                await started.Task.WaitAsync(deadline.Token);
+                window.UpdateLayout();
+                loading.IsEffectivelyVisible.Should().BeTrue();
+                search.IsEffectivelyVisible.Should().Be(showSearch);
+                noFiles.IsEffectivelyVisible.Should().BeFalse();
+                filenameFilter.IsEffectivelyVisible.Should().BeTrue();
+                double loadingTop = loading.TranslatePoint(default, control)!.Value.Y;
+                double filterBottom = filenameFilter.TranslatePoint(default, control)!.Value.Y + filenameFilter.Bounds.Height;
+                loadingTop.Should().BeGreaterThanOrEqualTo(filterBottom);
+            }
+            finally
+            {
+                releaseFiles.Set();
+                await load;
+            }
+
+            loading.IsEffectivelyVisible.Should().BeFalse();
+            filenameFilter.IsEffectivelyVisible.Should().BeTrue();
+            control.AllItems.Should().ContainSingle().Which.Item.Should().BeSameAs(item);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_restore_refresh_settings_and_file_tree_toolbar_boundaries()
     {
         using FileStatusList control = new();

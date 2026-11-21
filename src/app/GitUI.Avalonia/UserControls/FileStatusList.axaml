@@ -192,7 +192,7 @@
             <MenuItem x:Name="tsmiBlame" x:FieldModifier="internal" Header="_Blame" />
             <MenuItem x:Name="tsmiFindFile" Header="_Find file..." />
             <MenuItem x:Name="tsmiOpenFindInCommitFilesGitGrepDialog" Header="Find in _commit files using git-grep..." IsVisible="False" />
-            <MenuItem x:Name="tsmiShowFindInCommitFilesGitGrep" Header="Show 'Find in commit fi_les using git-grep'" IsVisible="False" />
+            <MenuItem x:Name="tsmiShowFindInCommitFilesGitGrep" Header="Show 'Find in commit fi_les using git-grep'" ToggleType="CheckBox" IsVisible="False" />
             <Separator x:Name="sepIgnore" />
             <MenuItem x:Name="tsmiAddFileToGitIgnore" Header="Add file to _.gitignore" />
             <MenuItem x:Name="tsmiAddFileToGitInfoExclude" Header="Add file to .git/info/exclude" />

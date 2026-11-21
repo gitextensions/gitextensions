@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extended;
@@ -1066,7 +1067,9 @@ partial class FileStatusList
     {
         bool visible = tsmiShowFindInCommitFilesGitGrep.IsChecked == true;
         AppSettings.ShowFindInCommitFilesGitGrep.Value = visible;
-        SetFindInCommitFilesGitGrepVisibility(visible);
+
+        // The native context menu returns keyboard focus to the list when its popup closes.
+        Dispatcher.UIThread.Post(() => SetFindInCommitFilesGitGrepVisibility(visible));
     }
 
     private void ShowInFileTree_Click(object sender, EventArgs e)

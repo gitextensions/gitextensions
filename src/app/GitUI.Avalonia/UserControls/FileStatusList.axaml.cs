@@ -533,10 +533,14 @@ public partial class FileStatusList : GitModuleControl
         _formFindInCommitFilesGitGrep?.SetShowFindInCommitFilesGitGrep(visible);
         FindInCommitFilesGitGrepPanel.IsVisible = visible;
 
-        // Focus the box if it is becoming shown, but not on init of parent controls (which broke the form's focus management)
         if (visible)
         {
-            cboFindInCommitFilesGitGrep.Focus();
+            // Focus the box if it is becoming shown, but not on init of parent controls (which broke the form's focus management)
+            // Avalonia uses its routed focus-within flag for the active child of this control.
+            if (IsKeyboardFocusWithin)
+            {
+                cboFindInCommitFilesGitGrep.Focus();
+            }
         }
         else if (_formFindInCommitFilesGitGrep?.IsVisible is not true && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text))
         {
@@ -1270,6 +1274,11 @@ public partial class FileStatusList : GitModuleControl
     private void FileStatusListLoading()
     {
         // Show "Files loading" below the filterbox
+
+        if (_isFileTreeMode)
+        {
+            SetFileStatusListVisibility(showNoFiles: false);
+        }
 
         NoFiles.IsVisible = false;
         LoadingFiles.IsVisible = true;
