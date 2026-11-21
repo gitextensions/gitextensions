@@ -999,6 +999,88 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_forward_key_release_with_the_source_text_area_as_sender()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", "first\nsecond");
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            List<(object? Sender, Key Key)> released = [];
+            editor.KeyUp += (sender, e) => released.Add((sender, e.Key));
+
+            window.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+            released.Should().BeEmpty();
+            window.KeyRelease(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            released.Should().ContainSingle();
+            released[0].Sender.Should().BeSameAs(viewer.TextEditor.TextArea);
+            released[0].Key.Should().Be(Key.F7);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public async Task FileViewer_should_raise_continuous_wheel_events_only_from_the_text_area(bool onScrollBar, bool atBottom)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.AutomaticContinuousScroll = false;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            ScrollViewer scrollViewer = textView.FindAncestorOfType<ScrollViewer>()!;
+            scrollViewer.ScrollBarMaximum.Y.Should().BePositive();
+            if (atBottom)
+            {
+                viewer.VScrollPosition = (int)Math.Ceiling(scrollViewer.ScrollBarMaximum.Y);
+                window.UpdateLayout();
+            }
+
+            scrollViewer.Offset.Y.Should().Be(atBottom ? scrollViewer.ScrollBarMaximum.Y : 0);
+            int topRequests = 0;
+            int bottomRequests = 0;
+            viewer.TopScrollReached += (_, _) => topRequests++;
+            viewer.BottomScrollReached += (_, _) => bottomRequests++;
+            Control target = onScrollBar
+                ? viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                    .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible)
+                : textView;
+            Point center = new(target.Bounds.Width / 2, target.Bounds.Height / 2);
+            Point point = target.TranslatePoint(center, window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            Visual hit = window.InputHitTest(point).Should().BeAssignableTo<Visual>().Which;
+            hit.GetSelfAndVisualAncestors().Should().Contain(target);
+
+            window.MouseWheel(point, new Vector(0, atBottom ? -1 : 1), RawInputModifiers.Alt);
+            Dispatcher.UIThread.RunJobs();
+
+            topRequests.Should().Be(!onScrollBar && !atBottom ? 1 : 0);
+            bottomRequests.Should().Be(!onScrollBar && atBottom ? 1 : 0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_forward_hover_only_from_the_source_text_area()
     {
         using FileViewer viewer = CreateViewer();

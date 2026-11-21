@@ -140,7 +140,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
             e.Handled = true;
         }, RoutingStrategies.Tunnel);
-        TextEditor.KeyUp += (sender, e) => KeyUp?.Invoke(sender, e);
+        TextEditor.TextArea.KeyUp += (s, e) => KeyUp?.Invoke(s, e);
 
         // Avalonia's routed double tap stays on the source text area, outside the scrollbar route.
         TextEditor.TextArea.DoubleTapped += (s, e) => DoubleClick?.Invoke(s, e);
@@ -150,7 +150,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             int y = (int)e.GetPosition(TextEditor.TextArea.TextView).Y;
             SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(GetLineFromVisualPosY(y)));
         }, RoutingStrategies.Tunnel);
-        TextEditor.PointerWheelChanged += TextArea_MouseWheel;
+
+        // AvaloniaEdit routes the wheel through TextArea before the enclosing ScrollViewer.
+        TextEditor.TextArea.PointerWheelChanged += TextArea_MouseWheel;
         AttachedToVisualTree += (_, _) => TextEditor.ContextMenu = ContextMenu;
         DetachedFromVisualTree += (_, _) =>
         {

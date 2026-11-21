@@ -23810,6 +23810,7 @@
           "verifiedOn": "2026-10-03",
           "commit": "a7cc57b0c52c939d8034c164cf78a4a63032d928",
           "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md",
             "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/inventory/windows/GitUI.Editor.FileViewerInternal.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/tests/linux/focused.trx",
@@ -23821,7 +23822,7 @@
             "linux"
           ],
           "findingCount": 52,
-          "note": "The restored internal owner now uses the original forward/backward change-navigation algorithms, translating only AvaloniaEdit's one-based caret to the zero-based diff map at the framework boundary. The 128-test focused Windows/Linux gate passes; 52 explicit source findings and exhaustive live behavior stay open. 2026-10-03 batch75: Main lower-pane diff gutter retains source caret invalidation, raw inactive-border disabled background and zero-digit header-only sizing. Semantic diff overlays remain source-driven. Eleven FileViewer tooltips retain source Designer defaults before visibility and the same translation keys. This is cross-owner127 consumer evidence, not Progress126 ownership expansion or complete editor parity. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "The restored internal owner now uses the original forward/backward change-navigation algorithms, translating only AvaloniaEdit's one-based caret to the zero-based diff map at the framework boundary. The 128-test focused Windows/Linux gate passes; 52 explicit source findings and exhaustive live behavior stay open. 2026-10-03 batch75: Main lower-pane diff gutter retains source caret invalidation, raw inactive-border disabled background and zero-digit header-only sizing. Semantic diff overlays remain source-driven. Eleven FileViewer tooltips retain source Designer defaults before visibility and the same translation keys. This is cross-owner127 consumer evidence, not Progress126 ownership expansion or complete editor parity. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. The headless KeyUp and Alt-wheel cases verify the native text-area sender and top/bottom navigation scope, including wheel input on the adjacent scrollbar. Native desktop wheel routing remains open."
         },
         "visual": {
           "status": "unverified",
