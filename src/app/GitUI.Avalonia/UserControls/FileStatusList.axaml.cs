@@ -2087,6 +2087,7 @@ public partial class FileStatusList : GitModuleControl
         _mouseEntered = false;
     }
 
+    private string _toolTipText = "";
     private Regex? _filter;
 
     /// <summary>
@@ -2115,7 +2116,6 @@ public partial class FileStatusList : GitModuleControl
     private void DeleteFilterButton_Click(object? sender, EventArgs e)
     {
         SetFilter(string.Empty);
-        cboFilterComboBox.Focus();
     }
 
     private int FilterFiles(string value)
@@ -2126,15 +2126,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         _filterTimer.Stop();
-        try
-        {
-            StoreFilter(value);
-        }
-        catch (ArgumentException exception)
-        {
-            SetFilterState(FilterState.Invalid, exception.Message);
-            return _gitItemFilteredStatuses.Count;
-        }
+        StoreFilter(value);
 
         // Feed back the current list of files
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
@@ -2164,7 +2156,8 @@ public partial class FileStatusList : GitModuleControl
         }
         catch (RegexMatchTimeoutException exception)
         {
-            SetFilterState(FilterState.Invalid, exception.Message);
+            _toolTipText = exception.Message;
+            SetFilterState(FilterState.Invalid, _toolTipText);
             return false;
         }
     }
@@ -2178,8 +2171,18 @@ public partial class FileStatusList : GitModuleControl
         void FilterTimer_Tick(object? sender, EventArgs e)
         {
             _filterTimer.Stop();
-            int fileCount = FilterFiles(cboFilterComboBox.Text ?? string.Empty);
+            _toolTipText = "";
             string filterText = cboFilterComboBox.Text ?? string.Empty;
+            int fileCount = 0;
+            try
+            {
+                fileCount = FilterFiles(filterText);
+            }
+            catch (ArgumentException exception)
+            {
+                _toolTipText = exception.Message;
+            }
+
             if (fileCount > 0 && filterText.Length > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
             {
                 AddToSelectionFilter(filterText);
@@ -2263,7 +2266,8 @@ public partial class FileStatusList : GitModuleControl
 
     private void FilterComboBox_MouseEnter(object? sender, EventArgs e)
     {
-        // Avalonia's ToolTip service retains the current validation text without assigning it again on pointer entry.
+        // Avalonia's attached tip is disabled by a null value.
+        ToolTip.SetTip(cboFilterComboBox, _toolTipText.Length == 0 ? null : _toolTipText);
     }
 
     private void FilterComboBox_SelectedIndexChanged(object? sender, EventArgs e)
@@ -2464,13 +2468,23 @@ public partial class FileStatusList : GitModuleControl
     private void StoreFilter(string value)
     {
         SetDeleteFilterButtonVisibility();
-        _filter = value.Length == 0
-            ? null
-            : new Regex(
-                value,
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
-                RegexTimeout);
-        SetFilterState(value.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
+        if (value.Length == 0)
+        {
+            SetFilterState(FilterState.Empty, toolTip: null);
+            _filter = null;
+            return;
+        }
+
+        try
+        {
+            _filter = new Regex(value, RegexOptions.IgnoreCase, RegexTimeout);
+            SetFilterState(FilterState.Valid, toolTip: null);
+        }
+        catch
+        {
+            SetFilterState(FilterState.Invalid, toolTip: null);
+            throw;
+        }
     }
 
     /// <summary>

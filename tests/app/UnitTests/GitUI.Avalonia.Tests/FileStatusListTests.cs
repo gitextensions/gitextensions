@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -174,9 +175,9 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
-    public void FileStatusList_should_filter_names_and_old_names_and_retain_results_for_invalid_regex()
+    public async Task FileStatusList_should_filter_names_and_old_names_and_retain_results_for_invalid_regex()
     {
-        FileStatusList control = new();
+        using FileStatusList control = new();
         GitItemStatus renamed = new("src/new-name.cs")
         {
             IsRenamed = true,
@@ -187,24 +188,127 @@ public sealed class FileStatusListTests
         GitItemStatus documentation = new("docs/readme.md") { IsChanged = true, IsTracked = true };
         GitItemStatus rangeDiff = new("range-diff") { IsRangeDiff = true };
         control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [renamed, documentation, rangeDiff]);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        ComboBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!;
+        Window window = new() { Width = 720, Height = 360, Content = control };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            control.SetFilter("old-name");
+            control.GitItemFilteredStatuses.Count.Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
+            control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
+            filter.Classes.Should().Contain("file-filter-active");
 
-        control.SetFilter("old-name");
-        control.GitItemFilteredStatuses.Count.Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
-        control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
-        accessor.FilterComboBox.Classes.Should().Contain("file-filter-active");
+            window.MouseMove(new Point(300, 220), RawInputModifiers.None);
+            TextBox editor = filter.GetVisualDescendants().OfType<TextBox>().Single(part => part.Name == "PART_EditableTextBox");
+            editor.Focus().Should().BeTrue();
+            editor.SelectAll();
+            window.KeyTextInput("[");
+            using CancellationTokenSource filterTimeout = new(TimeSpan.FromSeconds(5));
+            while (!filter.Classes.Contains("file-filter-invalid"))
+            {
+                await Task.Delay(10, filterTimeout.Token);
+                Dispatcher.UIThread.RunJobs();
+            }
 
-        control.SetFilter("[");
-        control.GitItemFilteredStatuses.Count.Should().Be(2, "an invalid expression keeps the last valid result");
-        control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
-        accessor.FilterComboBox.Classes.Should().Contain("file-filter-invalid");
-        ToolTip.GetTip(accessor.FilterComboBox).Should().BeOfType<string>().Which.Should().NotBeEmpty();
+            control.GitItemFilteredStatuses.Count.Should().Be(2, "an invalid expression keeps the last valid result");
+            control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
+            filter.Classes.Should().Contain("file-filter-invalid");
+            ToolTip.GetTip(filter).Should().BeNull();
+            Point filterPoint = filter.TranslatePoint(new Point(12, filter.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(filterPoint, RawInputModifiers.None);
+            ToolTip.GetTip(filter).Should().BeOfType<string>().Which.Should().NotBeEmpty();
 
-        control.SetFilter(string.Empty);
-        control.GitItemFilteredStatuses.Count.Should().Be(3);
-        control.GitItemFilteredStatuses.Should().Equal(documentation, renamed, rangeDiff);
-        accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
-        accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
+            control.SetFilter(string.Empty);
+            control.GitItemFilteredStatuses.Count.Should().Be(3);
+            control.GitItemFilteredStatuses.Should().Equal(documentation, renamed, rangeDiff);
+            filter.Classes.Should().NotContain("file-filter-active");
+            filter.Classes.Should().NotContain("file-filter-invalid");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_use_the_active_culture_for_filter_case_matching()
+    {
+        using FileStatusList control = new();
+        GitItemStatus lowercase = new("index.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus uppercase = new("INDEX.md") { IsChanged = true, IsTracked = true };
+        GitItemStatus dotted = new("İNDEX.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus dotless = new("ındex.log") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [lowercase, uppercase, dotted, dotless]);
+        CultureInfo originalCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
+            control.SetFilter(@"^index\.");
+
+            control.GitItemFilteredStatuses.Should().BeEquivalentTo([lowercase, dotted]);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = originalCulture;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_report_an_invalid_programmatic_filter_to_its_caller()
+    {
+        using FileStatusList control = new();
+        GitItemStatus matching = new("tracked.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus remaining = new("readme.md") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [matching, remaining]);
+        control.SetFilter(@"\.cs$");
+        Action applyInvalid = () => control.SetFilter("[");
+
+        applyInvalid.Should().Throw<ArgumentException>();
+        control.GitItemFilteredStatuses.Should().Equal(matching);
+        ComboBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!;
+        filter.Classes.Should().Contain("file-filter-invalid");
+        ToolTip.GetTip(filter).Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_clear_the_filter_without_taking_focus()
+    {
+        using FileStatusList control = new();
+        GitItemStatus matching = new("tracked.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus remaining = new("readme.md") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [matching, remaining]);
+        control.SetFilter(@"\.cs$");
+        Button outside = new() { Content = "Outside the file list" };
+        Grid content = new() { RowDefinitions = new RowDefinitions("Auto,*") };
+        content.Children.Add(outside);
+        content.Children.Add(control);
+        Grid.SetRow(control, 1);
+        Window window = new() { Width = 720, Height = 360, Content = content };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            outside.Focus().Should().BeTrue();
+            Button clearFilter = control.FindControl<Button>("DeleteFilterButton")!;
+            clearFilter.IsEffectivelyVisible.Should().BeTrue();
+            Point point = clearFilter.TranslatePoint(new Point(clearFilter.Bounds.Width / 2, clearFilter.Bounds.Height / 2), window)!.Value;
+
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            outside.IsFocused.Should().BeTrue();
+            clearFilter.IsVisible.Should().BeFalse();
+            control.GitItemFilteredStatuses.Should().BeEquivalentTo([matching, remaining]);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
