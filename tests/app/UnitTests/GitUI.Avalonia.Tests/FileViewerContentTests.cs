@@ -1089,6 +1089,89 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_show_commit_warning_tooltips_on_text_hover()
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Border outside = new() { Background = Brushes.Transparent, Height = 32 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 1100, Height = 342, Content = content };
+        try
+        {
+            window.Show();
+            string summary = new('s', 64);
+            string firstDescription = new('a', 89);
+            string secondDescription = new('b', 92);
+            string text = string.Join('\n', summary, firstDescription, "Context", "Details", "Examples", "Results", secondDescription);
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", text);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TaskCompletionSource firstHover = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            textView.PointerHover += (_, _) => firstHover.TrySetResult();
+
+            MoveTo(line: 1, column: 56);
+            await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 2, column: 83);
+            ToolTip.GetTip(textView).Should().Be("There must be a blank line after the summary.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 7, column: 85);
+            textView.IsPointerOver.Should().BeTrue(
+                "the overlength description must receive the pointer move");
+            ToolTip.GetTip(textView).Should().Be("Line is too long.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 7, column: 2);
+            ToolTip.GetTip(textView).Should().BeNull();
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            Point descriptionPoint = MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            window.MouseDown(descriptionPoint, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(descriptionPoint, MouseButton.Left, RawInputModifiers.None);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MoveTo(line: 7, column: 2);
+            MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            bool? tooltipOpenDuringEdit = null;
+            viewer.TextChanged += (_, _) => tooltipOpenDuringEdit = ToolTip.GetIsOpen(textView);
+            window.KeyTextInput("z");
+            viewer.TextEditor.Document.TextLength.Should().Be(text.Length + 1);
+            tooltipOpenDuringEdit.Should().Be(false);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            MoveTo(line: 7, column: 2);
+            MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            Point outsidePoint = outside.TranslatePoint(new Point(outside.Bounds.Width / 2, outside.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(outsidePoint, RawInputModifiers.None);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            Point MoveTo(int line, int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(line, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+                return windowPoint;
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_adapt_commit_message_warning_colors_when_the_source_creates_markers()
     {
         ThemeId originalThemeId = AppSettings.ThemeId;

@@ -22135,13 +22135,17 @@
           "note": "Headless FileViewer drawing exercises the original adapted warning colors for light and the dark colorblind variation. Markers retain their creation colors while their spans are reused. Native appearance and remaining themes are pending."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-11-21",
+          "commit": "0a3ffcbc72d8a664f5685ce4b101c469b3a2b12c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Headless FileViewer pointer input exercises the three commit warning messages, initial overlap precedence, active hover refresh, pointer press and printable input dismissal. Native appearance, pending hover during a held button and edited overlap order are pending."
         },
         "platform": {
           "status": "unverified",

@@ -99,6 +99,28 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.TextArea.PointerMoved += (sender, e) => MouseMove?.Invoke(sender, e);
         TextEditor.TextArea.PointerEntered += (sender, e) => MouseEnter?.Invoke(sender, e);
         TextEditor.TextArea.PointerExited += (sender, e) => MouseLeave?.Invoke(sender, e);
+
+        // AvaloniaEdit supplies the source editor's delayed hover event for validation markers.
+        TextView textView = TextEditor.TextArea.TextView;
+        textView.PointerHover += (_, e) => UpdateValidationToolTip(e);
+        textView.PointerMoved += (_, e) =>
+        {
+            if (ToolTip.GetIsOpen(textView))
+            {
+                UpdateValidationToolTip(e);
+            }
+        };
+        textView.PointerExited += (_, _) => ToolTip.SetTip(textView, null);
+
+        // AvaloniaEdit exposes printable text entry before the document changes.
+        TextEditor.TextArea.TextEntering += (_, e) =>
+        {
+            if (!TextEditor.IsReadOnly && e.Text?.Any(character => character >= ' ') == true)
+            {
+                ToolTip.SetTip(textView, null);
+            }
+        };
+
         TextEditor.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
             if (e.Key != Key.Escape)
@@ -124,6 +146,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.TextArea.DoubleTapped += (s, e) => DoubleClick?.Invoke(s, e);
         TextEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
         {
+            ToolTip.SetTip(textView, null);
             int y = (int)e.GetPosition(TextEditor.TextArea.TextView).Y;
             SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(GetLineFromVisualPosY(y)));
         }, RoutingStrategies.Tunnel);
@@ -1205,6 +1228,30 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         }
 
         TextEditor.TextArea.TextView.InvalidateLayer(KnownLayer.Selection);
+    }
+
+    private void UpdateValidationToolTip(PointerEventArgs e)
+    {
+        TextView textView = TextEditor.TextArea.TextView;
+        PointerPoint pointer = e.GetCurrentPoint(textView);
+        PointerPointProperties buttons = pointer.Properties;
+        string? toolTip = null;
+        if (_validationRenderer.Markers.Count > 0
+            && !buttons.IsLeftButtonPressed && !buttons.IsRightButtonPressed && !buttons.IsMiddleButtonPressed
+            && !buttons.IsXButton1Pressed && !buttons.IsXButton2Pressed
+            && textView.Document is TextDocument document
+            && textView.GetPosition(pointer.Position + textView.ScrollOffset) is TextViewPosition position)
+        {
+            int offset = document.GetOffset(position.Line, position.Column);
+            toolTip = _validationRenderer.Markers
+                .FirstOrDefault(marker => offset >= marker.Offset && offset - marker.Offset < marker.Length)?.ToolTip;
+        }
+
+        ToolTip.SetTip(textView, toolTip);
+        if (toolTip is not null)
+        {
+            ToolTip.SetIsOpen(textView, true);
+        }
     }
 
     private sealed class CommitMessageValidationRenderer : IBackgroundRenderer
