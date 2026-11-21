@@ -123,7 +123,8 @@ public partial class FormMergeBranch : GitModuleForm
             // When the user has not checked "Do not commit", open the commit
             // dialog so the staged changes can be committed, pre-filled with
             // the merge message if one was entered.
-            if (ShouldOpenCommitDialogAfterSquash(success, squash.Checked, noCommit.Checked))
+            bool shouldOpenCommitDialogAfterSquash = success && squash.Checked && !noCommit.Checked;
+            if (shouldOpenCommitDialogAfterSquash)
             {
                 UICommands.StartCommitDialog(this, addMergeMessage.Checked ? mergeMessage.Text : null, showOnlyWhenChanges: true);
             }
@@ -131,15 +132,6 @@ public partial class FormMergeBranch : GitModuleForm
             Close();
         }
     }
-
-    /// <summary>
-    /// Determines whether the commit dialog should be opened after a squash merge.
-    /// git merge --squash stages the changes without creating a commit, so when
-    /// the user has not checked "Do not commit" and the merge succeeded without
-    /// conflicts, the commit dialog is offered to commit the staged changes.
-    /// </summary>
-    internal static bool ShouldOpenCommitDialogAfterSquash(bool mergeSucceeded, bool squash, bool doNotCommit)
-        => mergeSucceeded && squash && !doNotCommit;
 
     private void NonDefaultMergeStrategy_CheckedChanged(object sender, EventArgs e)
     {
