@@ -23477,6 +23477,7 @@
           "verifiedOn": "2026-10-03",
           "commit": "a7cc57b0c52c939d8034c164cf78a4a63032d928",
           "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md",
             "eng/avalonia/parity-evidence/P8.6i/repository-host-client-alignment-42/inventory/FileViewer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/repository-host-client-alignment-42/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/P8.6i/repository-host-client-alignment-42/tests/linux/gate.log",
@@ -23488,7 +23489,7 @@
             "linux"
           ],
           "findingCount": 590,
-          "note": "Existing FileViewer behavior, source-named toolbar fields, integer runtime layout, and truthful inner-editor hover route pass 140 focused tests on Windows and Linux. The inventory retains 590 findings and the complete editor behavior audit remains open. 2026-10-03 batch75: Main lower-pane diff gutter retains source caret invalidation, raw inactive-border disabled background and zero-digit header-only sizing. Semantic diff overlays remain source-driven. Eleven FileViewer tooltips retain source Designer defaults before visibility and the same translation keys. This is cross-owner127 consumer evidence, not Progress126 ownership expansion or complete editor parity. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Existing FileViewer behavior, source-named toolbar fields, integer runtime layout, and truthful inner-editor hover route pass 140 focused tests on Windows and Linux. The inventory retains 590 findings and the complete editor behavior audit remains open. 2026-10-03 batch75: Main lower-pane diff gutter retains source caret invalidation, raw inactive-border disabled background and zero-digit header-only sizing. Semantic diff overlays remain source-driven. Eleven FileViewer tooltips retain source Designer defaults before visibility and the same translation keys. This is cross-owner127 consumer evidence, not Progress126 ownership expansion or complete editor parity. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. Headless input verifies that both mouse buttons open the Diff appearance submenu on press and reset Patch on release within the header, a release outside preserves the setting, Enter opens the submenu, and Word diff remains independent. Native popup appearance and dismissal remain unverified."
         },
         "visual": {
           "status": "partial",

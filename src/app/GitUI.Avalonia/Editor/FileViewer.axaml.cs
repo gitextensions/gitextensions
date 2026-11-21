@@ -275,6 +275,28 @@ public partial class FileViewer : GitModuleControl
         ignoreWhitespaceAtEol.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
         ignoreWhiteSpaces.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
         ignoreAllWhitespaces.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
+
+        // Avalonia reserves release-driven Click for leaves, so the header dispatches its own.
+        diffAppearanceToolStripMenuItem.PointerPressed += (_, e) =>
+        {
+            if (e.GetCurrentPoint(diffAppearanceToolStripMenuItem).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
+                && (e.Source as ILogical)?.FindLogicalAncestorOfType<MenuItem>(includeSelf: true) == diffAppearanceToolStripMenuItem)
+            {
+                diffAppearanceToolStripMenuItem.Open();
+                e.Handled = true;
+            }
+        };
+        diffAppearanceToolStripMenuItem.PointerReleased += (_, e) =>
+        {
+            if (e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right
+                && (e.Source as ILogical)?.FindLogicalAncestorOfType<MenuItem>(includeSelf: true) == diffAppearanceToolStripMenuItem
+                && new Rect(diffAppearanceToolStripMenuItem.Bounds.Size).Contains(e.GetPosition(diffAppearanceToolStripMenuItem)))
+            {
+                diffAppearanceToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                e.Handled = true;
+            }
+        };
+        diffAppearanceToolStripMenuItem.Click += ResetPatchAppearanceToolStripMenuItemClick;
         showPatchToolStripMenuItem.Click += ResetPatchAppearanceToolStripMenuItemClick;
         showGitWordColoringToolStripMenuItem.Click += ToggleGitWordColoringToolStripMenuItemClick;
         showDifftasticToolStripMenuItem.Click += ToggleDifftasticToolStripMenuItemClick;
@@ -1485,6 +1507,12 @@ public partial class FileViewer : GitModuleControl
 
     private void ResetPatchAppearanceToolStripMenuItemClick(object? sender, EventArgs e)
     {
+        // Avalonia Click events also bubble from submenu items.
+        if (e is RoutedEventArgs routedEvent && routedEvent.Source != sender)
+        {
+            return;
+        }
+
         // The other settings toggle, this just resets the appearance
         AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
         UpdateDiffOptionState();

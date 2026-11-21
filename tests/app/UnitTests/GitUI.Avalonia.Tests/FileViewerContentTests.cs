@@ -653,6 +653,105 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(MouseButton.Left, false)]
+    [TestCase(MouseButton.Right, false)]
+    [TestCase(null, false)]
+    [TestCase(MouseButton.Left, true)]
+    [TestCase(MouseButton.Right, true)]
+    public void FileViewer_should_apply_the_original_diff_appearance_header_action(MouseButton? button, bool releaseOutside)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 720, Height = 420, Content = viewer };
+        ContextMenu? menu = null;
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.GitWordDiff;
+            window.Show();
+            viewer.ViewPatch("diff --git a/file.txt b/file.txt\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-before\n+after\n");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            menu = viewer.TextEditor.ContextMenu!;
+            menu.Open(viewer.TextEditor);
+            Dispatcher.UIThread.RunJobs();
+
+            MenuItem appearance = viewer.FindControl<MenuItem>("diffAppearanceToolStripMenuItem")!;
+            appearance.IsEffectivelyVisible.Should().BeTrue();
+            TopLevel popup = TopLevel.GetTopLevel(appearance)!;
+            int changes = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => changes++;
+            if (button is MouseButton selectedButton)
+            {
+                Point center = new(appearance.Bounds.Width / 2, appearance.Bounds.Height / 2);
+                Point point = appearance.TranslatePoint(center, popup)!.Value;
+                popup.MouseMove(point, RawInputModifiers.None);
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                popup.MouseDown(point, selectedButton, RawInputModifiers.None);
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                bool openedOnPress = appearance.IsSubMenuOpen;
+                Point releasePoint = point;
+                if (releaseOutside)
+                {
+                    releasePoint = new Point(-8, point.Y);
+                    RawInputModifiers pressed = selectedButton == MouseButton.Left
+                        ? RawInputModifiers.LeftMouseButton : RawInputModifiers.RightMouseButton;
+                    popup.MouseMove(releasePoint, pressed);
+                }
+
+                popup.MouseUp(releasePoint, selectedButton, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+
+                if (releaseOutside)
+                {
+                    AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                    changes.Should().Be(0);
+                    return;
+                }
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.Patch);
+                openedOnPress.Should().BeTrue();
+                changes.Should().Be(1);
+            }
+            else
+            {
+                appearance.Focus(NavigationMethod.Tab).Should().BeTrue();
+                popup.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+                popup.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+                Dispatcher.UIThread.RunJobs();
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                changes.Should().Be(0);
+            }
+
+            appearance.IsSubMenuOpen.Should().BeTrue();
+            menu.IsOpen.Should().BeTrue();
+
+            if (button == MouseButton.Left)
+            {
+                MenuItem wordDiff = viewer.FindControl<MenuItem>("showGitWordColoringToolStripMenuItem")!;
+                TopLevel submenu = TopLevel.GetTopLevel(wordDiff)!;
+                Point wordDiffCenter = new(wordDiff.Bounds.Width / 2, wordDiff.Bounds.Height / 2);
+                Point wordDiffPoint = wordDiff.TranslatePoint(wordDiffCenter, submenu)!.Value;
+                submenu.MouseMove(wordDiffPoint, RawInputModifiers.None);
+                submenu.MouseDown(wordDiffPoint, MouseButton.Left, RawInputModifiers.None);
+                submenu.MouseUp(wordDiffPoint, MouseButton.Left, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                changes.Should().Be(2);
+                menu.IsOpen.Should().BeFalse();
+            }
+        }
+        finally
+        {
+            menu?.Close();
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public async Task FileViewer_should_only_toggle_word_diff_when_the_original_menu_action_is_enabled(bool showPatch)
