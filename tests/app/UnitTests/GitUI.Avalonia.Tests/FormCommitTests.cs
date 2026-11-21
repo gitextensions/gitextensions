@@ -1726,7 +1726,13 @@ public sealed class FormCommitTests
             toolbar.IsVisible.Should().BeTrue("the toolbar remains visible while the pointer enters it");
             Point outside = staged.TranslatePoint(new Point(staged.Bounds.Width / 2, staged.Bounds.Height / 2), form)!.Value;
             form.MouseMove(outside, Avalonia.Input.RawInputModifiers.None);
-            toolbar.IsVisible.Should().BeFalse("leaving the viewer hides its hover toolbar");
+            toolbar.IsVisible.Should().BeTrue("leaving the toolbar itself does not run the original editor leave handler");
+
+            Point backOverEditor = textView.TranslatePoint(new Point(textView.Bounds.Width / 2, textView.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(backOverEditor, Avalonia.Input.RawInputModifiers.None);
+            textView.IsPointerOver.Should().BeTrue("the pointer has returned to the exposed text area");
+            form.MouseMove(outside, Avalonia.Input.RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse("leaving the editor for another control hides its hover toolbar");
         }
         finally
         {

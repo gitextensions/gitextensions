@@ -11,6 +11,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
@@ -160,7 +161,18 @@ public partial class FileViewer : GitModuleControl
                 fileviewerToolbar.IsVisible = true;
             }
         };
-        PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
+        internalFileViewer.MouseLeave += (_, e) =>
+        {
+            // Avalonia hit testing returns the deepest visual in the native toolbar.
+            if (e is PointerEventArgs pointerEvent
+                && this.InputHitTest(pointerEvent.GetPosition(this)) is Visual hovered
+                && hovered.GetSelfAndVisualAncestors().Contains(fileviewerToolbar))
+            {
+                return;
+            }
+
+            fileviewerToolbar.IsVisible = false;
+        };
         internalFileViewer.TextChanged += (sender, e) =>
         {
             internalFileViewer.AddTextHighlighting();
@@ -2524,7 +2536,7 @@ public partial class FileViewer : GitModuleControl
                     return;
                 }
 
-                ResetView(ViewMode.Text, fileName: null);
+                ResetView(ViewMode.Text, fileName: null, openWithDifftool: null /* not applicable */);
                 SetText("Unsupported file: \n\n" + exception);
                 TextLoaded?.Invoke(this, EventArgs.Empty);
             }, cancellationToken);

@@ -1597,6 +1597,57 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_follow_the_editor_leave_route_for_its_hover_toolbar()
+    {
+        using FileViewer viewer = CreateViewer();
+        Border outside = new() { Background = Brushes.Transparent, Height = 32 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 700, Height = 360, Content = content };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("large.txt", new string('x', (5 * 1024 * 1024) + 1));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            HyperlinkButton preview = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+            preview.IsVisible.Should().BeTrue();
+            toolbar.IsVisible.Should().BeFalse();
+
+            Point editorPoint = viewer.TranslatePoint(new Point(160, 160), window)!.Value;
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue();
+            window.UpdateLayout();
+
+            window.MouseMove(CenterOf(toolbar), RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue("the source keeps its toolbar while the pointer moves onto it");
+
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            window.MouseMove(CenterOf(preview), RawInputModifiers.None);
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            toolbar.IsVisible.Should().BeFalse("a different child ends the editor hover");
+
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue();
+            window.MouseMove(CenterOf(outside), RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse("leaving the editor outside the FileViewer also ends its hover");
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        Point CenterOf(Control control)
+        {
+            Point center = new(control.Bounds.Width / 2, control.Bounds.Height / 2);
+            return control.TranslatePoint(center, window)!.Value;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileViewer_should_show_the_current_encoding_when_the_toolbar_becomes_visible()
     {
         using FileViewer viewer = CreateViewer();
