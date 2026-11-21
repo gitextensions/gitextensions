@@ -89,6 +89,7 @@ public partial class CommitInfo : GitModuleControl
     private IDictionary<string, int>? _tagsOrderDict;
     private int _revisionInfoHeight;
     private int _commitMessageHeight;
+    private Size _layoutSize;
     private bool _showAllBranches;
     private bool _showAllTags;
 
@@ -282,13 +283,19 @@ public partial class CommitInfo : GitModuleControl
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        OnLayout(availableSize);
+        // Avalonia applies the measured rows here. Preserve the source resize error boundary.
+        TaskManager.HandleExceptions(() => OnLayout(availableSize), WinFormsShims.Application.OnThreadException);
         return base.MeasureOverride(availableSize);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        OnLayout(finalSize);
+        // Avalonia can arrange at a different constraint. Reuse the measured rows when it agrees.
+        if (_layoutSize != finalSize)
+        {
+            TaskManager.HandleExceptions(() => OnLayout(finalSize), WinFormsShims.Application.OnThreadException);
+        }
+
         return base.ArrangeOverride(finalSize);
     }
 
@@ -433,6 +440,7 @@ public partial class CommitInfo : GitModuleControl
             {
                 rtbxCommitMessage.SetXHTMLText(WebUtility.HtmlEncode(revision.Body ?? revision.Subject ?? string.Empty));
                 RevisionInfo.Clear();
+                InvalidateMeasure();
                 return;
             }
         }
@@ -542,6 +550,7 @@ public partial class CommitInfo : GitModuleControl
         else
         {
             rtbxCommitMessage.SetXHTMLText(GetFixCommitMessage());
+            InvalidateMeasure();
         }
 
         return;
@@ -582,6 +591,9 @@ public partial class CommitInfo : GitModuleControl
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             rtbxCommitMessage.SetXHTMLText(commitMessage);
+
+            // The fixed Avalonia table row can retain its previous desired size when its text changes.
+            InvalidateMeasure();
         }
 
         void StartAsyncDataLoad(DistributedSettings settings, CancellationToken cancellationToken)
@@ -808,6 +820,7 @@ public partial class CommitInfo : GitModuleControl
         _tagInfo = "";
         _gitDescribeInfo = "";
         RevisionInfo.Clear();
+        InvalidateMeasure();
     }
 
     private void UpdateRevisionInfo()
@@ -856,6 +869,7 @@ public partial class CommitInfo : GitModuleControl
                 .Where(_ => !string.IsNullOrEmpty(_)));
 
         RevisionInfo.SetXHTMLText(body);
+        InvalidateMeasure();
         return;
 
         static string GetAnnotatedTagsInfo(
@@ -1023,8 +1037,10 @@ public partial class CommitInfo : GitModuleControl
     private void RevisionInfo_ContentsResized(int contentsHeight)
     {
         _revisionInfoHeight = contentsHeight;
-        OnLayout(Bounds.Size);
-        InvalidateMeasure();
+        if (tableLayout.RowDefinitions[2].Height.Value != contentsHeight + RevisionInfo.Margin.Top + RevisionInfo.Margin.Bottom)
+        {
+            InvalidateMeasure();
+        }
     }
 
     private void CommitMessage_ContentsResized(int contentsHeight)
@@ -1032,8 +1048,12 @@ public partial class CommitInfo : GitModuleControl
         _commitMessageHeight = contentsHeight;
 
         //
-        OnLayout(Bounds.Size);
-        InvalidateMeasure();
+        double rowHeight = contentsHeight + rtbxCommitMessage.Margin.Top + rtbxCommitMessage.Margin.Bottom
+            + pnlCommitMessage.Margin.Top + pnlCommitMessage.Margin.Bottom;
+        if (tableLayout.RowDefinitions[1].Height.Value != rowHeight)
+        {
+            InvalidateMeasure();
+        }
     }
 
     // Avalonia has no WinForms OnLayout event. Measure/arrange supply the real parent
@@ -1046,7 +1066,8 @@ public partial class CommitInfo : GitModuleControl
             return;
         }
 
-        commitInfoHeader.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        _layoutSize = default;
+        commitInfoHeader.Measure(Size.Infinity);
         double clientWidth = double.IsFinite(availableSize.Width)
             ? availableSize.Width
             : Math.Max(Bounds.Width, commitInfoHeader.DesiredSize.Width);
@@ -1057,14 +1078,17 @@ public partial class CommitInfo : GitModuleControl
         // parent on every unchanged pass when a word wraps only at the narrower width.
         rtbxCommitMessage.SuspendContentsResized();
         RevisionInfo.SuspendContentsResized();
+        double[] heights;
         try
         {
             MeasureContents(width);
-            if (GetHeights(measured: true).Sum() > availableSize.Height)
+            heights = GetHeights();
+            if (heights.Sum() > availableSize.Height)
             {
                 clientWidth = Math.Max(0, clientWidth - GetVerticalScrollBarWidth());
                 width = Math.Max(clientWidth, commitInfoHeader.DesiredSize.Width);
                 MeasureContents(width);
+                heights = GetHeights();
             }
         }
         finally
@@ -1079,7 +1103,6 @@ public partial class CommitInfo : GitModuleControl
             }
         }
 
-        double[] heights = GetHeights();
         double height = heights.Sum();
 
         // WinForms recomputes scrolling from the full client, not a viewport left
@@ -1107,14 +1130,15 @@ public partial class CommitInfo : GitModuleControl
         tableLayout.ColumnDefinitions[0].Width = new GridLength(width);
         tableLayout.Width = width;
         tableLayout.Height = height;
+        _layoutSize = availableSize;
         return;
 
-        double[] GetHeights(bool measured = false) =>
+        double[] GetHeights() =>
         [
             commitInfoHeader.DesiredSize.Height,
-            (measured ? rtbxCommitMessage.ContentsHeight : _commitMessageHeight) + rtbxCommitMessage.Margin.Top + rtbxCommitMessage.Margin.Bottom
+            rtbxCommitMessage.ContentsHeight + rtbxCommitMessage.Margin.Top + rtbxCommitMessage.Margin.Bottom
                 + pnlCommitMessage.Margin.Top + pnlCommitMessage.Margin.Bottom,
-            (measured ? RevisionInfo.ContentsHeight : _revisionInfoHeight) + RevisionInfo.Margin.Top + RevisionInfo.Margin.Bottom
+            RevisionInfo.ContentsHeight + RevisionInfo.Margin.Top + RevisionInfo.Margin.Bottom
         ];
 
         double GetVerticalScrollBarWidth()

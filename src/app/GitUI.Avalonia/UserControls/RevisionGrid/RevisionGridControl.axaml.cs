@@ -1012,9 +1012,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     }
 
     public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
-        => [.. _revisions
-            .Where(revision => revision.ParentIds?.Contains(objectId) == true)
-            .Select(revision => revision.ObjectId)];
+    {
+        // The Avalonia list has no graph API; use the same node lookup as RevisionDataGridView.
+        if (_revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node))
+        {
+            List<ObjectId> children = [.. node.Children.Select(d => d.GitRevision!.ObjectId)];
+            children.Reverse();
+            return children;
+        }
+
+        return [];
+    }
 
     private bool IsValidRevisionIndex(int index)
         => index >= 0 && index < _revisions.Count;
