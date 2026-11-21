@@ -2108,29 +2108,11 @@ public partial class FileViewer : GitModuleControl
             case Command.GoToLine:
                 return PerformClickIfAvailable(goToLineToolStripMenuItem);
             case Command.IncreaseNumberOfVisibleLines:
-                if (!increaseNumberOfLines.IsVisible || !increaseNumberOfLines.IsEnabled)
-                {
-                    return false;
-                }
-
-                IncreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(increaseNumberOfLinesToolStripMenuItem);
             case Command.DecreaseNumberOfVisibleLines:
-                if (!decreaseNumberOfLines.IsVisible || !decreaseNumberOfLines.IsEnabled)
-                {
-                    return false;
-                }
-
-                DecreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(decreaseNumberOfLinesToolStripMenuItem);
             case Command.ShowEntireFile:
-                if (!showEntireFileButton.IsVisible)
-                {
-                    return false;
-                }
-
-                ShowEntireFileToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
             case Command.ShowSyntaxHighlighting:
                 if (!showSyntaxHighlightingToolStripMenuItem.IsVisible)
                 {
@@ -2140,13 +2122,7 @@ public partial class FileViewer : GitModuleControl
                 ShowSyntaxHighlighting_Click(this, EventArgs.Empty);
                 break;
             case Command.ShowGitWordColoring:
-                if (!showGitWordColoringToolStripMenuItem.IsVisible)
-                {
-                    return false;
-                }
-
-                ToggleGitWordColoringToolStripMenuItemClick(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(showGitWordColoringToolStripMenuItem);
             case Command.ShowDifftastic:
                 if (!showDifftasticToolStripMenuItem.IsVisible || !showDifftasticToolStripMenuItem.IsEnabled)
                 {
@@ -2180,13 +2156,7 @@ public partial class FileViewer : GitModuleControl
             case Command.ResetLines:
                 return ResetSelectedLines();
             case Command.IgnoreAllWhitespace:
-                if (!ignoreAllWhitespaces.IsVisible)
-                {
-                    return false;
-                }
-
-                IgnoreAllWhitespaceChangesToolStripMenuItem_Click(this, EventArgs.Empty);
-                break;
+                return PerformClickIfAvailable(ignoreAllWhitespaceChangesToolStripMenuItem);
             default:
                 return base.ExecuteCommand(cmd);
         }

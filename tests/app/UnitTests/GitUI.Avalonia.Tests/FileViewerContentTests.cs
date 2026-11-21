@@ -650,6 +650,98 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_only_toggle_word_diff_when_the_original_menu_action_is_enabled(bool showPatch)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            if (showPatch)
+            {
+                viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("ordinary.txt", "first\nsecond");
+            }
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>("showGitWordColoringToolStripMenuItem")!;
+            action.IsEnabled.Should().Be(showPatch);
+            int notifications = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+
+            owner.KeyPress(Key.D, RawInputModifiers.Control, PhysicalKey.D, keySymbol: null);
+            owner.KeyRelease(Key.D, RawInputModifiers.Control, PhysicalKey.D, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            AppSettings.DiffDisplayAppearance.Value.Should().Be(showPatch ? DiffDisplayAppearance.GitWordDiff : DiffDisplayAppearance.Patch);
+            notifications.Should().Be(showPatch ? 1 : 0);
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("increaseNumberOfLinesToolStripMenuItem", Key.OemPlus, PhysicalKey.Equal, RawInputModifiers.Control)]
+    [TestCase("decreaseNumberOfLinesToolStripMenuItem", Key.OemMinus, PhysicalKey.Minus, RawInputModifiers.Control)]
+    [TestCase("showEntireFileToolStripMenuItem", Key.E, PhysicalKey.E, RawInputModifiers.Control)]
+    [TestCase("ignoreAllWhitespaceChangesToolStripMenuItem", Key.W, PhysicalKey.W, RawInputModifiers.Control | RawInputModifiers.Shift)]
+    public void FileViewer_diff_shortcut_should_invoke_the_available_context_menu_action(
+        string menuItemName, Key key, PhysicalKey physicalKey, RawInputModifiers modifiers)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        AppSettings.ShowEntireFile.Value = false;
+        AppSettings.NumberOfContextLines = 3;
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>(menuItemName)!;
+            action.IsVisible.Should().BeTrue();
+            int clicks = 0;
+            int notifications = 0;
+            action.Click += (_, _) => clicks++;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+            string originalArguments = viewer.GetExtraDiffArguments().ToString();
+
+            action.IsEnabled = false;
+            PressShortcut();
+            clicks.Should().Be(0);
+            notifications.Should().Be(0);
+            viewer.GetExtraDiffArguments().ToString().Should().Be(originalArguments);
+
+            action.IsEnabled = true;
+            PressShortcut();
+            clicks.Should().Be(1);
+            notifications.Should().Be(1);
+            viewer.GetExtraDiffArguments().ToString().Should().NotBe(originalArguments);
+        }
+        finally
+        {
+            owner.Close();
+        }
+
+        void PressShortcut()
+        {
+            owner.KeyPress(key, modifiers, physicalKey, keySymbol: null);
+            owner.KeyRelease(key, modifiers, physicalKey, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
     {
         using FormEditor editor = new(_commands, fileName: null, showWarning: false);
