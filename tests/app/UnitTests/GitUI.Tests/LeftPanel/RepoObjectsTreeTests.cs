@@ -121,6 +121,34 @@ public sealed class RepoObjectsTreeTests
         _testAccessor.ContextMenu.Items["mnubtnMoveDown"]!.Enabled.Should().BeTrue();
     }
 
+    [Test]
+    public void context_menu_should_offer_worktree_actions_on_worktrees_but_not_on_their_folders()
+    {
+        _testAccessor.WorktreeTree.GetTestAccessor().FillTree(
+            [
+                new(@"C:\repos\project", GitWorktreeHeadType.Branch, Sha1: null, "main", IsDeleted: false) { IsMain = true },
+                new(@"C:\repos\project.worktrees\agent\one", GitWorktreeHeadType.Branch, Sha1: null, "one", IsDeleted: false),
+                new(@"C:\repos\project.worktrees\agent\two", GitWorktreeHeadType.Branch, Sha1: null, "two", IsDeleted: false),
+                new(@"C:\repos\project.worktrees\release\three", GitWorktreeHeadType.Branch, Sha1: null, "three", IsDeleted: false),
+            ],
+            @"C:\repos\project");
+        string worktrees = _testAccessor.WorktreeTree.TreeViewNode.Text;
+
+        _testAccessor.SelectNode<WorktreeFolderNode>([worktrees, "agent"]);
+        _testAccessor.OpenContextMenu();
+
+        _testAccessor.ContextMenu.Items["mnubtnOpenWorktree"]!.Enabled.Should().BeFalse();
+        _testAccessor.ContextMenu.Items["mnubtnDeleteWorktree"]!.Enabled.Should().BeFalse();
+        _testAccessor.ContextMenu.Items["mnubtnCopyWorktreePath"]!.Enabled.Should().BeFalse();
+
+        _testAccessor.SelectNode<WorktreeNode>([worktrees, "agent", "one (one)"]);
+        _testAccessor.OpenContextMenu();
+
+        _testAccessor.ContextMenu.Items["mnubtnOpenWorktree"]!.Enabled.Should().BeTrue();
+        _testAccessor.ContextMenu.Items["mnubtnDeleteWorktree"]!.Enabled.Should().BeTrue();
+        _testAccessor.ContextMenu.Items["mnubtnCopyWorktreePath"]!.Enabled.Should().BeTrue();
+    }
+
     private string[] GetNodeTexts()
         => _testAccessor.TreeView.Nodes.Cast<TreeNode>().Select(node => node.Text).ToArray();
 }
