@@ -455,7 +455,7 @@ public static partial class Commands
             { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F {getPathForGitExecution(mergeCommitFilePath).Quote()}" },
             { log is not null && log.Value > 0, $"--log={log}" },
             "--no-edit", // suppress editor prompt and accept auto-generated message
-            branch
+            GitRefName.ToBranchRef(branch)
         };
     }
 
@@ -601,9 +601,9 @@ public static partial class Commands
         }
 
         builder.Add(rebaseOptions.AutoStash, "--autostash");
-        builder.Add(rebaseOptions.OnTo is not null, $"--onto {rebaseOptions.OnTo}");
-        builder.Add(rebaseOptions.From.QuoteNE());
-        builder.Add(rebaseOptions.BranchName.Quote());
+        builder.Add(rebaseOptions.OnTo is not null, $"--onto {GitRefName.ToBranchRef(rebaseOptions.OnTo)}");
+        builder.Add(GitRefName.ToBranchRef(rebaseOptions.From).QuoteNE());
+        builder.Add(GitRefName.ToBranchRef(rebaseOptions.BranchName).Quote());
 
         return builder;
     }
