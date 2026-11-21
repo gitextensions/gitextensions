@@ -15,6 +15,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
+using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitCommands.Git;
@@ -31,6 +32,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Hotkey;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -1016,14 +1018,102 @@ public sealed class FileViewerContentTests
             else
             {
                 int descriptionOffset = summary.Length + separator.Length;
-                strategy.ValidationMarkers.Should().Equal(
-                    new CommitMessageValidationMarker(descriptionOffset, description.Length, "There must be a blank line after the summary."),
-                    new CommitMessageValidationMarker(descriptionOffset + 80, 1, "Line is too long."));
+                strategy.ValidationMarkers
+                    .Select(marker => (marker.Offset, marker.Length, marker.ToolTip))
+                    .Should().Equal(
+                        (descriptionOffset, description.Length, "There must be a blank line after the summary."),
+                        (descriptionOffset + 80, 1, "Line is too long."));
             }
         }
         finally
         {
             owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_adapt_commit_message_warning_colors_when_the_source_creates_markers()
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 1000, Height = 310, Content = viewer };
+        try
+        {
+            AppSettings.UseSystemVisualStyle = false;
+            ApplyTheme(ThemeId.DefaultDark, [ThemeVariations.Colorblind]);
+            Color colorblindColor = AvaloniaThemeResources.ToMediaColor(System.Drawing.Color.Red.AdaptBackColor(ThemeModule.Settings));
+            colorblindColor.Should().NotBe(Colors.Red);
+
+            window.Show();
+            string summary = new('s', 51);
+            string description = new('a', 81);
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", summary + "\n" + description);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TextDocument document = viewer.TextEditor.Document;
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultLight, []);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            document.Insert(document.TextLength, "a");
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            int appendedLineOffset = document.TextLength;
+            document.Insert(appendedLineOffset, "\n" + description);
+            ReadMarkerColors(textView).Should().BeEquivalentTo([colorblindColor, Colors.Red]);
+
+            document.Remove(appendedLineOffset, description.Length + 1);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultDark, [ThemeVariations.Colorblind]);
+            document.Insert(appendedLineOffset, "\n" + description);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultLight, []);
+            int separatorOffset = summary.Length;
+            document.Insert(separatorOffset, "\n");
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            document.Remove(separatorOffset, 1);
+            ReadMarkerColors(textView).Should().BeEquivalentTo([colorblindColor, Colors.Red]);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId, originalVariations);
+        }
+
+        void ApplyTheme(ThemeId theme, string[] variations)
+        {
+            AppSettings.ThemeVariations = variations;
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        Color[] ReadMarkerColors(TextView textView)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DrawingGroup drawing = new();
+            using (DrawingContext context = drawing.Open())
+            {
+                foreach (IBackgroundRenderer renderer in textView.BackgroundRenderers.Where(renderer => renderer.Layer == KnownLayer.Selection))
+                {
+                    renderer.Draw(textView, context);
+                }
+            }
+
+            return drawing.Children.OfType<GeometryDrawing>()
+                .Select(item => item.Pen?.Brush)
+                .OfType<ISolidColorBrush>()
+                .Select(brush => brush.Color)
+                .Distinct()
+                .ToArray();
         }
     }
 

@@ -1218,7 +1218,6 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                 return;
             }
 
-            Pen pen = new(Brushes.Red, 1);
             foreach (CommitMessageValidationMarker marker in Markers)
             {
                 if (marker.Length <= 0 || marker.Offset >= textView.Document.TextLength)
@@ -1226,6 +1225,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                     continue;
                 }
 
+                Pen pen = new(new SolidColorBrush(marker.Color), 1);
                 SimpleSegment segment = new(marker.Offset, Math.Min(marker.Length, textView.Document.TextLength - marker.Offset));
                 foreach (Avalonia.Rect rectangle in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
                 {

@@ -1,5 +1,8 @@
 ﻿using AvaloniaEdit.Document;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using DrawingColor = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor;
@@ -9,8 +12,11 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
     // Avalonia passes the original summary color and font weight separately to the text run.
     private static (MediaColor Color, bool Bold) ColorSummary => (ColorNormal, true);
 
-    private const int MaxSummaryLength = 50;
-    private const int MaxDescriptionLength = 80;
+    // AvaloniaEdit draws validation spans from immutable marker snapshots.
+    private readonly List<CommitMessageValidationMarker> _overlengthDescriptionMarkers = [];
+
+    private readonly CommitMessageValidationMarker _markerSummaryTooLong = new(0, 0, "Summary line is too long.");
+    private readonly CommitMessageValidationMarker _markerSpacerNeeded = new(0, 0, "There must be a blank line after the summary.");
 
     private readonly List<CommitMessageValidationMarker> _validationMarkers = [];
 
@@ -25,38 +31,65 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
     {
         _validationMarkers.Clear();
         (int summaryLineNumber, bool seenDividingSpace, int descriptionStartLineNumber) = Classify(document);
+
+        const int maxSummaryLength = 50;
+        const int maxDescriptionLength = 80;
+
         if (summaryLineNumber > 0)
         {
             DocumentLine summary = document.GetLineByNumber(summaryLineNumber);
-            if (summary.Length > MaxSummaryLength)
+            if (summary.Length > maxSummaryLength)
             {
-                _validationMarkers.Add(new(
-                    summary.Offset + MaxSummaryLength,
-                    summary.Length - MaxSummaryLength,
-                    "Summary line is too long."));
+                _validationMarkers.Add(_markerSummaryTooLong with
+                {
+                    Offset = summary.Offset + maxSummaryLength,
+                    Length = summary.Length - maxSummaryLength,
+                });
             }
         }
 
         if (descriptionStartLineNumber > 0 && !seenDividingSpace)
         {
             DocumentLine description = document.GetLineByNumber(descriptionStartLineNumber);
-            _validationMarkers.Add(new(description.Offset, description.Length, "There must be a blank line after the summary."));
+            _validationMarkers.Add(_markerSpacerNeeded with { Offset = description.Offset, Length = description.Length });
         }
 
         if (descriptionStartLineNumber <= 0)
         {
+            _overlengthDescriptionMarkers.Clear();
             return;
         }
 
+        int markerIndex = 0;
+
         foreach (DocumentLine line in document.Lines.Skip(descriptionStartLineNumber - 1))
         {
-            if (line.Length > MaxDescriptionLength)
+            if (line.Length > maxDescriptionLength)
             {
-                _validationMarkers.Add(new(
-                    line.Offset + MaxDescriptionLength,
-                    line.Length - MaxDescriptionLength,
-                    "Line is too long."));
+                int markerOffset = line.Offset + maxDescriptionLength;
+                int markerLength = line.Length - maxDescriptionLength;
+
+                CommitMessageValidationMarker overlengthMarker;
+                if (markerIndex < _overlengthDescriptionMarkers.Count)
+                {
+                    overlengthMarker = _overlengthDescriptionMarkers[markerIndex] with { Offset = markerOffset, Length = markerLength };
+                    _overlengthDescriptionMarkers[markerIndex] = overlengthMarker;
+                }
+                else
+                {
+                    overlengthMarker = new(markerOffset, markerLength, "Line is too long.");
+                    _overlengthDescriptionMarkers.Add(overlengthMarker);
+                }
+
+                _validationMarkers.Add(overlengthMarker);
+                markerIndex++;
             }
+        }
+
+        int toRemove = _overlengthDescriptionMarkers.Count - markerIndex;
+        if (toRemove > 0)
+        {
+            _overlengthDescriptionMarkers.RemoveRange(markerIndex, toRemove);
         }
     }
 
@@ -116,4 +149,7 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
     }
 }
 
-internal sealed record CommitMessageValidationMarker(int Offset, int Length, string ToolTip);
+internal sealed record CommitMessageValidationMarker(int Offset, int Length, string ToolTip)
+{
+    public MediaColor Color { get; } = AvaloniaThemeResources.ToMediaColor(DrawingColor.Red.AdaptBackColor());
+}

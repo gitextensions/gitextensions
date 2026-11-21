@@ -22122,13 +22122,17 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-11-21",
+          "commit": "9b11496851ec7a8b0bf14b611fe0ae06224d1951",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261122/report.md"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Headless FileViewer drawing exercises the original adapted warning colors for light and the dark colorblind variation. Markers retain their creation colors while their spans are reused. Native appearance and remaining themes are pending."
         },
         "behavioralState": {
           "status": "unverified",
