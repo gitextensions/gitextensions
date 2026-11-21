@@ -94,9 +94,11 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                 OnVScrollPositionChanged(EventArgs.Empty);
             }
         };
-        TextEditor.PointerMoved += (sender, e) => MouseMove?.Invoke(sender, e);
-        TextEditor.PointerEntered += (sender, e) => MouseEnter?.Invoke(sender, e);
-        TextEditor.PointerExited += (sender, e) => MouseLeave?.Invoke(sender, e);
+
+        // AvaloniaEdit places scrollbars outside the native text area.
+        TextEditor.TextArea.PointerMoved += (sender, e) => MouseMove?.Invoke(sender, e);
+        TextEditor.TextArea.PointerEntered += (sender, e) => MouseEnter?.Invoke(sender, e);
+        TextEditor.TextArea.PointerExited += (sender, e) => MouseLeave?.Invoke(sender, e);
         TextEditor.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
             if (e.Key != Key.Escape)

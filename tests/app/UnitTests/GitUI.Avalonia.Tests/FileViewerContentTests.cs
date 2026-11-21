@@ -900,6 +900,63 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_forward_hover_only_from_the_source_text_area()
+    {
+        using FileViewer viewer = CreateViewer();
+        Border outside = new() { Background = Brushes.Transparent, Height = 28 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 500, Height = 300, Content = content };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            Control scrollBar = viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Point barPoint = CenterOf(scrollBar);
+            Point textPoint = CenterOf(textView);
+            window.MouseMove(CenterOf(outside), RawInputModifiers.None);
+            int entries = 0;
+            int exits = 0;
+            int moves = 0;
+            editor.MouseEnter += (_, _) => entries++;
+            editor.MouseLeave += (_, _) => exits++;
+            editor.MouseMove += (_, _) => moves++;
+
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            window.MouseMove(barPoint, RawInputModifiers.None);
+            (window.InputHitTest(barPoint) as Visual)!.GetSelfAndVisualAncestors().Should().Contain(scrollBar);
+            toolbar.IsVisible.Should().BeFalse();
+            entries.Should().Be(0);
+            moves.Should().Be(0);
+
+            window.MouseMove(textPoint, RawInputModifiers.None);
+            textView.IsPointerOver.Should().BeTrue();
+            toolbar.IsVisible.Should().BeTrue();
+            entries.Should().Be(1);
+            moves.Should().BeGreaterThan(0);
+
+            window.MouseMove(barPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse();
+            exits.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        Point CenterOf(Control control)
+            => control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
+    }
+
+    [AvaloniaTest]
     public async Task Binary_preview_should_start_at_the_hex_header_and_keep_its_difftool()
     {
         using FileViewer viewer = CreateViewer();
