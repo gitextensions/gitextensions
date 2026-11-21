@@ -61,6 +61,13 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
 
     private void OnPostSettings(object? sender, GitUIPostActionEventArgs e)
     {
+        // StartSettingsDialog raises the subscribers of PostSettings from before the settings dialog was shown,
+        // so this is also called if the plugin has been unregistered in the meantime
+        if (_currentGitUiCommands is null)
+        {
+            return;
+        }
+
         RecreateObservable();
     }
 
