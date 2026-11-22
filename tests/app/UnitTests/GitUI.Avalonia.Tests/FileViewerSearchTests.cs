@@ -334,6 +334,40 @@ public sealed class FileViewerSearchTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public async Task FindAndReplaceForm_should_search_supplementary_letters_with_the_selected_case_rule(bool backwards, bool matchCase)
+    {
+        const string uppercase = "\U00010400";
+        const string lowercase = "\U00010428";
+        string text = backwards ? $"{uppercase} {lowercase} " : $" {lowercase} {uppercase}";
+        using FileViewer viewer = new();
+        Window owner = new() { Width = 500, Height = 300, Content = viewer };
+        try
+        {
+            owner.Show();
+            await viewer.ViewTextAsync("search.txt", text);
+            viewer.TextEditor.CaretOffset = backwards ? text.Length : 0;
+            viewer.Find(replace: false);
+            FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+            FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.TxtLookFor.Text = uppercase;
+            accessor.ChkMatchCase.IsChecked = matchCase;
+
+            TextRange? result = await form.FindNextAsync(viaF3: false, searchBackward: backwards, messageIfNotFound: null);
+
+            result.Should().NotBeNull();
+            viewer.TextEditor.SelectedText.Should().Be(matchCase ? uppercase : lowercase);
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FindAndReplaceForm_should_replace_the_selection_and_find_the_next_match()
     {
         FileViewer viewer = new();

@@ -716,22 +716,31 @@ public sealed class TextEditorSearcher : IDisposable
     }
 
     private static bool MatchFirstCh(char a, char b, bool matchCase)
-        => matchCase ? a == b : char.ToUpperInvariant(a) == char.ToUpperInvariant(b);
+    {
+        if (a == b)
+        {
+            return true;
+        }
+
+        return !matchCase && a == char.ToUpperInvariant(b);
+    }
 
     private TextRange? FindNextIn(int offset1, int offset2, bool searchBackward)
     {
         string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
-        _ = _document ?? throw new InvalidOperationException("The searcher has no document.");
-        _ = _lookFor2 ?? throw new InvalidOperationException("Search comparison text was not initialized.");
+        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
+        string comparison = _lookFor2 ?? throw new InvalidOperationException("Search comparison text was not initialized.");
 
         offset2 -= lookFor.Length;
 
         // Search
+        char lookForCh = comparison[0];
         if (searchBackward)
         {
             for (int offset = offset2; offset >= offset1; offset--)
             {
-                if (IsPartWordMatch(offset) && (!MatchWholeWordOnly || IsWholeWordMatch(offset)))
+                if (MatchFirstCh(lookForCh, document.GetCharAt(offset), MatchCase)
+                    && (IsWholeWordMatch(offset) || (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                 {
                     return new TextRange(offset, lookFor.Length);
                 }
@@ -741,7 +750,8 @@ public sealed class TextEditorSearcher : IDisposable
         {
             for (int offset = offset1; offset <= offset2; offset++)
             {
-                if (IsPartWordMatch(offset) && (!MatchWholeWordOnly || IsWholeWordMatch(offset)))
+                if (MatchFirstCh(lookForCh, document.GetCharAt(offset), MatchCase)
+                    && (IsWholeWordMatch(offset) || (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                 {
                     return new TextRange(offset, lookFor.Length);
                 }
@@ -752,7 +762,10 @@ public sealed class TextEditorSearcher : IDisposable
     }
 
     private bool IsWholeWordMatch(int offset)
-        => IsWordBoundary(offset) && IsWordBoundary(offset + (LookFor?.Length ?? 0));
+    {
+        string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
+        return IsWordBoundary(offset) && IsWordBoundary(offset + lookFor.Length) && IsPartWordMatch(offset);
+    }
 
     private bool IsWordBoundary(int offset)
     {
@@ -775,20 +788,14 @@ public sealed class TextEditorSearcher : IDisposable
         TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
         string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
         string comparison = _lookFor2 ?? throw new InvalidOperationException("Search comparison text was not initialized.");
-        if (!MatchFirstCh(document.GetCharAt(offset), comparison[0], MatchCase))
+
+        string substr = document.GetText(offset, lookFor.Length);
+        if (!MatchCase)
         {
-            return false;
+            substr = substr.ToUpperInvariant();
         }
 
-        for (int index = 1; index < lookFor.Length; index++)
-        {
-            if (!MatchFirstCh(document.GetCharAt(offset + index), comparison[index], MatchCase))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return substr == comparison;
     }
 
     // Framework constraint: AvaloniaEdit has no document marker strategy; track its per-edit changes here.
