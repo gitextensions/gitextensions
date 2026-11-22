@@ -861,7 +861,7 @@ public partial class CommitInfo : GitModuleControl
             clientWidth -= SystemInformation.VerticalScrollBarWidth;
         }
 
-        int width = Math.Max(clientWidth, commitInfoHeader.Width + commitInfoHeader.Margin.Horizontal);
+        int width = clientWidth;
 
         tableLayout.ColumnStyles[0].SizeType = SizeType.Absolute;
         tableLayout.ColumnStyles[0].Width = width;
