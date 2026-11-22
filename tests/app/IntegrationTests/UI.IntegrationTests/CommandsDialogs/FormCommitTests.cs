@@ -18,6 +18,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 [Apartment(ApartmentState.STA)]
 public class FormCommitTests
 {
+    private const string _firstChangeMessage = "first change";
+
+    private const string _secondChangeMessage = "second change";
+
     // Created once for the fixture
     private ReferenceRepository _referenceRepository = null!;
 
@@ -838,7 +842,7 @@ public class FormCommitTests
             // Two changes far enough apart to be in separate hunks
             string contents = string.Concat(Enumerable.Range(1, 20).Select(i => $"line{i}\n"));
             _referenceRepository.CreateCommit("commit", contents, "hunks.txt");
-            _referenceRepository.CreateRepoFile("hunks.txt", contents.Replace("line2\n", "first change\n").Replace("line18\n", "second change\n"));
+            _referenceRepository.CreateRepoFile("hunks.txt", contents.Replace("line2\n", _firstChangeMessage + "\n").Replace("line18\n", "second change\n"));
 
             ta.RescanChanges();
             AsyncTestHelper.JoinPendingOperations();
@@ -848,8 +852,8 @@ public class FormCommitTests
             AsyncTestHelper.JoinPendingOperations();
 
             TextAreaControl textArea = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl;
-            int firstChangeLine = LineOf("+first change");
-            int secondChangeLine = LineOf("+second change");
+            int firstChangeLine = LineOf("+" + _firstChangeMessage);
+            int secondChangeLine = LineOf("+" + _secondChangeMessage);
             firstChangeLine.Should().BeLessThan(secondChangeLine);
 
             // Select from the first hunk down into the second hunk, so the caret ends up in the second hunk
@@ -860,8 +864,8 @@ public class FormCommitTests
             AsyncTestHelper.JoinPendingOperations();
 
             string stagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff --cached -- hunks.txt");
-            stagedDiff.Should().Contain("+second change");
-            stagedDiff.Should().NotContain("+first change");
+            stagedDiff.Should().Contain("+" + _secondChangeMessage);
+            stagedDiff.Should().NotContain("+" + _firstChangeMessage);
 
             int LineOf(string text)
             {
@@ -885,7 +889,7 @@ public class FormCommitTests
             // Two staged changes far enough apart to be in separate hunks
             string contents = string.Concat(Enumerable.Range(1, 20).Select(i => $"line{i}\n"));
             _referenceRepository.CreateCommit("commit", contents, "unstage.txt");
-            _referenceRepository.CreateRepoFile("unstage.txt", contents.Replace("line2\n", "first change\n").Replace("line18\n", "second change\n"));
+            _referenceRepository.CreateRepoFile("unstage.txt", contents.Replace("line2\n", _firstChangeMessage + "\n").Replace("line18\n", "second change\n"));
             _referenceRepository.Module.GitExecutable.GetOutput("add -- unstage.txt");
 
             ta.RescanChanges();
@@ -897,7 +901,7 @@ public class FormCommitTests
 
             // Caret in the first hunk, nothing selected
             TextAreaControl textArea = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl;
-            int offset = textArea.Document.TextContent.IndexOf("+first change", StringComparison.Ordinal);
+            int offset = textArea.Document.TextContent.IndexOf("+" + _firstChangeMessage, StringComparison.Ordinal);
             offset.Should().BeGreaterThanOrEqualTo(0);
             textArea.SelectionManager.ClearSelection();
             textArea.Caret.Position = new TextLocation(1, textArea.Document.GetLineNumberForOffset(offset));
@@ -906,12 +910,12 @@ public class FormCommitTests
             AsyncTestHelper.JoinPendingOperations();
 
             string stagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff --cached -- unstage.txt");
-            stagedDiff.Should().Contain("+second change");
-            stagedDiff.Should().NotContain("+first change");
+            stagedDiff.Should().Contain("+" + _secondChangeMessage);
+            stagedDiff.Should().NotContain("+" + _firstChangeMessage);
 
             string unstagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff -- unstage.txt");
-            unstagedDiff.Should().Contain("+first change");
-            unstagedDiff.Should().NotContain("+second change");
+            unstagedDiff.Should().Contain("+" + _firstChangeMessage);
+            unstagedDiff.Should().NotContain("+" + _secondChangeMessage);
         });
     }
 
