@@ -157,6 +157,7 @@ public sealed partial class FormCommit : GitModuleForm
     private bool _subscribedToRepositoryChanges;
     private bool _suppressRepositoryChangeReload;
     private bool _initialized;
+    private bool _wasVisibleWhenClosing;
     private IReadOnlyList<GitItemStatus>? _currentSelection;
     private int _alreadyLoadedTemplatesCount = -1;
     private EventHandler<RoutedEventArgs>? _branchNameLabelOnClick;
@@ -2615,8 +2616,17 @@ public sealed partial class FormCommit : GitModuleForm
         _skipUpdate = false;
     }
 
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+
+        // Avalonia clears the window visibility before raising Closed.
+        _wasVisibleWhenClosing = IsVisible;
+    }
+
     protected override void OnClosed(EventArgs e)
     {
+        bool wasVisibleWhenClosing = _wasVisibleWhenClosing;
         if (_subscribedToRepositoryChanges)
         {
             UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
@@ -2638,7 +2648,12 @@ public sealed partial class FormCommit : GitModuleForm
         // closed and access the detached list view.
         _selectionFilterSubscription?.Dispose();
         _selectionFilterSubject.Dispose();
-        _splitterManager.SaveSplitters();
+
+        // Do not attempt to store if the form was hidden when closing. OnClosed also runs for an unshown form.
+        if (wasVisibleWhenClosing)
+        {
+            _splitterManager.SaveSplitters();
+        }
 
         DispatcherPump.Wait(async () =>
         {
@@ -2648,7 +2663,8 @@ public sealed partial class FormCommit : GitModuleForm
 
         // Do not remember commit message of fixup or squash commits, since they have
         // a special meaning, and can be dangerous if used inappropriately.
-        if (!_messageConsumed
+        if (wasVisibleWhenClosing
+            && !_messageConsumed
             && !_commitInProgress
             && _commitMessageManager is not null
             && CommitKind is CommitKind.Normal or CommitKind.Amend)

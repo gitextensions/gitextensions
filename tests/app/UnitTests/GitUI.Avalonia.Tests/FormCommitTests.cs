@@ -110,6 +110,60 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public async Task FormCommit_should_save_draft_and_splitters_only_when_visible_at_close(bool show, bool hideBeforeClose)
+    {
+        const string originalDraft = "The saved draft";
+        const string editedDraft = "The updated draft";
+        const string splitterSizeKey = "splitMain_Size";
+        GitModule module = CreateCleanRepository();
+        string draftPath = Path.Combine(module.WorkingDirGitDir, "COMMITMESSAGE");
+        await File.WriteAllTextAsync(draftPath, originalDraft, module.CommitEncoding);
+
+        GitCommands.AppSettingsPath settings = new("CommitDialog");
+        string? originalSize = settings.GetValue(splitterSizeKey);
+        bool visibleAtClose = show && !hideBeforeClose;
+        try
+        {
+            FormCommit form = new(new GitUICommands(_serviceContainer, module));
+            FormCommit.TestAccessor accessor = form.GetTestAccessor();
+            try
+            {
+                if (show)
+                {
+                    form.Show();
+                    await WaitUntilAsync(() => accessor.Message.Text == originalDraft);
+                    form.UpdateLayout();
+                }
+
+                accessor.Message.Text = editedDraft;
+                if (hideBeforeClose)
+                {
+                    form.Hide();
+                }
+
+                form.IsVisible.Should().Be(visibleAtClose);
+                settings.SetValue(splitterSizeKey, null);
+            }
+            finally
+            {
+                form.Close();
+                await accessor.ClosePersistenceTask;
+            }
+
+            string draft = await File.ReadAllTextAsync(draftPath, module.CommitEncoding);
+            draft.Should().Be(visibleAtClose ? editedDraft : originalDraft);
+            (settings.GetValue(splitterSizeKey) is not null).Should().Be(visibleAtClose);
+        }
+        finally
+        {
+            settings.SetValue(splitterSizeKey, originalSize);
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Commit_splitter_should_retry_saved_distance_after_the_real_window_reaches_its_final_size()
     {
         GitModule module = CreateCleanRepository();
