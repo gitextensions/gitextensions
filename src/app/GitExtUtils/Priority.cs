@@ -50,9 +50,10 @@ public static class Priority
         // a few usages in submodule status processing etc.
         // This check should probably be done in a central location only at startup.
         const int additionalRegexCacheEntries = 10;
-        if ((regexes.Length * 2) + additionalRegexCacheEntries > Regex.CacheSize)
+        int minCacheSize = (regexes.Length * 2) + additionalRegexCacheEntries;
+        if (Regex.CacheSize < minCacheSize)
         {
-            Regex.CacheSize = (regexes.Length * 2) + additionalRegexCacheEntries;
+            Regex.CacheSize = minCacheSize;
         }
 
         Dictionary<T, int> priorityByItem = [];
