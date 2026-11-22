@@ -475,7 +475,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 .AsReadOnlyList();
 
             // Find the first revision that goes in each reserved lane.
-            Dictionary<IGitRef, int> lanePriorityByRef = LanePriorities(refs);
+            IReadOnlyDictionary<IGitRef, int> lanePriorityByRef = LanePriorities(refs);
             _firstIndexForReservedLane = Enumerable.Repeat(-1, lanePriorityByRef.Values.Append(-1).Max() + 1).ToArray();
             for (int nodeIndex = 0; nodeIndex < orderedNodesCount; ++nodeIndex)
             {
@@ -1230,10 +1230,10 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// <summary>
     ///  Returns a dictionary with lane priorities for the references whose name matches a reserved lane pattern
     /// </summary>
-    private static Dictionary<IGitRef, int> LanePriorities(IReadOnlyList<IGitRef> refs)
+    private static IReadOnlyDictionary<IGitRef, int> LanePriorities(IReadOnlyList<IGitRef> refs)
     {
         List<IGitRef> branches = refs.Where(r => r.IsHead || r.IsRemote).ToList();
-        return Priority.Priorities(branches, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
+        return Priority.GetPriorityMapping(branches, x => x.LocalName, AppSettings.ReservedLanesBranchNames);
     }
 
     /// <summary>

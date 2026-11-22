@@ -100,18 +100,18 @@ internal abstract class BaseRefTree : BaseRevisionTree
     }
 
     /// <summary>
-    /// Order the references by the priorities according to the regexes
+    /// Order the items (e.g. refs, remotes) by the priorities according to the regexes
     /// </summary>
     /// <typeparam name="T">The type to prioritize, e.g. IGitRef.</typeparam>
-    /// <param name="references">The branches or remotes to prioritize.</param>
+    /// <param name="items">The items to prioritize.</param>
     /// <param name="keySelector">Function in T to get the sort key.</param>
     /// <param name="regexList">String with the priority regexes separated by semicolon.</param>
-    /// <returns>The resorted references.</returns>
-    private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string regexList) where T : class
+    /// <returns>The resorted items.</returns>
+    private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> items, Func<T, string> keySelector, string regexList) where T : class
     {
-        Dictionary<T, int> priorityByNode = Priority.Priorities(references, keySelector, regexList: regexList);
+        IReadOnlyDictionary<T, int> priorityByNode = Priority.GetPriorityMapping(items, keySelector, regexList);
 
         // Order by the sort match, with no match last as int.Max
-        return references.OrderBy(node => priorityByNode.GetValueOrDefault(node, int.MaxValue));
+        return items.OrderBy(node => priorityByNode.GetValueOrDefault(node, int.MaxValue));
     }
 }
