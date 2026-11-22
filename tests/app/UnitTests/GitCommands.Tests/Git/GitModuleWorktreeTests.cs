@@ -257,4 +257,24 @@ public sealed class CheckExistsInParallelTests
 
         result.Should().Equal(true, false, true);
     }
+
+    [Test]
+    public void CheckExistsInParallel_should_treat_a_throwing_check_as_not_existing()
+    {
+        Func<string, bool> check = path =>
+        {
+            if (path == "throws")
+            {
+                throw new InvalidOperationException();
+            }
+
+            return true;
+        };
+
+        string[] paths = ["exists", "throws", "exists"];
+
+        bool[] result = GitModule.CheckExistsInParallel(paths, check);
+
+        result.Should().Equal(true, false, true);
+    }
 }

@@ -2304,7 +2304,7 @@ public sealed partial class GitModule : IGitModule
 
         bool[] exists = CheckExistsInParallel(records.Select(record => record.FullPath), Directory.Exists);
 
-        List<GitWorktree> worktrees = [];
+        List<GitWorktree> worktrees = new(records.Count);
         for (int i = 0; i < records.Count; i++)
         {
             worktrees.Add(new GitWorktree(
@@ -2323,6 +2323,10 @@ public sealed partial class GitModule : IGitModule
     /// slow or dead path (e.g. a disconnected mapped drive) does not serialize the
     /// blocking checks for all the others.
     /// </summary>
+    /// <remarks>
+    ///  A check that throws for a path (e.g. an inaccessible location) is treated as
+    ///  "does not exist" so that one bad path cannot abort the whole parallel scan.
+    /// </remarks>
     internal static bool[] CheckExistsInParallel(IEnumerable<string> paths, Func<string, bool> checkExists)
     {
         string[] pathArray = paths.ToArray();
@@ -2332,7 +2336,21 @@ public sealed partial class GitModule : IGitModule
             return exists;
         }
 
-        Parallel.For(0, pathArray.Length, i => exists[i] = checkExists(pathArray[i]));
+        Parallel.For(0, pathArray.Length, i =>
+        {
+            try
+            {
+                exists[i] = checkExists(pathArray[i]);
+            }
+            catch (Exception)
+            {
+                // A path that cannot be checked (e.g. an inaccessible or disconnected
+                // location) must not abort the whole parallel scan; treat it as "does
+                // not exist" so the worktree is reported as deleted.
+                exists[i] = false;
+            }
+        });
+
         return exists;
     }
 
