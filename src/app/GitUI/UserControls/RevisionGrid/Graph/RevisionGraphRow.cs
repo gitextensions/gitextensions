@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitExtensions.Extensibility;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph;
@@ -156,7 +157,7 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
                     }
                     else
                     {
-                        laneSharing = SecondarySharing(segment, null, Revision.Score);
+                        laneSharing = SecondarySharing(segment, Revision.Score);
                     }
 
                     return new Lane(_revisionLane, laneSharing);
@@ -189,19 +190,23 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
                         if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
                             && (!otherSegment.IsReservedLanePlaceholder || segment.MayUseReservedLane))
                         {
-                            return new Lane(lane.Index, SecondarySharing(segment, otherSegment, Revision.Score));
+                            return new Lane(lane.Index, SecondarySharing(segment, Revision.Score));
                         }
                     }
                 }
                 else if (segment.ReservedLaneIndex < int.MaxValue)
                 {
                     // Merge lane for segments with the same reserved lane index
-                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes.Reverse())
+                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes)
                     {
                         if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
                             && otherSegment.ReservedLaneIndex == segment.ReservedLaneIndex)
                         {
-                            return new Lane(lane.Index, SecondarySharing(segment, otherSegment, Revision.Score));
+                            // This should only occur when merging a placeholder segment and the selected outgoing merge segment
+                            DebugHelpers.Assert(otherSegment.IsReservedLanePlaceholder, "Expected a reserved lane placeholder");
+
+                            // A placeholder is not the true (drawn) primary; this segment is
+                            return new Lane(lane.Index, LaneSharing.ExclusiveOrPrimary);
                         }
                     }
                 }
@@ -218,14 +223,8 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 
                 return result;
 
-                static LaneSharing SecondarySharing(RevisionGraphSegment segment, RevisionGraphSegment? otherSegment, int revisionScore)
+                static LaneSharing SecondarySharing(RevisionGraphSegment segment, int revisionScore)
                 {
-                    if (otherSegment?.IsReservedLanePlaceholder == true)
-                    {
-                        // A placeholder cannot be the true primary, so this segment is
-                        return LaneSharing.ExclusiveOrPrimary;
-                    }
-
                     if (revisionScore > segment.IsSecondarySharedLaneAtLeastSinceScore)
                     {
                         return LaneSharing.Entire;
