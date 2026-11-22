@@ -876,7 +876,7 @@ public class RevisionGraphTests
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
             // List refs applying to commit
-            string refs = string.Join(" ", row.Revision.GitRevision?.Refs.Select(r => r.Name) ?? []);
+            string refs = string.Join("", row.Revision.GitRevision?.Refs.Select(r => $" {r.Name}") ?? []);
             if (row.Revision.Objectid == ObjectId.WorkTreeId)
             {
                 refs += " [Working directory]";
@@ -887,7 +887,7 @@ public class RevisionGraphTests
                 refs += " [Commit index]";
             }
 
-            graph.Add($"{new string(line)}  {refs}".TrimEnd());
+            graph.Add($"{new string(line)} {refs}".TrimEnd());
 
             IRevisionGraphRow? nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
             if (nextRow == null)

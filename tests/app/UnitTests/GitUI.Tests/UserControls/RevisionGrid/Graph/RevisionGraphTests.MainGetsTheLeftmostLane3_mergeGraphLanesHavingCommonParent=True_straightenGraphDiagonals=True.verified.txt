@@ -2,9 +2,9 @@
   |
   4
  /|
-| | *   [Working directory]
+| | *  [Working directory]
 | | |
-| | *   [Commit index]
+| | *  [Commit index]
 |-|´
 m |  main
 |\ \

@@ -1,6 +1,6 @@
-﻿*   [Working directory]
+﻿*  [Working directory]
 |
-*   [Commit index]
+*  [Commit index]
 |
 4  B
 |

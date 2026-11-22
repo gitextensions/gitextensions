@@ -1,4 +1,4 @@
-﻿    *   [Working directory]
+﻿    *  [Working directory]
 ,--´
 7  main
 |`--ˎ
