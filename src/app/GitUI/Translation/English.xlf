@@ -10038,9 +10038,10 @@ Separate the priorities with ';'.</source>
       </trans-unit>
       <trans-unit id="_reservedLanesBranchNamesTooltip.Text">
         <source>Regex for branch names that get reserved lanes in the revision graph.
-The first lane is reserved for a branch matching the priority 1 pattern if there is one, 
+The first lane is reserved for a branch matching the priority 1 pattern if there is one,
 the next lane for a priority 2 pattern branch and so on.
-Separate the priorities with ';'.</source>
+Separate the priorities with ';'.
+E.g. "dev[^/]*;main|master;release/.*"</source>
         <target />
       </trans-unit>
       <trans-unit id="_revisionSortWarningTooltip.Text">

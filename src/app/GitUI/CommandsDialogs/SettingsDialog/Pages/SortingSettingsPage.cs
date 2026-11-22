@@ -15,10 +15,13 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _prioRemoteNamesTooltip = new("Regex to prioritize remote names in the left panel and commit info.\n" +
         "The remotes matching the pattern will be shown before the others.\n" +
         "Separate the priorities with ';'.");
-    private readonly TranslationString _reservedLanesBranchNamesTooltip = new("Regex for branch names that get reserved lanes in the revision graph.\n" +
-        "The first lane is reserved for a branch matching the priority 1 pattern if there is one, \n" +
-        "the next lane for a priority 2 pattern branch and so on.\n" +
-        "Separate the priorities with ';'.");
+    private readonly TranslationString _reservedLanesBranchNamesTooltip = new("""
+        Regex for branch names that get reserved lanes in the revision graph.
+        The first lane is reserved for a branch matching the priority 1 pattern if there is one,
+        the next lane for a priority 2 pattern branch and so on.
+        Separate the priorities with ';'.
+        E.g. "dev[^/]*;main|master;release/.*"
+        """);
 
     public SortingSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
