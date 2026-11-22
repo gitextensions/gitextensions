@@ -4,6 +4,7 @@ using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
+using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
@@ -1069,7 +1070,7 @@ public class RevisionGraphTests
             // Size window to fit graph
             int maxLaneCount = Enumerable.Range(0, revisionGraph.Count)
                 .Max(rowIndex => revisionGraph.GetSegmentsForRow(rowIndex)?.GetLaneCount() ?? 0);
-            window.ClientSize = new((graphColumn.GetTestAccessor().LaneWidth * (maxLaneCount + 1)) + subjectColumn.Column.Width,
+            window.ClientSize = new((GraphRenderer.LaneWidth * (maxLaneCount + 1)) + subjectColumn.Column.Width,
                 grid.RowTemplate.Height * (rowCount + 1));
 
             AppSettings.ShowRevisionGridGraphColumn = true;
