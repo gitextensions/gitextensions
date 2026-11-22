@@ -120,10 +120,10 @@ internal sealed partial class FilterToolBar : TranslatedControl
         tsmiBranchLocal.Click += (_, _) => UpdateBranchFilterItems();
         tsmiBranchRemote.Click += (_, _) => UpdateBranchFilterItems();
         tsmiBranchTag.Click += (_, _) => UpdateBranchFilterItems();
-        tsmiCommitFilter.Click += revisionFilterBox_CheckedChanged;
-        tsmiCommitterFilter.Click += revisionFilterBox_CheckedChanged;
-        tsmiAuthorFilter.Click += revisionFilterBox_CheckedChanged;
-        tsmiDiffContainsFilter.Click += revisionFilterBox_CheckedChanged;
+        tsmiCommitFilter.PropertyChanged += revisionFilterBox_CheckedChanged;
+        tsmiCommitterFilter.PropertyChanged += revisionFilterBox_CheckedChanged;
+        tsmiAuthorFilter.PropertyChanged += revisionFilterBox_CheckedChanged;
+        tsmiDiffContainsFilter.PropertyChanged += revisionFilterBox_CheckedChanged;
 
         _revisionFilters = AppSettings.RevisionFilterDropdowns
             .Union([
@@ -674,7 +674,9 @@ internal sealed partial class FilterToolBar : TranslatedControl
 
     private void revisionFilterBox_CheckedChanged(object sender, EventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
+        // Avalonia exposes the menu check transition through the native property.
+        if (e is AvaloniaPropertyChangedEventArgs args && args.Property == MenuItem.IsCheckedProperty
+            && !string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
         {
             ApplyRevisionFilter();
         }

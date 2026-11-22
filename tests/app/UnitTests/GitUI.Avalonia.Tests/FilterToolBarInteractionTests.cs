@@ -33,6 +33,46 @@ namespace GitExtensionsTests;
 public sealed class FilterToolBarInteractionTests
 {
     [AvaloniaTest]
+    [TestCase("tsmiCommitFilter", false)]
+    [TestCase("tsmiCommitterFilter", false)]
+    [TestCase("tsmiAuthorFilter", false)]
+    [TestCase("tsmiDiffContainsFilter", false)]
+    [TestCase("tsmiAuthorFilter", true)]
+    public void Revision_filter_option_should_apply_a_nonempty_query_when_its_check_changes(string name, bool byPointer)
+    {
+        using FilterFixture fixture = new();
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu("tsddbtnRevisionFilter");
+        MenuItem item = menu.Items.OfType<MenuItem>().Single(option => option.Name == name);
+        ComboBox text = fixture.Toolbar.FindControl<ComboBox>("tstxtRevisionFilter")!;
+        bool original = item.IsChecked;
+        item.IsChecked = !original;
+        fixture.RevisionGridFilter.DidNotReceive().SetAndApplyRevisionFilter(Arg.Any<RevisionFilter>());
+        item.IsChecked = original;
+        text.Text = "  search terms  ";
+        fixture.RevisionGridFilter.ClearReceivedCalls();
+
+        if (byPointer)
+        {
+            fixture.Click(owner);
+            menu.IsOpen.Should().BeTrue();
+            fixture.Click(item);
+        }
+        else
+        {
+            item.IsChecked = !original;
+        }
+
+        item.IsChecked.Should().Be(!original);
+        bool byCommit = menu.Items.OfType<MenuItem>().Single(option => option.Name == "tsmiCommitFilter").IsChecked;
+        bool byCommitter = menu.Items.OfType<MenuItem>().Single(option => option.Name == "tsmiCommitterFilter").IsChecked;
+        bool byAuthor = menu.Items.OfType<MenuItem>().Single(option => option.Name == "tsmiAuthorFilter").IsChecked;
+        bool byDiffContent = menu.Items.OfType<MenuItem>().Single(option => option.Name == "tsmiDiffContainsFilter").IsChecked;
+        fixture.RevisionGridFilter.Received(1).SetAndApplyRevisionFilter(Arg.Is<RevisionFilter>(filter =>
+            filter.Text == "search terms" && filter.FilterByCommit == byCommit && filter.FilterByCommitter == byCommitter
+            && filter.FilterByAuthor == byAuthor && filter.FilterByDiffContent == byDiffContent));
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public void Advanced_filter_tooltip_should_follow_the_actual_summary_without_suppressing_an_open_menu(bool openMenu)
