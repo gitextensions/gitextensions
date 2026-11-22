@@ -20,12 +20,176 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
 [TestFixture]
 public sealed class FileStatusListTests
 {
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileStatusList_should_report_throttled_notification_errors_and_keep_processing(bool useFilter)
+    {
+        using FileStatusList control = new();
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
+        Window window = new() { Width = 720, Height = 360, Content = control };
+        InvalidOperationException expected = new("A file status subscriber failed.");
+        List<Exception> reported = [];
+        List<Exception> unhandled = [];
+        TaskCompletionSource firstNotification = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource nextNotification = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(10));
+        int notifications = 0;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            if (!useFilter)
+            {
+                control.SelectFileOrFolder(RelativePath.From(first.Name)).Should().BeTrue();
+            }
+
+            WinFormsShims.Application.ThreadException += Report;
+            Dispatcher.UIThread.UnhandledException += ReportUnhandled;
+            if (useFilter)
+            {
+                control.FilterChanged += OnChanged;
+            }
+            else
+            {
+                control.SelectedIndexChanged += OnChanged;
+            }
+
+            ChangeSelectionOrFilter(firstRequest: true);
+            await firstNotification.Task.WaitAsync(deadline.Token);
+            reported.Should().ContainSingle().Which.Should().BeSameAs(expected);
+            unhandled.Should().BeEmpty();
+
+            ChangeSelectionOrFilter(firstRequest: false);
+            await nextNotification.Task.WaitAsync(deadline.Token);
+            reported.Should().ContainSingle();
+            if (useFilter)
+            {
+                control.GitItemFilteredStatuses.Should().Equal(first);
+            }
+            else
+            {
+                control.SelectedGitItem.Should().BeSameAs(first);
+            }
+        }
+        finally
+        {
+            control.FilterChanged -= OnChanged;
+            control.SelectedIndexChanged -= OnChanged;
+            WinFormsShims.Application.ThreadException -= Report;
+            Dispatcher.UIThread.UnhandledException -= ReportUnhandled;
+            window.Close();
+        }
+
+        return;
+
+        void ChangeSelectionOrFilter(bool firstRequest)
+        {
+            if (useFilter)
+            {
+                TextBox editor = control.FindControl<ComboBox>("cboFilterComboBox")!
+                    .GetVisualDescendants().OfType<TextBox>().Single(textBox => textBox.Name == "PART_EditableTextBox");
+                editor.Focus().Should().BeTrue();
+                editor.SelectAll();
+                window.KeyTextInput(firstRequest ? "second" : "first");
+                return;
+            }
+
+            GitItemStatus item = firstRequest ? second : first;
+            TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+            Control row = tree.IsEffectivelyVisible
+                ? tree.GetVisualDescendants().OfType<TreeViewItem>()
+                    .Single(row => row.DataContext is FileStatusList.DiffTreeNode node && node.Item?.Item == item)
+                : control.FindControl<ListBox>("lstFiles")!.GetVisualDescendants().OfType<ListBoxItem>()
+                    .Single(row => row.DataContext is FileStatusItem status && status.Item == item);
+            Point point = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            control.SelectedGitItem.Should().BeSameAs(item);
+        }
+
+        void OnChanged(object? sender, EventArgs e)
+        {
+            if (++notifications == 1)
+            {
+                firstNotification.TrySetResult();
+                throw expected;
+            }
+
+            nextNotification.TrySetResult();
+        }
+
+        void Report(object? sender, ThreadExceptionEventArgs e)
+        {
+            reported.Add(e.Exception);
+        }
+
+        void ReportUnhandled(object? sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (ReferenceEquals(e.Exception, expected))
+            {
+                unhandled.Add(e.Exception);
+                e.Handled = true;
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileStatusList_should_remember_a_typed_empty_filter_without_recording_programmatic_changes()
+    {
+        using FileStatusList control = new();
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
+        Window window = new() { Width = 720, Height = 360, Content = control };
+        using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(10));
+        TaskCompletionSource applied = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ComboBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!;
+            string[] initialHistory = [.. filter.Items.OfType<string>()];
+            control.SetFilter("second");
+            control.SetFilter(string.Empty);
+            filter.Items.OfType<string>().Should().Equal(initialHistory);
+
+            TextBox editor = filter.GetVisualDescendants().OfType<TextBox>()
+                .Single(textBox => textBox.Name == "PART_EditableTextBox");
+            editor.Focus().Should().BeTrue();
+            editor.SelectAll();
+            control.FilterChanged += (_, _) => applied.TrySetResult();
+            window.KeyTextInput("first");
+            await applied.Task.WaitAsync(deadline.Token);
+            filter.Items.OfType<string>().First().Should().Be("first");
+            control.GitItemFilteredStatuses.Should().Equal(first);
+
+            applied = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            editor.SelectAll();
+            window.KeyPress(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, keySymbol: null);
+            window.KeyRelease(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, keySymbol: null);
+            await applied.Task.WaitAsync(deadline.Token);
+            filter.Items.OfType<string>().Take(2).Should().Equal(string.Empty, "first");
+            control.GitItemFilteredStatuses.Should().Equal(first, second);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaTest]
     public void FileStatusList_should_publish_data_and_filter_changes_from_the_original_operations()
     {

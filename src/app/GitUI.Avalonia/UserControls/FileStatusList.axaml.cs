@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using PixelPoint = Avalonia.PixelPoint;
 using Rectangle = Avalonia.Rect;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
@@ -2180,22 +2181,25 @@ public partial class FileStatusList : GitModuleControl
         void FilterTimer_Tick(object? sender, EventArgs e)
         {
             _filterTimer.Stop();
-            _toolTipText = "";
-            string filterText = cboFilterComboBox.Text ?? string.Empty;
-            int fileCount = 0;
-            try
+            TaskManager.HandleExceptions(() =>
             {
-                fileCount = FilterFiles(filterText);
-            }
-            catch (ArgumentException exception)
-            {
-                _toolTipText = exception.Message;
-            }
+                _toolTipText = "";
+                string filterText = cboFilterComboBox.Text ?? string.Empty;
+                int fileCount = 0;
+                try
+                {
+                    fileCount = FilterFiles(filterText);
+                }
+                catch (ArgumentException exception)
+                {
+                    _toolTipText = exception.Message;
+                }
 
-            if (fileCount > 0 && filterText.Length > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
-            {
-                AddToSelectionFilter(filterText);
-            }
+                if (fileCount > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
+                {
+                    AddToSelectionFilter(filterText);
+                }
+            }, WinFormsShims.Application.OnThreadException);
         }
 
         void AddToSelectionFilter(string filter)
@@ -2546,7 +2550,7 @@ public partial class FileStatusList : GitModuleControl
     private void SelectedIndexChangeTimer_Tick(object? sender, EventArgs e)
     {
         _selectedIndexChangeTimer.Stop();
-        FileStatusListView_SelectedIndexChanged();
+        TaskManager.HandleExceptions(FileStatusListView_SelectedIndexChanged, WinFormsShims.Application.OnThreadException);
     }
 
     private async Task StartFileDragAsync(PointerPressedEventArgs pressedEventArgs)
