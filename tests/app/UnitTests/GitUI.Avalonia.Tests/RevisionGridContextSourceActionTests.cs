@@ -67,6 +67,23 @@ public sealed class RevisionGridContextSourceActionTests
     }
 
     [AvaloniaTest]
+    public void ContextMenuOpening_should_refresh_a_new_selection_only_when_requested()
+    {
+        using GridFixture fixture = new(bare: false, count: 2);
+        int menuChanges = 0;
+        fixture.Grid.MenuCommands.MenuChanged += (_, _) => menuChanges++;
+
+        fixture.Grid.SetSelectedRevision(fixture.Revisions[0].ObjectId).Should().BeTrue();
+        fixture.Grid.GetSelectedRevisions().Should().Equal(fixture.Revisions[0]);
+        menuChanges.Should().Be(0);
+
+        fixture.OpenContextMenu();
+        fixture.Grid.GetSelectedRevisions().Should().Equal(fixture.Revisions[1]);
+        fixture.AssertMenu("createTagToolStripMenuItem", true);
+        menuChanges.Should().Be(1);
+    }
+
+    [AvaloniaTest]
     [TestCase("commit", false)]
     [TestCase("stash", false)]
     [TestCase("autostash", false)]

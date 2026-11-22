@@ -236,6 +236,9 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     /// <summary>Renders the supported XHTML subset.</summary>
     public void SetXHTMLText(string? xhtml)
     {
+        using IDisposable? nativeFonts = _usesNativeWidthMeasurement
+            ? WinFormsRichEditTextMeasurer.BeginFontMeasurementBatch(this)
+            : null;
         _xhtml = xhtml ?? string.Empty;
         Inlines?.Clear();
         SelectedLinkUri = null;
@@ -589,6 +592,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         {
             return base.CreateTextLayout(text);
         }
+
+        using IDisposable? nativeFonts = WinFormsRichEditTextMeasurer.BeginFontMeasurementBatch(this);
 
         // ContentsResized and painting use the same native character advances. Merely
         // assigning a GDI-measured Width leaves Skia's wider advances clipping the final

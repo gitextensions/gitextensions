@@ -9,6 +9,15 @@ namespace GitUI.Compat;
 /// </summary>
 internal static class WinFormsRichEditTextMeasurer
 {
+    [ThreadStatic]
+    private static FontMeasurementBatch? _fontBatch;
+
+    /// <summary>
+    ///  Shares LOGFONT conversions for one synchronous layout or content update.
+    /// </summary>
+    internal static IDisposable? BeginFontMeasurementBatch(TextBlock owner)
+        => OperatingSystem.IsWindows() ? _fontBatch = new FontMeasurementBatch(owner, _fontBatch) : null;
+
     public static double GetLineHeight(TextBlock owner)
     {
         if (OperatingSystem.IsWindows() && TryMeasureNativeFont(owner, null, owner.FontSize, out int height, out _, out _))
@@ -73,41 +82,11 @@ internal static class WinFormsRichEditTextMeasurer
             return false;
         }
 
-        nuint token = 0;
-        nint graphics = 0;
-        nint family = 0;
-        nint font = 0;
         nint nativeFont = 0;
         nint previousFont = 0;
         try
         {
-            StartupInput input = new() { Version = 1 };
-            if (GdiplusStartup(out token, ref input, 0) != 0
-                || GdipCreateFromHDC(deviceContext, out graphics) != 0
-                || GdipCreateFontFamilyFromName(owner.FontFamily.Name, 0, out family) != 0)
-            {
-                return false;
-            }
-
-            // These native advances describe 96-DPI DIPs. An HDC at another system DPI
-            // would turn point-font pixels into larger logical widths a second time when
-            // Avalonia scales them. Use its normal scalable renderer in that context.
-            if (GdipGetDpiX(graphics, out float dpiX) != 0 || GdipGetDpiY(graphics, out float dpiY) != 0
-                || dpiX != 96 || dpiY != 96)
-            {
-                return false;
-            }
-
-            int style = (owner.FontWeight >= FontWeight.Bold ? 1 : 0)
-                | (owner.FontStyle == FontStyle.Italic ? 2 : 0);
-
-            // Control.FontHandleWrapper calls Font.ToHfont, whose GDI+ LOGFONT conversion
-            // quantizes the native-control font differently from TextRenderer's cache.
-            // The source Font is in points. Convert the owner's 96-DPI DIPs back to that
-            // unit before the same GDI+ conversion; UnitPixel can choose different metrics.
-            const int unitPoint = 3;
-            if (GdipCreateFont(family, (float)(fontSize * 72 / 96), style, unitPoint, out font) != 0
-                || GdipGetLogFontW(font, graphics, out NativeLogFont logFont) != 0)
+            if (!TryGetLogFont(deviceContext, owner, fontSize, out NativeLogFont logFont))
             {
                 return false;
             }
@@ -158,6 +137,61 @@ internal static class WinFormsRichEditTextMeasurer
                 DeleteObject(nativeFont);
             }
 
+            ReleaseDC(0, deviceContext);
+        }
+    }
+
+    private static bool TryGetLogFont(nint deviceContext, TextBlock owner, double fontSize, out NativeLogFont logFont)
+    {
+        FontMeasurementBatch? batch = ReferenceEquals(_fontBatch?.Owner, owner) ? _fontBatch : null;
+        int style = (owner.FontWeight >= FontWeight.Bold ? 1 : 0)
+            | (owner.FontStyle == FontStyle.Italic ? 2 : 0);
+        (string Family, float Points, int Style) key = (owner.FontFamily.Name, (float)(fontSize * 72 / 96), style);
+        if (batch is not null && batch.Fonts.TryGetValue(key, out logFont))
+        {
+            return true;
+        }
+
+        logFont = default;
+        nuint token = 0;
+        nint graphics = 0;
+        nint family = 0;
+        nint font = 0;
+        try
+        {
+            StartupInput input = new() { Version = 1 };
+            if (GdiplusStartup(out token, ref input, 0) != 0
+                || GdipCreateFromHDC(deviceContext, out graphics) != 0
+                || GdipCreateFontFamilyFromName(key.Family, 0, out family) != 0)
+            {
+                return false;
+            }
+
+            // These native advances describe 96-DPI DIPs. An HDC at another system DPI
+            // would turn point-font pixels into larger logical widths a second time when
+            // Avalonia scales them. Use its normal scalable renderer in that context.
+            if (GdipGetDpiX(graphics, out float dpiX) != 0 || GdipGetDpiY(graphics, out float dpiY) != 0
+                || dpiX != 96 || dpiY != 96)
+            {
+                return false;
+            }
+
+            // Control.FontHandleWrapper calls Font.ToHfont, whose GDI+ LOGFONT conversion
+            // quantizes the native-control font differently from TextRenderer's cache.
+            // The source Font is in points. Convert the owner's 96-DPI DIPs back to that
+            // unit before the same GDI+ conversion; UnitPixel can choose different metrics.
+            const int unitPoint = 3;
+            if (GdipCreateFont(family, key.Points, key.Style, unitPoint, out font) != 0
+                || GdipGetLogFontW(font, graphics, out logFont) != 0)
+            {
+                return false;
+            }
+
+            batch?.Fonts.Add(key, logFont);
+            return true;
+        }
+        finally
+        {
             if (font != 0)
             {
                 GdipDeleteFont(font);
@@ -177,8 +211,6 @@ internal static class WinFormsRichEditTextMeasurer
             {
                 GdiplusShutdown(token);
             }
-
-            ReleaseDC(0, deviceContext);
         }
     }
 
@@ -236,6 +268,15 @@ internal static class WinFormsRichEditTextMeasurer
     [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW", CharSet = CharSet.Unicode)]
     private static extern bool GetTextExtentExPoint(nint deviceContext, string text, int length,
         int maximumExtent, out int fittedCharacters, [Out] int[] advances, out NativeSize size);
+
+    private sealed class FontMeasurementBatch(TextBlock owner, FontMeasurementBatch? previous) : IDisposable
+    {
+        public TextBlock Owner { get; } = owner;
+
+        public Dictionary<(string Family, float Points, int Style), NativeLogFont> Fonts { get; } = [];
+
+        public void Dispose() => _fontBatch = previous;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct NativeSize

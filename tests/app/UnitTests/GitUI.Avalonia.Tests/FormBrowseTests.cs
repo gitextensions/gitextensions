@@ -3221,8 +3221,7 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Revision context menu was not created.");
             MenuItem deleteBranch = revisionGrid.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
-            contextMenu.Open(revisionGrid._gridView);
-            Dispatcher.UIThread.RunJobs();
+            revisionGrid.OpenSelectedRevisionContextMenu(form);
             deleteBranch.IsVisible.Should().BeTrue();
             deleteBranch.IsEnabled.Should().BeFalse();
             deleteBranch.Bounds.Height.Should().BeGreaterThan(0);
@@ -5689,38 +5688,42 @@ public sealed class FormBrowseTests
     {
         GitModule module = CreateRepositoryWithInitialCommit();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
-        form.Show();
-        RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
-            ?? throw new InvalidOperationException("Revision grid was not created.");
-        TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
-            ?? throw new InvalidOperationException("Revision loading status was not created.");
-        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && revisionGrid.SelectedRevision is not null);
+        try
+        {
+            form.Show();
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                ?? throw new InvalidOperationException("Revision grid was not created.");
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
+                ?? throw new InvalidOperationException("Revision loading status was not created.");
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && revisionGrid.SelectedRevision is not null);
 
-        ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
-            ?? throw new InvalidOperationException("Revision context menu was not created.");
-        ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
-            ?? throw new InvalidOperationException("Revision list was not created.");
-        MenuItem rebaseOn = revisionGrid.FindControl<MenuItem>("rebaseOnToolStripMenuItem")
-            ?? throw new InvalidOperationException("Rebase-on menu item was not created.");
-        MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
-            ?? throw new InvalidOperationException("Rebase menu item was not created.");
-        MenuItem rebaseInteractively = revisionGrid.FindControl<MenuItem>("rebaseInteractivelyToolStripMenuItem")
-            ?? throw new InvalidOperationException("Interactive-rebase menu item was not created.");
-        MenuItem rebaseWithAdvancedOptions = revisionGrid.FindControl<MenuItem>("rebaseWithAdvOptionsToolStripMenuItem")
-            ?? throw new InvalidOperationException("Advanced-rebase menu item was not created.");
+            ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("Revision context menu was not created.");
+            MenuItem rebaseOn = revisionGrid.FindControl<MenuItem>("rebaseOnToolStripMenuItem")
+                ?? throw new InvalidOperationException("Rebase-on menu item was not created.");
+            MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
+                ?? throw new InvalidOperationException("Rebase menu item was not created.");
+            MenuItem rebaseInteractively = revisionGrid.FindControl<MenuItem>("rebaseInteractivelyToolStripMenuItem")
+                ?? throw new InvalidOperationException("Interactive-rebase menu item was not created.");
+            MenuItem rebaseWithAdvancedOptions = revisionGrid.FindControl<MenuItem>("rebaseWithAdvOptionsToolStripMenuItem")
+                ?? throw new InvalidOperationException("Advanced-rebase menu item was not created.");
 
-        contextMenu.Open(revisions);
-        Dispatcher.UIThread.RunJobs();
-        rebaseOn.IsVisible.Should().BeTrue("WinForms keeps the Rebase on parent available for a regular revision");
-        rebaseOn.IsEnabled.Should().BeTrue();
+            revisionGrid.OpenSelectedRevisionContextMenu(form);
+            rebaseOn.IsVisible.Should().BeTrue("WinForms keeps the Rebase on parent available for a regular revision");
+            rebaseOn.IsEnabled.Should().BeTrue();
 
-        rebaseOn.IsSubMenuOpen = true;
-        Dispatcher.UIThread.RunJobs();
-        rebase.IsEnabled.Should().BeFalse("the selected HEAD has no other branch to rebase onto");
-        rebaseInteractively.IsEnabled.Should().BeFalse();
-        rebaseWithAdvancedOptions.IsEnabled.Should().BeFalse();
-        rebaseOn.IsSubMenuOpen = false;
-        contextMenu.Close();
+            rebaseOn.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            rebase.IsEnabled.Should().BeFalse("the selected HEAD has no other branch to rebase onto");
+            rebaseInteractively.IsEnabled.Should().BeFalse();
+            rebaseWithAdvancedOptions.IsEnabled.Should().BeFalse();
+            rebaseOn.IsSubMenuOpen = false;
+            contextMenu.Close();
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -6008,19 +6011,17 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Navigate menu item was not created.");
             MenuItem openCommitsWithDiffTool = revisionGrid.FindControl<MenuItem>("openCommitsWithDiffToolMenuItem")
                 ?? throw new InvalidOperationException("Open-commits-with-difftool item was not created.");
-            ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
-                ?? throw new InvalidOperationException("Revision list was not created.");
 
             (string Name, ThemeVariant Variant)[] themes =
             [
                 ("Light", ThemeVariant.Light),
                 ("Dark", ThemeVariant.Dark),
             ];
+            int opening = 0;
             foreach ((string themeName, ThemeVariant themeVariant) in themes)
             {
                 form.RequestedThemeVariant = themeVariant;
-                contextMenu.Open(revisions);
-                Dispatcher.UIThread.RunJobs();
+                revisionGrid.OpenSelectedRevisionContextMenu(form, opening++);
 
                 TopLevel contextMenuRoot = TopLevel.GetTopLevel(contextMenu)
                     ?? throw new InvalidOperationException("Revision context menu did not open in a top level.");

@@ -403,8 +403,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         _gridView.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
         _gridView.SelectionChanged += OnGridViewSelectionChanged;
-        _gridView.GotFocus += (_, _) => RefreshSelection();
-        _gridView.LostFocus += (_, _) => RefreshSelection();
+
+        // Focus can move between rows while Avalonia's selection colors keep the same focus owner.
+        _gridView.GetObservable(IsKeyboardFocusWithinProperty).Subscribe(_ => RefreshSelection());
         _gridView.AttachedToVisualTree += (_, _) =>
             Dispatcher.UIThread.Post(FocusRevisionGridWhenShown, DispatcherPriority.Loaded);
         _gridView.KeyDown += OnGridViewKeyDown;
@@ -1938,6 +1939,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             _latestSelectedRowIndex = GetRevisionIndex(latestSelectedRevision);
         }
 
+        _selectionTimer.Stop();
+        _selectionTimer.Start();
+
         (ObjectId first, GitRevision? selected) = GetFirstAndSelected();
         compareToWorkingDirectoryMenuItem.IsEnabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
         compareWithCurrentBranchToolStripMenuItem.IsEnabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
@@ -1947,14 +1951,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         HighlightRevisionsByAuthor(selectedRevisions);
         RefreshSelection();
-        UpdateContextMenuItems();
         if (selectedRevisions.Count == 1 && selected is not null)
         {
             _navigationHistory.Push(selected.ObjectId);
         }
-
-        _selectionTimer.Stop();
-        _selectionTimer.Start();
     }
 
     private void AddColumn(ColumnProvider columnProvider)

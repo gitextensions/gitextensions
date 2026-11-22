@@ -222,6 +222,7 @@ public sealed class RenameBranchTests
             MenuItem rename = revisionGrid.FindControl<MenuItem>("renameBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Rename-branch menu item was not created.");
 
+            revisionGrid.OpenSelectedRevisionContextMenu(form);
             rename.IsEnabled.Should().BeTrue();
             rename.Items.OfType<MenuItem>().Select(item => item.Header).Should().BeEquivalentTo(
                 ["feature__one", "main"],

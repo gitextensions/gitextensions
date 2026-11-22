@@ -1,7 +1,12 @@
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -36,6 +41,25 @@ internal static class RevisionGridTestSupport
                 process.When(value => value.Dispose()).Do(_ => output.Dispose());
                 return process;
             });
+    }
+
+    internal static void OpenSelectedRevisionContextMenu(this RevisionGridControl control, Window owner, int opening = 0)
+    {
+        Dispatcher.UIThread.RunJobs();
+        owner.UpdateLayout();
+        ListBox revisions = control._gridView;
+        ListBoxItem row = revisions.ContainerFromIndex(revisions.SelectedIndex) as ListBoxItem
+            ?? throw new AssertionException("The selected revision must be realized.");
+        Size doubleTapSize = owner.GetPlatformSettings()?.GetDoubleTapSize(PointerType.Mouse)
+            ?? throw new InvalidOperationException("The platform must define pointer gesture bounds.");
+        Point rowPoint = new(row.Bounds.Width - 5 - (opening * (doubleTapSize.Width + 1)), row.Bounds.Height / 2);
+        Point point = row.TranslatePoint(rowPoint, owner)
+            ?? throw new InvalidOperationException("The selected revision must be attached to the window.");
+        owner.MouseMove(point, RawInputModifiers.None);
+        owner.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+        owner.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        (revisions.ContextMenu?.IsOpen ?? false).Should().BeTrue("the real right-button route must open the revision menu");
     }
 
     internal readonly struct Accessor(RevisionGridControl control)
