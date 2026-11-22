@@ -109,7 +109,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     /// <returns>The resorted items.</returns>
     private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> items, Func<T, string> keySelector, string regexList) where T : class
     {
-        IReadOnlyDictionary<T, int> priorityByNode = Priority.GetPriorityMapping(items, keySelector, regexList);
+        IReadOnlyDictionary<T, int> priorityByNode = items.GetPriorityMapping(keySelector, regexList);
 
         // Order by the sort match, with no match last as int.Max
         return items.OrderBy(node => priorityByNode.GetValueOrDefault(node, int.MaxValue));

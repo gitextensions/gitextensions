@@ -1233,7 +1233,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
     private static IReadOnlyDictionary<IGitRef, int> LanePriorities(IReadOnlyList<IGitRef> refs)
     {
         List<IGitRef> branches = refs.Where(r => r.IsHead || r.IsRemote).ToList();
-        return Priority.GetPriorityMapping(branches, x => x.LocalName, AppSettings.ReservedLanesBranchNames);
+        return branches.GetPriorityMapping(x => x.LocalName, AppSettings.ReservedLanesBranchNames);
     }
 
     /// <summary>

@@ -918,9 +918,9 @@ public partial class CommitInfo : GitModuleControl
             string[] remoteBranchRegexes = [.. branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$")];
             string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
 
-            IReadOnlyDictionary<string, int> localBranchPriorities = Priority.GetPriorityMapping(branches, x => x, localBranchRegexes);
-            IReadOnlyDictionary<string, int> remoteBranchPriorities = Priority.GetPriorityMapping(branches, x => x, remoteBranchRegexes);
-            IReadOnlyDictionary<string, int> remotePriorities = Priority.GetPriorityMapping(branches, x => x, remoteRegexes);
+            IReadOnlyDictionary<string, int> localBranchPriorities = branches.GetPriorityMapping(x => x, localBranchRegexes);
+            IReadOnlyDictionary<string, int> remoteBranchPriorities = branches.GetPriorityMapping(x => x, remoteBranchRegexes);
+            IReadOnlyDictionary<string, int> remotePriorities = branches.GetPriorityMapping(x => x, remoteRegexes);
 
             foreach (string branch in branches)
             {

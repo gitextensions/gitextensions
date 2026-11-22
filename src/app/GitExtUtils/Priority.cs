@@ -14,7 +14,7 @@ public static class Priority
     /// <param name="keySelector">Function in T to get the sort key.</param>
     /// <param name="regexes">String with the priority regexes separated by semicolon.</param>
     /// <returns>Priorities for the items that match a regex.</returns>
-    public static IReadOnlyDictionary<T, int> GetPriorityMapping<T>(IReadOnlyList<T> items, Func<T, string> keySelector, string regexes) where T : class
+    public static IReadOnlyDictionary<T, int> GetPriorityMapping<T>(this IReadOnlyList<T> items, Func<T, string> keySelector, string regexes) where T : class
     {
         return GetPriorityMapping(items, keySelector,
             regexes
@@ -30,7 +30,7 @@ public static class Priority
     /// <param name="keySelector">Function in T to get the sort key.</param>
     /// <param name="regexes">Array with the priority regexes.</param>
     /// <returns>Priorities for the items that match a regex.</returns>
-    public static IReadOnlyDictionary<T, int> GetPriorityMapping<T>(IReadOnlyList<T> items, Func<T, string> keySelector, string[] regexes) where T : class
+    public static IReadOnlyDictionary<T, int> GetPriorityMapping<T>(this IReadOnlyList<T> items, Func<T, string> keySelector, string[] regexes) where T : class
     {
         regexes = regexes
             .Select(regex => $"^({regex})$")
