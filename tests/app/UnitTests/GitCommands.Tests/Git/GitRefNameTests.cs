@@ -57,24 +57,24 @@ public sealed class GitRefNameTests
     }
 
     [Test]
-    public void ToBranchRef_should_qualify_numeric_branch_name()
+    public void GetFullBranchNameIfNumeric_should_qualify_numeric_branch_name()
     {
-        GitRefName.ToBranchRef("13435").Should().Be("refs/heads/13435");
-        GitRefName.ToBranchRef(" 13435 ").Should().Be("refs/heads/13435");
+        GitRefName.GetFullBranchNameIfNumeric("13435").Should().Be("refs/heads/13435");
+        GitRefName.GetFullBranchNameIfNumeric(" 13435 ").Should().Be("refs/heads/13435");
     }
 
     [Test]
-    public void ToBranchRef_should_not_touch_non_branch_names()
+    public void GetFullBranchNameIfNumeric_should_not_touch_non_branch_names()
     {
-        GitRefName.ToBranchRef(null).Should().Be(null);
-        GitRefName.ToBranchRef("").Should().Be("");
-        GitRefName.ToBranchRef("    ").Should().Be("");
-        GitRefName.ToBranchRef("master").Should().Be("master");
-        GitRefName.ToBranchRef("v1.0").Should().Be("v1.0");
-        GitRefName.ToBranchRef("origin/13435").Should().Be("origin/13435");
-        GitRefName.ToBranchRef("4e0f0fe3f6add43557913c354de02560b8faec32").Should().Be("4e0f0fe3f6add43557913c354de02560b8faec32");
-        GitRefName.ToBranchRef("refs/heads/13435").Should().Be("refs/heads/13435");
-        GitRefName.ToBranchRef("13435 13436").Should().Be("13435 13436");
+        GitRefName.GetFullBranchNameIfNumeric(null).Should().Be(null);
+        GitRefName.GetFullBranchNameIfNumeric("").Should().Be("");
+        GitRefName.GetFullBranchNameIfNumeric("    ").Should().Be("");
+        GitRefName.GetFullBranchNameIfNumeric("master").Should().Be("master");
+        GitRefName.GetFullBranchNameIfNumeric("v1.0").Should().Be("v1.0");
+        GitRefName.GetFullBranchNameIfNumeric("origin/13435").Should().Be("origin/13435");
+        GitRefName.GetFullBranchNameIfNumeric("4e0f0fe3f6add43557913c354de02560b8faec32").Should().Be("4e0f0fe3f6add43557913c354de02560b8faec32");
+        GitRefName.GetFullBranchNameIfNumeric("refs/heads/13435").Should().Be("refs/heads/13435");
+        GitRefName.GetFullBranchNameIfNumeric("13435 13436").Should().Be("13435 13436");
     }
 
     [Test]
