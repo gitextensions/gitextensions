@@ -261,8 +261,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             .FirstOrDefault(candidate => candidate.Offset > offset);
         if (marker is not null)
         {
+            // AvaloniaEdit caret offsets leave viewport scrolling to the caller.
             TextEditor.TextArea.Caret.Offset = marker.Offset;
-            TextEditor.ScrollToLine(TextEditor.Document.GetLineByOffset(marker.Offset).LineNumber);
+            TextEditor.TextArea.Caret.BringCaretToView();
         }
     }
 
@@ -276,8 +277,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             .LastOrDefault(candidate => candidate.Offset < offset);
         if (marker is not null)
         {
+            // AvaloniaEdit caret offsets leave viewport scrolling to the caller.
             TextEditor.TextArea.Caret.Offset = marker.Offset;
-            TextEditor.ScrollToLine(TextEditor.Document.GetLineByOffset(marker.Offset).LineNumber);
+            TextEditor.TextArea.Caret.BringCaretToView();
         }
     }
 
@@ -289,16 +291,16 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public async Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
     {
-        FindAndReplaceForm findAndReplaceForm = GetOrCreateFindAndReplaceForm();
+        // Avalonia creates a native window during construction, so check the current query first.
         if (searchForwardOrOpenWithDifftool
             && OpenWithDifftool is not null
-            && string.IsNullOrEmpty(findAndReplaceForm.LookFor))
+            && string.IsNullOrEmpty(_findAndReplaceForm?.LookFor))
         {
             OpenWithDifftool();
             return;
         }
 
-        await findAndReplaceForm.FindNextAsync(
+        await GetOrCreateFindAndReplaceForm().FindNextAsync(
             viaF3: true,
             searchBackward: !searchForwardOrOpenWithDifftool,
             messageIfNotFound: "Text not found");

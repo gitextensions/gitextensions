@@ -378,6 +378,51 @@ public sealed class FileViewerSearchTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Highlighted_occurrence_navigation_should_reveal_the_target_horizontally(bool backwards)
+    {
+        const string token = "needle";
+        string prefix = token + " " + new string('x', 240) + " ";
+        int targetOffset = prefix.Length;
+        using FileViewer viewer = new();
+        Window window = new() { Width = 480, Height = 280, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("search.txt", prefix + token);
+            viewer.TextEditor.WordWrap = false;
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.Select(0, token.Length);
+            viewer.TextEditor.TextArea.Caret.Offset = backwards ? targetOffset + token.Length : 0;
+            viewer.HScrollPosition = 0;
+            viewer.HScrollPosition.Should().Be(0);
+
+            if (backwards)
+            {
+                viewer.GoToPreviousOccurrence();
+            }
+            else
+            {
+                viewer.GoToNextOccurrence();
+            }
+
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.TextArea.Caret.Offset.Should().Be(targetOffset);
+            viewer.HScrollPosition.Should().BeGreaterThan(0);
+            global::Avalonia.Rect caret = viewer.TextEditor.TextArea.Caret.CalculateCaretRectangle();
+            AvaloniaEdit.Rendering.TextView textView = viewer.TextEditor.TextArea.TextView;
+            (caret.X - textView.ScrollOffset.X).Should().BeInRange(0, textView.Bounds.Width);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FindAndReplaceForm_should_show_the_file_name_and_render_the_scan_region()
     {
         FileViewer viewer = new();

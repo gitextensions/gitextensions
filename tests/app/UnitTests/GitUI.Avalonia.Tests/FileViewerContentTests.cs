@@ -473,6 +473,7 @@ public sealed class FileViewerContentTests
 
             difftoolRequests.Should().Be(hasQuery ? 0 : 1);
             viewer.TextEditor.SelectedText.Should().Be(hasQuery ? "target" : string.Empty);
+            viewer.GetTestAccessor().IsFindAndReplaceFormCreated.Should().Be(hasQuery);
         }
         finally
         {
