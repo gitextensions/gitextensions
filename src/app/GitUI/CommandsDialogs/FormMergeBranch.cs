@@ -118,6 +118,17 @@ public partial class FormMergeBranch : GitModuleForm
         {
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterMerge, this);
             UICommands.RepoChangedNotifier.Notify();
+
+            // git merge --squash stages the changes without creating a commit.
+            // When the user has not checked "Do not commit", open the commit
+            // dialog so the staged changes can be committed, pre-filled with
+            // the merge message if one was entered.
+            bool shouldOpenCommitDialogAfterSquash = success && squash.Checked && !noCommit.Checked;
+            if (shouldOpenCommitDialogAfterSquash)
+            {
+                UICommands.StartCommitDialog(this, addMergeMessage.Checked ? mergeMessage.Text : null, showOnlyWhenChanges: true);
+            }
+
             Close();
         }
     }
