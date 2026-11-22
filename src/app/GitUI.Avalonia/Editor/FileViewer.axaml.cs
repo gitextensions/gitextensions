@@ -1223,6 +1223,10 @@ public partial class FileViewer : GitModuleControl
         await showFunc();
     }
 
+    // Avalonia's bitmap decoder handles icons and ordinary images through one stream API.
+    private static Bitmap CreateImage(Stream stream)
+        => new(stream);
+
     private void OnIgnoreWhitespaceChanged()
     {
         UpdateDiffOptionState();
@@ -1321,8 +1325,13 @@ public partial class FileViewer : GitModuleControl
             }
 
             (string text, byte[] preamble) = await getFileText();
-            await InvokeOnOwnerMainThreadAsync(() => FilePreamble = preamble, cancellationToken);
-            await ShowHexDumpAsync(_cannotViewImage.Text, fileName, text, openWithDifftool, cancellationToken);
+            await InvokeOnOwnerMainThreadAsync(() =>
+            {
+                FilePreamble = preamble;
+                ResetView(ViewMode.Text, fileName, item, openWithDifftool);
+                DisplayAsHexDump(_cannotViewImage.Text, fileName, text, openWithDifftool);
+                TextLoaded?.Invoke(this, EventArgs.Empty);
+            }, cancellationToken);
         }
         else
         {
@@ -2438,21 +2447,6 @@ public partial class FileViewer : GitModuleControl
         }, cancellationToken);
     }
 
-    private async Task ShowHexDumpAsync(
-        string fileNameFormat,
-        string fileName,
-        string text,
-        Action? openWithDifftool,
-        CancellationToken cancellationToken)
-    {
-        await InvokeOnOwnerMainThreadAsync(() =>
-        {
-            ResetView(ViewMode.Text, fileName, item: null, openWithDifftool);
-            DisplayAsHexDump(fileNameFormat, fileName, text, openWithDifftool);
-            TextLoaded?.Invoke(this, EventArgs.Empty);
-        }, cancellationToken);
-    }
-
     private async Task ShowImageAsync(
         string fileName,
         FileStatusItem? item,
@@ -2492,36 +2486,33 @@ public partial class FileViewer : GitModuleControl
 
     private async Task<Bitmap?> LoadBlobImageAsync(ObjectId blobId, CancellationToken cancellationToken)
     {
-        using MemoryStream? stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken);
-        return stream is null ? null : TryCreateImage(stream, cancellationToken);
-    }
-
-    private static async Task<Bitmap?> LoadFileImageAsync(string fullPath, CancellationToken cancellationToken)
-    {
+        IGitModule module = Module;
+        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
         try
         {
-            await using FileStream stream = new(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 4096, useAsync: true);
-            using MemoryStream copy = new();
-            await stream.CopyToAsync(copy, cancellationToken);
-            copy.Position = 0;
-            return TryCreateImage(copy, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            using MemoryStream? stream = await module.GetFileStreamAsync(blobId.ToString(), cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            return stream is null ? null : CreateImage(stream);
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch
+        catch (Exception exception) when (exception is not OperationCanceledException)
         {
             return null;
         }
     }
 
-    private static Bitmap? TryCreateImage(Stream stream, CancellationToken cancellationToken)
+    private static async Task<Bitmap?> LoadFileImageAsync(string fullPath, CancellationToken cancellationToken)
     {
+        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return new Bitmap(stream);
+            await using FileStream stream = new(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 4096, useAsync: true);
+            using MemoryStream copy = new();
+            await stream.CopyToAsync(copy, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            copy.Position = 0;
+            return CreateImage(copy);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

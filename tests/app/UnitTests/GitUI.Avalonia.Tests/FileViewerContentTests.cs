@@ -1692,6 +1692,56 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase("available")]
+    [TestCase("missing")]
+    [TestCase("failed")]
+    public async Task ViewGitItemAsync_should_read_image_blobs_off_the_dispatcher_and_preserve_the_fallback(string result)
+    {
+        const string imageName = "sample.ico";
+        string imagePath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        byte[] imageBytes = await File.ReadAllBytesAsync(imagePath);
+        ObjectId blob = ObjectId.Random();
+        bool? startedOnDispatcher = null;
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.GetFileStreamAsync(blob.ToString(), Arg.Any<CancellationToken>())
+            .Returns(_ =>
+            {
+                startedOnDispatcher = Dispatcher.UIThread.CheckAccess();
+                return result switch
+                {
+                    "available" => Task.FromResult<MemoryStream?>(new MemoryStream(imageBytes, writable: false)),
+                    "missing" => Task.FromResult<MemoryStream?>(null),
+                    _ => Task.FromException<MemoryStream?>(new IOException("Could not read the image blob.")),
+                };
+            });
+        module.GetFileText(blob, Arg.Any<Encoding>(), stripAnsiEscapeCodes: true).Returns("\0image bytes");
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(new GitUICommands(_serviceContainer, module));
+        FileStatusItem item = new(null, new GitRevision(ObjectId.Random()), new GitItemStatus(imageName) { TreeId = blob });
+        Action openWithDifftool = () => { };
+        using FileViewer viewer = new() { UICommandsSource = source };
+        FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+
+        await viewer.ViewGitItemAsync(item, line: null, openWithDifftool);
+
+        if (result == "available")
+        {
+            viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Image);
+            viewer.FindControl<PictureBoxEx>("ImagePreview")!.Source.Should().NotBeNull();
+        }
+        else
+        {
+            viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Text);
+            viewer.GetText().Should().StartWith("Cannot view image " + imageName).And.Contain("0000");
+        }
+
+        viewer.GetTestAccessor().ViewItem.Should().BeSameAs(item);
+        editor.OpenWithDifftool.Should().BeSameAs(openWithDifftool);
+        startedOnDispatcher.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public async Task FileViewer_should_report_a_rendering_failure_for_the_current_image(bool replaceSource)
