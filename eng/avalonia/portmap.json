@@ -3374,7 +3374,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/CommitMessageHighlightingStrategy.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "AvaloniaEdit uses one copy of the source summary and divider classification for its per-line colorizer and document validation renderer. The named ColorSummary property supplies WindowText and bold weight through the native text-run API. The 50/80-column and missing-divider warnings retain the original named fields. Immutable marker spans carry the original theme-adapted red sampled at creation, and reused description markers retain their colors as lines change."
+    "notes": "AvaloniaEdit uses one copy of the source summary and divider classification for its per-line colorizer and document validation renderer. The named ColorSummary property supplies WindowText and bold weight through the native text-run API. The 50/80-column and missing-divider warnings retain the original named fields. Immutable marker spans carry the original theme-adapted red sampled at creation, and reused description markers retain their colors as lines change. AvaloniaEdit document versions identify edits on the missing-divider line so retained overlength markers keep their original precedence when the divider marker is refreshed."
   },
   "src/app/GitUI/Editor/Diff/AnsiEscapeUtilities.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/AnsiEscapeUtilities.cs",

@@ -19,6 +19,7 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
     private readonly CommitMessageValidationMarker _markerSpacerNeeded = new(0, 0, "There must be a blank line after the summary.");
 
     private readonly List<CommitMessageValidationMarker> _validationMarkers = [];
+    private ITextSourceVersion? _validationVersion;
 
     public CommitMessageHighlightingStrategy(IGitModule module)
         : base("GitCommitMessage", module)
@@ -29,6 +30,20 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
 
     internal void UpdateValidationMarkers(TextDocument document)
     {
+        ITextSourceVersion version = document.Version;
+        ITextSourceVersion? previousVersion = _validationVersion;
+        if (ReferenceEquals(previousVersion, version))
+        {
+            return;
+        }
+
+        // AvaloniaEdit reports all changed lines together, so use its version to retain the source marker order.
+        int previousSpacerIndex = _validationMarkers.FindIndex(marker => marker.ToolTip == _markerSpacerNeeded.ToolTip);
+        int previousSummaryCount = _validationMarkers.Count > 0 && _validationMarkers[0].ToolTip == _markerSummaryTooLong.ToolTip ? 1 : 0;
+        int descriptionMarkersBeforeSpacer = previousSpacerIndex < 0
+            ? _overlengthDescriptionMarkers.Count
+            : previousSpacerIndex - previousSummaryCount;
+
         _validationMarkers.Clear();
         (int summaryLineNumber, bool seenDividingSpace, int descriptionStartLineNumber) = Classify(document);
 
@@ -48,18 +63,25 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
             }
         }
 
+        CommitMessageValidationMarker? spacerMarker = null;
         if (descriptionStartLineNumber > 0 && !seenDividingSpace)
         {
             DocumentLine description = document.GetLineByNumber(descriptionStartLineNumber);
-            _validationMarkers.Add(_markerSpacerNeeded with { Offset = description.Offset, Length = description.Length });
+            spacerMarker = _markerSpacerNeeded with { Offset = description.Offset, Length = description.Length };
+            if (WasEdited(description))
+            {
+                descriptionMarkersBeforeSpacer = _overlengthDescriptionMarkers.Count;
+            }
         }
 
         if (descriptionStartLineNumber <= 0)
         {
             _overlengthDescriptionMarkers.Clear();
+            _validationVersion = version;
             return;
         }
 
+        int descriptionStartIndex = _validationMarkers.Count;
         int markerIndex = 0;
 
         foreach (DocumentLine line in document.Lines.Skip(descriptionStartLineNumber - 1))
@@ -90,6 +112,37 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
         if (toRemove > 0)
         {
             _overlengthDescriptionMarkers.RemoveRange(markerIndex, toRemove);
+        }
+
+        if (spacerMarker is not null)
+        {
+            _validationMarkers.Insert(descriptionStartIndex + Math.Min(descriptionMarkersBeforeSpacer, markerIndex), spacerMarker);
+        }
+
+        _validationVersion = version;
+        return;
+
+        bool WasEdited(DocumentLine line)
+        {
+            if (previousVersion is null || !version.BelongsToSameDocumentAs(previousVersion))
+            {
+                return true;
+            }
+
+            int start = line.Offset;
+            int end = line.EndOffset;
+            foreach (TextChangeEventArgs change in version.GetChangesTo(previousVersion))
+            {
+                if (change.Offset <= end && change.Offset + change.RemovalLength >= start)
+                {
+                    return true;
+                }
+
+                start = change.GetNewOffset(start, AnchorMovementType.BeforeInsertion);
+                end = change.GetNewOffset(end, AnchorMovementType.AfterInsertion);
+            }
+
+            return false;
         }
     }
 

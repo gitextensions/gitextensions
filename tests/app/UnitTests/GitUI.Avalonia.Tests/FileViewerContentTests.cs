@@ -1354,6 +1354,53 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(2, "Line is too long.")]
+    [TestCase(3, "There must be a blank line after the summary.")]
+    public async Task FileViewer_should_keep_the_source_order_of_overlapping_commit_warnings_after_an_edit(int editedLine, string expectedWarning)
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window window = new() { Width = 1100, Height = 342, Content = viewer };
+        try
+        {
+            window.Show();
+            string text = $"Summary\n{new string('a', 90)}\nAdditional detail";
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", text);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+
+            MoveTo(83);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be("There must be a blank line after the summary.");
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            viewer.TextEditor.CaretOffset = viewer.TextEditor.Document.GetLineByNumber(editedLine).Offset + 5;
+            window.KeyTextInput("z");
+            viewer.TextEditor.Document.TextLength.Should().Be(text.Length + 1);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+            window.UpdateLayout();
+
+            MoveTo(2);
+            MoveTo(83);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be(expectedWarning);
+
+            void MoveTo(int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(2, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FileViewer_should_adapt_commit_message_warning_colors_when_the_source_creates_markers()
     {
         ThemeId originalThemeId = AppSettings.ThemeId;
