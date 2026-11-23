@@ -244,3 +244,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/11/09, djack42, Julien Tillay, djack42@gmail.com
 2026/11/07, jonmseaman, Jon Seaman, jonmseaman@live.com
 2026/11/16, C-H-F, Christian Fürthauer, git@fuerthauer.net
+2026/11/23, vurumalla92, Venkateshwar Reddy Vurumalla, venkvuru@gmail.com
