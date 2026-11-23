@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -139,6 +139,7 @@ public sealed partial class FormCommit : GitModuleForm
     private bool _changingSelection;
     private bool _commitInProgress;
     private bool _indexOperationInProgress;
+    private FileStatusList? _indexOperationFilesList;
     private FileStatusList _currentFilesList = null!;
     private bool _skipUpdate;
     private FileStatusItem? _currentItem;
@@ -899,7 +900,13 @@ public sealed partial class FormCommit : GitModuleForm
             _currentFilesList = Staged;
         }
 
+        bool focusUnstaged = _indexOperationFilesList == Staged && Staged.IsEmpty;
         RestoreSelectedFiles(unstagedFiles, stagedFiles, lastSelection);
+        if (focusUnstaged)
+        {
+            Unstaged.Focus();
+        }
+
         if (_currentFilesList == Staged && Staged.SelectedFileStatusItem is FileStatusItem stagedItem)
         {
             _currentSelection = Staged.SelectedGitItems;
@@ -949,6 +956,17 @@ public sealed partial class FormCommit : GitModuleForm
         IReadOnlyList<GitItemStatus> stagedFiles,
         IReadOnlyList<GitItemStatus>? lastSelection)
     {
+        FileStatusList? indexOperationFilesList = _indexOperationFilesList;
+        _indexOperationFilesList = null;
+        if (indexOperationFilesList is not null)
+        {
+            indexOperationFilesList.SelectStoredNextItem();
+            if (indexOperationFilesList == _currentFilesList && !indexOperationFilesList.IsEmpty)
+            {
+                return;
+            }
+        }
+
         if (_currentFilesList.IsEmpty)
         {
             SelectStoredNextIndex();
@@ -970,8 +988,15 @@ public sealed partial class FormCommit : GitModuleForm
 
         void SelectStoredNextIndex()
         {
-            Unstaged.SelectStoredNextItem(orSelectFirst: true);
-            Staged.SelectStoredNextItem(orSelectFirst: !Unstaged.GitItemStatuses.Any());
+            if (indexOperationFilesList != Unstaged)
+            {
+                Unstaged.SelectStoredNextItem(orSelectFirst: true);
+            }
+
+            if (indexOperationFilesList != Staged)
+            {
+                Staged.SelectStoredNextItem(orSelectFirst: !Unstaged.GitItemStatuses.Any());
+            }
         }
     }
 
@@ -1073,7 +1098,19 @@ public sealed partial class FormCommit : GitModuleForm
 
         _indexOperationInProgress = true;
         UpdateStageButtons();
-        if (!stage)
+        if (stage)
+        {
+            Unstaged.StoreNextItemToSelect();
+            toolStripProgressBar1.IsVisible = true;
+            toolStripProgressBar1.Maximum = items.Count * 2;
+            toolStripProgressBar1.Value = 0;
+
+            for (int index = 0; index < items.Count; index++)
+            {
+                toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+            }
+        }
+        else
         {
             toolStripProgressBar1.IsVisible = true;
             toolStripProgressBar1.Value = 0;
@@ -1086,6 +1123,8 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 return item.IsRenamed ? count + 2 : count + 1;
             });
+
+            Staged.StoreNextItemToSelect();
         }
 
         CancellationToken cancellationToken = _interactiveAddSequence.Next();
@@ -1146,17 +1185,16 @@ public sealed partial class FormCommit : GitModuleForm
                 }
             }
 
-            if (!stage)
+            if (success)
             {
-                if (success)
-                {
-                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
-                }
+                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
-                toolStripProgressBar1.IsVisible = false;
+                // Avalonia refreshes the file lists asynchronously, so retain the source until the selection can be restored.
+                _indexOperationFilesList = stage ? Unstaged : Staged;
             }
 
-            ReloadChanges(preferStaged: stage);
+            toolStripProgressBar1.IsVisible = false;
+            ReloadChanges();
         });
     }
 

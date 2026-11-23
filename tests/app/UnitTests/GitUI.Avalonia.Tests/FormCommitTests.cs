@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
 using Avalonia;
@@ -480,6 +480,46 @@ public sealed class FormCommitTests
             progress.Maximum.Should().Be(maximum);
             progress.Value.Should().Be(maximum);
             module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached", "--name-only" }).Should().BeEmpty();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Stage_button_should_display_preparation_and_completion_progress_for_the_real_index()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+            unstaged.SelectAll();
+            ProgressBar progress = form.FindControl<ProgressBar>("toolStripProgressBar1")!;
+            List<(double Maximum, double Value, bool OnUIThread)> updates = [];
+            progress.PropertyChanged += (_, _) =>
+            {
+                if (progress.IsVisible)
+                {
+                    updates.Add((progress.Maximum, progress.Value, Dispatcher.UIThread.CheckAccess()));
+                }
+            };
+
+            Button stage = form.FindControl<Button>("toolStageItem")!;
+            stage.IsEnabled.Should().BeTrue();
+            stage.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 0, staged, 2);
+            await WaitUntilAsync(() => !progress.IsVisible);
+
+            updates.Where(update => update.Maximum == 4).Select(update => update.Value).Distinct()
+                .Should().ContainInOrder(0d, 1d, 2d, 4d);
+            updates.Should().OnlyContain(update => update.OnUIThread);
+            progress.Maximum.Should().Be(4);
+            progress.Value.Should().Be(4);
         }
         finally
         {
@@ -1678,6 +1718,79 @@ public sealed class FormCommitTests
             await WaitForCountsAsync(unstaged, 2, staged, 0);
 
             module.GetAllChangedFilesWithSubmodulesStatus().Should().OnlyContain(item => item.Staged == StagedStatus.WorkTree);
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(true, false)]
+    [TestCase(false, false)]
+    [TestCase(true, true)]
+    [TestCase(false, true)]
+    public async Task FormCommit_should_restore_the_source_pane_selection_after_an_index_operation(bool stage, bool emptySource)
+    {
+        GitModule module = CreateCleanRepository();
+        string[] fileNames = ["a.txt", "b.txt", "c.txt", "d.txt"];
+        foreach (string fileName in fileNames)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, fileName), "initial content\n");
+        }
+
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--all" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "prepare" }).Should().BeTrue();
+        foreach (string fileName in fileNames)
+        {
+            File.AppendAllText(Path.Combine(_workingDirectory, fileName), $"changed content for {fileName}\n");
+        }
+
+        if (!stage)
+        {
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--all" }).Should().BeTrue();
+        }
+
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            FileStatusList source = stage ? unstaged : staged;
+            FileStatusList destination = stage ? staged : unstaged;
+            await WaitForCountsAsync(unstaged, stage ? 4 : 0, staged, stage ? 0 : 4);
+            ClickFileRow(form, source, "b.txt");
+            await WaitUntilAsync(() => ReferenceEquals(form.GetTestAccessor().CurrentFilesList, source));
+            string[] selectedNames = emptySource ? fileNames : ["b.txt", "c.txt"];
+            source.SelectedGitItems = [.. source.GitItemStatuses.Where(item => selectedNames.Contains(item.Name))];
+            source.SelectedGitItems.Select(item => item.Name).Should().Equal(selectedNames);
+            form.GetTestAccessor().CurrentFilesList.Should().BeSameAs(source);
+
+            Button action = form.FindControl<Button>(stage ? "toolStageItem" : "toolUnstageItem")!;
+            action.IsEnabled.Should().BeTrue();
+            action.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            int moved = selectedNames.Length;
+            await WaitForCountsAsync(unstaged, stage ? 4 - moved : moved, staged, stage ? moved : 4 - moved);
+
+            destination.GitItemStatuses.Select(item => item.Name).Should().Equal(selectedNames);
+            if (emptySource)
+            {
+                form.GetTestAccessor().CurrentFilesList.Should().BeSameAs(destination);
+                destination.SelectedGitItems.Select(item => item.Name).Should().Equal(selectedNames);
+                if (!stage)
+                {
+                    destination.IsKeyboardFocusWithin.Should().BeTrue();
+                }
+            }
+            else
+            {
+                form.GetTestAccessor().CurrentFilesList.Should().BeSameAs(source);
+                source.SelectedGitItems.Select(item => item.Name).Should().Equal("d.txt");
+                FileViewer viewer = form.FindControl<FileViewer>("SelectedDiff")!;
+                await WaitUntilAsync(() => viewer.TextEditor.Text.Contains("changed content for d.txt", StringComparison.Ordinal));
+            }
         }
         finally
         {
