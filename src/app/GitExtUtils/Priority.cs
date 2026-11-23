@@ -19,6 +19,7 @@ public static class Priority
         return GetPriorityMapping(items, keySelector,
             regexes
                 .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(regex => $"^({regex})$")
                 .ToArray());
     }
 
@@ -32,10 +33,6 @@ public static class Priority
     /// <returns>Priorities for the items that match a regex.</returns>
     public static IReadOnlyDictionary<T, int> GetPriorityMapping<T>(this IReadOnlyList<T> items, Func<T, string> keySelector, string[] regexes) where T : class
     {
-        regexes = regexes
-            .Select(regex => $"^({regex})$")
-            .ToArray();
-
         if (regexes.Length == 0)
         {
             return ReadOnlyDictionary<T, int>.Empty;
