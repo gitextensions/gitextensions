@@ -32,7 +32,11 @@ internal sealed class GitExecutor : IGitExecutor
             // (e.g. zsh), which glob-expands patterns like "--exclude=refs/sessions/**" before git ever sees them. zsh's default
             // "nomatch" behaviour then aborts the whole command with a non-zero exit and no output when the pattern matches nothing,
             // which silently empties revision/diff output for any repo whose distro defaults to zsh (or any shell) with that setting.
-            GitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} --exec {AppSettings.WslGitCommand} ");
+            //
+            // The `bash -c` wrapper sources the user's `~/.bashrc` before running git, so that shell-level configuration
+            // (e.g. an auto-launched ssh-agent) is available to the git process. The git command and its arguments are passed
+            // as separate argv entries ($0 and $@) rather than as a shell string, so they are not re-parsed or glob-expanded.
+            GitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} --exec bash -c \"source ~/.bashrc 2>/dev/null; exec \\\"$0\\\" \\\"$@\\\"\" {AppSettings.WslGitCommand} ");
             GitCommandRunner = new GitCommandRunner(GitExecutable, () => SystemEncoding);
         }
         else
