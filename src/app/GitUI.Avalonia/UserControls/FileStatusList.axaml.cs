@@ -1175,11 +1175,34 @@ public partial class FileStatusList : GitModuleControl
 
     public void StoreNextItemToSelect()
     {
-        GitItemStatus[] visible = [.. AllItems.Select(item => item.Item)];
-        int currentIndex = Array.IndexOf(visible, SelectedItem?.Item);
-        _nextItemToSelect = currentIndex >= 0 && currentIndex + 1 < visible.Length
-            ? visible[currentIndex + 1]
-            : currentIndex > 0 ? visible[currentIndex - 1] : null;
+        IList? selectedNodes = _isFileTreeMode ? tvFiles.SelectedItems
+            : ShowDiffTree ? tvDiffFiles.SelectedItems
+            : lstFiles.SelectedItems;
+        if (selectedNodes is { Count: > 0 })
+        {
+            IEnumerable<object> nodes = _isFileTreeMode
+                ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(DescendantsAndSelf)
+                : ShowDiffTree
+                    ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(DescendantsAndSelf)
+                    : lstFiles.Items.Cast<object>();
+            bool found = false;
+            foreach (object node in nodes)
+            {
+                if (selectedNodes.Contains(node))
+                {
+                    found = true;
+                    continue;
+                }
+
+                if (found && GetFileStatusItem(node) is FileStatusItem fileStatusItem)
+                {
+                    _nextItemToSelect = fileStatusItem.Item;
+                    return;
+                }
+            }
+        }
+
+        _nextItemToSelect = AllItems.FirstOrDefault()?.Item;
     }
 
     protected override void DisposeCustomResources()

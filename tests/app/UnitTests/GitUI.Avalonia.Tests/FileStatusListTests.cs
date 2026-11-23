@@ -686,6 +686,70 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [TestCase(new[] { 0, 1 }, 2, false)]
+    [TestCase(new[] { 0, 1 }, 2, true)]
+    [TestCase(new[] { 3 }, 0, false)]
+    [TestCase(new int[] { }, 0, false)]
+    public void FileStatusList_should_restore_the_first_unselected_file_after_the_selection_or_wrap(int[] selected, int next, bool isFileTreeMode)
+    {
+        using FileStatusList control = new() { SelectionMode = SelectionMode.Multiple };
+        GitItemStatus[] files =
+        [
+            new("a.txt") { IsChanged = true, IsTracked = true },
+            new("b.txt") { IsChanged = true, IsTracked = true },
+            new("c.txt") { IsChanged = true, IsTracked = true },
+            new("d.txt") { IsChanged = true, IsTracked = true },
+        ];
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            GitRevision revision = new(ObjectId.IndexId);
+            control.SetDiffs([new FileStatusWithDescription(null, revision, string.Empty, files)], isFileTreeMode);
+            control.AllItems.Select(item => item.Item).Should().Equal(files);
+            control.SelectedGitItems = [.. selected.Select(index => files[index])];
+            control.SelectedGitItems.Should().Equal(selected.Select(index => files[index]));
+
+            control.StoreNextItemToSelect();
+            control.SelectedGitItems = [];
+            control.SelectStoredNextItem();
+
+            control.SelectedGitItems.Should().Equal(files[next]);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_restore_the_first_file_after_a_selected_non_file_group()
+    {
+        using FileStatusList control = new() { GroupByRevision = true, SelectionMode = SelectionMode.Multiple };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "First", [first]),
+            new FileStatusWithDescription(null, revision, "Second", [second]),
+        ],
+        isFileTreeMode: false);
+        TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+        FileStatusList.DiffTreeNode group = tree.Items[1].Should().BeOfType<FileStatusList.DiffTreeNode>().Which;
+        group.IsGroupHeader.Should().BeTrue();
+        group.Item.Should().BeNull();
+        tree.SelectedItem = group;
+        tree.SelectedItem.Should().BeSameAs(group);
+
+        control.StoreNextItemToSelect();
+        control.SelectedGitItems = [];
+        control.SelectStoredNextItem();
+
+        control.SelectedGitItems.Should().Equal(second);
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_preserve_children_while_delaying_visual_expansion()
     {
         using AppSettingsTestScope settings = new();
