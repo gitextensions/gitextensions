@@ -73,6 +73,31 @@ public partial class BranchComboBox : GitExtensionsControl
 
     public string GetSelectedText() => branches.Text;
 
+    /// <summary>
+    ///  Returns the selected text, except that a purely numeric name which only matches
+    ///  non-head refs (e.g. the tag "13435") is returned as the ref's <see cref="IGitRef.CompleteName"/>
+    ///  (e.g. "refs/tags/13435"). Otherwise <c>GitRefName.GetFullBranchNameIfNumeric</c>
+    ///  would qualify it as a local branch.
+    /// </summary>
+    public string GetSelectedTextQualifiedIfNumeric()
+        => GetQualifiedNameIfNumericNonHead(branches.Text, _branchesToSelect);
+
+    internal static string GetQualifiedNameIfNumericNonHead(string text, IEnumerable<IGitRef>? refs)
+    {
+        if (refs is null || text.Length == 0 || !text.Trim().All(char.IsDigit))
+        {
+            return text;
+        }
+
+        string name = text.Trim();
+        IGitRef[] matches = [.. refs.Where(r => r.Name == name)];
+
+        // A local branch of that name wins: it is what GetFullBranchNameIfNumeric qualifies to.
+        return matches.Length == 0 || matches.Any(r => r.IsHead)
+            ? text
+            : matches[0].CompleteName;
+    }
+
     public void SetSelectedText(string text)
     {
         ArgumentNullException.ThrowIfNull(text);

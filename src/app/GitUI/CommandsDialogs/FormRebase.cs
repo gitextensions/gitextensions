@@ -349,16 +349,19 @@ public partial class FormRebase : GitExtensionsDialog
                 UpdateRefs = updateRefChoice,
             };
 
+            // A numeric tag must not be qualified as a local branch
+            string selectedRef = BranchComboBox.GetQualifiedNameIfNumericNonHead(cboBranches.Text, cboBranches.DataSource as IEnumerable<IGitRef>);
+
             if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
             {
                 // Rebase onto
-                rebaseOptions.OnTo = cboBranches.Text;
+                rebaseOptions.OnTo = selectedRef;
                 rebaseOptions.From = txtFrom.Text;
                 rebaseOptions.BranchName = cboTo.Text;
             }
             else
             {
-                rebaseOptions.BranchName = cboBranches.Text;
+                rebaseOptions.BranchName = selectedRef;
             }
 
             string rebaseCmd = Commands.Rebase(rebaseOptions);
