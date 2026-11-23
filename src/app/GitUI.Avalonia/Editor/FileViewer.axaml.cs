@@ -2574,8 +2574,12 @@ public partial class FileViewer : GitModuleControl
 
     private CancellationToken BeginView(CancellationToken cancellationToken)
     {
-        CancellationToken viewToken = _viewSequence.Next();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // The previous caller's callback cancels the current sequence token.
+        // Remove it before publishing the replacement view token.
         _externalCancellationRegistration.Dispose();
+        CancellationToken viewToken = _viewSequence.Next();
         _externalCancellationRegistration = cancellationToken.CanBeCanceled
             ? cancellationToken.Register(_viewSequence.CancelCurrent)
             : default;

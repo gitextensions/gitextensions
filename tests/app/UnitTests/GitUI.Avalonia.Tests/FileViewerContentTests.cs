@@ -1792,6 +1792,60 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task Superseded_blob_callers_cancellation_should_not_cancel_the_replacement_view()
+    {
+        using CancellationTokenSource superseded = new();
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task oldView = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null, cancellationToken: superseded.Token);
+        try
+        {
+            CancellationToken oldLoadToken = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            using CancellationTokenRegistration cancelSupersededCaller = oldLoadToken.Register(superseded.Cancel);
+            await viewer.ViewTextAsync("new.txt", "new selection");
+            superseded.IsCancellationRequested.Should().BeTrue();
+            viewer.GetText().Should().Be("new selection");
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await oldView.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().Be("new selection");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewTextAsync_should_preserve_the_current_document_when_its_own_caller_is_cancelled()
+    {
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task pendingView = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null);
+        try
+        {
+            CancellationToken currentLoad = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            CancellationToken caller = new(canceled: true);
+
+            Func<Task> show = () => viewer.ViewTextAsync("cancelled.txt", "cancelled selection", cancellationToken: caller);
+
+            await show.Should().ThrowAsync<OperationCanceledException>();
+            viewer.GetText().Should().Be("previous selection");
+            currentLoad.IsCancellationRequested.Should().BeFalse("a request with an already-cancelled caller never replaces the pending view");
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await pendingView.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().StartWith("Cannot view image sample.ico");
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public async Task FileViewer_should_report_a_rendering_failure_for_the_current_image(bool replaceSource)
@@ -2733,6 +2787,22 @@ public sealed class FileViewerContentTests
             AppSettings.DiffVerticalRulerPosition = originalRuler;
             Environment.SetEnvironmentVariable("DFT_WIDTH", originalWidth);
         }
+    }
+
+    private FileViewer CreateViewerWithPendingImage(
+        TaskCompletionSource<CancellationToken> imageRead, Task<MemoryStream?> stream, out FileStatusItem item)
+    {
+        ObjectId blob = ObjectId.Random();
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.GetFileStreamAsync(blob.ToString(), Arg.Any<CancellationToken>())
+            .Returns(stream)
+            .AndDoes(call => imageRead.SetResult(call.ArgAt<CancellationToken>(1)));
+        module.GetFileText(blob, Arg.Any<Encoding>(), stripAnsiEscapeCodes: true).Returns("\0image bytes");
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(new GitUICommands(_serviceContainer, module));
+        item = new FileStatusItem(null, new GitRevision(ObjectId.Random()), new GitItemStatus("sample.ico") { TreeId = blob });
+        return new FileViewer { UICommandsSource = source };
     }
 
     private FileViewer CreateViewer()
