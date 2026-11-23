@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -113,6 +115,92 @@ public sealed class CommitDialogExtrasTests
         form.FindControl<TextBox>("_NO_TRANSLATE_textBoxCommitTemplateName")!.MaxLength.Should().Be(80);
 
         Dispatcher.UIThread.RunJobs();
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommitTemplateSettings_should_wait_for_regex_help_when_returning_to_the_same_checkbox()
+    {
+        using FormCommitTemplateSettings form = new(CreateCommands());
+        CheckBox checkBox = form.FindControl<CheckBox>("checkBoxRegexEnabled")!;
+        TaskCompletionSource opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        checkBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ToolTip.IsOpenProperty && ToolTip.GetIsOpen(checkBox))
+            {
+                opened.TrySetResult();
+            }
+        };
+
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            Point hover = checkBox.TranslatePoint(new Rect(checkBox.Bounds.Size).Center, form)!.Value;
+            Point outside = new(1, 1);
+            form.MouseMove(outside);
+            form.MouseMove(hover);
+            ToolTip.GetShowDelay(checkBox).Should().Be(500);
+            ToolTip.GetIsOpen(checkBox).Should().BeFalse();
+            await opened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            form.MouseMove(outside);
+            ToolTip.GetIsOpen(checkBox).Should().BeFalse();
+            opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            form.MouseMove(hover);
+            ToolTip.GetIsOpen(checkBox).Should().BeFalse("returning to the only tool uses the initial delay");
+            await opened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommitTemplateSettings_should_expire_regex_help_while_hover_remains()
+    {
+        using FormCommitTemplateSettings form = new(CreateCommands());
+        CheckBox checkBox = form.FindControl<CheckBox>("checkBoxRegexEnabled")!;
+        TaskCompletionSource opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<TimeSpan> closed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        Stopwatch visibleTime = new();
+        checkBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ToolTip.IsOpenProperty)
+            {
+                if (ToolTip.GetIsOpen(checkBox))
+                {
+                    visibleTime.Restart();
+                    opened.TrySetResult();
+                }
+                else
+                {
+                    closed.TrySetResult(visibleTime.Elapsed);
+                }
+            }
+        };
+
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            Point hover = checkBox.TranslatePoint(new Rect(checkBox.Bounds.Size).Center, form)!.Value;
+            form.MouseMove(new Point(1, 1));
+            form.MouseMove(hover);
+            await opened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            ToolTip.GetIsOpen(checkBox).Should().BeTrue();
+
+            TimeSpan duration = await closed.Task.WaitAsync(TimeSpan.FromSeconds(30));
+
+            duration.Should().BeGreaterThanOrEqualTo(TimeSpan.FromSeconds(19.5));
+            ToolTip.GetIsOpen(checkBox).Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

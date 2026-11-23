@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using Microsoft;
@@ -9,6 +10,11 @@ namespace GitUI.CommandsDialogs.CommitDialog;
 
 public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
 {
+    // Avalonia keeps the tooltip caption on the checkbox and has no AutoPopDelay property.
+#pragma warning disable SX1309 // Preserve the original Designer field name.
+    private readonly DispatcherTimer toolTipRegex = new() { Interval = TimeSpan.FromMilliseconds(20000) };
+#pragma warning restore SX1309
+
     private readonly TranslationString _emptyTemplate =
         new("empty");
 
@@ -28,6 +34,7 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
     public FormCommitTemplateSettings()
     {
         InitializeComponent();
+        InitializeToolTipRegex();
         InitializeComplete();
     }
 
@@ -35,6 +42,7 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+        InitializeToolTipRegex();
         buttonOk.Click += buttonOk_Click;
         buttonCancel.Click += buttonCancel_Click;
         _NO_TRANSLATE_comboBoxCommitTemplates.ItemsSource = _commitTemplateNames;
@@ -213,5 +221,22 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
         }
 
         template.IsRegex = isRegex;
+    }
+
+    private void InitializeToolTipRegex()
+    {
+        toolTipRegex.Tick += (_, _) =>
+        {
+            toolTipRegex.Stop();
+            ToolTip.SetIsOpen(checkBoxRegexEnabled, false);
+        };
+        checkBoxRegexEnabled.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ToolTip.IsOpenProperty)
+            {
+                toolTipRegex.IsEnabled = ToolTip.GetIsOpen(checkBoxRegexEnabled);
+            }
+        };
+        checkBoxRegexEnabled.DetachedFromVisualTree += (_, _) => toolTipRegex.Stop();
     }
 }
