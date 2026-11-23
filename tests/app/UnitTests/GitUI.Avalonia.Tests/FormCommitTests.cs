@@ -1137,6 +1137,65 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_keep_a_matching_empty_term_in_selection_filter_history()
+    {
+        bool selectionFilterVisible = AppSettings.CommitDialogSelectionFilter;
+        AppSettings.CommitDialogSelectionFilter = true;
+        try
+        {
+            FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+            try
+            {
+                form.Show();
+                ComboBox selectionFilter = form.FindControl<ComboBox>("selectionFilter")!;
+                FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+                await WaitUntilAsync(() => unstaged.GitItemStatuses.Count == 2);
+                TextBox editor = selectionFilter.GetVisualDescendants().OfType<TextBox>()
+                    .Single(part => part.Name == "PART_EditableTextBox");
+                editor.Focus().Should().BeTrue();
+
+                TypeFilter("^tracked");
+                await WaitUntilAsync(() => selectionFilter.Items.Count == 1
+                    && unstaged.SelectedGitItems.Select(item => item.Name).SequenceEqual(["tracked.txt"]));
+                selectionFilter.Items.Cast<string>().Should().Equal("^tracked");
+
+                ClearFilter();
+                await WaitUntilAsync(() => unstaged.SelectedGitItems.Count() == 2);
+                selectionFilter.Text.Should().BeEmpty();
+                selectionFilter.Items.Cast<string>().Should().Equal(string.Empty, "^tracked");
+
+                TypeFilter("^untracked");
+                await WaitUntilAsync(() => unstaged.SelectedGitItems.Select(item => item.Name).SequenceEqual(["untracked.txt"]));
+                ClearFilter();
+                await WaitUntilAsync(() => unstaged.SelectedGitItems.Count() == 2);
+                selectionFilter.Items.Cast<string>().Should().Equal("^untracked", string.Empty, "^tracked");
+
+                void TypeFilter(string text)
+                {
+                    editor.SelectAll();
+                    form.KeyTextInput(text);
+                }
+
+                void ClearFilter()
+                {
+                    editor.SelectAll();
+                    form.KeyPress(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, keySymbol: null);
+                    form.KeyRelease(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, keySymbol: null);
+                }
+            }
+            finally
+            {
+                form.Close();
+                await form.GetTestAccessor().ClosePersistenceTask;
+            }
+        }
+        finally
+        {
+            AppSettings.CommitDialogSelectionFilter = selectionFilterVisible;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_restore_selection_filter_and_visibility_settings()
     {
         bool selectionFilterVisible = AppSettings.CommitDialogSelectionFilter;

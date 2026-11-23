@@ -1378,9 +1378,21 @@ public sealed partial class FormCommit : GitModuleForm
             ToolTip.SetTip(selectionFilter, string.Format(_selectionFilterErrorToolTip.Text, exception.Message));
         }
 
-        // Item is not already in the list
-        if (matchCount > 0 && filterText.Length > 0 && !_selectionFilterHistory.Contains(filterText))
+        if (matchCount > 0)
         {
+            AddToSelectionFilter(filterText);
+        }
+
+        return;
+
+        void AddToSelectionFilter(string expression)
+        {
+            if (_selectionFilterHistory.Contains(expression))
+            {
+                // Item is already in the list
+                return;
+            }
+
             const int SelectionFilterMaxLength = 10;
             while (_selectionFilterHistory.Count >= SelectionFilterMaxLength)
             {
@@ -1389,7 +1401,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
 
             // Insert the next term at the start of the filter control
-            _selectionFilterHistory.Insert(0, filterText);
+            _selectionFilterHistory.Insert(0, expression);
         }
     }
 
