@@ -466,7 +466,7 @@ public partial class FileViewer : GitModuleControl
         // Guess a reasonable even column number from viewer width, so scrollbar is (barely) activated.
         // At least 2*(2+linenoLength) of the width is used for difftastic lineno.
         // DFT_WIDTH is also used when parsing in GE, must be in environment.
-        int width = Math.Max(88, Math.Min(200, DpiUtil.Scale(internalFileViewer.Width) / 7)) / 2 * 2;
+        int width = DifftasticWidth.ComputeSideBySideWidth(internalFileViewer.Width, DifftasticWidth.MeasureCharWidth(internalFileViewer.Font));
         SetEnvironmentVariable("DFT_WIDTH", width.ToString());
 
         // Also export to WSL environment.
