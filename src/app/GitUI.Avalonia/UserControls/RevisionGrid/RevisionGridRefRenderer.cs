@@ -562,6 +562,7 @@ internal static class RevisionGridRefRenderer
         private bool _isHighlighted;
         private int _labelWidth;
         private double _literalTextWidth;
+        private int _paintTextWidth;
         private Size _textSize;
         private int _textOffsetY;
         private RefLabelIconRenderer? _iconRenderer;
@@ -709,6 +710,16 @@ internal static class RevisionGridRefRenderer
             _literalTextWidth = WinFormsTextMeasurer.MeasureSize(FontFamily, FontStyle, FontWeight,
                 FontSize, Label, singleLine: false, useTextRendererPadding: false).Width;
 
+            // Avalonia's shaped advance can exceed a fitting GDI allocation. Keep
+            // source prefix underallocation and let the cell set the final clip.
+            _paintTextWidth = (int)_textSize.Width;
+            if (_paintTextWidth > 0 && _literalTextWidth <= _paintTextWidth)
+            {
+                using TextLayout layout = new(Label, new Typeface(FontFamily, FontStyle, FontWeight),
+                    FontSize, foreground: null, textWrapping: TextWrapping.NoWrap, flowDirection: FlowDirection.LeftToRight);
+                _paintTextWidth = Math.Max(_paintTextWidth, (int)Math.Ceiling(layout.WidthIncludingTrailingWhitespace));
+            }
+
             // Nestled hits share the first font's space height, not a multiline
             // caption's height. Cache it with layout rather than querying GDI per move.
             _fontPointWidth = GetPointWidth(this);
@@ -727,7 +738,7 @@ internal static class RevisionGridRefRenderer
             // before the text, so only a small extra nudge (instead of a second full paddingLeftRight) is added.
             int leadingPadding = _iconRenderer is null ? PaddingLeftRight(Label) : 1;
 
-            _labelWidth = (int)_textSize.Width
+            _labelWidth = _paintTextWidth
                 + _iconAreaWidth
                 + leadingPadding + PaddingLeftRight(Label)
                 + extraWidth
@@ -800,7 +811,7 @@ internal static class RevisionGridRefRenderer
                 + leadingPadding
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
             int availableWidth = Math.Max(0, (int)Bounds.Width);
-            int textWidth = Math.Clamp(Math.Min(availableWidth - paddingLeftRight - paddingLeftRight, (int)_textSize.Width),
+            int textWidth = Math.Clamp(Math.Min(availableWidth - paddingLeftRight - paddingLeftRight, _paintTextWidth),
                 0, Math.Max(0, availableWidth - textX));
             Rect textBounds = new(textX, capsuleBounds.Y + _textOffsetY, textWidth, _textSize.Height);
             if (textWidth > 0 && _textSize.Height > 0)

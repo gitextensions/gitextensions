@@ -241,6 +241,32 @@ public sealed class RevisionGridRefPaintTests
     }
 
     [AvaloniaTest]
+    [TestCase("Avalonia_Port", false)]
+    [TestCase("Avalonia_Port", true)]
+    [TestCase("master", false)]
+    [TestCase("master", true)]
+    public void RefLabelControl_should_fit_the_painted_caption_inside_its_clip_and_capsule(string caption, bool bold)
+    {
+        using LabelFixture fixture = new(caption, new Font("Segoe UI", 9,
+            bold ? ShimFontStyle.Bold : ShimFontStyle.Regular));
+        RevisionGridRefRenderer.RefLabelControl label = fixture.Label;
+        DrawingGroup drawing = new();
+        using (DrawingContext context = drawing.Open())
+        {
+            label.Render(context);
+        }
+
+        DrawingGroup text = drawing.Children.OfType<DrawingGroup>().Single(group => group.ClipGeometry is not null);
+        Rect clip = text.ClipGeometry!.Bounds;
+        Rect paintedText = text.GetBounds();
+        TestContext.Out.WriteLine($"{caption} ({label.FontWeight}): GDI {fixture.CachedTextSize.Width}, paint right {paintedText.Right}, clip {clip}, capsule {label.CapsuleBounds}");
+        (paintedText.Right - clip.X).Should().BeGreaterThan(0);
+        paintedText.Right.Should().BeLessThanOrEqualTo(clip.Right);
+        paintedText.Right.Should().BeLessThanOrEqualTo(label.CapsuleBounds.Right);
+        clip.Width.Should().Be(Math.Max(fixture.CachedTextSize.Width, Math.Ceiling(paintedText.Right - clip.X)));
+    }
+
+    [AvaloniaTest]
     [TestCaseSource(nameof(LiteralTrimmingAllocations))]
     public void Literal_trimming_should_change_at_the_source_width_boundary_without_expanding_the_source_text_allocation(
         string caption, string family, float points, bool bold, bool italic)
