@@ -28,6 +28,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     private readonly IFullPathResolver _fullPathResolver;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
+    private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormFileHistory"));
 
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private string? _commitInfoTabPageText;
@@ -179,6 +180,19 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         }
 
         base.Dispose(disposing);
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        Blame.InitSplitterManager(new NestedSplitterManager(_splitterManager, Name));
+        _splitterManager.RestoreSplitters();
+        base.OnLoad(e);
+    }
+
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        _splitterManager.SaveSplitters();
+        base.OnFormClosing(e);
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
