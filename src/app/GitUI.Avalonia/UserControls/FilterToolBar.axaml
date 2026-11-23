@@ -69,7 +69,6 @@
                             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                             compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button"
-                            Content="_All branches"
                             Icon="{x:Static properties:Images.BranchLocal}">
       <compat:IconSplitButton.Flyout>
         <compat:WinFormsMenuFlyout>

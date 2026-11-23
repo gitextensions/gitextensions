@@ -161,7 +161,7 @@ public sealed class FilterToolBarInteractionTests
         combo.IsDropDownOpen.Should().BeTrue();
         opened.Should().Be(1);
         closed.Should().Be(0, "the opening click must not be toggled closed on its release");
-        combo.Items.Cast<string>().Should().Equal("feature/filters", "feature/other", "main");
+        combo.Items.Cast<string>().Should().Equal("main", "feature/filters", "feature/other");
         editor.Focus();
         fixture.Window.KeyTextInput("fea");
         fixture.Settle();
@@ -179,18 +179,82 @@ public sealed class FilterToolBarInteractionTests
     }
 
     [AvaloniaTest]
+    public void Typing_in_the_branch_editor_should_open_the_closed_completion_popup()
+    {
+        using FilterFixture fixture = new();
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tscboBranchFilter;
+        TextBox editor = Editor(combo);
+        fixture.Click(combo, new Point(combo.Bounds.Width - 4, combo.Bounds.Height / 2));
+        combo.IsDropDownOpen.Should().BeTrue();
+        editor.Focus().Should().BeTrue();
+        fixture.Window.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+        fixture.Settle();
+        combo.IsDropDownOpen.Should().BeFalse();
+        editor.Focus().Should().BeTrue();
+        int opened = 0;
+        combo.DropDownOpened += (_, _) => opened++;
+
+        fixture.Window.KeyTextInput("fea");
+        fixture.Settle();
+
+        combo.Text.Should().Be("fea");
+        combo.IsDropDownOpen.Should().BeTrue();
+        opened.Should().Be(1);
+        combo.Items.Cast<string>().Should().Equal("feature/filters", "feature/other");
+        editor.IsFocused.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void Branch_completion_should_keep_cached_ref_order_and_duplicate_display_names()
+    {
+        using FilterFixture fixture = new();
+        FilterToolBar.TestAccessor accessor = fixture.Toolbar.GetTestAccessor();
+        accessor.tsmiBranchTag.IsChecked = true;
+        IGitModule module = Substitute.For<IGitModule>();
+        IReadOnlyList<IGitRef> refs =
+        [
+            new GitRef(module, ObjectId.Random(), "refs/heads/main"),
+            new GitRef(module, ObjectId.Random(), "refs/heads/feature/zeta"),
+            new GitRef(module, ObjectId.Random(), "refs/tags/main"),
+            new GitRef(module, ObjectId.Random(), "refs/heads/feature/alpha"),
+        ];
+        fixture.Toolbar.RefreshRevisionFunction(_ => refs);
+        ToolbarComboBox combo = accessor.tscboBranchFilter;
+
+        fixture.Click(combo, new Point(combo.Bounds.Width - 4, combo.Bounds.Height / 2));
+
+        combo.IsDropDownOpen.Should().BeTrue();
+        combo.Items.Cast<string>().Should().Equal("main", "feature/zeta", "main", "feature/alpha");
+    }
+
+    [AvaloniaTest]
+    public void Setting_the_branch_text_should_mark_it_changed_and_leave_the_popup_closed()
+    {
+        using FilterFixture fixture = new();
+        FilterToolBar.TestAccessor accessor = fixture.Toolbar.GetTestAccessor();
+        accessor.ApplyCustomBranchFilter(checkBranch: false);
+        accessor._filterBeingChanged.Should().BeFalse();
+
+        accessor.tscboBranchFilter.Text = "feature";
+        fixture.Settle();
+
+        accessor._filterBeingChanged.Should().BeTrue();
+        accessor.tscboBranchFilter.IsDropDownOpen.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public void Selecting_an_actual_completion_row_should_close_the_popup_without_the_owner_reopening_it()
     {
         using FilterFixture fixture = new();
         ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tscboBranchFilter;
         fixture.Click(combo, new Point(combo.Bounds.Width - 4, combo.Bounds.Height / 2));
         combo.IsDropDownOpen.Should().BeTrue();
-        ComboBoxItem row = combo.ContainerFromIndex(0) as ComboBoxItem
+        ComboBoxItem row = combo.ContainerFromIndex(1) as ComboBoxItem
             ?? throw new InvalidOperationException("The opened native completion list has no retained row.");
         fixture.Click(row);
         combo.SelectedItem.Should().Be("feature/filters");
         combo.Text.Should().Be("feature/filters");
-        combo.Items.Cast<string>().Should().Equal("feature/filters", "feature/other", "main");
+        combo.Items.Cast<string>().Should().Equal("main", "feature/filters", "feature/other");
         combo.IsDropDownOpen.Should().BeFalse();
     }
 
