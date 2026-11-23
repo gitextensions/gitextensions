@@ -1089,7 +1089,7 @@ public partial class FileViewer : GitModuleControl
 
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
     {
-        const long maxLength = 5 * 1024 * 1024;
+        long maxLength = AppSettings.MaxDiffFileSizeMb * 1024 * 1024;
 
         if (contentLength > maxLength)
         {
@@ -2270,5 +2270,9 @@ public partial class FileViewer : GitModuleControl
             ThreadHelper.JoinableTaskFactory.Run(
                 () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool));
         }
+
+        internal Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc) => _fileViewer.ShowOrDeferAsync(contentLength, showFunc);
+
+        public bool IsShowDeferred => _fileViewer._deferShowFunc is not null;
     }
 }

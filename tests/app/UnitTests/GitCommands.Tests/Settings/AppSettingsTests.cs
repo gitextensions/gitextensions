@@ -346,6 +346,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.MaxDiffFileSizeMb)], 5, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isISetting);

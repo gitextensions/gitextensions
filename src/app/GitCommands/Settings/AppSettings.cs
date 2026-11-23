@@ -1326,6 +1326,12 @@ public static partial class AppSettings
         set => SetInt("diffverticalrulerposition", value);
     }
 
+    public static int MaxDiffFileSizeMb
+    {
+        get => GetInt("maxdifffilesize", 5);
+        set => SetInt("maxdifffilesize", value);
+    }
+
     public static TextSetting GitGrepUserArguments { get; } = new(DialogSettingsPath, nameof(GitGrepUserArguments), defaultValue: "");
 
     public static BooleanSetting GitGrepIgnoreCase { get; } = new(DialogSettingsPath, nameof(GitGrepIgnoreCase), defaultValue: false);
