@@ -175,6 +175,7 @@ public partial class FileStatusList : GitModuleControl
         cboFilterComboBox.PointerEntered += FilterComboBox_MouseEnter;
         cboFilterComboBox.SelectionChanged += FilterComboBox_SelectedIndexChanged;
         cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
+        InitializeFilterToolTip();
         cboFindInCommitFilesGitGrep.PropertyChanged += cboFindInCommitFilesGitGrep_TextUpdate;
         cboFindInCommitFilesGitGrep.SelectionChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
         cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
@@ -2286,8 +2287,37 @@ public partial class FileStatusList : GitModuleControl
 
     private void FilterComboBox_MouseEnter(object? sender, EventArgs e)
     {
+        SetFilterToolTip(_toolTipText);
+    }
+
+    private void InitializeFilterToolTip()
+    {
+        // Avalonia's attached value is detached until the original error route supplies a message.
+        ToolTip.SetTip(cboFilterComboBox, null);
+
+        // The WinForms component's AutomaticDelay owns this single target and its display duration.
+        DispatcherTimer autoPopTimer = new() { Interval = TimeSpan.FromMilliseconds(10 * ToolTip.GetShowDelay(cboFilterComboBox)) };
+        autoPopTimer.Tick += (_, _) =>
+        {
+            autoPopTimer.Stop();
+            ToolTip.SetIsOpen(cboFilterComboBox, false);
+        };
+        cboFilterComboBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ToolTip.IsOpenProperty)
+            {
+                autoPopTimer.IsEnabled = ToolTip.GetIsOpen(cboFilterComboBox);
+            }
+        };
+        cboFilterComboBox.DetachedFromVisualTree += (_, _) => autoPopTimer.Stop();
+    }
+
+    private void SetFilterToolTip(string? message)
+    {
+        lblFilterToolTipMessage.Text = message;
+
         // Avalonia's attached tip is disabled by a null value.
-        ToolTip.SetTip(cboFilterComboBox, _toolTipText.Length == 0 ? null : _toolTipText);
+        ToolTip.SetTip(cboFilterComboBox, string.IsNullOrEmpty(message) ? null : FilterToolTip);
     }
 
     private void FilterComboBox_SelectedIndexChanged(object? sender, EventArgs e)
@@ -2649,7 +2679,7 @@ public partial class FileStatusList : GitModuleControl
     {
         cboFilterComboBox.Classes.Set("file-filter-active", state == FilterState.Valid);
         cboFilterComboBox.Classes.Set("file-filter-invalid", state == FilterState.Invalid);
-        ToolTip.SetTip(cboFilterComboBox, toolTip);
+        SetFilterToolTip(toolTip);
         DeleteFilterButton.IsVisible = IsFilterActive;
     }
 

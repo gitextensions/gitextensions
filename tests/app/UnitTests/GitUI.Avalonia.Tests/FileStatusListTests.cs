@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
@@ -366,34 +367,104 @@ public sealed class FileStatusListTests
             filter.Classes.Should().Contain("file-filter-active");
 
             window.MouseMove(new Point(300, 220), RawInputModifiers.None);
-            TextBox editor = filter.GetVisualDescendants().OfType<TextBox>().Single(part => part.Name == "PART_EditableTextBox");
-            editor.Focus().Should().BeTrue();
-            editor.SelectAll();
-            window.KeyTextInput("[");
-            using CancellationTokenSource filterTimeout = new(TimeSpan.FromSeconds(5));
-            while (!filter.Classes.Contains("file-filter-invalid"))
-            {
-                await Task.Delay(10, filterTimeout.Token);
-                Dispatcher.UIThread.RunJobs();
-            }
+            await TypeInvalidFilterAsync(window, filter);
 
             control.GitItemFilteredStatuses.Count.Should().Be(2, "an invalid expression keeps the last valid result");
             control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
             filter.Classes.Should().Contain("file-filter-invalid");
             ToolTip.GetTip(filter).Should().BeNull();
+            TaskCompletionSource opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            filter.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == ToolTip.IsOpenProperty && ToolTip.GetIsOpen(filter))
+                {
+                    opened.TrySetResult();
+                }
+            };
+
             Point filterPoint = filter.TranslatePoint(new Point(12, filter.Bounds.Height / 2), window)!.Value;
             window.MouseMove(filterPoint, RawInputModifiers.None);
-            ToolTip.GetTip(filter).Should().BeOfType<string>().Which.Should().NotBeEmpty();
+            await opened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            ToolTip tooltip = ToolTip.GetTip(filter).Should().BeOfType<ToolTip>().Which;
+            Dispatcher.UIThread.RunJobs();
+            tooltip.GetVisualDescendants().OfType<TextBlock>().Select(text => text.Text)
+                .Should().Contain("RegEx").And.Contain(text => !string.IsNullOrEmpty(text) && text != "RegEx");
+            tooltip.GetVisualDescendants().OfType<Image>().Should().Contain(icon => icon.Source == Images.StatusBadgeError);
+            ToolTip.GetShowDelay(filter).Should().Be(100);
 
             control.SetFilter(string.Empty);
             control.GitItemFilteredStatuses.Count.Should().Be(3);
             control.GitItemFilteredStatuses.Should().Equal(documentation, renamed, rangeDiff);
             filter.Classes.Should().NotContain("file-filter-active");
             filter.Classes.Should().NotContain("file-filter-invalid");
+            ToolTip.GetIsOpen(filter).Should().BeFalse();
         }
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileStatusList_should_expire_the_regex_error_tooltip_while_hover_remains()
+    {
+        using FileStatusList control = new();
+        GitItemStatus file = new("tracked.txt") { IsTracked = true, IsChanged = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [file]);
+        ComboBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!;
+        Window window = new() { Width = 720, Height = 360, Content = control };
+        TaskCompletionSource opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<TimeSpan> closed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        Stopwatch visibleTime = new();
+        filter.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ToolTip.IsOpenProperty)
+            {
+                if (ToolTip.GetIsOpen(filter))
+                {
+                    visibleTime.Restart();
+                    opened.TrySetResult();
+                }
+                else
+                {
+                    closed.TrySetResult(visibleTime.Elapsed);
+                }
+            }
+        };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.MouseMove(new Point(300, 220), RawInputModifiers.None);
+            await TypeInvalidFilterAsync(window, filter);
+            Point filterPoint = filter.TranslatePoint(new Point(12, filter.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(filterPoint, RawInputModifiers.None);
+            await opened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            TimeSpan duration = await closed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            duration.Should().BeGreaterThanOrEqualTo(TimeSpan.FromMilliseconds(900));
+            ToolTip.GetIsOpen(filter).Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static async Task TypeInvalidFilterAsync(Window window, ComboBox filter)
+    {
+        TextBox editor = filter.GetVisualDescendants().OfType<TextBox>().Single(part => part.Name == "PART_EditableTextBox");
+        editor.Focus().Should().BeTrue();
+        editor.SelectAll();
+        window.KeyTextInput("[");
+        using CancellationTokenSource filterTimeout = new(TimeSpan.FromSeconds(5));
+        while (!filter.Classes.Contains("file-filter-invalid"))
+        {
+            await Task.Delay(10, filterTimeout.Token);
+            Dispatcher.UIThread.RunJobs();
         }
     }
 

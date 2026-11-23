@@ -130,7 +130,20 @@
       </Button>
     </Grid>
     <Grid DockPanel.Dock="Top" Height="23">
-      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" FontWeight="Bold" Watermark="Filter files using a regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" FontWeight="Bold" Watermark="Filter files using a regular expression..."
+                                      ToolTip.ShowDelay="100" ToolTip.BetweenShowDelay="-1">
+        <ToolTip.Tip>
+          <ToolTip x:Name="FilterToolTip">
+            <StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <Image Width="16" Height="16" Source="{x:Static properties:Images.StatusBadgeError}" />
+                <TextBlock Text="RegEx" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock x:Name="lblFilterToolTipMessage" TextWrapping="Wrap" />
+            </StackPanel>
+          </ToolTip>
+        </ToolTip.Tip>
+      </userControls:WatermarkComboBox>
       <Button x:Name="DeleteFilterButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
