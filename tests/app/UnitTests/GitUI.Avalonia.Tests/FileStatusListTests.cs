@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -489,6 +490,22 @@ public sealed class FileStatusListTests
         {
             CultureInfo.CurrentCulture = originalCulture;
         }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_use_the_process_timeout_for_file_filtering()
+    {
+        const string pattern = @"\.cs$";
+        using FileStatusList control = new();
+        GitItemStatus matching = new("tracked.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus remaining = new("readme.md") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [matching, remaining]);
+
+        control.SetFilter(pattern);
+
+        control.GitItemFilteredStatuses.Should().Equal(matching);
+        Regex sourceFilter = new(pattern, RegexOptions.IgnoreCase);
+        control.GetTestAccessor().Filter!.MatchTimeout.Should().Be(sourceFilter.MatchTimeout);
     }
 
     [AvaloniaTest]

@@ -41,8 +41,6 @@ namespace GitUI;
 // original filtering, staging/context-menu, status, revision grouping, and repository hierarchy.
 public partial class FileStatusList : GitModuleControl
 {
-    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
-
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
     private readonly DispatcherTimer _selectedIndexChangeTimer = new() { Interval = SelectedIndexChangeThrottleDuration };
@@ -2184,23 +2182,19 @@ public partial class FileStatusList : GitModuleControl
 
         string name = item.Name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
         string? oldName = item.OldName;
+
         if (AppSettings.TruncatePathMethod == TruncatePathMethod.FileNameOnly)
         {
             name = Path.GetFileName(name);
             oldName = Path.GetFileName(oldName);
         }
 
-        try
+        if (_filter.IsMatch(name))
         {
-            return _filter.IsMatch(name)
-                   || (oldName is not null && _filter.IsMatch(oldName));
+            return true;
         }
-        catch (RegexMatchTimeoutException exception)
-        {
-            _toolTipText = exception.Message;
-            SetFilterState(FilterState.Invalid, _toolTipText);
-            return false;
-        }
+
+        return oldName is not null && _filter.IsMatch(oldName);
     }
 
     private void InitialiseFiltering()
@@ -2226,7 +2220,7 @@ public partial class FileStatusList : GitModuleControl
                     _toolTipText = exception.Message;
                 }
 
-                if (fileCount > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
+                if (fileCount > 0)
                 {
                     AddToSelectionFilter(filterText);
                 }
@@ -2550,7 +2544,7 @@ public partial class FileStatusList : GitModuleControl
 
         try
         {
-            _filter = new Regex(value, RegexOptions.IgnoreCase, RegexTimeout);
+            _filter = new Regex(value, RegexOptions.IgnoreCase);
             SetFilterState(FilterState.Valid, toolTip: null);
         }
         catch
@@ -2774,6 +2768,8 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal ComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
+        internal Regex? Filter => _fileStatusList._filter;
+
         internal bool UpdateContextMenu()
         {
             CancelEventArgs eventArgs = new();
