@@ -2577,6 +2577,7 @@ public partial class FileViewer : GitModuleControl
     private CancellationToken BeginView(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         // The previous caller's callback cancels the current sequence token.
         // Remove it before publishing the replacement view token.
@@ -2590,8 +2591,19 @@ public partial class FileViewer : GitModuleControl
 
     private void CancelPendingView()
     {
-        _ = BeginView(CancellationToken.None);
         _externalCancellationRegistration.Dispose();
+        _externalCancellationRegistration = default;
+
+        // Avalonia can detach and later reattach this view.
+        if (_isDisposed)
+        {
+            _viewSequence.Dispose();
+        }
+        else
+        {
+            _viewSequence.CancelCurrent();
+        }
+
         _deferShowFunc = null;
         _NO_TRANSLATE_lblShowPreview.IsVisible = false;
     }

@@ -1891,6 +1891,66 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task FileViewer_should_accept_disk_loads_after_reattachment_and_reject_them_after_disposal()
+    {
+        const string fileName = "file-viewer-lifetime.txt";
+        string fullPath = Path.Combine(_workingDirectory, fileName);
+        await File.WriteAllTextAsync(fullPath, "initial contents");
+        using FileViewer viewer = CreateViewer();
+        Grid layout = new() { Children = { viewer } };
+        Window window = new() { Width = 580, Height = 260, Content = layout };
+        try
+        {
+            window.Show();
+            await viewer.ViewFileAsync(fileName);
+            viewer.GetText().Should().Be("initial contents");
+
+            layout.Children.Remove(viewer);
+            await File.WriteAllTextAsync(fullPath, "contents after reattachment");
+            layout.Children.Add(viewer);
+            await viewer.ViewFileAsync(fileName);
+            viewer.GetText().Should().Be("contents after reattachment");
+
+            ((IDisposable)viewer).Dispose();
+            await File.WriteAllTextAsync(fullPath, "late contents");
+            Func<Task> load = () => viewer.ViewFileAsync(fileName);
+
+            await load.Should().ThrowAsync<ObjectDisposedException>();
+            viewer.GetText().Should().Be("contents after reattachment");
+            layout.Children.Remove(viewer);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_cancel_an_inflight_blob_read_when_disposed()
+    {
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task pending = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null);
+        try
+        {
+            CancellationToken loadToken = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            ((IDisposable)viewer).Dispose();
+
+            loadToken.IsCancellationRequested.Should().BeTrue();
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await pending.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().Be("previous selection");
+    }
+
+    [AvaloniaTest]
     public async Task Superseded_blob_callers_cancellation_should_not_cancel_the_replacement_view()
     {
         using CancellationTokenSource superseded = new();
