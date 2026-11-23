@@ -1,16 +1,22 @@
 ﻿using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using AwesomeAssertions.Execution;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Editor;
+using GitUI.Editor.Diff;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -350,6 +356,48 @@ public sealed class DiffPatchDialogTests
         await WaitUntilAsync(() => accessor.BranchSelector.GetTestAccessor().Changes.Text == "1 ahead, 2 behind");
 
         module.Received(1).GetCommitCountString(expectedCommit, "origin/main");
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormDiff_should_preserve_its_source_line_number_preference_and_inset(bool dark)
+    {
+        using FormDiff form = new() { RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light };
+        form.Resources["GitExtensionsWindowBackgroundBrush"] = new SolidColorBrush(Colors.Magenta);
+        FileViewer viewer = form.GetTestAccessor().DiffText;
+        FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+        try
+        {
+            form.Show();
+            await viewer.ViewTextAsync(fileName: null, text: "No differences");
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+
+            using AssertionScope assertions = new();
+            viewer.ShowLineNumbers.Should().BeFalse();
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse("plain text keeps FormDiff's explicit preference");
+            editor.Padding.Left.Should().Be(5);
+            viewer.TextEditor.TranslatePoint(default, editor)!.Value.X.Should().Be(5);
+            form.TryFindResource("GitExtensionsNativeTreeDefaultBackgroundBrush", form.ActualThemeVariant, out object? background)
+                .Should().BeTrue();
+            Color? expectedBackground = (background as ISolidColorBrush)?.Color;
+            expectedBackground.Should().NotBeNull();
+            ((editor.Background as ISolidColorBrush)?.Color).Should().Be(expectedBackground);
+
+            viewer.ViewPatch("@@ -5,2 +11,2 @@\n-old\n+new\n context\n");
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
+            viewer.TextEditor.TextArea.LeftMargins.OfType<DiffViewerLineNumberControl>()
+                .Should().ContainSingle(gutter => gutter.IsVisible, "patches use the separate diff line numbers");
+            viewer.TextEditor.TranslatePoint(default, editor)!.Value.X.Should().Be(5);
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

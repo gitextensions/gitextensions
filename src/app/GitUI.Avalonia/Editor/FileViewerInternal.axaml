@@ -3,6 +3,12 @@
              xmlns:compat="using:GitUI.Compat"
              x:Class="GitUI.Editor.FileViewerInternal"
              Margin="0">
+  <UserControl.Styles>
+    <Style Selector=":is(UserControl).fileviewer-hide-ordinary-line-numbers">
+      <!-- The editor and repository tree both paint raw SystemBrushes.Window. -->
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeDefaultBackgroundBrush}" />
+    </Style>
+  </UserControl.Styles>
   <compat:ThemeAwareTextEditor x:Name="TextEditor"
                                Classes="gitextensions-diff-editor"
                                FontFamily="Courier New"

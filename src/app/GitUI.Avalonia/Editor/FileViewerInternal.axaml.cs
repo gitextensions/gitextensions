@@ -339,10 +339,24 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public string GetText() => TextEditor.Text;
 
+    private bool? _showLineNumbers;
+
     public bool? ShowLineNumbers
     {
-        get => TextEditor.ShowLineNumbers;
-        set => TextEditor.ShowLineNumbers = value ?? false;
+        get => _showLineNumbers;
+        set
+        {
+            _showLineNumbers = value;
+            UpdateLineNumberVisibility();
+
+            // Avalonia paints the inset through its ContentPresenter background.
+            Classes.Set("fileviewer-hide-ordinary-line-numbers", value is false);
+        }
+    }
+
+    internal void UpdateLineNumberVisibility()
+    {
+        TextEditor.ShowLineNumbers = ShowLineNumbers ?? (DiffHighlightService is null);
     }
 
     /// <summary>
@@ -375,6 +389,11 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         TextEditor.Document ??= new TextDocument();
         TextEditor.Document.Text = text;
+
+        if (ShowLineNumbers is false)
+        {
+            Padding = new Thickness(5, Padding.Top, Padding.Right, Padding.Bottom);
+        }
 
         // important to set after the text was changed
         // otherwise the may be rendering artifacts as noted in #5568
@@ -851,7 +870,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     /// <returns>The caret offset</returns>
     private int GetCaretOffset(int lineNumber, bool rightFile)
     {
-        if (ShowLineNumbers == true)
+        if (TextEditor.ShowLineNumbers)
         {
             // All contents is shown, just translate the lineNumber (that is an offset)
             return lineNumber - 1;
@@ -873,7 +892,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         return 0;
     }
 
-    public int MaxLineNumber => ShowLineNumbers == true
+    public int MaxLineNumber => TextEditor.ShowLineNumbers
         ? TotalNumberOfLines
         : Math.Max(1, _lineNumbersControl.MaxLineNumber);
 

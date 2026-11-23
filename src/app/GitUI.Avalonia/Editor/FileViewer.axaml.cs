@@ -57,7 +57,6 @@ public partial class FileViewer : GitModuleControl
     private Bitmap? _image;
     private Action? _openWithDifftool;
     private string? _fileName;
-    private bool? _showLineNumbers;
     private bool _showNonPrintingChars;
     private IGitUICommands? _settingsCommands;
     private bool _updatingEncoding;
@@ -419,12 +418,8 @@ public partial class FileViewer : GitModuleControl
     /// </summary>
     public bool? ShowLineNumbers
     {
-        get => _showLineNumbers;
-        set
-        {
-            _showLineNumbers = value;
-            UpdateLineNumberVisibility();
-        }
+        get => internalFileViewer.ShowLineNumbers;
+        set => internalFileViewer.ShowLineNumbers = value;
     }
 
     /// <summary>
@@ -2661,12 +2656,6 @@ public partial class FileViewer : GitModuleControl
         AppSettings.IgnoreWhitespaceKind.Value = IgnoreWhitespace;
     }
 
-    private void UpdateLineNumberVisibility()
-    {
-        bool hasDiffLineNumbers = internalFileViewer.DiffHighlightService is not null;
-        TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasDiffLineNumbers;
-    }
-
     private void UpdateSyntaxHighlightingToggleState()
     {
         showSyntaxHighlightingToolStripMenuItem.IsChecked = ShowSyntaxHighlightingInDiff;
@@ -2713,7 +2702,7 @@ public partial class FileViewer : GitModuleControl
         _diffBackgroundRenderer.SetHighlightService(highlightService);
         _diffTextColorizer.SetHighlightService(highlightService);
         internalFileViewer.LineNumbersControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
-        UpdateLineNumberVisibility();
+        internalFileViewer.UpdateLineNumberVisibility();
         return SetText(text);
     }
 
@@ -2723,7 +2712,7 @@ public partial class FileViewer : GitModuleControl
         _diffBackgroundRenderer.SetHighlightService(null);
         _diffTextColorizer.SetHighlightService(null);
         internalFileViewer.LineNumbersControl.Clear();
-        UpdateLineNumberVisibility();
+        internalFileViewer.UpdateLineNumberVisibility();
     }
 
     public int MaxLineNumber

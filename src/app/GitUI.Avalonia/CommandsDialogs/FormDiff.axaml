@@ -29,6 +29,7 @@
       <editor:FileViewer x:Name="DiffText"
                          Grid.Column="2"
                          Background="{StaticResource GitExtensionsTransparentBrush}"
+                         ShowLineNumbers="False"
                          TabIndex="0" />
     </Grid>
 
