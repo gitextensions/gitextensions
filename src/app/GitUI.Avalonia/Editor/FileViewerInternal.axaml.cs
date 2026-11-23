@@ -30,6 +30,7 @@ namespace GitUI.Editor;
 public partial class FileViewerInternal : GitModuleControl, IFileViewer
 {
     private readonly CommitMessageValidationRenderer _validationRenderer;
+    private PointerPointProperties? _validationPointerButtons;
     private readonly SelectionOccurrenceRenderer _selectionOccurrenceRenderer;
     private readonly List<HighlightedLines> _lineHighlights = [];
     private GetNextFileFnc? _findAndReplaceFileLoader;
@@ -106,12 +107,17 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         textView.PointerHover += (_, e) => UpdateValidationToolTip(e);
         textView.PointerMoved += (_, e) =>
         {
+            _validationPointerButtons = e.Properties;
             if (ToolTip.GetIsOpen(textView))
             {
                 UpdateValidationToolTip(e);
             }
         };
-        textView.PointerExited += (_, _) => ToolTip.SetTip(textView, null);
+        textView.PointerExited += (_, _) =>
+        {
+            _validationPointerButtons = null;
+            ToolTip.SetTip(textView, null);
+        };
 
         // AvaloniaEdit exposes printable text entry before the document changes.
         TextEditor.TextArea.TextEntering += (_, e) =>
@@ -147,10 +153,12 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.TextArea.DoubleTapped += (s, e) => DoubleClick?.Invoke(s, e);
         TextEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
         {
+            _validationPointerButtons = e.Properties;
             ToolTip.SetTip(textView, null);
             int y = (int)e.GetPosition(TextEditor.TextArea.TextView).Y;
             SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(GetLineFromVisualPosY(y)));
         }, RoutingStrategies.Tunnel);
+        TextEditor.TextArea.AddHandler(InputElement.PointerReleasedEvent, (_, e) => _validationPointerButtons = e.Properties, RoutingStrategies.Tunnel);
 
         // AvaloniaEdit routes the wheel through TextArea before the enclosing ScrollViewer.
         TextEditor.TextArea.PointerWheelChanged += TextArea_MouseWheel;
@@ -1246,7 +1254,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         TextView textView = TextEditor.TextArea.TextView;
         PointerPoint pointer = e.GetCurrentPoint(textView);
-        PointerPointProperties buttons = pointer.Properties;
+
+        // AvaloniaEdit's delayed hover can carry motion from before the last press or release.
+        PointerPointProperties buttons = _validationPointerButtons ?? pointer.Properties;
         string? toolTip = null;
         if (_validationRenderer.Markers.Count > 0
             && !buttons.IsLeftButtonPressed && !buttons.IsRightButtonPressed && !buttons.IsMiddleButtonPressed

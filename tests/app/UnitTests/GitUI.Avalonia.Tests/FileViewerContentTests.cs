@@ -1356,6 +1356,66 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_hide_commit_warnings_during_a_stationary_pointer_press(bool pressBeforeHover)
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window window = new() { Width = 1100, Height = 342, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", new string('s', 64) + "\n\ndescription");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TaskCompletionSource firstHover = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            textView.PointerHover += (_, _) => firstHover.TrySetResult();
+            Point warningPoint = MoveTo(column: 56);
+            if (!pressBeforeHover)
+            {
+                await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+                ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+                ToolTip.GetIsOpen(textView).Should().BeTrue();
+            }
+
+            window.MouseDown(warningPoint, MouseButton.Middle, RawInputModifiers.None);
+            try
+            {
+                if (pressBeforeHover)
+                {
+                    await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+                }
+
+                ToolTip.GetIsOpen(textView).Should().BeFalse();
+                ToolTip.GetTip(textView).Should().BeNull();
+            }
+            finally
+            {
+                window.MouseUp(warningPoint, MouseButton.Middle, RawInputModifiers.None);
+            }
+
+            MoveTo(column: 2);
+            MoveTo(column: 56);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+
+            Point MoveTo(int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(1, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                return windowPoint;
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(2, "Line is too long.")]
     [TestCase(3, "There must be a blank line after the summary.")]
     public async Task FileViewer_should_keep_the_source_order_of_overlapping_commit_warnings_after_an_edit(int editedLine, string expectedWarning)
