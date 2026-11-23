@@ -152,7 +152,9 @@ public partial class FileViewer : GitModuleControl
         _diffBackgroundRenderer = new DiffBackgroundRenderer(this);
         _diffTextColorizer = new DiffTextColorizer(this);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
-        TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
+
+        // The source occurrence marker overrides syntax and diff foreground colors.
+        TextEditor.TextArea.TextView.LineTransformers.Insert(0, _diffTextColorizer);
         internalFileViewer.AddHandler(InputElement.KeyDownEvent, TextEditor_KeyDown, RoutingStrategies.Tunnel);
         internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
         internalFileViewer.MouseMove += (_, _) =>

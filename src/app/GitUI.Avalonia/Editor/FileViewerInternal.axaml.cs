@@ -70,6 +70,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_validationRenderer);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_selectionOccurrenceRenderer);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(new HighlightBackgroundRenderer(_lineHighlights));
+        TextEditor.TextArea.TextView.LineTransformers.Add(_selectionOccurrenceRenderer);
         TextEditor.TextChanged += (sender, e) =>
         {
             UpdateValidationMarkers();
@@ -191,8 +192,15 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         string word = TextEditor.SelectedText;
         List<global::GitUI.TextRange> markers = GetTextMarkersMatchingWord(word);
+        if (_selectionOccurrenceRenderer.Markers.Count == 0 && markers.Count == 0)
+        {
+            return;
+        }
+
         _selectionOccurrenceRenderer.Markers = markers;
-        TextEditor.TextArea.TextView.InvalidateLayer(KnownLayer.Selection);
+
+        // The occurrence foreground is stored on formatted visual lines.
+        TextEditor.TextArea.TextView.Redraw();
     }
 
     /// <summary>
@@ -447,7 +455,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _gitHighlightingStrategy = gitHighlightingStrategy;
         if (_gitHighlightingStrategy is not null)
         {
-            transformers.Add(_gitHighlightingStrategy);
+            transformers.Insert(transformers.IndexOf(_selectionOccurrenceRenderer), _gitHighlightingStrategy);
         }
 
         TextEditor.SyntaxHighlighting = highlightingStrategy;
@@ -1293,11 +1301,35 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         }
     }
 
-    private sealed class SelectionOccurrenceRenderer : IBackgroundRenderer
+    private sealed class SelectionOccurrenceRenderer : DocumentColorizingTransformer, IBackgroundRenderer
     {
         public IReadOnlyList<global::GitUI.TextRange> Markers { get; set; } = [];
 
         public KnownLayer Layer => KnownLayer.Selection;
+
+        protected override void ColorizeLine(DocumentLine line)
+        {
+            if (Markers.Count == 0)
+            {
+                return;
+            }
+
+            IBrush foreground = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(GetHighlightColor().GetTextColor())).ToImmutable();
+            foreach (global::GitUI.TextRange marker in Markers)
+            {
+                if (marker.Offset >= line.EndOffset)
+                {
+                    break;
+                }
+
+                int start = Math.Max(line.Offset, marker.Offset);
+                int end = Math.Min(line.EndOffset, marker.EndOffset);
+                if (start < end)
+                {
+                    ChangeLinePart(start, end, element => element.TextRunProperties.SetForegroundBrush(foreground));
+                }
+            }
+        }
 
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
@@ -1306,10 +1338,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                 return;
             }
 
-            System.Drawing.Color color = AvaloniaThemeResources.ResolveAppColor(
-                ThemeModule.Settings,
-                AppColor.HighlightAllOccurences);
-            IBrush brush = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(color)).ToImmutable();
+            IBrush brush = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(GetHighlightColor())).ToImmutable();
             foreach (global::GitUI.TextRange marker in Markers)
             {
                 foreach (Avalonia.Rect rectangle in BackgroundGeometryBuilder.GetRectsForSegment(textView, marker))
@@ -1318,6 +1347,9 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                 }
             }
         }
+
+        private static Color GetHighlightColor()
+            => AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, AppColor.HighlightAllOccurences);
     }
 
     /// <summary>

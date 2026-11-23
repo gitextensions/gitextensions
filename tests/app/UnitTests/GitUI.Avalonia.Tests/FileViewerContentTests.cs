@@ -1593,6 +1593,105 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Highlighted_occurrences_should_use_the_source_contrast_foreground_over_git_syntax(bool dark)
+    {
+        const string comment = "# Git comment";
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            AppSettings.ThemeId = dark ? ThemeId.DefaultDark : ThemeId.DefaultLight;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            _module.SetSetting("core.commentchar", "#");
+            window.Show();
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", $"{comment}\n{comment}\nOrdinary text");
+            Color syntaxColor = ReadForeground(2);
+            Color ordinaryColor = ReadForeground(3);
+            System.Drawing.Color background = AppColor.HighlightAllOccurences.GetThemeColor();
+            Color contrast = AvaloniaThemeResources.ToMediaColor(background.GetTextColor());
+            syntaxColor.Should().NotBe(contrast, "the source occurrence color overrides a visibly different syntax color");
+
+            viewer.TextEditor.Select(0, comment.Length);
+
+            ReadForeground(2).Should().Be(contrast);
+            ReadForeground(3).Should().Be(ordinaryColor);
+
+            viewer.TextEditor.Select(0, 0);
+
+            ReadForeground(2).Should().Be(syntaxColor);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeId = originalThemeId;
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            AvaloniaThemeSettings.ApplyAppSettings();
+        }
+
+        Color ReadForeground(int lineNumber)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = textView.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == lineNumber);
+            return line.Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Highlighted_occurrences_should_use_the_source_contrast_foreground_over_diff_coloring()
+    {
+        const string word = "repeat";
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ReverseGitColoring.Value = false;
+            window.Show();
+            viewer.ViewPatch($"@@ -1,2 +1,2 @@\n-{word}\n+{word}\n context\n", useGitColoring: true);
+            Color diffColor = ReadAddedWordForeground();
+            Color contrast = AvaloniaThemeResources.ToMediaColor(AppColor.HighlightAllOccurences.GetThemeColor().GetTextColor());
+            diffColor.Should().NotBe(contrast);
+
+            int removedWord = viewer.TextEditor.Text.IndexOf(word, StringComparison.Ordinal);
+            viewer.TextEditor.Select(removedWord, word.Length);
+
+            ReadAddedWordForeground().Should().Be(contrast);
+
+            viewer.TextEditor.Select(0, 0);
+
+            ReadAddedWordForeground().Should().Be(diffColor);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ReverseGitColoring.Value = reverseGitColoring;
+        }
+
+        Color ReadAddedWordForeground()
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = textView.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == 3);
+            VisualLineElement wordElement = line.Elements.Single(element =>
+                element.RelativeTextOffset <= 1 && element.RelativeTextOffset + element.DocumentLength > 1);
+            return wordElement.TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase("COMMIT_EDITMSG", typeof(CommitMessageHighlightingStrategy))]
     [TestCase("git-rebase-todo", typeof(RebaseTodoHighlightingStrategy))]
     public async Task FileViewer_should_use_its_repository_for_git_specific_syntax(string name, Type expected)
