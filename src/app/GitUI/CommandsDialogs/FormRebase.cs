@@ -47,6 +47,8 @@ public partial class FormRebase : GitExtensionsDialog
     private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
     #endregion
 
+    private const string RebaseAutosquashSetting = "rebase.autosquash";
+
     private static readonly List<PatchFile> Skipped = [];
 
     private readonly string? _defaultBranch;
@@ -128,8 +130,9 @@ public partial class FormRebase : GitExtensionsDialog
         rebasePanel.Visible = !Module.InTheMiddleOfRebase();
         EnableButtons();
 
-        // Honor the rebase.autosquash configuration.
-        chkAutosquash.Checked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
+        // Honor the rebase.autosquash configuration; SetIfUnset defaults it to enabled for interactive rebase.
+        bool? autosquash = Module.GetEffectiveSetting<bool>(RebaseAutosquashSetting);
+        chkAutosquash.Checked = autosquash is not null ? autosquash.Value : chkInteractive.Checked;
         if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updaterefs") is true)
         {
             checkBoxUpdateRefs.Checked = true;
@@ -214,6 +217,12 @@ public partial class FormRebase : GitExtensionsDialog
     private void chkInteractive_CheckedChanged(object sender, EventArgs e)
     {
         chkAutosquash.Enabled = chkInteractive.Checked;
+
+        // SetIfUnset: default to enabled for interactive rebase when rebase.autosquash is not explicitly set.
+        if (chkInteractive.Checked && Module.GetEffectiveSetting<bool>(RebaseAutosquashSetting) is null)
+        {
+            chkAutosquash.Checked = true;
+        }
     }
 
     private void chkIgnoreDate_CheckedChanged(object sender, EventArgs e)
@@ -471,5 +480,7 @@ public partial class FormRebase : GitExtensionsDialog
         public CheckBox chkStash => _form.chkStash;
         public CheckBox chkIgnoreDate => _form.chkIgnoreDate;
         public CheckBox chkCommitterDateIsAuthorDate => _form.chkCommitterDateIsAuthorDate;
+
+        public void RaiseShown() => _form.OnShown(EventArgs.Empty);
     }
 }
