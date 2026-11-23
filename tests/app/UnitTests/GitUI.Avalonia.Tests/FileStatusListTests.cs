@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -1051,6 +1052,48 @@ public sealed class FileStatusListTests
         roots[1].Text.Should().Be("(0) No changes");
         roots[2].Item?.Item.Should().Be(range);
         control.GitItemFilteredStatuses.Should().Equal(source, noChanges, range);
+    }
+
+    [AvaloniaTest]
+    public void Branch_status_filter_should_keep_range_diff_markers_and_hide_ordinary_excluded_rows()
+    {
+        using FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus keep = new("keep-only-b.txt") { IsChanged = true, IsTracked = true, DiffStatus = DiffBranchStatus.OnlyBChange };
+        GitItemStatus hideByStatus = new("keep-only-a.txt") { IsChanged = true, IsTracked = true, DiffStatus = DiffBranchStatus.OnlyAChange };
+        GitItemStatus hideByName = new("omit-only-b.txt") { IsChanged = true, IsTracked = true, DiffStatus = DiffBranchStatus.OnlyBChange };
+        GitItemStatus range = new("range-diff") { IsRangeDiff = true, DiffStatus = DiffBranchStatus.OnlyAChange };
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "Changes", [keep, hideByStatus, hideByName], iconName: nameof(Images.DiffA)),
+            new FileStatusWithDescription(null, revision, "Range", [range], iconName: nameof(Images.DiffR)),
+        ], isFileTreeMode: false);
+        Window window = new() { Width = 720, Height = 360, Content = control };
+        try
+        {
+            window.Show();
+            control.SetFilter("^keep");
+            control.GitItemFilteredStatuses.Should().BeEquivalentTo(new[] { keep, hideByStatus, range });
+
+            ToggleButton onlyA = control.FindControl<ToggleButton>("btnOnlyA")!;
+            onlyA.IsEffectivelyVisible.Should().BeTrue();
+            onlyA.IsChecked.Should().BeTrue();
+            Point point = onlyA.TranslatePoint(new Point(onlyA.Bounds.Width / 2, onlyA.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            onlyA.IsChecked.Should().BeFalse();
+            control.GitItemFilteredStatuses.Should().Equal(keep, range);
+            TreeView diffTree = control.FindControl<TreeView>("tvDiffFiles")!;
+            FileStatusList.DiffTreeNode rangeRoot = diffTree.Items.Cast<FileStatusList.DiffTreeNode>().Last();
+            rangeRoot.Item?.Item.Should().BeSameAs(range);
+            rangeRoot.IsGroupHeader.Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

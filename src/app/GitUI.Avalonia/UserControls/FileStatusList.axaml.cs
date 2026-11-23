@@ -1354,7 +1354,7 @@ public partial class FileStatusList : GitModuleControl
             (List<TreeNodeInfo> nodes, _showDiffGroups, filesPresent) = GetNodes(
                 items,
                 GroupByRevision,
-                item => IsFilterMatch(item) && IsDiffStatusMatch(item.DiffStatus),
+                IsFilterMatch,
                 _groupBy,
                 _flatList,
                 expandIfFewFiles: true,
@@ -1493,6 +1493,13 @@ public partial class FileStatusList : GitModuleControl
             cancellationToken.ThrowIfCancellationRequested();
             FileStatusWithDescription group = items[groupIndex];
             bool emptyGroup = showGroupLabel && group.Statuses.Count == 0;
+            if (group.Statuses.Count == 1 && group.Statuses[0].IsRangeDiff)
+            {
+                FileStatusItem rangeDiff = new(group.FirstRev, group.SecondRev, group.Statuses[0], group.BaseA, group.BaseB);
+                rootNodes.Add(new TreeNodeInfo(CreateDiffFileNode(rangeDiff, parent: null), ExpandCollapseState.LeafNode));
+                continue;
+            }
+
             IEnumerable<GitItemStatus> statuses = emptyGroup
                 ? noItemStatuses
                 : group.Statuses.Where(isFilterMatch);
@@ -1500,16 +1507,6 @@ public partial class FileStatusList : GitModuleControl
             [
                 .. statuses.Select(item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB)),
             ];
-
-            if (group.Statuses.Count == 1 && group.Statuses[0].IsRangeDiff)
-            {
-                if (visibleItems.Length == 1)
-                {
-                    rootNodes.Add(new TreeNodeInfo(CreateDiffFileNode(visibleItems[0], parent: null), ExpandCollapseState.LeafNode));
-                }
-
-                continue;
-            }
 
             // Always expand grep results
             // Collapse some groups for diffs with common BASE
@@ -2146,7 +2143,17 @@ public partial class FileStatusList : GitModuleControl
 
     private bool IsFilterMatch(GitItemStatus item)
     {
-        if (item.IsRangeDiff || _filter is null)
+        if (item.IsRangeDiff)
+        {
+            return true;
+        }
+
+        if (!IsDiffStatusMatch(item.DiffStatus))
+        {
+            return false;
+        }
+
+        if (_filter is null)
         {
             return true;
         }
