@@ -177,8 +177,17 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             using (FormBusyScope.Enter(this))
             {
-                Directory.SetCurrentDirectory(Module.WorkingDir);
-                await Task.Run(() => Module.RunMergeTool());
+                string previousDirectory = Directory.GetCurrentDirectory();
+                try
+                {
+                    Directory.SetCurrentDirectory(Module.WorkingDir);
+                    await Task.Run(() => Module.RunMergeTool());
+                }
+                finally
+                {
+                    Directory.SetCurrentDirectory(previousDirectory);
+                }
+
                 Initialize();
             }
         });
@@ -1363,11 +1372,20 @@ public partial class FormResolveConflicts : GitModuleForm
             {
                 string? customTool = item?.Tag as string;
 
-                foreach (ConflictData conflict in GetConflicts().conflicts)
+                string previousDirectory = Directory.GetCurrentDirectory();
+                try
                 {
                     Directory.SetCurrentDirectory(Module.WorkingDir);
-                    await Task.Run(() => Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool));
-                    Initialize();
+
+                    foreach (ConflictData conflict in GetConflicts().conflicts)
+                    {
+                        await Task.Run(() => Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool));
+                        Initialize();
+                    }
+                }
+                finally
+                {
+                    Directory.SetCurrentDirectory(previousDirectory);
                 }
             }
         });

@@ -528,36 +528,44 @@ public sealed partial class GitModule : IGitModule
 
     public bool HandleConflictSelectSide(string fileName, string side, out string errorMessage)
     {
-        Directory.SetCurrentDirectory(WorkingDir);
-        GitArgumentBuilder args = new("checkout-index")
+        string previousDirectory = Directory.GetCurrentDirectory();
+        try
         {
-            "-f",
-            $"--stage={GetSide(side)}",
-            "--",
-            fileName.ToPosixPath().QuoteNE()
-        };
+            Directory.SetCurrentDirectory(WorkingDir);
+            GitArgumentBuilder args = new("checkout-index")
+            {
+                "-f",
+                $"--stage={GetSide(side)}",
+                "--",
+                fileName.ToPosixPath().QuoteNE()
+            };
 
-        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        if (IsConflictSelectSideFailure(result))
-        {
-            errorMessage = FormatConflictSelectSideError(result);
-            return false;
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+            if (IsConflictSelectSideFailure(result))
+            {
+                errorMessage = FormatConflictSelectSideError(result);
+                return false;
+            }
+
+            args = new GitArgumentBuilder("add")
+            {
+                "--",
+                fileName.ToPosixPath().QuoteNE()
+            };
+            result = GitExecutable.Execute(args, throwOnErrorExit: false);
+            if (IsConflictSelectSideFailure(result))
+            {
+                errorMessage = FormatConflictSelectSideError(result);
+                return false;
+            }
+
+            errorMessage = string.Empty;
+            return true;
         }
-
-        args = new GitArgumentBuilder("add")
+        finally
         {
-            "--",
-            fileName.ToPosixPath().QuoteNE()
-        };
-        result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        if (IsConflictSelectSideFailure(result))
-        {
-            errorMessage = FormatConflictSelectSideError(result);
-            return false;
+            Directory.SetCurrentDirectory(previousDirectory);
         }
-
-        errorMessage = string.Empty;
-        return true;
 
         static string FormatConflictSelectSideError(ExecutionResult result)
             => $"{result.ExitCodeDisplay}: {result.AllOutput.Trim()}";
@@ -569,64 +577,72 @@ public sealed partial class GitModule : IGitModule
 
     public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
     {
-        Directory.SetCurrentDirectory(WorkingDir);
-
-        GitArgumentBuilder args = new("checkout-index")
-        {
-            $"--stage={GetSide(side)}",
-            "--temp",
-            "--",
-            fileName.ToPosixPath().QuoteNE()
-        };
-        string output = GitExecutable.GetOutput(args);
-
-        if (string.IsNullOrEmpty(output))
-        {
-            return false;
-        }
-
-        if (!output.StartsWith(".merge_file_"))
-        {
-            return false;
-        }
-
-        // Parse temporary file name from command line result
-        string[] splitResult = output.Split(Delimiters.TabAndLineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
-        if (splitResult.Length != 2)
-        {
-            return false;
-        }
-
-        string temporaryFileName = splitResult[0].Trim();
-
-        if (!File.Exists(temporaryFileName))
-        {
-            return false;
-        }
-
-        bool retValue = false;
+        string previousDirectory = Directory.GetCurrentDirectory();
         try
         {
-            if (File.Exists(saveAsFileName))
+            Directory.SetCurrentDirectory(WorkingDir);
+
+            GitArgumentBuilder args = new("checkout-index")
             {
-                File.Delete(saveAsFileName);
+                $"--stage={GetSide(side)}",
+                "--temp",
+                "--",
+                fileName.ToPosixPath().QuoteNE()
+            };
+            string output = GitExecutable.GetOutput(args);
+
+            if (string.IsNullOrEmpty(output))
+            {
+                return false;
             }
 
-            File.Move(temporaryFileName, saveAsFileName);
-            retValue = true;
-        }
-        catch
-        {
+            if (!output.StartsWith(".merge_file_"))
+            {
+                return false;
+            }
+
+            // Parse temporary file name from command line result
+            string[] splitResult = output.Split(Delimiters.TabAndLineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
+            if (splitResult.Length != 2)
+            {
+                return false;
+            }
+
+            string temporaryFileName = splitResult[0].Trim();
+
+            if (!File.Exists(temporaryFileName))
+            {
+                return false;
+            }
+
+            bool retValue = false;
+            try
+            {
+                if (File.Exists(saveAsFileName))
+                {
+                    File.Delete(saveAsFileName);
+                }
+
+                File.Move(temporaryFileName, saveAsFileName);
+                retValue = true;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                if (File.Exists(temporaryFileName))
+                {
+                    File.Delete(temporaryFileName);
+                }
+            }
+
+            return retValue;
         }
         finally
         {
-            if (File.Exists(temporaryFileName))
-            {
-                File.Delete(temporaryFileName);
-            }
+            Directory.SetCurrentDirectory(previousDirectory);
         }
-
-        return retValue;
     }
 
     public void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default)
@@ -675,14 +691,22 @@ public sealed partial class GitModule : IGitModule
 
     public (string? BaseFile, string? LocalFile, string? RemoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
     {
-        Directory.SetCurrentDirectory(WorkingDir);
-
         int processId = Environment.ProcessId;
-        string? baseFile = CheckoutPart(1, "BASE", unmergedData.Base.Filename);
-        string? localFile = CheckoutPart(2, "LOCAL", unmergedData.Local.Filename);
-        string? remoteFile = CheckoutPart(3, "REMOTE", unmergedData.Remote.Filename);
+        string previousDirectory = Directory.GetCurrentDirectory();
+        try
+        {
+            Directory.SetCurrentDirectory(WorkingDir);
 
-        return (baseFile, localFile, remoteFile);
+            string? baseFile = CheckoutPart(1, "BASE", unmergedData.Base.Filename);
+            string? localFile = CheckoutPart(2, "LOCAL", unmergedData.Local.Filename);
+            string? remoteFile = CheckoutPart(3, "REMOTE", unmergedData.Remote.Filename);
+
+            return (baseFile, localFile, remoteFile);
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(previousDirectory);
+        }
 
         string? CheckoutPart(int part, string side, string? unmerged)
         {
