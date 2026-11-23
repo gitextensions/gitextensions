@@ -4166,6 +4166,7 @@ internal static class WinFormsInputMetadata
                 new("DeleteFilterButton", "Label"),
                 new("DeleteSearchButton", "Label"),
                 new("FileStatusListView", "MultiSelectTreeView"),
+                new("FilterToolTip", "ToolTip"),
                 new("ItemContextMenu", "ContextMenuStrip"),
                 new("LoadingFiles", "Label"),
                 new("NoFiles", "Label"),

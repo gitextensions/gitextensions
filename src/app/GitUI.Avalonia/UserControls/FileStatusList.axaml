@@ -136,7 +136,7 @@
           <ToolTip x:Name="FilterToolTip">
             <StackPanel>
               <StackPanel Orientation="Horizontal" Spacing="4">
-                <Image Width="16" Height="16" Source="{x:Static properties:Images.StatusBadgeError}" />
+                <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.StatusBadgeError}" />
                 <TextBlock Text="RegEx" FontWeight="Bold" VerticalAlignment="Center" />
               </StackPanel>
               <TextBlock x:Name="lblFilterToolTipMessage" TextWrapping="Wrap" />
