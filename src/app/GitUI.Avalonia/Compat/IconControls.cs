@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
 using AvaloniaToolTip = Avalonia.Controls.ToolTip;
 using Point = Avalonia.Point;
@@ -183,6 +184,7 @@ internal sealed class NativeToolStripSplitContent : Panel
     private readonly IconSplitButton _owner;
     private readonly Image _image = new() { Stretch = Stretch.Fill, IsHitTestVisible = false };
     private readonly TextBlock _caption;
+    private Size _captionSize;
 
     public NativeToolStripSplitContent(IconSplitButton owner)
     {
@@ -213,8 +215,10 @@ internal sealed class NativeToolStripSplitContent : Panel
     }
 
     internal static Size GetPreferredSize(IconSplitButton owner)
+        => GetPreferredSize(owner, MeasureCaption(owner));
+
+    private static Size GetPreferredSize(IconSplitButton owner, Size text)
     {
-        Size text = MeasureCaption(owner);
         int image = owner.Icon is null ? 0 : 16;
 
         // CommonLayoutOptions: BorderSize=2, PaddingSize=0 and TextImageInset=0.
@@ -241,8 +245,9 @@ internal sealed class NativeToolStripSplitContent : Panel
         };
         _caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(_caption);
         _image.Measure(new Size(16, 16));
-        _caption.Measure(MeasureCaption(_owner));
-        return GetPreferredSize(_owner);
+        _captionSize = MeasureCaption(_owner, _caption.Padding.Left);
+        _caption.Measure(_captionSize);
+        return GetPreferredSize(_owner, _captionSize);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
@@ -252,8 +257,7 @@ internal sealed class NativeToolStripSplitContent : Panel
         System.Drawing.Rectangle field = new(2, 2,
             Math.Max(0, (int)finalSize.Width - 4), Math.Max(0, (int)finalSize.Height - 4));
         System.Drawing.Size imageSize = _owner.Icon is null ? default : new(16, 16);
-        Size measured = MeasureCaption(_owner);
-        System.Drawing.Size textSize = new((int)measured.Width, (int)measured.Height);
+        System.Drawing.Size textSize = new((int)_captionSize.Width, (int)_captionSize.Height);
         HorizontalAlignment imageAlign = Translate(_owner.ImageAlign);
         HorizontalAlignment textAlign = Translate(_owner.TextAlign);
         bool rightToLeft = _owner.FlowDirection == FlowDirection.RightToLeft;
@@ -338,7 +342,7 @@ internal sealed class NativeToolStripSplitContent : Panel
         _owner.InvalidateMeasure();
     }
 
-    private static Size MeasureCaption(IconSplitButton owner)
+    private static Size MeasureCaption(IconSplitButton owner, double? paintInset = null)
     {
         if (owner.Classes.Contains("gitextensions-icon-only") || owner.Content is not string text || text.Length == 0)
         {
@@ -348,7 +352,18 @@ internal sealed class NativeToolStripSplitContent : Panel
         string display = TranslationCompat.GetConvertMnemonics(owner) ? AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(text) : text;
         string measuredCaption = OperatingSystem.IsWindows() ? display.Replace("&", "&&", StringComparison.Ordinal) : display;
         Size measured = WinFormsTextMeasurer.MeasureTextRenderer(owner, measuredCaption);
-        return new Size(Math.Ceiling(measured.Width), Math.Ceiling(measured.Height));
+        if (display.Length == 0)
+        {
+            return measured;
+        }
+
+        // The native padded width is a floor. Avalonia draws from the left inset,
+        // and a wider shaped caption needs enough room to reach the end of its clip.
+        using TextLayout layout = new(display, new Typeface(owner.FontFamily, owner.FontStyle, owner.FontWeight),
+            owner.FontSize, foreground: null, textWrapping: TextWrapping.NoWrap, flowDirection: owner.FlowDirection);
+        double paintWidth = layout.WidthIncludingTrailingWhitespace
+            + (paintInset ?? WinFormsTextMeasurer.GetTextRendererPadding(owner).Left);
+        return new Size(Math.Ceiling(Math.Max(measured.Width, paintWidth)), Math.Ceiling(measured.Height));
     }
 
     private static System.Drawing.Rectangle Align(System.Drawing.Size size, System.Drawing.Rectangle region, HorizontalAlignment alignment)

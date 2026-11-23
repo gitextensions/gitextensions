@@ -34,14 +34,7 @@ public sealed class NativeTabHeaderPanel : Panel
                 continue;
             }
 
-            Size size = child is TextBlock text
-                ? WinFormsTextMeasurer.MeasureSize(text, GetCaption(text))
-                : child.DesiredSize;
-            if (child is TextBlock emptyCaption && size.Height == 0)
-            {
-                size = new Size(size.Width, WinFormsTextMeasurer.MeasureSize(emptyCaption, "0").Height);
-            }
-
+            Size size = GetChildSize(child);
             desired = new Size(desired.Width + Math.Ceiling(size.Width), Math.Max(desired.Height, Math.Ceiling(size.Height)));
             hasImage |= child is Image;
             if (child is TextBlock caption)
@@ -61,9 +54,8 @@ public sealed class NativeTabHeaderPanel : Panel
         {
             if (child.IsVisible && child is not Image { Source: null })
             {
-                contentWidth += child is TextBlock text
-                    ? Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, GetCaption(text)).Width)
-                    : child.DesiredSize.Width + (child is Image ? ImageTextSpacing : 0);
+                double width = GetChildSize(child).Width;
+                contentWidth += child is TextBlock ? Math.Ceiling(width) : width + (child is Image ? ImageTextSpacing : 0);
             }
         }
 
@@ -76,14 +68,7 @@ public sealed class NativeTabHeaderPanel : Panel
                 continue;
             }
 
-            Size size = child is TextBlock text
-                ? WinFormsTextMeasurer.MeasureSize(text, GetCaption(text))
-                : child.DesiredSize;
-            if (child is TextBlock emptyCaption && size.Height == 0)
-            {
-                size = new Size(size.Width, WinFormsTextMeasurer.MeasureSize(emptyCaption, "0").Height);
-            }
-
+            Size size = GetChildSize(child);
             double width = Math.Ceiling(size.Width);
             double height = Math.Ceiling(size.Height);
             double y = Math.Floor((finalSize.Height - height) / 2);
@@ -92,6 +77,21 @@ public sealed class NativeTabHeaderPanel : Panel
         }
 
         return finalSize;
+    }
+
+    private static Size GetChildSize(Control child)
+    {
+        if (child is not TextBlock text)
+        {
+            return child.DesiredSize;
+        }
+
+        Size source = WinFormsTextMeasurer.MeasureSize(text, GetCaption(text));
+        double height = source.Height == 0 ? WinFormsTextMeasurer.MeasureSize(text, "0").Height : source.Height;
+
+        // TextBlock clips at its arranged bounds. Keep the native width floor and
+        // include the actual shaped caption when its unbounded measure exceeds it.
+        return new Size(Math.Max(source.Width, text.DesiredSize.Width), height);
     }
 
     private static string GetCaption(TextBlock text)

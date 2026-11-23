@@ -93,6 +93,44 @@ public sealed class NativeToolStripSplitContentTests
     }
 
     [AvaloniaTest]
+    [TestCase("Avalonia_Port", false, false)]
+    [TestCase("Avalonia_Port", true, false)]
+    [TestCase("feature/Avalonia_Port/rendering/Avalonia_Port_text_clipping", true, false)]
+    [TestCase("feature/Avalonia_Port/Avalonia_Port/Avalonia_Port/Avalonia_Port", true, false)]
+    [TestCase("feature/Avalonia_Port/Avalonia_Port/Avalonia_Port/Avalonia_Port", true, true)]
+    public void Autosized_split_button_caption_should_fit_inside_its_actual_clip(string text, bool bold, bool rightToLeft)
+    {
+        IconSplitButton button = NewButton(9, "Segoe UI", bold, false, false, rightToLeft);
+        TranslationCompat.SetConvertMnemonics(button, false);
+        button.Content = text;
+        Window window = NewWindow(button);
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            TextBlock caption = Caption(button);
+            DrawingGroup drawing = new();
+            using (DrawingContext context = drawing.Open())
+            {
+                caption.Render(context);
+            }
+
+            Rect painted = drawing.GetBounds();
+            TestContext.Out.WriteLine($"{text} ({caption.FontWeight}): GDI {CaptionSize(button)}, paint {painted}, clip {caption.Bounds.Size}");
+            caption.ClipToBounds.Should().BeTrue();
+            painted.Width.Should().BeGreaterThan(0);
+            painted.Left.Should().BeGreaterThanOrEqualTo(0);
+            painted.Right.Should().BeLessThanOrEqualTo(caption.Bounds.Width);
+            caption.Bounds.Width.Should().Be(Math.Max(CaptionSize(button).Width,
+                Math.Ceiling(caption.Padding.Left + caption.TextLayout.WidthIncludingTrailingWhitespace)));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(9, false)]
     [TestCase(9, true)]
     [TestCase(11, false)]

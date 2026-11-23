@@ -22,17 +22,23 @@ internal static class WinFormsTextMeasurer
     ///  Gets the source text renderer's glyph-overhang insets from the current font metrics.
     /// </summary>
     public static Avalonia.Thickness GetTextRendererPadding(TextBlock owner)
+        => GetTextRendererPadding(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize);
+
+    internal static Avalonia.Thickness GetTextRendererPadding(TemplatedControl owner)
+        => GetTextRendererPadding(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize);
+
+    private static Avalonia.Thickness GetTextRendererPadding(FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, double fontSize)
     {
         // TextRenderer's glyph overhang margins use the current font height, not a
         // screenshot offset. Reuse the same GDI metric as native measurement on Windows.
         if (OperatingSystem.IsWindows()
-            && TryMeasureWithGdi(owner.FontFamily, owner.FontStyle, owner.FontWeight,
-                owner.FontSize, "0", true, true, out _, out Avalonia.Thickness padding, out _))
+            && TryMeasureWithGdi(fontFamily, fontStyle, fontWeight, fontSize, "0", true, true,
+                out _, out Avalonia.Thickness padding, out _))
         {
             return padding;
         }
 
-        double overhangPadding = MeasureSize(owner, "0").Height / 6;
+        double overhangPadding = MeasureSize(fontFamily, fontStyle, fontWeight, fontSize, "0").Height / 6;
         return new Avalonia.Thickness(Math.Ceiling(overhangPadding), 0, Math.Ceiling(overhangPadding * 1.5), 0);
     }
 

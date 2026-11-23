@@ -1628,9 +1628,17 @@ public sealed class FormBrowseTests
             const int sourceImageWidth = 16;
             const int sourceDropDownWidth = 11;
             const int sourceSplitterWidth = 1;
-            double sourceWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(selector, selector.Content as string ?? string.Empty).Width)
-                + sourceImageWidth + (sourceBorder * 2) + sourceDropDownWidth + sourceSplitterWidth;
-            selector.Bounds.Width.Should().Be(sourceWidth, "the source split-button preferred allocation is retained even when the popup host is narrower");
+            const int sourceChromeWidth = sourceImageWidth + (sourceBorder * 2) + sourceDropDownWidth + sourceSplitterWidth;
+            double sourceCaptionWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(selector, (string)selector.Content!).Width);
+            double sourceWidth = sourceCaptionWidth + sourceChromeWidth;
+            sourceWidth.Should().BeGreaterThan(toolbar.Bounds.Width, "the source caption and fixed item chrome are already wider than the toolbar");
+            TextBlock caption = selector.GetVisualDescendants().OfType<NativeToolStripSplitContent>().Single()
+                .Children.OfType<TextBlock>().Single();
+            double paintedCaptionWidth = Math.Ceiling(caption.Padding.Left + caption.TextLayout.WidthIncludingTrailingWhitespace);
+            double preferredCaptionWidth = Math.Max(sourceCaptionWidth, paintedCaptionWidth);
+            caption.Bounds.Width.Should().Be(preferredCaptionWidth, "the overflow item retains its complete caption allocation");
+            selector.Bounds.Width.Should().Be(preferredCaptionWidth + sourceChromeWidth,
+                "the overflow item preserves its source chrome and takes the whole preferred width even when its popup host is narrower");
             toolbar.IsOverflowOpen.Should().BeTrue();
             toolbar.OverflowContent.Bounds.Width.Should().BeGreaterThan(0);
             TestContext.Out.WriteLine($"Source item width={sourceWidth}; actual popup viewport width={toolbar.OverflowContent.Bounds.Width}; "

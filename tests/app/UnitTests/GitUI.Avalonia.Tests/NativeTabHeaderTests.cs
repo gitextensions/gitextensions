@@ -20,6 +20,59 @@ namespace GitExtensionsTests;
 public sealed class NativeTabHeaderTests
 {
     [AvaloniaTest]
+    [TestCase("Avalonia__Port", false)]
+    [TestCase("Avalonia__Port", true)]
+    [TestCase("_master", false)]
+    [TestCase("_master", true)]
+    public void Workspace_tab_caption_should_fit_inside_its_actual_clip(string text, bool bold)
+    {
+        TabItem page = new()
+        {
+            Header = text,
+            Content = new Border(),
+            Classes = { "gitextensions-workspace-tab" },
+        };
+        FullBleedTabControl tabs = new()
+        {
+            Items = { page },
+            SelectedIndex = 0,
+            Classes = { "gitextensions-workspace-tabs" },
+        };
+        Window window = new()
+        {
+            Width = 640,
+            Height = 240,
+            Content = tabs,
+            Classes = { "gitextensions-browse-window" },
+        };
+        try
+        {
+            window.Show();
+            AccessText caption = page.GetVisualDescendants().OfType<AccessText>().Single();
+            caption.FontFamily = new FontFamily("Segoe UI");
+            caption.FontSize = 12;
+            caption.FontWeight = bold ? FontWeight.Bold : FontWeight.Normal;
+            window.UpdateLayout();
+            DrawingGroup drawing = new();
+            using (DrawingContext context = drawing.Open())
+            {
+                caption.Render(context);
+            }
+
+            Rect painted = drawing.GetBounds();
+            TestContext.Out.WriteLine($"{text} ({caption.FontWeight}): paint {painted}, clip {caption.Bounds.Size}");
+            caption.ClipToBounds.Should().BeTrue();
+            painted.Width.Should().BeGreaterThan(0);
+            painted.Left.Should().BeGreaterThanOrEqualTo(0);
+            painted.Right.Should().BeLessThanOrEqualTo(caption.Bounds.Width);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase("_File tree", "File tree")]
     [TestCase("A&B__C", "A&B_C")]
     public void Header_should_measure_the_displayed_mnemonic_caption(string source, string display)
@@ -44,8 +97,11 @@ public sealed class NativeTabHeaderTests
         NativeTabHeaderPanel panel = new() { Children = { text } };
         panel.Measure(Size.Infinity);
         panel.Arrange(new Rect(panel.DesiredSize));
-        double captionWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, caption).Width);
-        panel.DesiredSize.Width.Should().Be(Math.Max(captionWidth, WinFormsTextMeasurer.GetTabCaptionMinimumWidth(text)));
+        double nativeCaptionWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, caption).Width);
+        double captionWidth = Math.Max(nativeCaptionWidth, Math.Ceiling(text.DesiredSize.Width));
+        double nativeMinimum = WinFormsTextMeasurer.GetTabCaptionMinimumWidth(text);
+        panel.DesiredSize.Width.Should().Be(Math.Max(captionWidth, nativeMinimum));
+        text.Bounds.Width.Should().Be(captionWidth);
         text.Bounds.X.Should().Be(Math.Floor((panel.DesiredSize.Width - captionWidth) / 2));
         panel.DesiredSize.Height.Should().BeGreaterThan(0, "empty native captions retain the control's font height");
         if (OperatingSystem.IsWindows())
@@ -71,14 +127,16 @@ public sealed class NativeTabHeaderTests
         panel.Measure(Size.Infinity);
         panel.Arrange(new Rect(panel.DesiredSize));
         double nativeCaptionWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, caption).Width);
-        panel.DesiredSize.Width.Should().Be(Math.Max(nativeCaptionWidth + 16 + 8,
-            WinFormsTextMeasurer.GetTabCaptionMinimumWidth(text)),
+        double captionWidth = Math.Max(nativeCaptionWidth, Math.Ceiling(text.DesiredSize.Width));
+        double nativeMinimum = WinFormsTextMeasurer.GetTabCaptionMinimumWidth(text);
+        panel.DesiredSize.Width.Should().Be(Math.Max(captionWidth + 16 + 8, nativeMinimum),
             "native minimum allocation also applies when the portable font fallback is wider");
-        text.Bounds.X.Should().Be(24 + Math.Floor((panel.DesiredSize.Width - nativeCaptionWidth - 24) / 2),
+        text.Bounds.Width.Should().Be(captionWidth);
+        text.Bounds.X.Should().Be(24 + Math.Floor((panel.DesiredSize.Width - captionWidth - 24) / 2),
             "the source centers image and caption together inside the font-based minimum");
         if (OperatingSystem.IsWindows())
         {
-            (panel.DesiredSize.Width + 16).Should().Be(nativeWidth,
+            (Math.Max(nativeCaptionWidth + 16 + 8, nativeMinimum) + 16).Should().Be(nativeWidth,
                 "native tab padding includes the outline rather than adding Avalonia's border again");
         }
     }
