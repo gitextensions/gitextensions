@@ -1,4 +1,5 @@
 using System.ComponentModel.Design;
+using System.IO.Abstractions;
 using System.Reflection;
 using System.Text;
 using Avalonia;
@@ -38,6 +39,7 @@ using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -1834,6 +1836,61 @@ public sealed class FileViewerContentTests
         else
         {
             viewer.GetText().Should().Be("Cannot view image \nInvalidOperationException: Image could not be drawn.");
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_report_file_size_errors_and_continue_loading(bool sizeLookupFails)
+    {
+        const string contents = "The file contents";
+        const string error = "The metadata is unavailable.";
+        string path = Path.Combine(_workingDirectory, "metadata-error.txt");
+        await File.WriteAllTextAsync(path, contents);
+
+        IFileInfo fileInfo = Substitute.For<IFileInfo>();
+        fileInfo.Length.Returns(_ => sizeLookupFails ? throw new IOException(error) : contents.Length);
+        IFileInfoFactory fileInfoFactory = Substitute.For<IFileInfoFactory>();
+        fileInfoFactory.New(path).Returns(fileInfo);
+        IFileSystem metadataFileSystem = Substitute.For<IFileSystem>();
+        metadataFileSystem.FileInfo.Returns(fileInfoFactory);
+        _serviceContainer.RemoveService(typeof(IFileSystem));
+        _serviceContainer.AddService<IFileSystem>(metadataFileSystem);
+
+        WinFormsShims.IMessageBoxHost? previousHost;
+        try
+        {
+            previousHost = WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            previousHost = null;
+        }
+
+        WinFormsShims.IMessageBoxHost host = Substitute.For<WinFormsShims.IMessageBoxHost>();
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 480, Height = 270, Content = viewer };
+        try
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = host;
+            owner.Show();
+            await viewer.ViewFileAsync(path);
+
+            host.Received(sizeLookupFails ? 1 : 0).Show(
+                viewer,
+                error + Environment.NewLine + path,
+                GitUI.TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error,
+                WinFormsShims.MessageBoxDefaultButton.Button1);
+            viewer.GetText().Should().Be(contents);
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = previousHost!;
+            owner.Close();
         }
     }
 

@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -1172,21 +1173,30 @@ public partial class FileViewer : GitModuleControl
     }
 
     // The native viewer carries the request token through preview publication.
-    private Task ShowOrDeferAsync(string fullPath, Func<Task> showFunc, CancellationToken cancellationToken)
+    private async Task ShowOrDeferAsync(string fullPath, Func<Task> showFunc, CancellationToken cancellationToken)
     {
-        return ShowOrDeferAsync(GetFileLength(), showFunc, cancellationToken);
+        long contentLength = await GetFileLengthAsync();
+        await ShowOrDeferAsync(contentLength, showFunc, cancellationToken);
 
-        long GetFileLength()
+        async Task<long> GetFileLengthAsync()
         {
             try
             {
+                DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
                 if (File.Exists(fullPath))
                 {
-                    return new FileInfo(fullPath).Length;
+                    IFileSystem? fileSystem = TryGetUICommandsDirect(out IGitUICommands? commands)
+                        ? commands.GetService<IFileSystem>()
+                        : null;
+                    return fileSystem?.FileInfo.New(fullPath).Length ?? new FileInfo(fullPath).Length;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                // Avalonia needs the owner dispatcher to present a modal message from a file load.
+                await InvokeOnOwnerMainThreadAsync(() => MessageBoxes.Show(
+                    this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error), cancellationToken);
             }
 
             // If the file does not exist, it doesn't matter what size we
