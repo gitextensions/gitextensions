@@ -444,21 +444,6 @@ public static partial class AppSettings
         set => SetBool("showresetallchanges", value);
     }
 
-    public static CommitInfoPosition CommitInfoPosition
-    {
-        get => ((ISettingsValueGetter)_detailedSettingsPath).GetValue<CommitInfoPosition>("CommitInfoPosition") ?? (
-            _detailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
-                ? CommitInfoPosition.RightwardFromList
-                : CommitInfoPosition.BelowList);
-        set => _detailedSettingsPath.SetEnum("CommitInfoPosition", value);
-    }
-
-    public static bool ShowSplitViewLayout
-    {
-        get => _detailedSettingsPath.GetBool("ShowSplitViewLayout", true);
-        set => _detailedSettingsPath.SetBool("ShowSplitViewLayout", value);
-    }
-
     public static bool ProvideAutocompletion
     {
         get => GetBool("provideautocompletion", true);

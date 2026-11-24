@@ -4,6 +4,8 @@ namespace GitCommands;
 
 public static partial class AppSettings
 {
+    public static EnumSetting<CommitInfoPosition> CommitInfoPosition { get; } = new(_detailedSettingsPath, nameof(CommitInfoPosition), defaultValue: GitCommands.CommitInfoPosition.BelowList);
+
     public static TextSetting ConEmuStyle { get; } = new(_detailedSettingsPath, nameof(ConEmuStyle), defaultValue: "Default");
 
     public static TextSetting ConEmuTerminal { get; } = new(_detailedSettingsPath, nameof(ConEmuTerminal), defaultValue: "bash");
@@ -23,6 +25,8 @@ public static partial class AppSettings
     public static BooleanSetting ShowOutputHistoryAsTab { get; } = new(_detailedSettingsPath, nameof(ShowOutputHistoryAsTab), defaultValue: true);
 
     public static BooleanSetting ShowProcessDialogPasswordInput { get; } = new(_detailedSettingsPath, nameof(ShowProcessDialogPasswordInput), defaultValue: false);
+
+    public static BooleanSetting ShowSplitViewLayout { get; } = new(_detailedSettingsPath, nameof(ShowSplitViewLayout), defaultValue: true);
 
     public static TextSetting UninformativeRepoNameRegex { get; } = new(_detailedSettingsPath, nameof(UninformativeRepoNameRegex), defaultValue: "app|(repo(sitory)?)");
 
