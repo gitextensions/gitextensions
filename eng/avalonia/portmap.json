@@ -2236,6 +2236,14 @@
     "basedOn": "23c361e77cc5cc86b143f634a5d0bf8bb4e674bd",
     "notes": "Retains the same tree-layer boundary; Avalonia rebuilds immutable ref snapshots on the existing FormBrowse-owned refresh task. P8.6i progress 69 records comments, handler identities, and event subscriptions blocked by an already-missing method as dependent findings under that exact actionable root; every difference remains serialized and the total gap count is unchanged. 2026-11-03 Tier 1 comment review: Original and twin members reviewed; surviving comments restored verbatim or minimally adapted beside their code. Exact moved, absent and adapted-wording pins preserve the source text and reviewed rationale; accepted pins are separate from closed findings. No parity axis promoted. 2026-11-13: As in the original, the tree is created once with its command source and reloads its refs on its own background task; the FormBrowse snapshot path is removed."
   },
+  "src/app/GitUI/LeftPanel/BisectNode.cs": {
+    "status": "unported",
+    "plannedIn": "P5.9"
+  },
+  "src/app/GitUI/LeftPanel/BisectTree.cs": {
+    "status": "unported",
+    "plannedIn": "P5.9"
+  },
   "src/app/GitUI/LeftPanel/BranchPathNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/BranchPathNode.cs",
     "status": "functional",
@@ -4001,6 +4009,10 @@
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
     "notes": "Preserves ordinal exact-case completion selection through the native editable ComboBox and is consumed by FormRemotes. Avalonia requires the derived control to select the base ComboBox theme explicitly; P8.6g.1 verifies the main/Main transition through the realized editable template and captures every requested FormRemotes consumer state without a blank render. The source-provenance correction removes the capture-derived fixed 22.4-DIP height so the native control follows the original implicit default/host layout. Exhaustive styling, state, native-DPI, manual, and macOS closure remain P8.6g.3b. P8.6i progress 67 classifies exact WinForms Designer-generated lifecycle omissions, required Avalonia-only seams, and approved framework signature substitutions through schema-4 drift-checked deviations, and restores 18 original handler identities where Avalonia permits them; all remaining differences stay measured."
+  },
+  "src/app/GitUI/UserControls/DiffProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P5.9"
   },
   "src/app/GitUI/UserControls/EnterEventArgs.cs": {
     "twin": "src/app/GitUI/UserControls/EnterEventArgs.cs",

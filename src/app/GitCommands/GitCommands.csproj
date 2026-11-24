@@ -50,6 +50,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
     <Compile Remove="Git\OsShellUtil.NonWindows.cs" />
+    <Compile Remove="Properties\PlatformSuppressions.NonWindows.cs" />
   </ItemGroup>
 
 </Project>

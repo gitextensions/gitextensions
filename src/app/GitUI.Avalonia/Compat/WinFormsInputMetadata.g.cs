@@ -5661,13 +5661,13 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.CommandsDialogs.FormStash"] =
             [
-                new("Apply", null, "Fill", null, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
-                new("Clear", null, "Fill", null, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
+                new("Apply", null, "Fill", true, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
+                new("Clear", null, "Fill", true, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
                 new("Loading", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, true),
-                new("Stash", null, "Fill", null, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
+                new("Stash", null, "Fill", true, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
                 new("StashKeepIndex", ["Left"], null, true, new Avalonia.Thickness(3, 3, 3, 3), null, null, null, null, false, false),
                 new("StashMessage", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, "None", null, false, true),
-                new("StashSelectedFiles", null, "Fill", null, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
+                new("StashSelectedFiles", null, "Fill", true, new Avalonia.Thickness(3, 3, 0, 3), null, null, null, null, false, false),
                 new("Stashed", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("Stashes", null, null, false, null, null, null, null, null, false, false),
                 new("View", null, "Fill", null, new Avalonia.Thickness(4, 4, 4, 4), null, null, null, null, false, false),
