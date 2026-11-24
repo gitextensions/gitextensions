@@ -225,6 +225,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     // fetch off the UI thread (independent of the left panel being visible); the dropdown reuses
     // the last completed value so it never runs `git worktree list` on the UI thread (see #13059).
     // The left-panel tree fetches its own list off the UI thread, so the two are independent.
+    // A successful fetch is published only while it is still the current fetch for the same module
+    // (so an older, slower fetch can't overwrite a newer list out of order), and the list is
+    // cleared when the repository changes (see SetGitModule).
     private Task<IReadOnlyList<GitWorktree>>? _worktreesTask;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private IConsoleShellRunner? _terminal;
@@ -727,9 +730,21 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // visible), so a dead UNC path never blocks the UI. The dropdown reuses the last
         // completed value; while the fetch is in flight it shows the previous value (see #13059).
         // The left-panel tree fetches its own list off the UI thread.
-        _worktreesTask = Task.Run(() => Module.GetWorktrees());
+        // Capture the module the fetch belongs to; a successful result is published only while
+        // this is still the current fetch for the same module, so an older, slower fetch can't
+        // overwrite a newer list out of order (or a different repository's list after a switch).
+        IGitModule module = Module;
+        _worktreesTask = Task.Run(() => module.GetWorktrees());
         _worktreesTask.ContinueWith(
-            t => _worktrees = t.IsFaulted ? _worktrees : t.Result,
+            t =>
+            {
+                if (t.IsFaulted || t.IsCanceled || !ReferenceEquals(_worktreesTask, t) || !ReferenceEquals(Module, module))
+                {
+                    return;
+                }
+
+                _worktrees = t.Result;
+            },
             TaskScheduler.FromCurrentSynchronizationContext());
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
@@ -1750,6 +1765,16 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         e.GitModule.ResetRemoteColors();
 
         UICommands = UICommands.WithGitModule(e.GitModule);
+
+        // Invalidate the cached worktree list when the repository changes so the previous
+        // repository's entries don't linger in the dropdown while the new repository's fetch
+        // is pending (or indefinitely if it fails) (see #13059). The previous value is
+        // retained only for refreshes of the same repository.
+        if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+        {
+            _worktrees = [];
+        }
+
         RevisionGrid.OnRepositoryChanged();
         if (Module.IsValidGitWorkingDir())
         {
