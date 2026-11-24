@@ -32,6 +32,7 @@ EnumRuntimeSetting`1<IgnoreWhitespaceKind> IgnoreWhitespaceKind = IgnoreWhitespa
 BooleanSetting IsEditorSettingsMigrated = Hidden.Migration.IsEditorSettingsMigrated
 BooleanSetting MergeGraphLanesHavingCommonParent = Appearance.RevisionGraph.MergeGraphLanesHavingCommonParent
 BooleanSetting MessageEditorWordWrap = Detailed.MessageEditorWordWrap
+BooleanSetting OmitSecondsInRevisionGridDate = Appearance.OmitSecondsInRevisionGridDate
 IntegerSetting OutputHistoryDepth = Detailed.OutputHistoryDepth
 BooleanSetting OutputHistoryPanelVisible = Detailed.OutputHistoryPanelVisible
 BooleanSetting RememberDiffDisplayAppearance = Appearance.RememberDiffDisplayAppearance
