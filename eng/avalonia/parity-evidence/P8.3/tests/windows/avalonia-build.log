@@ -1,0 +1,86 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ImagesResxToAvalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ImagesResxToAvalonia\net10.0\ImagesResxToAvalonia.dll
+  WinFormsToAxaml -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\WinFormsToAxaml\net10.0\WinFormsToAxaml.dll
+  Git.hub.Portable -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\Git.hub.Portable\bin\Debug\net10.0\Git.hub.Portable.dll
+  GitExtensions.Shims.WinForms -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Shims.WinForms\net10.0\GitExtensions.Shims.WinForms.dll
+  GitExtensions.Extensibility -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Extensibility\net10.0\GitExtensions.Extensibility.dll
+  GitExtUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtUtils\net10.0\GitExtUtils.dll
+  GitUIPluginInterfaces -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUIPluginInterfaces\net10.0\GitUIPluginInterfaces.dll
+  GitCommands -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitCommands\net10.0\GitCommands.dll
+  GitExtensions.Extensibility -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Extensibility\net10.0-windows\GitExtensions.Extensibility.dll
+  GitExtUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtUtils\net10.0-windows\GitExtUtils.dll
+  GitUIPluginInterfaces -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUIPluginInterfaces\net10.0-windows\GitUIPluginInterfaces.dll
+  GitCommands -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitCommands\net10.0-windows\GitCommands.dll
+  ResourceManager -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ResourceManager\net10.0\ResourceManager.dll
+  SpellChecker -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\NetSpell.SpellChecker\bin\Debug\net10.0\SpellChecker.dll
+  GitUI.Avalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUI.Avalonia\net10.0\GitUI.Avalonia.dll
+  GitExtensions.Plugins.AutoCompileSubmodules -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.dll
+  GitExtensions.Plugins.BackgroundFetch -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.dll
+  GitExtensions.Plugins.CreateLocalBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.dll
+  GitExtensions.Plugins.DeleteUnusedBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.dll
+  GitExtensions.Plugins.FindLargeFiles -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.dll
+  GitExtensions.Plugins.GitHub3 -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitHub3\GitExtensions.Plugins.GitHub3.dll
+  GitExtensions.Plugins.Gource -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\Gource\GitExtensions.Plugins.Gource.dll
+  GitExtensions.Plugins.GitImpact -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitImpact\GitExtensions.Plugins.GitImpact.dll
+  GitExtensions.Plugins.GitStatistics -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitStatistics\GitExtensions.Plugins.GitStatistics.dll
+  GitExtensions.Plugins.ProxySwitcher -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.dll
+  GitExtensions.Plugins.ReleaseNotesGenerator -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.dll
+  GitExtensions.Plugins.AppVeyorIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.dll
+  GitExtensions.Plugins.AzureDevOpsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.dll
+  GitExtensions.Plugins.GitHubActionsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.dll
+  GitExtensions.Plugins.GitlabIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.dll
+  GitExtensions.Plugins.JenkinsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.dll
+  GitExtensions.Plugins.TeamCityIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.dll
+  GitExtensions.Avalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\GitExtensions.Avalonia.dll
+  ResourceManager -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ResourceManager\net10.0-windows\ResourceManager.dll
+  GitExtensions.Plugins.AutoCompileSubmodules -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.dll
+  GitExtensions.Plugins.BackgroundFetch -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.dll
+  GitExtensions.Plugins.AppVeyorIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.dll
+  GitExtensions.Plugins.AzureDevOpsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.dll
+  GitExtensions.Plugins.GitHubActionsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.dll
+  GitExtensions.Plugins.GitlabIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.dll
+  GitExtensions.Plugins.JenkinsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.dll
+  GitExtensions.Plugins.TeamCityIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.dll
+  GitExtensions.Plugins.CreateLocalBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.dll
+  SpellChecker -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\NetSpell.SpellChecker\bin\Debug\net10.0-windows\SpellChecker.dll
+  ConEmuWinForms -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\conemu-inside\ConEmuWinForms\bin\net10.0-windows\ConEmuWinForms.dll
+  Git.hub -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\Git.hub\Git.hub\bin\Debug\net10.0-windows\Git.hub.dll
+  ICSharpCode.TextEditor -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\ICSharpCode.TextEditor\Project\bin\Debug\net10.0-windows\ICSharpCode.TextEditor.dll
+  BugReporter -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\BugReporter\net10.0-windows\BugReporter.dll
+  GitExtensions.Analyzers.CSharp -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Analyzers.CSharp\netstandard2.0\GitExtensions.Analyzers.CSharp.dll
+  GitUI -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUI\net10.0-windows\GitUI.dll
+  GitExtensions.Plugins.DeleteUnusedBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.dll
+  GitExtensions.Plugins.FindLargeFiles -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.dll
+  GitExtensions.Plugins.GitHub3 -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitHub3\GitExtensions.Plugins.GitHub3.dll
+  GitExtensions.Plugins.Gource -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\Gource\GitExtensions.Plugins.Gource.dll
+  GitExtensions.Plugins.ProxySwitcher -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.dll
+  GitExtensions.Plugins.ReleaseNotesGenerator -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.dll
+  GitExtensions.Plugins.GitImpact -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitImpact\GitExtensions.Plugins.GitImpact.dll
+  GitExtensions.Plugins.GitStatistics -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitStatistics\GitExtensions.Plugins.GitStatistics.dll
+  CommonTestUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\CommonTestUtils\net10.0\CommonTestUtils.dll
+  GitExtensions.Extensibility.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitExtensions.Extensibility.Tests\net10.0\GitExtensions.Extensibility.Tests.dll
+  CommonTestUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\CommonTestUtils\net10.0-windows\CommonTestUtils.dll
+  GitExtensions.Extensibility.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitExtensions.Extensibility.Tests\net10.0-windows\GitExtensions.Extensibility.Tests.dll
+  ParityCaptureSchema -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityCaptureSchema\net10.0\ParityCaptureSchema.dll
+  GitUI.Avalonia.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitUI.Avalonia.Tests\net10.0\GitUI.Avalonia.Tests.dll
+  AppVeyorIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AppVeyorIntegration.Tests\net10.0\AppVeyorIntegration.Tests.dll
+  AppVeyorIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AppVeyorIntegration.Tests\net10.0-windows\AppVeyorIntegration.Tests.dll
+  AzureDevOpsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AzureDevOpsIntegration.Tests\net10.0\AzureDevOpsIntegration.Tests.dll
+  AzureDevOpsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AzureDevOpsIntegration.Tests\net10.0-windows\AzureDevOpsIntegration.Tests.dll
+  GitHubActionsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitHubActionsIntegration.Tests\net10.0\GitHubActionsIntegration.Tests.dll
+  GitHubActionsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitHubActionsIntegration.Tests\net10.0-windows\GitHubActionsIntegration.Tests.dll
+  GitlabIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitlabIntegration.Tests\net10.0\GitlabIntegration.Tests.dll
+  GitlabIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitlabIntegration.Tests\net10.0-windows\GitlabIntegration.Tests.dll
+  JenkinsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\JenkinsIntegration.Tests\net10.0\JenkinsIntegration.Tests.dll
+  JenkinsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\JenkinsIntegration.Tests\net10.0-windows\JenkinsIntegration.Tests.dll
+  DeleteUnusedBranches.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\DeleteUnusedBranches.Tests\net10.0\DeleteUnusedBranches.Tests.dll
+  DeleteUnusedBranches.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\DeleteUnusedBranches.Tests\net10.0-windows\DeleteUnusedBranches.Tests.dll
+  ReleaseNotesGenerator.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\ReleaseNotesGenerator.Tests\net10.0\ReleaseNotesGenerator.Tests.dll
+  ReleaseNotesGenerator.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\ReleaseNotesGenerator.Tests\net10.0-windows\ReleaseNotesGenerator.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:53.76

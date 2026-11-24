@@ -1,0 +1,10 @@
+{
+  "missingKeys": [
+    "FormFileHistory/toolStripBlameOptions.ToolTipText: emitted \"Blame options\""
+  ],
+  "sourceMismatches": [],
+  "duplicateConflicts": [],
+  "rationales": {
+    "FormFileHistory/toolStripBlameOptions.ToolTipText": "Original FormFileHistory.Designer.cs:400-401 explicitly assigns Text and ToolTipText to Blame options. TranslationBody.AddTranslationItemIfNotExist deliberately omits a ToolTipText entry when its source equals Text. The raw emitter agrees with the original; the catalog absence is the original generator deduplication contract."
+  }
+}

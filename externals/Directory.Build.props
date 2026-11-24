@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
+    <!-- Externals have an isolated props chain, so mirror the root solution-entry default.
+         Direct projects and the WinForms solution leave this property unset. -->
+    <BuildAvalonia Condition="'$(BuildAvalonia)' == '' and '$(SolutionName)' == 'GitExtensions.Avalonia'">true</BuildAvalonia>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <UseWindowsForms>true</UseWindowsForms>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>

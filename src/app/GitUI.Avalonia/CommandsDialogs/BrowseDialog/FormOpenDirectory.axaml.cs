@@ -1,0 +1,216 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using GitCommands;
+using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using ResourceManager;
+using ToolTip = GitUI.Compat.Components.ToolTip;
+using WinFormsShims = GitExtensions.Shims.WinForms;
+
+namespace GitUI.CommandsDialogs.BrowseDialog;
+
+public partial class FormOpenDirectory : GitExtensionsForm
+{
+#pragma warning disable SX1309 // Keep the original Designer component name.
+    private readonly ToolTip toolTip1 = new();
+#pragma warning restore SX1309
+
+    private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
+
+    private readonly IGitExecutorProvider _executorProvider = null!;
+    private IGitModule? _chosenModule;
+
+    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
+    public FormOpenDirectory()
+    {
+        InitializeComponent();
+        InitializeToolTips();
+        InitializeComplete();
+    }
+
+    public FormOpenDirectory(IGitExecutorProvider executorProvider, IGitModule? currentModule)
+    {
+        _executorProvider = executorProvider;
+
+        ThreadHelper.ThrowIfNotOnUIThread();
+
+        InitializeComponent();
+        Load.Click += LoadClick;
+        folderBrowserButton.Click += folderBrowserButton_Click;
+        folderGoUpButton.Click += folderGoUpButton_Click;
+        _NO_TRANSLATE_Directory.KeyDown += DirectoryKeyPress;
+        _NO_TRANSLATE_Directory.PropertyChanged += _NO_TRANSLATE_Directory_TextChanged;
+        InitializeToolTips();
+        InitializeComplete();
+
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+        _NO_TRANSLATE_Directory.ItemsSource = GetDirectories(currentModule, repositoryHistory);
+
+        _NO_TRANSLATE_Directory.Focus();
+    }
+
+    // Framework constraint: native XAML leaves component setup to the two constructors.
+    private void InitializeToolTips() => toolTip1.SetToolTip(folderGoUpButton, "Go to parent directory...");
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+
+        // scale up for hi DPI
+        // WinForms records whole-window minimum/maximum sizes. Avalonia sizes the client area,
+        // so the AXAML bounds retain the corresponding 434..784 by 77 logical-DIP range.
+        MinWidth = 434;
+        MaxWidth = 784;
+        MinHeight = 77;
+        MaxHeight = 77;
+    }
+
+    private static IReadOnlyList<string> GetDirectories(IGitModule? currentModule, IEnumerable<Repository> repositoryHistory)
+    {
+        List<string> directories = [];
+
+        if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath))
+        {
+            directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
+        }
+
+        if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
+        {
+            DirectoryInfo di = new(currentModule.WorkingDir);
+            if (di.Parent is not null)
+            {
+                directories.Add(di.Parent.FullName.EnsureTrailingPathSeparator());
+            }
+        }
+
+        directories.AddRange(repositoryHistory.Select(r => r.Path));
+
+        if (directories.Count == 0)
+        {
+            if (!string.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
+            {
+                directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
+            }
+
+            string homeDir = EnvironmentConfiguration.GetHomeDir();
+            if (!string.IsNullOrWhiteSpace(homeDir))
+            {
+                directories.Add(homeDir.EnsureTrailingPathSeparator());
+            }
+        }
+
+        return directories.Distinct().ToList();
+    }
+
+    public static IGitModule? OpenModule(WinFormsShims.IWin32Window owner, IGitExecutorProvider executorProvider, IGitModule? currentModule)
+    {
+        using FormOpenDirectory open = new(executorProvider, currentModule);
+        open.ShowDialog(owner);
+        return open._chosenModule;
+    }
+
+    private void LoadClick(object? sender, EventArgs e)
+    {
+        _NO_TRANSLATE_Directory.Text = (_NO_TRANSLATE_Directory.Text ?? string.Empty).Trim();
+
+        _chosenModule = OpenGitRepository(_executorProvider, _NO_TRANSLATE_Directory.Text, RepositoryHistoryManager.Locals);
+        if (_chosenModule is not null)
+        {
+            Close();
+            return;
+        }
+
+        MessageBoxes.Show(this, _warningOpenFailed.Text, TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+    }
+
+    private void DirectoryKeyPress(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            LoadClick(this, EventArgs.Empty);
+        }
+    }
+
+    private void folderBrowserButton_Click(object? sender, EventArgs e)
+    {
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_Directory.Text);
+        if (!string.IsNullOrEmpty(userSelectedPath))
+        {
+            _NO_TRANSLATE_Directory.Text = userSelectedPath;
+            LoadClick(this, EventArgs.Empty);
+        }
+    }
+
+    private void folderGoUpButton_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            DirectoryInfo currentDirectory = new(_NO_TRANSLATE_Directory.Text ?? string.Empty);
+            if (currentDirectory.Parent is null)
+            {
+                return;
+            }
+
+            // The native editor requests the filesystem suggestions after setting the parent path.
+            _NO_TRANSLATE_Directory.Text = currentDirectory.Parent.FullName.EnsureTrailingPathSeparator();
+            _NO_TRANSLATE_Directory.SuggestDirectories();
+        }
+        catch
+        {
+            // no-op
+        }
+    }
+
+    private void _NO_TRANSLATE_Directory_TextChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property != ComboBox.TextProperty)
+        {
+            return;
+        }
+
+        try
+        {
+            DirectoryInfo currentDirectory = new(_NO_TRANSLATE_Directory.Text ?? string.Empty);
+            folderGoUpButton.IsEnabled = currentDirectory.Exists && currentDirectory.Parent is not null;
+        }
+        catch
+        {
+            folderGoUpButton.IsEnabled = false;
+        }
+    }
+
+    private static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
+    {
+        if (!Directory.Exists(path))
+        {
+            return null;
+        }
+
+        GitModule chosenModule = new(executorProvider, path.EnsureTrailingPathSeparator());
+        if (!chosenModule.IsValidGitWorkingDir())
+        {
+            return null;
+        }
+
+        ThreadHelper.JoinableTaskFactory.Run(() => localRepositoryManager.AddAsMostRecentAsync(chosenModule.WorkingDir));
+        return chosenModule;
+    }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormOpenDirectory _form;
+
+        public TestAccessor(FormOpenDirectory form)
+        {
+            _form = form;
+        }
+
+        public static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
+            => FormOpenDirectory.OpenGitRepository(executorProvider, path, localRepositoryManager);
+    }
+}

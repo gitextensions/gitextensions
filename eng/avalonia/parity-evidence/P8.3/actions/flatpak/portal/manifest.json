@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "execution": "flatpak",
+  "appId": "com.github.gitextensions.GitExtensions.Avalonia.P83Smoke",
+  "backendPresent": "passed",
+  "pickerTransport": "org.freedesktop.portal.FileChooser",
+  "shellTransport": "org.freedesktop.portal.OpenURI",
+  "defaultHandlerLaunchesObserved": 3,
+  "openFileApplicationChooserAccepted": true,
+  "pickerCancellationCompleted": true,
+  "backend": "wayland",
+  "settingsIsolation": "temporaryXdgHomeInsideDedicatedFlatpakId",
+  "repositoryLocation": "outsideWorkingTree",
+  "reports": [
+    "present/report.json"
+  ]
+}

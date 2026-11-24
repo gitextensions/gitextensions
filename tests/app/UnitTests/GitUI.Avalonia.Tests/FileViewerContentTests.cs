@@ -1,0 +1,3120 @@
+using System.ComponentModel.Design;
+using System.IO.Abstractions;
+using System.Reflection;
+using System.Text;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Headless;
+using Avalonia.Headless.NUnit;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Styling;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
+using AvaloniaEdit;
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Rendering;
+using GitCommands;
+using GitCommands.Git;
+using GitCommands.Settings;
+using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
+using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
+using GitUI;
+using GitUI.Blame;
+using GitUI.CommandsDialogs;
+using GitUI.Compat;
+using GitUI.Editor;
+using GitUI.Hotkey;
+using GitUI.Theming;
+using GitUI.UserControls;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
+using NSubstitute;
+using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
+
+namespace GitExtensionsTests;
+
+[TestFixture]
+public sealed class FileViewerContentTests
+{
+    private GitUICommands _commands = null!;
+    private GitModule _module = null!;
+    private ServiceContainer _serviceContainer = null!;
+    private IGitUICommandsSource _source = null!;
+    private string _workingDirectory = null!;
+
+    [SetUp]
+    public void SetUp()
+    {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
+        _serviceContainer = new ServiceContainer();
+        GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+
+        System.IO.Abstractions.FileSystem fileSystem = new();
+        GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
+        RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
+        _serviceContainer.AddService<System.IO.Abstractions.IFileSystem>(fileSystem);
+        _serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
+        _serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
+        _serviceContainer.AddService<IAppTitleGenerator>(new AppTitleGenerator(repositoryDescriptionProvider));
+        _serviceContainer.AddService<ILinkFactory>(new LinkFactory());
+        GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+        GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+
+        _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.FileViewer-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(_workingDirectory);
+        _module = new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        _module.SetSetting("user.name", "Avalonia Test");
+        _module.SetSetting("user.email", "avalonia@example.com");
+
+        _commands = new GitUICommands(_serviceContainer, _module);
+        _source = Substitute.For<IGitUICommandsSource>();
+        _source.UICommands.Returns(_commands);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _serviceContainer.Dispose();
+        TestDirectory.Delete(_workingDirectory);
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_resume_post_settings_after_reattachment_and_unsubscribe_on_dispose()
+    {
+        using AppSettingsTestScope settings = new();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(_module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _commands.GetService(call.Arg<Type>()));
+        using FormEditor editor = new(commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        Grid layout = editor.FindControl<Grid>("tableLayoutPanel1")!;
+        try
+        {
+            editor.Show();
+            PublishRuler(89);
+            viewer.VRulerPosition.Should().Be(89);
+
+            layout.Children.Remove(viewer);
+            Dispatcher.UIThread.RunJobs();
+            PublishRuler(90);
+            viewer.VRulerPosition.Should().Be(89);
+
+            layout.Children.Add(viewer);
+            Dispatcher.UIThread.RunJobs();
+            PublishRuler(103);
+            viewer.VRulerPosition.Should().Be(103);
+
+            ((IDisposable)viewer).Dispose();
+            PublishRuler(105);
+            viewer.VRulerPosition.Should().Be(103);
+        }
+        finally
+        {
+            editor.Close();
+        }
+
+        void PublishRuler(int position)
+        {
+            AppSettings.DiffVerticalRulerPosition = position;
+            commands.PostSettings += Raise.Event<EventHandler<GitUIPostActionEventArgs>>(commands, new GitUIPostActionEventArgs(null, commands, actionDone: true));
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_populate_encoding_choices_and_size_the_dropdown_on_runtime_load()
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+        encodings.Items.Should().BeEmpty("the original adds the choices in OnRuntimeLoad");
+
+        try
+        {
+            editor.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            encodings.Items.Should().Contain(Encoding.Unicode.EncodingName);
+            encodings.SelectedItem.Should().BeNull();
+            encodings.Should().BeOfType<ToolbarComboBox>().Which.DropDownWidth.Should().BeInRange(50, 250);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_publish_copy_availability_before_its_context_menu_opens(bool selectText)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        ContextMenu menu = viewer.FindControl<ContextMenu>("contextMenu")!;
+        MenuItem copy = viewer.FindControl<MenuItem>("copyToolStripMenuItem")!;
+        object? openingSender = null;
+        bool? copyEnabledOnOpening = null;
+        viewer.ContextMenuOpening += (sender, args) =>
+        {
+            openingSender = sender;
+            copyEnabledOnOpening = copy.IsEnabled;
+            args.Cancel = true;
+        };
+
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "some selected text");
+            viewer.TextEditor.Select(0, selectText ? 4 : 0);
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.ContextMenu.Should().BeSameAs(menu);
+
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(20, 8), editor)!.Value;
+            editor.MouseMove(point, RawInputModifiers.None);
+            editor.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            copyEnabledOnOpening.Should().Be(selectText);
+            openingSender.Should().BeSameAs(menu);
+            menu.IsOpen.Should().BeFalse();
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public async Task FileViewer_should_publish_only_the_scroll_axis_that_changes(bool horizontal, bool useWheel)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        string text = string.Join('\n', Enumerable.Repeat(new string('w', 300), 100));
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("scroll.txt", text);
+            editor.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            viewer.TextEditor.Text.Should().Be(text);
+            viewer.HScrollPosition.Should().Be(0);
+            viewer.VScrollPosition.Should().Be(0);
+            int horizontalChanges = 0;
+            int verticalChanges = 0;
+            viewer.HScrollPositionChanged += (_, _) => horizontalChanges++;
+            viewer.VScrollPositionChanged += (_, _) => verticalChanges++;
+
+            if (useWheel)
+            {
+                Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(20, 8), editor)!.Value;
+                editor.MouseWheel(point, horizontal ? new Vector(-1, 0) : new Vector(0, -1), RawInputModifiers.None);
+            }
+            else if (horizontal)
+            {
+                viewer.HScrollPosition = 48;
+            }
+            else
+            {
+                viewer.VScrollPosition = 48;
+            }
+
+            editor.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            int changedOffset = horizontal ? viewer.HScrollPosition : viewer.VScrollPosition;
+            if (useWheel)
+            {
+                changedOffset.Should().BePositive();
+            }
+            else
+            {
+                changedOffset.Should().Be(48);
+            }
+
+            (horizontal ? viewer.VScrollPosition : viewer.HScrollPosition).Should().Be(0);
+            horizontalChanges.Should().Be(horizontal ? 1 : 0);
+            verticalChanges.Should().Be(horizontal ? 0 : 1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task FileViewer_should_land_at_the_source_offset_when_scrolling_to_the_previous_file(bool longPatch)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.AutomaticContinuousScroll = false;
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        File.WriteAllText(Path.Combine(_workingDirectory, "first.txt"),
+            string.Concat(Enumerable.Range(1, 100).Select(line => $"first file line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "first.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "first" }).Should().BeTrue();
+        ObjectId first = _module.GetCurrentCheckout();
+
+        int addedLines = longPatch ? 100 : 1;
+        string lastLine = $"+first file line {100 + addedLines}";
+        File.AppendAllText(Path.Combine(_workingDirectory, "first.txt"),
+            string.Concat(Enumerable.Range(101, addedLines).Select(line => $"first file line {line}\n")));
+        File.WriteAllText(Path.Combine(_workingDirectory, "second.txt"), "second file\n");
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "." }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second" }).Should().BeTrue();
+
+        using FormDiff form = new(_commands, first, _module.GetCurrentCheckout(), "Base", "Compare");
+        FileStatusList files = form.FindControl<FileStatusList>("DiffFiles")!;
+        FileViewer viewer = form.FindControl<FileViewer>("DiffText")!;
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => viewer.GetText().Contains(lastLine, StringComparison.Ordinal));
+            files.SelectNextVisibleItem();
+            await WaitUntilAsync(() => viewer.GetText().Contains("second file", StringComparison.Ordinal));
+            form.UpdateLayout();
+            viewer.VScrollPosition.Should().Be(0);
+
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Point point = textView.TranslatePoint(new Point(20, 8), form)!.Value;
+            form.MouseWheel(point, new Vector(0, 1), RawInputModifiers.Alt);
+            await WaitUntilAsync(() => viewer.GetText().Contains(lastLine, StringComparison.Ordinal));
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            files.SelectedFileStatusItem!.Item.Name.Should().Be("first.txt");
+            ScrollViewer scrollViewer = textView.FindAncestorOfType<ScrollViewer>()!;
+            if (longPatch)
+            {
+                double viewport = scrollViewer.Viewport.Height;
+                double lineHeight = textView.DefaultLineHeight;
+                int extraLines = (1 + (int)(viewport / lineHeight)) * 2 / 3;
+                double expectedOffset = textView.DocumentHeight + (extraLines * lineHeight) - viewport - 300;
+                expectedOffset.Should().BePositive();
+                scrollViewer.Offset.Y.Should().BeApproximately(expectedOffset, 1);
+                textView.VisualLines.Should().Contain(line => line.FirstDocumentLine.LineNumber == textView.Document.LineCount - 1);
+            }
+            else
+            {
+                scrollViewer.ScrollBarMaximum.Y.Should().Be(0);
+                scrollViewer.Offset.Y.Should().Be(0);
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task BlameControl_should_refresh_the_author_tip_under_a_stationary_pointer(bool scrollAuthorPane)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.BlameShowAuthorAvatar = false;
+        string path = Path.Combine(_workingDirectory, "blame.txt");
+        File.WriteAllText(path, string.Concat(Enumerable.Range(1, 4).Select(line => $"original line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "blame.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "original-author-change" }).Should().BeTrue();
+        File.AppendAllText(path, string.Concat(Enumerable.Range(5, 96).Select(line => $"new line {line}\n")));
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "blame.txt" }).Should().BeTrue();
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "later-author-change" }).Should().BeTrue();
+
+        using FormBlame form = new(_commands, "blame.txt", _module.GetRevision(), initialLine: 1);
+        BlameControl control = form.FindControl<BlameControl>("blameControl1")!;
+        FileViewer author = control.BlameAuthor;
+        FileViewer file = control.BlameFile;
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => file.GetText().Contains("new line 100", StringComparison.Ordinal));
+            form.UpdateLayout();
+            TextView textView = author.TextEditor.TextArea.TextView;
+            Point textPoint = new(2, textView.DefaultLineHeight * 3.5);
+            Point point = textView.TranslatePoint(textPoint, form)!.Value;
+            int authorY = (int)textView.TranslatePoint(textPoint, author)!.Value.Y;
+            form.MouseMove(point, RawInputModifiers.None);
+            author.IsPointerOver.Should().BeTrue();
+            author.GetLineFromVisualPosY(authorY).Should().Be(3);
+            ToolTip.GetTip(author).Should().BeOfType<string>().Which.Should().Contain("original-author-change");
+
+            if (scrollAuthorPane)
+            {
+                form.MouseWheel(point, new Vector(0, -4), RawInputModifiers.None);
+            }
+            else
+            {
+                file.VScrollPosition = (int)Math.Ceiling(textView.Bounds.Height + textView.DefaultLineHeight);
+            }
+
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            author.IsPointerOver.Should().BeTrue();
+            author.VScrollPosition.Should().BePositive();
+            file.VScrollPosition.Should().Be(author.VScrollPosition);
+            author.GetLineFromVisualPosY(authorY).Should().BeInRange(4, 99);
+            ToolTip.GetTip(author).Should().BeOfType<string>().Which.Should().Contain("later-author-change");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_clear_a_selection_before_raising_EscapePressed()
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window editor = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "first\nsecond");
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(8, 6), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            viewer.TextEditor.Select(0, 5);
+            viewer.TextEditor.SelectedText.Should().Be("first");
+            int escapeCount = 0;
+            viewer.EscapePressed += () => escapeCount++;
+
+            editor.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            editor.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            escapeCount.Should().Be(0);
+            viewer.TextEditor.SelectionLength.Should().Be(0);
+
+            editor.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            editor.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+            escapeCount.Should().Be(1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(12, 6)]
+    [TestCase(30, 6)]
+    [TestCase(200, 1)]
+    public void FileViewer_should_navigate_to_the_first_right_side_diff_line_at_or_after_the_requested_line(int requestedLine, int expectedDocumentLine)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -30,2 +30,2 @@\n-before\n+after\n context\n");
+
+            viewer.GoToLine(requestedLine);
+
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(expectedDocumentLine);
+            viewer.TextEditor.TextArea.Caret.Column.Should().Be(1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_use_F3_to_search_when_a_query_exists(bool hasQuery)
+    {
+        using AppSettingsTestScope settings = new();
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            int difftoolRequests = 0;
+            await viewer.ViewTextAsync("search.txt", "first target last", openWithDifftool: () => difftoolRequests++);
+
+            if (hasQuery)
+            {
+                viewer.Find(replace: false);
+                FindAndReplaceForm find = viewer.GetTestAccessor().FindAndReplaceForm;
+                find.FindControl<TextBox>("txtLookFor")!.Text = "target";
+                find.FindControl<Button>("btnCancel")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                find.IsVisible.Should().BeFalse();
+            }
+
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(5, 8), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            editor.KeyPress(Key.F3, RawInputModifiers.None, PhysicalKey.F3, keySymbol: null);
+            editor.KeyRelease(Key.F3, RawInputModifiers.None, PhysicalKey.F3, keySymbol: null);
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(timeout.Token);
+
+            difftoolRequests.Should().Be(hasQuery ? 0 : 1);
+            viewer.TextEditor.SelectedText.Should().Be(hasQuery ? "target" : string.Empty);
+            viewer.GetTestAccessor().IsFindAndReplaceFormCreated.Should().Be(hasQuery);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false, true)]
+    [TestCase(false, true, true)]
+    [TestCase(true, false, true)]
+    [TestCase(true, true, true)]
+    [TestCase(true, false, false)]
+    public async Task FileViewer_should_handle_change_hotkeys_only_when_the_action_is_available(bool showPatch, bool backward, bool actionEnabled)
+    {
+        using AppSettingsTestScope settings = new();
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            if (showPatch)
+            {
+                viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,2 +1,2 @@\n-old\n+new\n context\n@@ -8,2 +8,2 @@\n-before\n+after\n context\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("file.txt", "first\nsecond");
+            }
+
+            editor.UpdateLayout();
+            Point point = viewer.TextEditor.TextArea.TextView.TranslatePoint(new Point(5, 8), editor)!.Value;
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            viewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+            Key key = backward ? Key.Up : Key.Down;
+            PhysicalKey physicalKey = backward ? PhysicalKey.ArrowUp : PhysicalKey.ArrowDown;
+            Button changeButton = viewer.FindControl<Button>(backward ? "previousChangeButton" : "nextChangeButton")!;
+            changeButton.IsEnabled = actionEnabled;
+            int bubbledKeys = 0;
+            editor.KeyDown += (_, e) =>
+            {
+                if (e.Key == key)
+                {
+                    bubbledKeys++;
+                }
+            };
+            int initialLine = backward ? 9 : 5;
+            if (showPatch)
+            {
+                viewer.TextEditor.TextArea.Caret.Position = new TextViewPosition(initialLine, 1);
+            }
+
+            editor.KeyPress(key, RawInputModifiers.Alt, physicalKey, keySymbol: null);
+            editor.KeyRelease(key, RawInputModifiers.Alt, physicalKey, keySymbol: null);
+
+            bool actionAvailable = showPatch && actionEnabled;
+            bubbledKeys.Should().Be(actionAvailable ? 0 : 1);
+            if (showPatch)
+            {
+                int finalLine = viewer.TextEditor.TextArea.Caret.Line;
+                if (actionAvailable)
+                {
+                    (backward ? finalLine < initialLine : finalLine > initialLine).Should().BeTrue();
+                }
+                else
+                {
+                    finalLine.Should().Be(initialLine);
+                }
+            }
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_consume_replace_hotkey_in_the_focused_editor(bool readOnly)
+    {
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            await viewer.ViewTextAsync("replace.txt", "first\nsecond");
+            viewer.IsReadOnly = readOnly;
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            int editorKeys = 0;
+            viewer.TextEditor.TextArea.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.H)
+                {
+                    editorKeys++;
+                }
+            }, RoutingStrategies.Tunnel);
+
+            owner.KeyPress(Key.H, RawInputModifiers.Control, PhysicalKey.H, keySymbol: null);
+            owner.KeyRelease(Key.H, RawInputModifiers.Control, PhysicalKey.H, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            editorKeys.Should().Be(0);
+            viewer.GetTestAccessor().IsFindAndReplaceFormCreated.Should().Be(!readOnly);
+            if (!readOnly)
+            {
+                viewer.GetTestAccessor().FindAndReplaceForm.IsVisible.Should().BeTrue();
+            }
+        }
+        finally
+        {
+            if (viewer.GetTestAccessor().IsFindAndReplaceFormCreated)
+            {
+                viewer.GetTestAccessor().FindAndReplaceForm.Close();
+            }
+
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(true, true)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    public async Task FileViewer_should_follow_menu_availability_for_the_go_to_line_hotkey(bool enabled, bool visible)
+    {
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            await viewer.ViewTextAsync("lines.txt", "first\nsecond\nthird");
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>("goToLineToolStripMenuItem")!;
+            action.IsEnabled = enabled;
+            action.IsVisible = visible;
+
+            int editorKeys = 0;
+            viewer.TextEditor.TextArea.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.G)
+                {
+                    editorKeys++;
+                }
+            }, RoutingStrategies.Tunnel);
+
+            int opened = 0;
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+            {
+                if (window is FormGoToLine dialog)
+                {
+                    dialog.Opened += (_, _) =>
+                    {
+                        opened++;
+                        dialog.FindControl<NumericUpDown>("_NO_TRANSLATE_LineNumberUpDown")!.Value = 2;
+                        Button accept = dialog.FindControl<Button>("okBtn")!;
+                        Dispatcher.UIThread.Post(() => accept.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
+                    };
+                }
+            });
+
+            owner.KeyPress(Key.G, RawInputModifiers.Control, PhysicalKey.G, keySymbol: null);
+            owner.KeyRelease(Key.G, RawInputModifiers.Control, PhysicalKey.G, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            bool available = enabled && visible;
+            editorKeys.Should().Be(available ? 0 : 1);
+            opened.Should().Be(available ? 1 : 0);
+            viewer.CurrentFileLine.Should().Be(available ? 2 : 1);
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(MouseButton.Left, false)]
+    [TestCase(MouseButton.Right, false)]
+    [TestCase(null, false)]
+    [TestCase(MouseButton.Left, true)]
+    [TestCase(MouseButton.Right, true)]
+    public void FileViewer_should_apply_the_original_diff_appearance_header_action(MouseButton? button, bool releaseOutside)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 720, Height = 420, Content = viewer };
+        ContextMenu? menu = null;
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.GitWordDiff;
+            window.Show();
+            viewer.ViewPatch("diff --git a/file.txt b/file.txt\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-before\n+after\n");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            menu = viewer.TextEditor.ContextMenu!;
+            menu.Open(viewer.TextEditor);
+            Dispatcher.UIThread.RunJobs();
+
+            MenuItem appearance = viewer.FindControl<MenuItem>("diffAppearanceToolStripMenuItem")!;
+            appearance.IsEffectivelyVisible.Should().BeTrue();
+            TopLevel popup = TopLevel.GetTopLevel(appearance)!;
+            int changes = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => changes++;
+            if (button is MouseButton selectedButton)
+            {
+                Point center = new(appearance.Bounds.Width / 2, appearance.Bounds.Height / 2);
+                Point point = appearance.TranslatePoint(center, popup)!.Value;
+                popup.MouseMove(point, RawInputModifiers.None);
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                popup.MouseDown(point, selectedButton, RawInputModifiers.None);
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                bool openedOnPress = appearance.IsSubMenuOpen;
+                Point releasePoint = point;
+                if (releaseOutside)
+                {
+                    releasePoint = new Point(-8, point.Y);
+                    RawInputModifiers pressed = selectedButton == MouseButton.Left
+                        ? RawInputModifiers.LeftMouseButton : RawInputModifiers.RightMouseButton;
+                    popup.MouseMove(releasePoint, pressed);
+                }
+
+                popup.MouseUp(releasePoint, selectedButton, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+
+                if (releaseOutside)
+                {
+                    AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                    changes.Should().Be(0);
+                    return;
+                }
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.Patch);
+                openedOnPress.Should().BeTrue();
+                changes.Should().Be(1);
+            }
+            else
+            {
+                appearance.Focus(NavigationMethod.Tab).Should().BeTrue();
+                popup.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+                popup.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+                Dispatcher.UIThread.RunJobs();
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                changes.Should().Be(0);
+            }
+
+            appearance.IsSubMenuOpen.Should().BeTrue();
+            menu.IsOpen.Should().BeTrue();
+
+            if (button == MouseButton.Left)
+            {
+                MenuItem wordDiff = viewer.FindControl<MenuItem>("showGitWordColoringToolStripMenuItem")!;
+                TopLevel submenu = TopLevel.GetTopLevel(wordDiff)!;
+                Point wordDiffCenter = new(wordDiff.Bounds.Width / 2, wordDiff.Bounds.Height / 2);
+                Point wordDiffPoint = wordDiff.TranslatePoint(wordDiffCenter, submenu)!.Value;
+                submenu.MouseMove(wordDiffPoint, RawInputModifiers.None);
+                submenu.MouseDown(wordDiffPoint, MouseButton.Left, RawInputModifiers.None);
+                submenu.MouseUp(wordDiffPoint, MouseButton.Left, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+
+                AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+                changes.Should().Be(2);
+                menu.IsOpen.Should().BeFalse();
+            }
+        }
+        finally
+        {
+            menu?.Close();
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_only_toggle_word_diff_when_the_original_menu_action_is_enabled(bool showPatch)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            if (showPatch)
+            {
+                viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("ordinary.txt", "first\nsecond");
+            }
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>("showGitWordColoringToolStripMenuItem")!;
+            action.IsEnabled.Should().Be(showPatch);
+            int notifications = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+
+            owner.KeyPress(Key.D, RawInputModifiers.Control, PhysicalKey.D, keySymbol: null);
+            owner.KeyRelease(Key.D, RawInputModifiers.Control, PhysicalKey.D, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            AppSettings.DiffDisplayAppearance.Value.Should().Be(showPatch ? DiffDisplayAppearance.GitWordDiff : DiffDisplayAppearance.Patch);
+            notifications.Should().Be(showPatch ? 1 : 0);
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("increaseNumberOfLinesToolStripMenuItem", Key.OemPlus, PhysicalKey.Equal, RawInputModifiers.Control)]
+    [TestCase("decreaseNumberOfLinesToolStripMenuItem", Key.OemMinus, PhysicalKey.Minus, RawInputModifiers.Control)]
+    [TestCase("showEntireFileToolStripMenuItem", Key.E, PhysicalKey.E, RawInputModifiers.Control)]
+    [TestCase("ignoreAllWhitespaceChangesToolStripMenuItem", Key.W, PhysicalKey.W, RawInputModifiers.Control | RawInputModifiers.Shift)]
+    public void FileViewer_diff_shortcut_should_invoke_the_available_context_menu_action(
+        string menuItemName, Key key, PhysicalKey physicalKey, RawInputModifiers modifiers)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        AppSettings.ShowEntireFile.Value = false;
+        AppSettings.NumberOfContextLines = 3;
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>(menuItemName)!;
+            action.IsVisible.Should().BeTrue();
+            int clicks = 0;
+            int notifications = 0;
+            action.Click += (_, _) => clicks++;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+            string originalArguments = viewer.GetExtraDiffArguments().ToString();
+
+            action.IsEnabled = false;
+            PressShortcut();
+            clicks.Should().Be(0);
+            notifications.Should().Be(0);
+            viewer.GetExtraDiffArguments().ToString().Should().Be(originalArguments);
+
+            action.IsEnabled = true;
+            PressShortcut();
+            clicks.Should().Be(1);
+            notifications.Should().Be(1);
+            viewer.GetExtraDiffArguments().ToString().Should().NotBe(originalArguments);
+        }
+        finally
+        {
+            owner.Close();
+        }
+
+        void PressShortcut()
+        {
+            owner.KeyPress(key, modifiers, physicalKey, keySymbol: null);
+            owner.KeyRelease(key, modifiers, physicalKey, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("showSyntaxHighlightingToolStripMenuItem", Key.X, PhysicalKey.X, RawInputModifiers.None, false)]
+    [TestCase("showDifftasticToolStripMenuItem", Key.T, PhysicalKey.T, RawInputModifiers.Control, false)]
+    [TestCase("treatAllFilesAsTextToolStripMenuItem", Key.B, PhysicalKey.B, RawInputModifiers.Control, true)]
+    public async Task FileViewer_display_shortcut_should_invoke_the_available_context_menu_action(
+        string menuItemName, Key key, PhysicalKey physicalKey, RawInputModifiers modifiers, bool configureTreatAsText)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        AppSettings.SerializedHotkeys = string.Empty;
+        if (configureTreatAsText)
+        {
+            HotkeyCommand command = new((int)FileViewer.Command.TreatFileAsText, nameof(FileViewer.Command.TreatFileAsText))
+            {
+                KeyData = GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.B,
+            };
+            new HotkeySettingsManager().SaveSettings([new HotkeySettings(FileViewer.HotkeySettingsName, command)]);
+        }
+
+        using FileViewer viewer = CreateViewer();
+        using GitExtensionsForm owner = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\n");
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(timeout.Token);
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MenuItem action = viewer.FindControl<MenuItem>(menuItemName)!;
+            action.IsVisible.Should().BeTrue();
+            bool initialChecked = action.IsChecked;
+            int clicks = 0;
+            int notifications = 0;
+            action.Click += (_, _) => clicks++;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => notifications++;
+
+            action.IsEnabled = false;
+            PressShortcut();
+            clicks.Should().Be(0);
+            notifications.Should().Be(0);
+            action.IsChecked.Should().Be(initialChecked);
+
+            action.IsEnabled = true;
+            PressShortcut();
+            clicks.Should().Be(1);
+            notifications.Should().Be(1);
+            action.IsChecked.Should().Be(!initialChecked);
+        }
+        finally
+        {
+            owner.Close();
+        }
+
+        void PressShortcut()
+        {
+            owner.KeyPress(key, modifiers, physicalKey, keySymbol: null);
+            owner.KeyRelease(key, modifiers, physicalKey, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_publish_the_clicked_blame_line_without_requiring_a_caret_move()
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        try
+        {
+            editor.Show();
+            await viewer.ViewTextAsync("selection.txt", "first\nsecond\nthird");
+            Dispatcher.UIThread.RunJobs();
+
+            List<int> selected = [];
+            viewer.SelectedLineChanged += (_, args) => selected.Add(args.SelectedLine);
+            viewer.GoToLine(2);
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(2);
+            selected.Should().BeEmpty("the source reports a mouse selection, not a caret move");
+
+            TextView view = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = view.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == 2);
+            Point point = view.TranslatePoint(new Point(8, line.VisualTop + (line.Height / 2)), editor)!.Value;
+            editor.MouseMove(point, RawInputModifiers.None);
+            editor.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            editor.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            selected.Should().Equal(1);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewTextAsync_should_select_fixed_diff_and_bounded_binary_hex_modes()
+    {
+        FileViewer viewer = CreateViewer();
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        int loaded = 0;
+        viewer.TextLoaded += (_, _) => loaded++;
+
+        await viewer.ViewTextAsync("change.patch", "@@ -1 +1 @@\n-old\n+new");
+
+        accessor.ViewMode.Should().Be(ViewMode.FixedDiff);
+        viewer.TextEditor.Text.Should().Contain("+new");
+
+        await viewer.ViewTextAsync("payload.bin", "prefix\0\0\0\0\0\0suffix");
+
+        accessor.ViewMode.Should().Be(ViewMode.Text);
+        viewer.TextEditor.Text.Should().Contain("Binary file: payload.bin");
+        viewer.TextEditor.Text.Should().Contain("0000");
+        viewer.TextEditor.Text.Should().Contain("70 72 65 66 69 78 00 00");
+        loaded.Should().Be(2);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_request_a_diff_only_for_double_clicks_in_the_text_area(bool onScrollBar)
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            int requests = 0;
+            viewer.RequestDiffView += (_, _) => requests++;
+            Control target = onScrollBar
+                ? viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                    .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible)
+                : viewer.TextEditor.TextArea.TextView;
+            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
+
+            window.MouseMove(point, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            Visual hit = window.InputHitTest(point).Should().BeAssignableTo<Visual>().Which;
+            (hit == target || hit.GetVisualAncestors().Contains(target)).Should().BeTrue();
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            requests.Should().Be(onScrollBar ? 0 : 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_forward_key_release_with_the_source_text_area_as_sender()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", "first\nsecond");
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            List<(object? Sender, Key Key)> released = [];
+            editor.KeyUp += (sender, e) => released.Add((sender, e.Key));
+
+            window.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+            released.Should().BeEmpty();
+            window.KeyRelease(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            released.Should().ContainSingle();
+            released[0].Sender.Should().BeSameAs(viewer.TextEditor.TextArea);
+            released[0].Key.Should().Be(Key.F7);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public async Task FileViewer_should_raise_continuous_wheel_events_only_from_the_text_area(bool onScrollBar, bool atBottom)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.AutomaticContinuousScroll = false;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 500, Height = 270, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            ScrollViewer scrollViewer = textView.FindAncestorOfType<ScrollViewer>()!;
+            scrollViewer.ScrollBarMaximum.Y.Should().BePositive();
+            if (atBottom)
+            {
+                viewer.VScrollPosition = (int)Math.Ceiling(scrollViewer.ScrollBarMaximum.Y);
+                window.UpdateLayout();
+            }
+
+            scrollViewer.Offset.Y.Should().Be(atBottom ? scrollViewer.ScrollBarMaximum.Y : 0);
+            int topRequests = 0;
+            int bottomRequests = 0;
+            viewer.TopScrollReached += (_, _) => topRequests++;
+            viewer.BottomScrollReached += (_, _) => bottomRequests++;
+            Control target = onScrollBar
+                ? viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                    .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible)
+                : textView;
+            Point center = new(target.Bounds.Width / 2, target.Bounds.Height / 2);
+            Point point = target.TranslatePoint(center, window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            Visual hit = window.InputHitTest(point).Should().BeAssignableTo<Visual>().Which;
+            hit.GetSelfAndVisualAncestors().Should().Contain(target);
+
+            window.MouseWheel(point, new Vector(0, atBottom ? -1 : 1), RawInputModifiers.Alt);
+            Dispatcher.UIThread.RunJobs();
+
+            topRequests.Should().Be(!onScrollBar && !atBottom ? 1 : 0);
+            bottomRequests.Should().Be(!onScrollBar && atBottom ? 1 : 0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_forward_hover_only_from_the_source_text_area()
+    {
+        using FileViewer viewer = CreateViewer();
+        Border outside = new() { Background = Brushes.Transparent, Height = 28 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 500, Height = 300, Content = content };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", string.Join('\n', Enumerable.Repeat("sample line", 100)));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            Control scrollBar = viewer.TextEditor.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical && bar.IsEffectivelyVisible);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Point barPoint = CenterOf(scrollBar);
+            Point textPoint = CenterOf(textView);
+            window.MouseMove(CenterOf(outside), RawInputModifiers.None);
+            int entries = 0;
+            int exits = 0;
+            int moves = 0;
+            editor.MouseEnter += (_, _) => entries++;
+            editor.MouseLeave += (_, _) => exits++;
+            editor.MouseMove += (_, _) => moves++;
+
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            window.MouseMove(barPoint, RawInputModifiers.None);
+            (window.InputHitTest(barPoint) as Visual)!.GetSelfAndVisualAncestors().Should().Contain(scrollBar);
+            toolbar.IsVisible.Should().BeFalse();
+            entries.Should().Be(0);
+            moves.Should().Be(0);
+
+            window.MouseMove(textPoint, RawInputModifiers.None);
+            textView.IsPointerOver.Should().BeTrue();
+            toolbar.IsVisible.Should().BeTrue();
+            entries.Should().Be(1);
+            moves.Should().BeGreaterThan(0);
+
+            window.MouseMove(barPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse();
+            exits.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        Point CenterOf(Control control)
+            => control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
+    }
+
+    [AvaloniaTest]
+    public async Task Binary_preview_should_start_at_the_hex_header_and_keep_its_difftool()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 480, Height = 260, Content = viewer };
+        try
+        {
+            window.Show();
+            string bytes = new('\0', 256);
+            int difftoolRequests = 0;
+            await viewer.ViewTextAsync("payload.bin", bytes, line: 10, openWithDifftool: () => difftoolRequests++);
+            viewer.TextEditor.Text.Should().Contain("Binary file: payload.bin");
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+
+            viewer.TextEditor.TextArea.Caret.Line = 10;
+            await viewer.ViewTextAsync("payload.bin", bytes, openWithDifftool: () => difftoolRequests++);
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            await editor.FindNextAsync(searchForwardOrOpenWithDifftool: true);
+            difftoolRequests.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewChangesAsync_should_marshal_rendering_from_a_worker_thread()
+    {
+        string filePath = Path.Combine(_workingDirectory, "worker-thread.txt");
+        File.WriteAllText(filePath, "before\n");
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "worker-thread.txt" });
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
+        ObjectId head = _module.GetCurrentCheckout();
+        File.WriteAllText(filePath, "after\n");
+
+        FileStatusItem item = new(
+            new GitRevision(head),
+            new GitRevision(ObjectId.WorkTreeId) { ParentIds = [head] },
+            new GitItemStatus("worker-thread.txt") { IsTracked = true, Staged = StagedStatus.WorkTree });
+        FileViewer viewer = CreateViewer();
+
+        await Task.Run(() => viewer.ViewChangesAsync(item, CancellationToken.None));
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Diff);
+        viewer.TextEditor.Text.Should().Contain("+after");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task ViewChangesAsync_should_render_status_only_failures_without_running_a_diff()
+    {
+        GitItemStatus status = new("parse-error")
+        {
+            IsStatusOnly = true,
+            ErrorMessage = "Unable to parse the diff output.",
+        };
+        FileStatusItem item = new(null, new GitRevision(ObjectId.WorkTreeId), status);
+        FileViewer viewer = CreateViewer();
+
+        await viewer.ViewChangesAsync(item, CancellationToken.None);
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Text);
+        viewer.TextEditor.Text.Should().Be("Unable to parse the diff output.");
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_preserve_blob_control_and_translation_identities()
+    {
+        FileViewer viewer = CreateViewer();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        viewer.AddTranslationItems(translation);
+
+        viewer.FindControl<Border>("PictureBox").Should().NotBeNull();
+        viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview").Should().NotBeNull();
+        viewer.FindControl<ComboBox>("encodingToolStripComboBox").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("showNonprintableCharactersToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("showSyntaxHighlightingToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<Button>("showNonPrintChars").Should().NotBeNull();
+        viewer.FindControl<Button>("showSyntaxHighlighting").Should().NotBeNull();
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "_largeFileSizeWarning", "Text", "This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "_cannotViewImage", "Text", "Cannot view image {0}");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "_binaryFile", "Text", "Binary file: {0}");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showNonprintableCharactersToolStripMenuItem", "Text", "S&how nonprinting characters");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlightingToolStripMenuItem", "Text", "Show synta&x highlighting");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showNonPrintChars", "ToolTipText", "Show nonprinting characters");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlighting", "ToolTipText", "Show syntax highlighting");
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_follow_the_original_commit_message_description_marker_rule(bool hasBlankSeparator)
+    {
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 600, Height = 270, Content = viewer };
+        try
+        {
+            owner.Show();
+            const string summary = "Short summary";
+            string description = new('a', 81);
+            string separator = hasBlankSeparator ? "\n\n" : "\n";
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", summary + separator + description);
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            CommitMessageHighlightingStrategy strategy = textView.LineTransformers.OfType<CommitMessageHighlightingStrategy>().Single();
+            textView.VisualLines.First().Elements.First().TextRunProperties.Typeface.Weight.Should().Be(FontWeight.Bold);
+
+            if (hasBlankSeparator)
+            {
+                strategy.ValidationMarkers.Should().BeEmpty();
+            }
+            else
+            {
+                int descriptionOffset = summary.Length + separator.Length;
+                strategy.ValidationMarkers
+                    .Select(marker => (marker.Offset, marker.Length, marker.ToolTip))
+                    .Should().Equal(
+                        (descriptionOffset, description.Length, "There must be a blank line after the summary."),
+                        (descriptionOffset + 80, 1, "Line is too long."));
+            }
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_show_commit_warning_tooltips_on_text_hover()
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Border outside = new() { Background = Brushes.Transparent, Height = 32 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 1100, Height = 342, Content = content };
+        try
+        {
+            window.Show();
+            string summary = new('s', 64);
+            string firstDescription = new('a', 89);
+            string secondDescription = new('b', 92);
+            string text = string.Join('\n', summary, firstDescription, "Context", "Details", "Examples", "Results", secondDescription);
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", text);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TaskCompletionSource firstHover = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            textView.PointerHover += (_, _) => firstHover.TrySetResult();
+
+            MoveTo(line: 1, column: 56);
+            await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 2, column: 83);
+            ToolTip.GetTip(textView).Should().Be("There must be a blank line after the summary.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 7, column: 85);
+            textView.IsPointerOver.Should().BeTrue(
+                "the overlength description must receive the pointer move");
+            ToolTip.GetTip(textView).Should().Be("Line is too long.");
+            ToolTip.GetIsOpen(textView).Should().BeTrue();
+
+            MoveTo(line: 7, column: 2);
+            ToolTip.GetTip(textView).Should().BeNull();
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            Point descriptionPoint = MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            window.MouseDown(descriptionPoint, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(descriptionPoint, MouseButton.Left, RawInputModifiers.None);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            MoveTo(line: 7, column: 2);
+            MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            bool? tooltipOpenDuringEdit = null;
+            viewer.TextChanged += (_, _) => tooltipOpenDuringEdit = ToolTip.GetIsOpen(textView);
+            window.KeyTextInput("z");
+            viewer.TextEditor.Document.TextLength.Should().Be(text.Length + 1);
+            tooltipOpenDuringEdit.Should().Be(false);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            MoveTo(line: 7, column: 2);
+            MoveTo(line: 7, column: 85);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            Point outsidePoint = outside.TranslatePoint(new Point(outside.Bounds.Width / 2, outside.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(outsidePoint, RawInputModifiers.None);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+
+            Point MoveTo(int line, int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(line, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+                return windowPoint;
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_hide_commit_warnings_during_a_stationary_pointer_press(bool pressBeforeHover)
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window window = new() { Width = 1100, Height = 342, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", new string('s', 64) + "\n\ndescription");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TaskCompletionSource firstHover = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            textView.PointerHover += (_, _) => firstHover.TrySetResult();
+            Point warningPoint = MoveTo(column: 56);
+            if (!pressBeforeHover)
+            {
+                await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+                ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+                ToolTip.GetIsOpen(textView).Should().BeTrue();
+            }
+
+            window.MouseDown(warningPoint, MouseButton.Middle, RawInputModifiers.None);
+            try
+            {
+                if (pressBeforeHover)
+                {
+                    await firstHover.Task.WaitAsync(TimeSpan.FromSeconds(5));
+                }
+
+                ToolTip.GetIsOpen(textView).Should().BeFalse();
+                ToolTip.GetTip(textView).Should().BeNull();
+            }
+            finally
+            {
+                window.MouseUp(warningPoint, MouseButton.Middle, RawInputModifiers.None);
+            }
+
+            MoveTo(column: 2);
+            MoveTo(column: 56);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be("Summary line is too long.");
+
+            Point MoveTo(int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(1, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                return windowPoint;
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(2, "Line is too long.")]
+    [TestCase(3, "There must be a blank line after the summary.")]
+    public async Task FileViewer_should_keep_the_source_order_of_overlapping_commit_warnings_after_an_edit(int editedLine, string expectedWarning)
+    {
+        using FileViewer viewer = CreateViewer();
+        viewer.IsReadOnly = false;
+        Window window = new() { Width = 1100, Height = 342, Content = viewer };
+        try
+        {
+            window.Show();
+            string text = $"Summary\n{new string('a', 90)}\nAdditional detail";
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", text);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+
+            MoveTo(83);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be("There must be a blank line after the summary.");
+
+            viewer.TextEditor.TextArea.Focus().Should().BeTrue();
+            viewer.TextEditor.CaretOffset = viewer.TextEditor.Document.GetLineByNumber(editedLine).Offset + 5;
+            window.KeyTextInput("z");
+            viewer.TextEditor.Document.TextLength.Should().Be(text.Length + 1);
+            ToolTip.GetIsOpen(textView).Should().BeFalse();
+            window.UpdateLayout();
+
+            MoveTo(2);
+            MoveTo(83);
+            await WaitUntilAsync(() => ToolTip.GetIsOpen(textView));
+            ToolTip.GetTip(textView).Should().Be(expectedWarning);
+
+            void MoveTo(int column)
+            {
+                Point documentPoint = textView.GetVisualPosition(new TextViewPosition(2, column), VisualYPosition.LineMiddle);
+                Point windowPoint = textView.TranslatePoint(documentPoint - textView.ScrollOffset, window)!.Value;
+                window.MouseMove(windowPoint, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_adapt_commit_message_warning_colors_when_the_source_creates_markers()
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 1000, Height = 310, Content = viewer };
+        try
+        {
+            AppSettings.UseSystemVisualStyle = false;
+            ApplyTheme(ThemeId.DefaultDark, [ThemeVariations.Colorblind]);
+            Color colorblindColor = AvaloniaThemeResources.ToMediaColor(System.Drawing.Color.Red.AdaptBackColor(ThemeModule.Settings));
+            colorblindColor.Should().NotBe(Colors.Red);
+
+            window.Show();
+            string summary = new('s', 51);
+            string description = new('a', 81);
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", summary + "\n" + description);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            TextDocument document = viewer.TextEditor.Document;
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultLight, []);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            document.Insert(document.TextLength, "a");
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            int appendedLineOffset = document.TextLength;
+            document.Insert(appendedLineOffset, "\n" + description);
+            ReadMarkerColors(textView).Should().BeEquivalentTo([colorblindColor, Colors.Red]);
+
+            document.Remove(appendedLineOffset, description.Length + 1);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultDark, [ThemeVariations.Colorblind]);
+            document.Insert(appendedLineOffset, "\n" + description);
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            ApplyTheme(ThemeId.DefaultLight, []);
+            int separatorOffset = summary.Length;
+            document.Insert(separatorOffset, "\n");
+            ReadMarkerColors(textView).Should().Equal(colorblindColor);
+
+            document.Remove(separatorOffset, 1);
+            ReadMarkerColors(textView).Should().BeEquivalentTo([colorblindColor, Colors.Red]);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId, originalVariations);
+        }
+
+        void ApplyTheme(ThemeId theme, string[] variations)
+        {
+            AppSettings.ThemeVariations = variations;
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        Color[] ReadMarkerColors(TextView textView)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DrawingGroup drawing = new();
+            using (DrawingContext context = drawing.Open())
+            {
+                foreach (IBackgroundRenderer renderer in textView.BackgroundRenderers.Where(renderer => renderer.Layer == KnownLayer.Selection))
+                {
+                    renderer.Draw(textView, context);
+                }
+            }
+
+            return drawing.Children.OfType<GeometryDrawing>()
+                .Select(item => item.Pen?.Brush)
+                .OfType<ISolidColorBrush>()
+                .Select(brush => brush.Color)
+                .Distinct()
+                .ToArray();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", false)]
+    [TestCase("COMMIT_EDITMSG", true)]
+    [TestCase("git-rebase-todo", false)]
+    [TestCase("git-rebase-todo", true)]
+    public async Task Git_comment_foreground_should_follow_the_original_system_style_choice(string fileName, bool useSystemVisualStyle)
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+            ApplyTheme(ThemeId.DefaultDark);
+            ThemeModule.Settings.UseSystemVisualStyle.Should().Be(useSystemVisualStyle);
+            System.Drawing.Color sourceColor = System.Drawing.Color.DarkGreen;
+            System.Drawing.Color editorBackground = AppColor.EditorBackground.GetThemeColor();
+            Color adapted = AvaloniaThemeResources.ToMediaColor(sourceColor.AdaptForeColor(editorBackground));
+            adapted.Should().NotBe(Colors.DarkGreen);
+
+            _module.SetSetting("core.commentchar", "#");
+            window.Show();
+            await viewer.ViewTextAsync(fileName, "  # Git comment");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            Color actual = textView.VisualLines.First().Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            actual.Should().Be(useSystemVisualStyle ? Colors.DarkGreen : adapted);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId);
+        }
+
+        void ApplyTheme(ThemeId theme)
+        {
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", "Summarize the change", "#000000", "#F0F0F0")]
+    [TestCase("git-rebase-todo", "pick 89abcdef Summarize the change", "#000000", "#BEBEBE")]
+    [TestCase("git-rebase-todo", "x deadbeef example", "#6D6D6D", "#969696")]
+    public async Task Git_syntax_should_use_live_source_theme_roles(string fileName, string text, string lightColor, string darkColor)
+    {
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            ApplyTheme(ThemeId.DefaultLight);
+            window.Show();
+            await viewer.ViewTextAsync(fileName, text);
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            GitHighlightingStrategyBase strategy = textView.LineTransformers.OfType<GitHighlightingStrategyBase>().Single();
+            ReadForeground(textView).Should().Be(Color.Parse(lightColor));
+
+            ApplyTheme(ThemeId.DefaultDark);
+            ReadForeground(textView).Should().Be(Color.Parse(darkColor));
+            textView.LineTransformers.OfType<GitHighlightingStrategyBase>().Should().ContainSingle()
+                .Which.Should().BeSameAs(strategy);
+
+            ApplyTheme(ThemeId.DefaultLight);
+            ReadForeground(textView).Should().Be(Color.Parse(lightColor));
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            ApplyTheme(originalThemeId);
+        }
+
+        void ApplyTheme(ThemeId theme)
+        {
+            AppSettings.ThemeId = theme;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        Color ReadForeground(TextView textView)
+        {
+            window.UpdateLayout();
+            return textView.VisualLines.First().Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Highlighted_occurrences_should_use_the_source_contrast_foreground_over_git_syntax(bool dark)
+    {
+        const string comment = "# Git comment";
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            AppSettings.ThemeId = dark ? ThemeId.DefaultDark : ThemeId.DefaultLight;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            _module.SetSetting("core.commentchar", "#");
+            window.Show();
+            await viewer.ViewTextAsync("COMMIT_EDITMSG", $"{comment}\n{comment}\nOrdinary text");
+            Color syntaxColor = ReadForeground(2);
+            Color ordinaryColor = ReadForeground(3);
+            System.Drawing.Color background = AppColor.HighlightAllOccurences.GetThemeColor();
+            Color contrast = AvaloniaThemeResources.ToMediaColor(background.GetTextColor());
+            syntaxColor.Should().NotBe(contrast, "the source occurrence color overrides a visibly different syntax color");
+
+            viewer.TextEditor.Select(0, comment.Length);
+
+            ReadForeground(2).Should().Be(contrast);
+            ReadForeground(3).Should().Be(ordinaryColor);
+
+            viewer.TextEditor.Select(0, 0);
+
+            ReadForeground(2).Should().Be(syntaxColor);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ThemeId = originalThemeId;
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            AvaloniaThemeSettings.ApplyAppSettings();
+        }
+
+        Color ReadForeground(int lineNumber)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = textView.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == lineNumber);
+            return line.Elements.First().TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Highlighted_occurrences_should_use_the_source_contrast_foreground_over_diff_coloring()
+    {
+        const string word = "repeat";
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 580, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.ReverseGitColoring.Value = false;
+            window.Show();
+            viewer.ViewPatch($"@@ -1,2 +1,2 @@\n-{word}\n+{word}\n context\n", useGitColoring: true);
+            Color diffColor = ReadAddedWordForeground();
+            Color contrast = AvaloniaThemeResources.ToMediaColor(AppColor.HighlightAllOccurences.GetThemeColor().GetTextColor());
+            diffColor.Should().NotBe(contrast);
+
+            int removedWord = viewer.TextEditor.Text.IndexOf(word, StringComparison.Ordinal);
+            viewer.TextEditor.Select(removedWord, word.Length);
+
+            ReadAddedWordForeground().Should().Be(contrast);
+
+            viewer.TextEditor.Select(0, 0);
+
+            ReadAddedWordForeground().Should().Be(diffColor);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ReverseGitColoring.Value = reverseGitColoring;
+        }
+
+        Color ReadAddedWordForeground()
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            VisualLine line = textView.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == 3);
+            VisualLineElement wordElement = line.Elements.Single(element =>
+                element.RelativeTextOffset <= 1 && element.RelativeTextOffset + element.DocumentLength > 1);
+            return wordElement.TextRunProperties.ForegroundBrush
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("COMMIT_EDITMSG", typeof(CommitMessageHighlightingStrategy))]
+    [TestCase("git-rebase-todo", typeof(RebaseTodoHighlightingStrategy))]
+    public async Task FileViewer_should_use_its_repository_for_git_specific_syntax(string name, Type expected)
+    {
+        using FileViewer viewer = CreateViewer();
+
+        await viewer.ViewTextAsync(name, "pick fb42c9e example\n");
+
+        viewer.TextEditor.TextArea.TextView.LineTransformers.OfType<GitHighlightingStrategyBase>()
+            .Should().ContainSingle().Which.Should().BeOfType(expected);
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Display_options_should_apply_file_syntax_settings_and_independent_diff_rendering()
+    {
+        bool originalRememberNonPrinting = AppSettings.RememberShowNonPrintingCharsPreference;
+        bool originalShowNonPrinting = AppSettings.ShowNonPrintingChars.Value;
+        bool originalRememberSyntax = AppSettings.RememberShowSyntaxHighlightingInDiff;
+        bool originalShowSyntax = AppSettings.ShowSyntaxHighlightingInDiff.Value;
+        bool originalEolGlyph = AppSettings.ShowEolMarkerAsGlyph;
+        int originalRuler = AppSettings.DiffVerticalRulerPosition;
+        try
+        {
+            AppSettings.RememberShowNonPrintingCharsPreference = true;
+            AppSettings.ShowNonPrintingChars.Value = false;
+            AppSettings.RememberShowSyntaxHighlightingInDiff = true;
+            AppSettings.ShowSyntaxHighlightingInDiff.Value = true;
+            AppSettings.ShowEolMarkerAsGlyph = false;
+            AppSettings.DiffVerticalRulerPosition = 88;
+
+            string filePath = Path.Combine(_workingDirectory, "Sample.cs");
+            File.WriteAllText(filePath, "internal class Sample { }\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "Sample.cs" });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "first" });
+            ObjectId firstRevisionId = _module.GetCurrentCheckout();
+            File.WriteAllText(filePath, "internal class Sample\n{\n    // visible whitespace\n}\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "Sample.cs" });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second" });
+            ObjectId secondRevisionId = _module.GetCurrentCheckout();
+
+            GitRevision firstRevision = new(firstRevisionId);
+            GitRevision secondRevision = new(secondRevisionId) { ParentIds = [firstRevisionId] };
+            GitItemStatus status = new("Sample.cs") { IsTracked = true };
+            FileStatusItem item = new(firstRevision, secondRevision, status);
+            FileViewer viewer = CreateViewer();
+            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+            MenuItem showSyntaxHighlightingMenuItem = viewer.FindControl<MenuItem>("showSyntaxHighlightingToolStripMenuItem")!;
+            Button showSyntaxHighlighting = viewer.FindControl<Button>("showSyntaxHighlighting")!;
+            MenuItem showNonprintableCharactersMenuItem = viewer.FindControl<MenuItem>("showNonprintableCharactersToolStripMenuItem")!;
+            Button showNonPrintChars = viewer.FindControl<Button>("showNonPrintChars")!;
+            int reloadRequests = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
+
+            await viewer.ViewChangesAsync(item, CancellationToken.None);
+
+            accessor.ViewMode.Should().Be(ViewMode.Diff);
+            viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
+            viewer.TextEditor.SyntaxHighlighting!.Name.Should().Be("C#");
+            (editor.DiffHighlightService is not null).Should().BeTrue();
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
+            showSyntaxHighlightingMenuItem.IsVisible.Should().BeTrue();
+            showSyntaxHighlightingMenuItem.IsChecked.Should().BeTrue();
+            showSyntaxHighlighting.Classes.Should().Contain("checked");
+            viewer.VRulerPosition.Should().Be(88);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
+
+            showNonprintableCharactersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.Options.ShowSpaces.Should().BeTrue();
+            viewer.TextEditor.Options.ShowTabs.Should().BeTrue();
+            viewer.TextEditor.Options.ShowEndOfLine.Should().BeTrue();
+            viewer.TextEditor.Options.EndOfLineCRLFGlyph.Should().Be("\\r\\n");
+            showNonPrintChars.Classes.Should().Contain("checked");
+            AppSettings.ShowNonPrintingChars.Value.Should().BeTrue();
+
+            showSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.SyntaxHighlighting.Should().BeNull();
+            (editor.DiffHighlightService is not null).Should().BeTrue();
+            AppSettings.ShowSyntaxHighlightingInDiff.Value.Should().BeFalse();
+            reloadRequests.Should().Be(1);
+
+            showSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
+            (editor.DiffHighlightService is not null).Should().BeTrue();
+            reloadRequests.Should().Be(2);
+            viewer.FindControl<Border>("fileviewerToolbar")!.IsVisible = true;
+            await CaptureModeIfRequestedAsync(viewer, "DisplayOptions");
+
+            viewer.ShowLineNumbers = false;
+            await viewer.ViewTextAsync("Sample.cs", "line one\nline two\n");
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
+            viewer.ShowLineNumbers = null;
+            viewer.TextEditor.ShowLineNumbers.Should().BeTrue();
+            showSyntaxHighlighting.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.RememberShowNonPrintingCharsPreference = originalRememberNonPrinting;
+            AppSettings.ShowNonPrintingChars.Value = originalShowNonPrinting;
+            AppSettings.RememberShowSyntaxHighlightingInDiff = originalRememberSyntax;
+            AppSettings.ShowSyntaxHighlightingInDiff.Value = originalShowSyntax;
+            AppSettings.ShowEolMarkerAsGlyph = originalEolGlyph;
+            AppSettings.DiffVerticalRulerPosition = originalRuler;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewGitItemAsync_should_render_an_image_blob_and_preserve_view_state()
+    {
+        string imagePath = Path.Combine(_workingDirectory, "tiny.png");
+        using (RenderTargetBitmap bitmap = new(new PixelSize(8, 8), new Vector(96, 96)))
+        {
+            using DrawingContext drawingContext = bitmap.CreateDrawingContext();
+            drawingContext.FillRectangle(Brushes.Crimson, new Rect(0, 0, 8, 8));
+            using FileStream imageStream = File.Create(imagePath);
+            bitmap.Save(imageStream, PngBitmapEncoderOptions.Default);
+        }
+
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tiny.png" });
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "image" });
+        ObjectId revision = _module.GetCurrentCheckout();
+        ObjectId blob = _module.GetFileBlobHash("tiny.png", revision);
+        GitItemStatus item = new("tiny.png") { TreeId = blob };
+        FileViewer viewer = CreateViewer();
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        Border pictureBox = viewer.FindControl<Border>("PictureBox")!;
+        PictureBoxEx imagePreview = viewer.FindControl<PictureBoxEx>("ImagePreview")!;
+
+        await viewer.ViewGitItemAsync(item, revision);
+
+        accessor.ViewMode.Should().Be(ViewMode.Image);
+        pictureBox.IsVisible.Should().BeTrue();
+        viewer.TextEditor.IsVisible.Should().BeFalse();
+        imagePreview.Source.Should().NotBeNull();
+
+        await CaptureModeIfRequestedAsync(viewer, "Image");
+
+        string iconPath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        await viewer.ViewFileAsync(iconPath);
+
+        accessor.ViewMode.Should().Be(ViewMode.Image);
+        imagePreview.Source.Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    [TestCase("available")]
+    [TestCase("missing")]
+    [TestCase("failed")]
+    public async Task ViewGitItemAsync_should_read_image_blobs_off_the_dispatcher_and_preserve_the_fallback(string result)
+    {
+        const string imageName = "sample.ico";
+        string imagePath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        byte[] imageBytes = await File.ReadAllBytesAsync(imagePath);
+        ObjectId blob = ObjectId.Random();
+        bool? startedOnDispatcher = null;
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.GetFileStreamAsync(blob.ToString(), Arg.Any<CancellationToken>())
+            .Returns(_ =>
+            {
+                startedOnDispatcher = Dispatcher.UIThread.CheckAccess();
+                return result switch
+                {
+                    "available" => Task.FromResult<MemoryStream?>(new MemoryStream(imageBytes, writable: false)),
+                    "missing" => Task.FromResult<MemoryStream?>(null),
+                    _ => Task.FromException<MemoryStream?>(new IOException("Could not read the image blob.")),
+                };
+            });
+        module.GetFileText(blob, Arg.Any<Encoding>(), stripAnsiEscapeCodes: true).Returns("\0image bytes");
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(new GitUICommands(_serviceContainer, module));
+        FileStatusItem item = new(null, new GitRevision(ObjectId.Random()), new GitItemStatus(imageName) { TreeId = blob });
+        Action openWithDifftool = () => { };
+        using FileViewer viewer = new() { UICommandsSource = source };
+        FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+
+        await viewer.ViewGitItemAsync(item, line: null, openWithDifftool);
+
+        if (result == "available")
+        {
+            viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Image);
+            viewer.FindControl<PictureBoxEx>("ImagePreview")!.Source.Should().NotBeNull();
+        }
+        else
+        {
+            viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Text);
+            viewer.GetText().Should().StartWith("Cannot view image " + imageName).And.Contain("0000");
+        }
+
+        viewer.GetTestAccessor().ViewItem.Should().BeSameAs(item);
+        editor.OpenWithDifftool.Should().BeSameAs(openWithDifftool);
+        startedOnDispatcher.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_accept_disk_loads_after_reattachment_and_reject_them_after_disposal()
+    {
+        const string fileName = "file-viewer-lifetime.txt";
+        string fullPath = Path.Combine(_workingDirectory, fileName);
+        await File.WriteAllTextAsync(fullPath, "initial contents");
+        using FileViewer viewer = CreateViewer();
+        Grid layout = new() { Children = { viewer } };
+        Window window = new() { Width = 580, Height = 260, Content = layout };
+        try
+        {
+            window.Show();
+            await viewer.ViewFileAsync(fileName);
+            viewer.GetText().Should().Be("initial contents");
+
+            layout.Children.Remove(viewer);
+            await File.WriteAllTextAsync(fullPath, "contents after reattachment");
+            layout.Children.Add(viewer);
+            await viewer.ViewFileAsync(fileName);
+            viewer.GetText().Should().Be("contents after reattachment");
+
+            ((IDisposable)viewer).Dispose();
+            await File.WriteAllTextAsync(fullPath, "late contents");
+            Func<Task> load = () => viewer.ViewFileAsync(fileName);
+
+            await load.Should().ThrowAsync<ObjectDisposedException>();
+            viewer.GetText().Should().Be("contents after reattachment");
+            layout.Children.Remove(viewer);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_cancel_an_inflight_blob_read_when_disposed()
+    {
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task pending = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null);
+        try
+        {
+            CancellationToken loadToken = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+            ((IDisposable)viewer).Dispose();
+
+            loadToken.IsCancellationRequested.Should().BeTrue();
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await pending.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().Be("previous selection");
+    }
+
+    [AvaloniaTest]
+    public async Task Superseded_blob_callers_cancellation_should_not_cancel_the_replacement_view()
+    {
+        using CancellationTokenSource superseded = new();
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task oldView = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null, cancellationToken: superseded.Token);
+        try
+        {
+            CancellationToken oldLoadToken = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            using CancellationTokenRegistration cancelSupersededCaller = oldLoadToken.Register(superseded.Cancel);
+            await viewer.ViewTextAsync("new.txt", "new selection");
+            superseded.IsCancellationRequested.Should().BeTrue();
+            viewer.GetText().Should().Be("new selection");
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await oldView.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().Be("new selection");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewTextAsync_should_preserve_the_current_document_when_its_own_caller_is_cancelled()
+    {
+        TaskCompletionSource<CancellationToken> imageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource<MemoryStream?> finishImageRead = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using FileViewer viewer = CreateViewerWithPendingImage(imageRead, finishImageRead.Task, out FileStatusItem item);
+        await viewer.ViewTextAsync("previous.txt", "previous selection");
+        Task pendingView = viewer.ViewGitItemAsync(item, line: null, openWithDifftool: null);
+        try
+        {
+            CancellationToken currentLoad = await imageRead.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            CancellationToken caller = new(canceled: true);
+
+            Func<Task> show = () => viewer.ViewTextAsync("cancelled.txt", "cancelled selection", cancellationToken: caller);
+
+            await show.Should().ThrowAsync<OperationCanceledException>();
+            viewer.GetText().Should().Be("previous selection");
+            currentLoad.IsCancellationRequested.Should().BeFalse("a request with an already-cancelled caller never replaces the pending view");
+        }
+        finally
+        {
+            finishImageRead.TrySetResult(null);
+            await pendingView.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewer.GetText().Should().StartWith("Cannot view image sample.ico");
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_report_a_rendering_failure_for_the_current_image(bool replaceSource)
+    {
+        using FileViewer viewer = CreateViewer();
+        string iconPath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        await viewer.ViewFileAsync(iconPath);
+        Border pictureBox = viewer.FindControl<Border>("PictureBox")!;
+        PictureBoxEx preview = viewer.FindControl<PictureBoxEx>("ImagePreview")!;
+        pictureBox.IsVisible.Should().BeTrue();
+        viewer.TextEditor.IsVisible.Should().BeFalse();
+
+        IImage failingImage = Substitute.For<IImage>();
+        failingImage.Size.Returns(new Size(16, 16));
+        failingImage.When(image => image.Draw(Arg.Any<DrawingContext>(), Arg.Any<Rect>(), Arg.Any<Rect>()))
+            .Do(_ => throw new InvalidOperationException("Image could not be drawn."));
+        preview.Source = failingImage;
+        preview.Measure(new Size(32, 32));
+        preview.Arrange(new Rect(0, 0, 32, 32));
+        DrawingGroup drawing = new();
+        using (DrawingContext context = drawing.Open())
+        {
+            preview.Render(context);
+        }
+
+        IImage? replacement = null;
+        if (replaceSource)
+        {
+            replacement = new DrawingImage();
+            preview.Source = replacement;
+        }
+
+        Dispatcher.UIThread.RunJobs();
+
+        pictureBox.IsVisible.Should().Be(replaceSource);
+        viewer.TextEditor.IsVisible.Should().Be(!replaceSource);
+        if (replaceSource)
+        {
+            preview.Source.Should().BeSameAs(replacement);
+            viewer.GetText().Should().BeEmpty();
+        }
+        else
+        {
+            viewer.GetText().Should().Be("Cannot view image \nInvalidOperationException: Image could not be drawn.");
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_report_file_size_errors_and_continue_loading(bool sizeLookupFails)
+    {
+        const string contents = "The file contents";
+        const string error = "The metadata is unavailable.";
+        string path = Path.Combine(_workingDirectory, "metadata-error.txt");
+        await File.WriteAllTextAsync(path, contents);
+
+        IFileInfo fileInfo = Substitute.For<IFileInfo>();
+        fileInfo.Length.Returns(_ => sizeLookupFails ? throw new IOException(error) : contents.Length);
+        IFileInfoFactory fileInfoFactory = Substitute.For<IFileInfoFactory>();
+        fileInfoFactory.New(path).Returns(fileInfo);
+        IFileSystem metadataFileSystem = Substitute.For<IFileSystem>();
+        metadataFileSystem.FileInfo.Returns(fileInfoFactory);
+        _serviceContainer.RemoveService(typeof(IFileSystem));
+        _serviceContainer.AddService<IFileSystem>(metadataFileSystem);
+
+        WinFormsShims.IMessageBoxHost? previousHost;
+        try
+        {
+            previousHost = WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            previousHost = null;
+        }
+
+        WinFormsShims.IMessageBoxHost host = Substitute.For<WinFormsShims.IMessageBoxHost>();
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 480, Height = 270, Content = viewer };
+        try
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = host;
+            owner.Show();
+            await viewer.ViewFileAsync(path);
+
+            host.Received(sizeLookupFails ? 1 : 0).Show(
+                viewer,
+                error + Environment.NewLine + path,
+                GitUI.TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error,
+                WinFormsShims.MessageBoxDefaultButton.Button1);
+            viewer.GetText().Should().Be(contents);
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = previousHost!;
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewGitItemAsync_should_show_a_large_committed_blob_without_deferring_after_preview_is_requested()
+    {
+        const string fileName = "large.bin";
+        byte[] content = new byte[(5 * 1024 * 1024) + 1];
+        content[0] = 0xFF;
+        File.WriteAllBytes(Path.Combine(_workingDirectory, fileName), content);
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName });
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "large blob".Quote() });
+        ObjectId revision = _module.GetCurrentCheckout();
+        GitItemStatus item = new(fileName) { TreeId = _module.GetFileBlobHash(fileName, revision) };
+        using FileViewer viewer = CreateViewer();
+        HyperlinkButton previewLink = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+
+        await viewer.ViewFileAsync(fileName);
+        previewLink.IsVisible.Should().BeTrue();
+
+        await viewer.ViewGitItemAsync(item, revision);
+
+        previewLink.IsVisible.Should().BeTrue();
+        viewer.TextEditor.Text.Should().BeEmpty();
+        previewLink.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        await WaitUntilAsync(() => viewer.TextEditor.Text.Contains(fileName, StringComparison.Ordinal));
+
+        previewLink.IsVisible.Should().BeFalse();
+        viewer.TextEditor.Text.Should().Contain(fileName);
+        viewer.FilePreamble.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Viewing_an_image_should_clear_the_previous_text_preamble(bool useBlob)
+    {
+        const string imageName = "sample.ico";
+        const string textName = "previous.txt";
+        string imagePath = Path.Combine(GetRepositoryRoot(), "src", "app", "GitUI", "Resources", "Icons", "difftastic.ico");
+        File.Copy(imagePath, Path.Combine(_workingDirectory, imageName));
+        File.WriteAllText(Path.Combine(_workingDirectory, textName), "previous text", Encoding.Unicode);
+        using FileViewer viewer = CreateViewer();
+        await viewer.ViewFileAsync(textName);
+        viewer.FilePreamble.Should().Equal(Encoding.Unicode.GetPreamble());
+
+        if (useBlob)
+        {
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", imageName });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "image blob".Quote() });
+            ObjectId revision = _module.GetCurrentCheckout();
+            GitItemStatus item = new(imageName) { TreeId = _module.GetFileBlobHash(imageName, revision) };
+            await viewer.ViewGitItemAsync(item, revision);
+        }
+        else
+        {
+            await viewer.ViewFileAsync(imageName);
+        }
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Image);
+        viewer.FilePreamble.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task ViewFileAsync_should_show_path_errors_without_diff_actions(bool isDirectory)
+    {
+        const string path = "unavailable";
+        string fullPath = Path.Combine(_workingDirectory, path);
+        if (isDirectory)
+        {
+            Directory.CreateDirectory(fullPath);
+        }
+
+        GitItemStatus status = new(path) { IsNew = true, Staged = StagedStatus.WorkTree };
+        FileStatusItem item = new(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), status);
+        using FileViewer viewer = CreateViewer();
+        FileViewerInternal editor = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+
+        await viewer.ViewFileAsync(path, item: item, line: 10, openWithDifftool: () => { });
+
+        viewer.TextEditor.Text.Should().Be(isDirectory ? $"Directory: {path}" : $"File {fullPath} does not exist");
+        viewer.SupportLinePatching.Should().BeFalse();
+        editor.OpenWithDifftool.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPatchAsync_should_publish_text_after_applying_the_requested_line()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        GitRevision first = new(ObjectId.Random());
+        GitRevision second = new(ObjectId.Random());
+        FileStatusItem item = new(first, second, new GitItemStatus("sample.txt") { IsChanged = true, IsTracked = true });
+        const string patch = "diff --git a/sample.txt b/sample.txt\n--- a/sample.txt\n+++ b/sample.txt\n"
+            + "@@ -1 +1 @@\n-old\n+first\n@@ -30 +30 @@\n-before\n+target\n";
+        try
+        {
+            editor.Show();
+            List<int> publishedLines = [];
+            viewer.TextLoaded += (_, _) => publishedLines.Add(viewer.TextEditor.TextArea.Caret.Line);
+
+            await viewer.ViewPatchAsync(item, patch, line: 30, openWithDifftool: null);
+
+            viewer.TextEditor.TextArea.Caret.Line.Should().Be(9);
+            publishedLines.Should().Equal(9);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewFixedPatchAsync_should_defer_an_oversized_patch()
+    {
+        using FileViewer viewer = CreateViewer();
+        const int lineLength = 1024;
+        const int addedLines = (5 * 1024 * 1024 / lineLength) + 1;
+        string addedLine = "+" + new string('x', lineLength - 2) + "\n";
+        string patch = $"diff --git a/sample.txt b/sample.txt\n--- /dev/null\n+++ b/sample.txt\n@@ -0,0 +1,{addedLines} @@\n"
+            + string.Concat(Enumerable.Repeat(addedLine, addedLines));
+
+        await viewer.ViewFixedPatchAsync("sample.patch", patch);
+
+        viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!.IsVisible.Should().BeTrue();
+        viewer.GetText().Should().BeEmpty();
+
+        const string smallerPatch = "@@ -1 +1 @@\n-before\n+after\n";
+        await viewer.ViewFixedPatchAsync("sample.patch", smallerPatch);
+
+        viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!.IsVisible.Should().BeFalse();
+        viewer.GetText().Should().Be(smallerPatch);
+    }
+
+    [AvaloniaTest]
+    [TestCase(ViewMode.Difftastic)]
+    [TestCase(ViewMode.RangeDiff)]
+    [TestCase(ViewMode.Grep)]
+    public async Task Special_diff_loads_should_publish_on_the_owner_ui_thread(ViewMode viewMode)
+    {
+        using FormEditor editor = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = editor.FindControl<FileViewer>("fileViewer")!;
+        GitRevision revision = new(ObjectId.Random());
+        FileStatusItem item = new(null, revision, new GitItemStatus("sample.txt") { IsTracked = true });
+        try
+        {
+            editor.Show();
+            List<bool> publishThreadAccess = [];
+            viewer.TextLoaded += (_, _) => publishThreadAccess.Add(Dispatcher.UIThread.CheckAccess());
+
+            await Task.Run(() =>
+            {
+                Dispatcher.UIThread.CheckAccess().Should().BeFalse();
+                return viewMode switch
+                {
+                    ViewMode.Difftastic => viewer.ViewDifftasticAsync("sample.txt", "sample.txt --- Text\n1 worker content\n"),
+                    ViewMode.RangeDiff => viewer.ViewRangeDiffAsync("sample.txt", "1: abc1234 = 1: abc1234 worker content\n"),
+                    ViewMode.Grep => viewer.ViewGrepAsync(item, "12:worker content\n"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(viewMode)),
+                };
+            });
+
+            viewer.GetText().Should().Contain("worker content");
+            publishThreadAccess.Should().Equal(true);
+        }
+        finally
+        {
+            editor.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormEditor_should_keep_the_document_clean_when_a_large_preview_replaces_it(bool fromDisk)
+    {
+        using FormEditor form = new(_commands, fileName: null, showWarning: false);
+        using FileViewer viewer = form.FindControl<FileViewer>("fileViewer")!;
+        await viewer.ViewTextAsync("initial.txt", "initial content");
+        form.GetTestAccessor().HasChanges.Should().BeFalse();
+
+        HyperlinkButton preview = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+        List<(string Text, bool PreviewVisible)> loadedStates = [];
+        viewer.TextLoaded += (_, _) => loadedStates.Add((viewer.GetText(), preview.IsVisible));
+        string oversized = new('x', (5 * 1024 * 1024) + 1);
+
+        if (fromDisk)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, "large.txt"), oversized);
+            await viewer.ViewFileAsync("large.txt");
+        }
+        else
+        {
+            await viewer.ViewTextAsync("large.txt", oversized);
+        }
+
+        viewer.GetText().Should().BeEmpty();
+        preview.IsVisible.Should().BeTrue();
+        form.GetTestAccessor().HasChanges.Should().BeFalse();
+        loadedStates.Should().Equal((string.Empty, false));
+    }
+
+    [AvaloniaTest]
+    public async Task ViewTextAsync_should_defer_large_content_until_the_preview_link_is_clicked()
+    {
+        FileViewer viewer = CreateViewer();
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        string largeText = new('x', (5 * 1024 * 1024) + 1);
+
+        await viewer.ViewTextAsync("large.txt", largeText);
+
+        accessor.ShowPreviewLink.IsVisible.Should().BeTrue();
+        accessor.ShowPreviewLink.Content.Should().Be("This file is 5.0 MB. Showing large files can be slow. Click to show anyway.");
+        viewer.TextEditor.Text.Should().BeEmpty();
+        await CaptureModeIfRequestedAsync(viewer, "LargePreview");
+
+        // Closing the opt-in capture host deliberately cancels detached viewer work, just as
+        // closing a real parent view does. Restore the preview request before exercising it.
+        await viewer.ViewTextAsync("large.txt", largeText);
+
+        accessor.ShowPreviewLink.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        await WaitUntilAsync(() => viewer.TextEditor.Text.Length == largeText.Length);
+
+        accessor.ShowPreviewLink.IsVisible.Should().BeFalse();
+        viewer.TextEditor.Text.Should().Be(largeText);
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_should_follow_the_editor_leave_route_for_its_hover_toolbar()
+    {
+        using FileViewer viewer = CreateViewer();
+        Border outside = new() { Background = Brushes.Transparent, Height = 32 };
+        Grid content = new() { RowDefinitions = new RowDefinitions("*,Auto") };
+        content.Children.Add(viewer);
+        content.Children.Add(outside);
+        Grid.SetRow(outside, 1);
+        Window window = new() { Width = 700, Height = 360, Content = content };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("large.txt", new string('x', (5 * 1024 * 1024) + 1));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            HyperlinkButton preview = viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview")!;
+            preview.IsVisible.Should().BeTrue();
+            toolbar.IsVisible.Should().BeFalse();
+
+            Point editorPoint = viewer.TranslatePoint(new Point(160, 160), window)!.Value;
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue();
+            window.UpdateLayout();
+
+            window.MouseMove(CenterOf(toolbar), RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue("the source keeps its toolbar while the pointer moves onto it");
+
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            window.MouseMove(CenterOf(preview), RawInputModifiers.None);
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            toolbar.IsVisible.Should().BeFalse("a different child ends the editor hover");
+
+            window.MouseMove(editorPoint, RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue();
+            window.MouseMove(CenterOf(outside), RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse("leaving the editor outside the FileViewer also ends its hover");
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        Point CenterOf(Control control)
+        {
+            Point center = new(control.Bounds.Width / 2, control.Bounds.Height / 2);
+            return control.TranslatePoint(center, window)!.Value;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_show_the_current_encoding_when_the_toolbar_becomes_visible()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 640, Height = 360, Content = viewer };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+
+            toolbar.IsVisible.Should().BeFalse();
+            encodings.SelectedItem.Should().BeNull();
+
+            toolbar.IsVisible = true;
+
+            encodings.SelectedItem.Should().Be(_module.FilesEncoding.EncodingName);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Encoding_selector_should_use_the_shared_available_encodings_and_request_a_reload()
+    {
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 640, Height = 360, Content = viewer };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ComboBox encodings = viewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+            Encoding initial = Encoding.UTF8;
+            Encoding replacement = Encoding.Unicode;
+            int reloadRequests = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
+
+            viewer.Encoding = initial;
+            encodings.SelectedItem.Should().Be(initial.EncodingName);
+            encodings.SelectedItem = replacement.EncodingName;
+
+            viewer.Encoding.Should().Be(replacement);
+            reloadRequests.Should().Be(1);
+
+            viewer.FindControl<Border>("fileviewerToolbar")!.IsVisible = true;
+            await CaptureModeIfRequestedAsync(viewer, "EncodingToolbar", window);
+
+            File.WriteAllBytes(
+                Path.Combine(_workingDirectory, "legacy.txt"),
+                Encoding.Latin1.GetBytes("café!"));
+            viewer.Encoding = Encoding.Latin1;
+            await viewer.ViewFileAsync("legacy.txt");
+
+            viewer.TextEditor.Text.Should().Be("café!");
+            viewer.FilePreamble.Should().BeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Added_file_line_patching_should_include_copied_files_and_respect_revision_and_path_state(
+        [Values] bool copied,
+        [Values(StagedStatus.WorkTree, StagedStatus.Index, StagedStatus.Unknown)] StagedStatus staged,
+        [Values] bool exists)
+    {
+        const string fileName = "added-file.txt";
+        if (exists)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, fileName), "added file contents\n");
+        }
+
+        GitItemStatus status = new(fileName)
+        {
+            IsNew = !copied,
+            IsCopied = copied,
+            IsTracked = true,
+            Staged = staged,
+        };
+        FileStatusItem item = new(firstRev: null, secondRev: new GitRevision(ObjectId.Random()), status);
+        FileViewer viewer = CreateViewer();
+
+        await viewer.ViewTextAsync(fileName, "added file contents\n", item);
+
+        viewer.SupportLinePatching.Should().Be(staged is StagedStatus.WorkTree or StagedStatus.Index || !exists);
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Reset_selected_lines_should_decline_Escape_and_window_close_without_changing_the_file([Values] bool byEscape)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        Window owner = new();
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            const string fileName = "reset-selected-lines.txt";
+            string path = Path.Combine(_workingDirectory, fileName);
+            File.WriteAllText(path, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "reset selected lines".Quote() }).Should().BeTrue();
+            ObjectId head = _module.GetCurrentCheckout();
+            const string changed = "ONE\ntwo\nthree\n";
+            File.WriteAllText(path, changed);
+            FileStatusItem item = new(
+                new GitRevision(ObjectId.IndexId) { ParentIds = [head] },
+                new GitRevision(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] },
+                new GitItemStatus(fileName) { IsTracked = true, IsChanged = true, Staged = StagedStatus.WorkTree });
+            FileViewer viewer = CreateViewer();
+            owner.Content = viewer;
+            owner.Show();
+            await viewer.ViewChangesAsync(item, CancellationToken.None);
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+            int applied = 0;
+            bool cancelButtonWasAbsent = false;
+            viewer.PatchApplied += (_, _) => applied++;
+            using UpstreamTaskDialogObserver opened = new(dialog =>
+            {
+                cancelButtonWasAbsent = !dialog.GetLogicalDescendants().OfType<Button>().Any(button => button.IsCancel);
+                if (byEscape)
+                {
+                    dialog.RaiseEvent(new Avalonia.Input.KeyEventArgs
+                    {
+                        RoutedEvent = Avalonia.Input.InputElement.KeyDownEvent,
+                        Key = Avalonia.Input.Key.Escape,
+                        KeyModifiers = Avalonia.Input.KeyModifiers.None,
+                    });
+                }
+                else
+                {
+                    dialog.Close();
+                }
+            });
+
+            viewer.ResetNoncommittedSelectedLines();
+
+            opened.Count.Should().Be(1);
+            opened.Failure.Should().BeNull();
+            cancelButtonWasAbsent.Should().BeTrue("AllowCancel makes Escape cancel rather than selecting No");
+            applied.Should().Be(0);
+            File.ReadAllText(path).Should().Be(changed);
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" }).Should().BeEmpty();
+        }
+        finally
+        {
+            owner.Close();
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Selected_lines_should_stage_and_unstage_through_the_shared_patch_manager()
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            string filePath = Path.Combine(_workingDirectory, "selected-lines.txt");
+            File.WriteAllText(filePath, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "selected-lines.txt" }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "selected lines".Quote() }).Should().BeTrue();
+            ObjectId headId = _module.GetCurrentCheckout();
+            File.WriteAllText(filePath, "ONE\ntwo\nTHREE\n");
+
+            GitRevision indexRevision = new(ObjectId.IndexId) { ParentIds = [headId] };
+            GitRevision workTreeRevision = new(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] };
+            FileStatusItem workTreeItem = new(
+                indexRevision,
+                workTreeRevision,
+                new GitItemStatus("selected-lines.txt") { IsTracked = true, Staged = StagedStatus.WorkTree });
+            FileViewer viewer = CreateViewer();
+            int patchApplied = 0;
+            viewer.PatchApplied += (_, _) => patchApplied++;
+
+            await viewer.ViewChangesAsync(workTreeItem, CancellationToken.None);
+
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+            viewer.StageSelectedLines(stage: true);
+
+            string stagedDiff = _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" });
+            string workTreeDiff = _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff"));
+            stagedDiff.Should().Contain("+ONE").And.NotContain("+THREE");
+            workTreeDiff.Should().Contain("+THREE").And.NotContain("+ONE");
+            patchApplied.Should().Be(1);
+
+            FileStatusItem indexItem = new(
+                new GitRevision(headId),
+                new GitRevision(ObjectId.IndexId) { ParentIds = [headId] },
+                new GitItemStatus("selected-lines.txt") { IsTracked = true, Staged = StagedStatus.Index });
+            await viewer.ViewChangesAsync(indexItem, CancellationToken.None);
+            int stagedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            viewer.TextEditor.Select(stagedLine, "+ONE".Length);
+            viewer.StageSelectedLines(stage: false);
+
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" }).Should().BeEmpty();
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff")).Should().Contain("+ONE").And.Contain("+THREE");
+            patchApplied.Should().Be(2);
+        }
+        finally
+        {
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Selected_line_patch_failures_should_remove_file_mode_warnings_only_on_Windows()
+    {
+        using AppSettingsTestScope settings = new();
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        string originalExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        FormCommit? form = null;
+        Dictionary<FieldInfo, object?> originalServices = typeof(GitExtensions.Shims.WinForms.ShimHost)
+            .GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+            .Where(field => !field.IsInitOnly && !field.IsLiteral)
+            .ToDictionary(field => field, field => field.GetValue(null));
+        try
+        {
+            settingsAccessor.ApplicationExecutablePath = Path.Combine(AppContext.BaseDirectory, "GitExtensions.Avalonia.exe");
+            ShimServices.Install(Substitute.For<IClassicDesktopStyleApplicationLifetime>());
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            _module.SetSetting("core.autocrlf", "false");
+            _module.SetSetting("core.filemode", "false");
+            const string fileName = "mode-warning.txt";
+            string path = Path.Combine(_workingDirectory, fileName);
+            File.WriteAllText(path, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("update-index") { "--chmod=+x", "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+            File.WriteAllText(path, "ONE\ntwo\nthree\n");
+            form = new FormCommit(_commands);
+            form.Show();
+            FileViewer viewer = form.FindControl<FileViewer>("SelectedDiff")
+                ?? throw new AssertionException("The actual commit form did not create its diff viewer.");
+            await WaitUntilAsync(() => viewer.TextEditor.Text.Contains("+ONE", StringComparison.Ordinal));
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+
+            File.WriteAllText(path, "different\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("update-index") { "--chmod=-x", "--", fileName }).Should().BeTrue();
+            string? message = null;
+            int dialogs = 0;
+            using IDisposable opened = Window.WindowOpenedEvent.AddClassHandler<Window>((dialog, _) =>
+            {
+                if (dialog.Classes.Contains("gitextensions-message-box"))
+                {
+                    dialogs++;
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        message = string.Join('\n', dialog.GetLogicalDescendants().OfType<TextBlock>().Select(text => text.Text));
+                        dialog.Close();
+                    });
+                }
+            });
+            viewer.StageSelectedLines(stage: true);
+
+            dialogs.Should().Be(1);
+            message.Should().NotBeNull().And.Contain("error:").And.Contain("patch does not apply").And.Contain("+ONE");
+            if (OperatingSystem.IsWindows())
+            {
+                message.Should().NotContain("has type 100644, expected 100755");
+            }
+            else
+            {
+                message.Should().Contain("warning: mode-warning.txt has type 100644, expected 100755");
+            }
+
+            await WaitUntilAsync(
+                () => viewer.GetText().Contains("+different", StringComparison.Ordinal),
+                () =>
+                {
+                    FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+                    FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+                    return $"Expected the rescanned diff. Active pane: {form.GetTestAccessor().CurrentFilesList.Name}\n"
+                        + $"Unstaged: {unstaged.GitItemStatuses.Count} files, keyboard focus={unstaged.IsKeyboardFocusWithin}\n"
+                        + $"Staged: {staged.GitItemStatuses.Count} files, keyboard focus={staged.IsKeyboardFocusWithin}\n"
+                        + $"Diff: {viewer.GetText()}";
+                });
+        }
+        finally
+        {
+            try
+            {
+                if (form is not null)
+                {
+                    form.Close();
+                    await form.GetTestAccessor().ClosePersistenceTask;
+                }
+            }
+            finally
+            {
+                foreach ((FieldInfo field, object? originalValue) in originalServices)
+                {
+                    field.SetValue(null, originalValue);
+                }
+
+                settingsAccessor.ApplicationExecutablePath = originalExecutablePath;
+                AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_expose_portable_contract_and_navigate_change_blocks()
+    {
+        FileViewer viewer = new();
+        FileViewerInternal internalViewer = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+        IFileViewer contract = internalViewer;
+        viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,4 +1,4 @@\n-old\n+new\n context\n@@ -8,2 +8,2 @@\n-before\n+after\n");
+
+        contract.GetText().Should().Contain("+after");
+        internalViewer.GoToFirstChange(contextLines: 3);
+        int firstBlock = viewer.TextEditor.TextArea.Caret.Line;
+        internalViewer.GoToNextChange(contextLines: 3);
+
+        firstBlock.Should().Be(5);
+        viewer.TextEditor.TextArea.Caret.Line.Should().Be(9);
+        internalViewer.GoToPreviousChange(contextLines: 3);
+        viewer.TextEditor.TextArea.Caret.Line.Should().Be(5);
+        contract.TotalNumberOfLines.Should().BeGreaterThan(9);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FileViewer_should_keep_file_open_and_explicit_patch_navigation_distinct(bool explicitPatch)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        using AppSettingsTestScope settings = new();
+        using FileViewer viewer = CreateViewer();
+        Window owner = new() { Width = 450, Height = 260, Content = viewer };
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            const string fileName = "review.patch";
+            string context = string.Concat(Enumerable.Range(1, 35).Select(line => $" context {line}\n"));
+            string patch = "diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,36 +1,36 @@\n"
+                + context + "-before\n+after\n";
+            File.WriteAllText(Path.Combine(_workingDirectory, fileName), patch);
+            if (explicitPatch)
+            {
+                await viewer.ViewFixedPatchAsync(fileName, patch);
+            }
+            else
+            {
+                await viewer.ViewFileAsync(fileName);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            owner.UpdateLayout();
+            using AwesomeAssertions.Execution.AssertionScope assertions = new();
+            viewer.GetText().Should().Contain("+after");
+            viewer.SupportLinePatching.Should().Be(explicitPatch);
+            viewer.FindControl<MenuItem>("resetSelectedLinesToolStripMenuItem")!.IsVisible.Should().Be(explicitPatch);
+
+            TextView textView = viewer.TextEditor.TextArea.TextView;
+            if (explicitPatch)
+            {
+                viewer.TextEditor.TextArea.Caret.Line.Should().BeGreaterThan(1);
+                textView.ScrollOffset.Y.Should().BeGreaterThan(0);
+            }
+            else
+            {
+                viewer.TextEditor.TextArea.Caret.Line.Should().Be(1);
+                textView.ScrollOffset.Y.Should().Be(0);
+            }
+        }
+        finally
+        {
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_scroll_to_a_first_change_below_the_measured_viewport()
+    {
+        FileViewer viewer = new();
+        Window owner = new() { Width = 337, Height = 260, Content = viewer };
+        try
+        {
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+            string context = string.Concat(Enumerable.Range(1, 35).Select(line => $" context {line}\n"));
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,36 +1,36 @@\n"
+                + context + "-before\n+after\n");
+            Dispatcher.UIThread.RunJobs();
+
+            viewer.TextEditor.TextArea.TextView.ScrollOffset.Y.Should().BeGreaterThan(0,
+                "a first change below the viewport must still be brought into view");
+            viewer.TextEditor.Options.AllowScrollBelowDocument.Should().BeTrue(
+                "long files retain the source editor's below-document scroll travel");
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewer_blame_avatar_gutter_should_keep_its_width_on_pointer_drag()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.BlameShowAuthorAvatar = true;
+        using FileViewer viewer = CreateViewer();
+        Window window = new() { Width = 480, Height = 260, Content = viewer };
+        try
+        {
+            window.Show();
+            await viewer.ViewTextAsync("sample.txt", "first\nsecond");
+            GitBlameEntry[] entries =
+            [
+                new() { AgeBucketColor = System.Drawing.Color.Green },
+                new() { AgeBucketColor = System.Drawing.Color.Green },
+            ];
+            viewer.SetGitBlameGutter(entries);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            BlameAuthorMargin margin = viewer.TextEditor.TextArea.LeftMargins.OfType<BlameAuthorMargin>().Single();
+            double width = margin.Bounds.Width;
+            width.Should().BeGreaterThan(5);
+            Point start = margin.TranslatePoint(new Point(width - 2, 7), window)!.Value;
+            Point end = start + new Vector(38, 0);
+
+            window.MouseMove(start, RawInputModifiers.None);
+            window.MouseDown(start, MouseButton.Left, RawInputModifiers.None);
+            window.MouseMove(end, RawInputModifiers.LeftMouseButton);
+            window.MouseUp(end, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            margin.Bounds.Width.Should().Be(width);
+            viewer.ClearBlameGutter();
+            margin.IsVisible.Should().BeFalse();
+            viewer.SetGitBlameGutter(entries);
+            viewer.TextEditor.TextArea.LeftMargins.OfType<BlameAuthorMargin>().Should().ContainSingle()
+                .Which.Should().BeSameAs(margin);
+            margin.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewerInternal_should_restore_the_first_visible_line_when_the_caret_is_outside_the_view()
+    {
+        using FileViewerInternal viewer = new();
+        Window window = new() { Width = 480, Height = 250, Content = viewer };
+        try
+        {
+            window.Show();
+            string text = string.Join('\n', Enumerable.Range(1, 90).Select(line => $"line {line:00}"));
+            viewer.Editor.ShowLineNumbers = true;
+            viewer.SetText(text, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            viewer.Editor.TextArea.Caret.Position = new TextViewPosition(11, 3);
+            TextView textView = viewer.Editor.TextArea.TextView;
+            ScrollViewer scrollViewer = viewer.Editor.TextArea.FindAncestorOfType<ScrollViewer>()!;
+            scrollViewer.Offset = new Vector(0, textView.GetVisualTopByDocumentLine(37) + 1);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            viewer.GetLineFromVisualPosY(0).Should().Be(36);
+
+            string refreshed = text.Replace("line 50", "line fifty", StringComparison.Ordinal);
+            bool restored = viewer.SetText(
+                refreshed, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+
+            restored.Should().BeTrue();
+            viewer.Editor.TextArea.Caret.Line.Should().Be(11);
+            viewer.Editor.TextArea.Caret.Column.Should().Be(3);
+            viewer.GetLineFromVisualPosY(0).Should().Be(
+                36,
+                "the scroll position {0:R} must reach the document line starting at {1:R} and the first arranged line is {2}",
+                textView.ScrollOffset.Y,
+                textView.GetVisualTopByDocumentLine(37),
+                textView.VisualLines[0].FirstDocumentLine.LineNumber);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewerInternal_should_restore_the_caret_for_the_same_content_identity()
+    {
+        FileViewerInternal viewer = new();
+        string first = string.Join('\n', Enumerable.Range(1, 60).Select(line => $"line {line}"));
+        string refreshed = first.Replace("line 40", "line forty", StringComparison.Ordinal);
+
+        viewer.SetText(first, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+        viewer.Editor.TextArea.Caret.Position = new TextViewPosition(40, 3);
+
+        bool restored = viewer.SetText(refreshed, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+
+        restored.Should().BeTrue();
+        viewer.Editor.TextArea.Caret.Line.Should().Be(40);
+        viewer.Editor.TextArea.Caret.Column.Should().Be(3);
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public async Task Ordinary_content_should_restore_the_preferred_ruler_after_difftastic(bool sideBySide, bool patch)
+    {
+        using AppSettingsTestScope settings = new();
+        int originalRuler = AppSettings.DiffVerticalRulerPosition;
+        string? originalWidth = Environment.GetEnvironmentVariable("DFT_WIDTH");
+        Window? window = null;
+        try
+        {
+            AppSettings.DiffVerticalRulerPosition = 88;
+            Environment.SetEnvironmentVariable("DFT_WIDTH", "80");
+            FileViewer viewer = CreateViewer();
+            window = new Window { Width = 700, Height = 400, Content = viewer };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            await WaitUntilAsync(() => viewer.VRulerPosition == 88);
+            string text = "sample.cs --- Text\n" + (sideBySide ? "1 before".PadRight(40) + "1 after" : "1 before") + "\n";
+            await viewer.ViewDifftasticAsync("sample.cs", text);
+            viewer.VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().Be(sideBySide);
+
+            if (patch)
+            {
+                viewer.ViewPatch("diff --git a/sample.cs b/sample.cs\n--- a/sample.cs\n+++ b/sample.cs\n@@ -1 +1 @@\n-before\n+after\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("plain.cs", "ordinary text", CancellationToken.None);
+            }
+
+            viewer.VRulerPosition.Should().Be(88);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
+            await viewer.ViewDifftasticAsync("sample.cs", text);
+            viewer.VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+        }
+        finally
+        {
+            window?.Close();
+            AppSettings.DiffVerticalRulerPosition = originalRuler;
+            Environment.SetEnvironmentVariable("DFT_WIDTH", originalWidth);
+        }
+    }
+
+    private FileViewer CreateViewerWithPendingImage(
+        TaskCompletionSource<CancellationToken> imageRead, Task<MemoryStream?> stream, out FileStatusItem item)
+    {
+        ObjectId blob = ObjectId.Random();
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.GetFileStreamAsync(blob.ToString(), Arg.Any<CancellationToken>())
+            .Returns(stream)
+            .AndDoes(call => imageRead.SetResult(call.ArgAt<CancellationToken>(1)));
+        module.GetFileText(blob, Arg.Any<Encoding>(), stripAnsiEscapeCodes: true).Returns("\0image bytes");
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(new GitUICommands(_serviceContainer, module));
+        item = new FileStatusItem(null, new GitRevision(ObjectId.Random()), new GitItemStatus("sample.ico") { TreeId = blob });
+        return new FileViewer { UICommandsSource = source };
+    }
+
+    private FileViewer CreateViewer()
+        => new() { UICommandsSource = _source };
+
+    private static async Task WaitUntilAsync(Func<bool> condition, Func<string>? timeoutReason = null)
+    {
+        DateTime timeout = DateTime.UtcNow.AddSeconds(10);
+        while (!condition())
+        {
+            if (DateTime.UtcNow >= timeout)
+            {
+                throw new TimeoutException(timeoutReason?.Invoke() ?? "The FileViewer operation did not complete.");
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+    }
+
+    private static async Task CaptureModeIfRequestedAsync(FileViewer viewer, string mode, Window? owner = null)
+    {
+        if (Environment.GetEnvironmentVariable("GITEXT_CAPTURE_FILE_VIEWER_MODES") != "1")
+        {
+            return;
+        }
+
+        string outputDirectory = Path.Combine(GetRepositoryRoot(), "eng", "avalonia", "parity-shots", "FileViewerModes");
+        Directory.CreateDirectory(outputDirectory);
+        Window window = owner ?? new Window
+        {
+            Width = 640,
+            Height = 360,
+            Content = viewer,
+        };
+        if (owner is null)
+        {
+            window.Show();
+        }
+
+        try
+        {
+            foreach ((string themeName, ThemeVariant theme) in new[]
+                     {
+                         ("Light", ThemeVariant.Light),
+                         ("Dark", ThemeVariant.Dark),
+                     })
+            {
+                foreach ((string scaleName, double scale) in new[]
+                         {
+                             ("100", 1d),
+                             ("200", 2d),
+                         })
+                {
+                    window.RequestedThemeVariant = theme;
+                    window.SetRenderScaling(scale);
+                    Dispatcher.UIThread.RunJobs();
+                    using WriteableBitmap? frame = window.CaptureRenderedFrame();
+                    frame.Should().NotBeNull();
+                    using FileStream stream = File.Create(Path.Combine(outputDirectory, $"{mode}-{themeName}-{scaleName}.png"));
+                    frame!.Save(stream, PngBitmapEncoderOptions.Default);
+                }
+            }
+        }
+        finally
+        {
+            if (owner is null)
+            {
+                window.Close();
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private static string GetRepositoryRoot()
+    {
+        DirectoryInfo? directory = new(TestContext.CurrentContext.TestDirectory);
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "GitExtensions.slnx")))
+        {
+            directory = directory.Parent;
+        }
+
+        return directory?.FullName ?? throw new InvalidOperationException("Repository root was not found.");
+    }
+}

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.UserControls.RevisionGrid.EmptyRepoControl">
+  <Canvas x:Name="panel1"
+          Width="277"
+          Height="88"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center">
+    <Button x:Name="btnEditGitIgnore"
+            Canvas.Left="1"
+            Canvas.Top="58"
+            Width="134"
+            Height="27"
+            Content="Edit .gitignore" />
+    <Button x:Name="btnOpenCommitForm"
+            Canvas.Left="141"
+            Canvas.Top="58"
+            Width="134"
+            Height="27"
+            Content="Commit" />
+    <Label x:Name="lblEmptyRepository"
+           Canvas.Left="20"
+           Canvas.Top="22"
+           Padding="0"
+           Content="This repository does not yet contain any commits." />
+  </Canvas>
+</UserControl>

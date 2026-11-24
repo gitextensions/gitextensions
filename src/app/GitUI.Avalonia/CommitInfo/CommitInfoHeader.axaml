@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:local="using:GitUI"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
+             x:Class="GitUI.CommitInfo.CommitInfoHeader">
+  <wf:TableLayoutPanel ColumnDefinitions="Auto,*">
+    <local:AvatarControl x:Name="avatarControl"
+                         Margin="0,0,8,0"
+                         VerticalAlignment="Top" />
+    <!-- The original assigns ContentsResized.NewRectangle directly as ClientSize.
+         The renderer already includes its contents overhang; adding another pixel here
+         expands the header beyond the source's auto-sized contents rectangle. -->
+    <compat:XhtmlTextBlock x:Name="rtbRevisionHeader"
+                           Grid.Column="1"
+                           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                           FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
+                           FontSize="{DynamicResource GitExtensionsUiFontSize}"
+                           FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
+                           FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
+                           LineHeight="15"
+                           Text=""
+                           TextWrapping="NoWrap"
+                           VerticalAlignment="Top" />
+  </wf:TableLayoutPanel>
+</UserControl>

@@ -1,0 +1,132 @@
+using Avalonia.Media;
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Rendering;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using GitUI.Theming;
+using DrawingColor = System.Drawing.Color;
+using MediaColor = Avalonia.Media.Color;
+
+namespace GitUI.Editor;
+
+internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransformer
+{
+    // Avalonia resolves the original system role through the shared theme resources.
+    protected static MediaColor ColorNormal => GetSystemColor(System.Drawing.KnownColor.WindowText);
+
+    private static DrawingColor ColorComment { get; } = DrawingColor.DarkGreen;
+
+    private readonly char _commentChar;
+
+    // AvaloniaEdit's native Git transformer carries the source strategy's theme wrapper choice.
+    private readonly bool _useSystemVisualStyle = ThemeModule.Settings.UseSystemVisualStyle;
+
+    protected GitHighlightingStrategyBase(string name, IGitModule module)
+    {
+        Name = name;
+
+        // By default, comments start with '#'.
+        //
+        // This can be overridden via the "core.commentchar" configuration setting.
+        //
+        // However, if "core.commentchar" is "auto", then git attempts to choose a
+        // character from "#;@!$%^&|:" which is not present in the message.
+        // In such cases it does not appear that the character is provided to the
+        // editor. The only way to determine the character is to inspect the message,
+        // potentially for a regex resembling "with '(.)' will be ignored", though
+        // this likely changes with locale.
+        //
+        // An alternative approach would be to tally counts for the known set of
+        // characters for each line[0] and take the character with most.
+        // That would work well in practice.
+
+        const string defaultValue = "#";
+        string commentCharSetting = module.GetEffectiveSetting("core.commentchar", defaultValue);
+        _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
+    }
+
+    protected bool TryHighlightComment(TextDocument document, DocumentLine line)
+    {
+        if (IsComment(document, line))
+        {
+            DrawingColor color = _useSystemVisualStyle
+                ? ColorComment
+                : ColorComment.AdaptForeColor(AppColor.EditorBackground.GetThemeColor());
+            SetStyle(line.Offset, line.EndOffset, AvaloniaThemeResources.ToMediaColor(color));
+            return true;
+        }
+
+        return false;
+    }
+
+    protected override void ColorizeLine(DocumentLine line)
+    {
+        TextDocument document = CurrentContext.Document;
+        MarkTokens(document, line);
+    }
+
+    protected abstract void MarkTokens(TextDocument document, DocumentLine line);
+
+    public string Name { get; }
+
+    protected static MediaColor GetSystemColor(System.Drawing.KnownColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, name));
+
+    protected void SetStyle(int startOffset, int endOffset, MediaColor color, bool bold = false)
+    {
+        if (endOffset <= startOffset)
+        {
+            return;
+        }
+
+        IBrush brush = new SolidColorBrush(color);
+        ChangeLinePart(startOffset, endOffset, element =>
+        {
+            element.TextRunProperties.SetForegroundBrush(brush);
+            if (bold)
+            {
+                element.TextRunProperties.SetTypeface(new Typeface(
+                    element.TextRunProperties.Typeface.FontFamily,
+                    element.TextRunProperties.Typeface.Style,
+                    FontWeight.Bold));
+            }
+        });
+    }
+
+    #region Line classifiers
+
+    protected bool IsComment(TextDocument document, DocumentLine line)
+    {
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = document.GetCharAt(line.Offset + i);
+
+            if (char.IsWhiteSpace(c))
+            {
+                continue;
+            }
+
+            return c == _commentChar;
+        }
+
+        return false;
+    }
+
+    protected static bool IsEmptyOrWhiteSpace(TextDocument document, DocumentLine line)
+    {
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = document.GetCharAt(line.Offset + i);
+
+            if (!char.IsWhiteSpace(c))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    #endregion
+}

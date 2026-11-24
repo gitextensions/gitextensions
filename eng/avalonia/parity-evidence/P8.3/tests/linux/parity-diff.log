@@ -1,0 +1,8 @@
+  ParityCaptureSchema -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityCaptureSchema/net10.0/ParityCaptureSchema.dll
+  ParityDiff -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityDiff/net10.0/ParityDiff.dll
+  ParityDiff.Tests -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityDiff.Tests/net10.0/ParityDiff.Tests.dll
+Test run for /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityDiff.Tests/net10.0/ParityDiff.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /home/begota/src/gitextensions-wsl/eng/avalonia/parity-evidence/P8.3/tests/linux/P8.3-parity-diff.trx
+
+Passed!  - Failed:     0, Passed:    15, Skipped:     0, Total:    15, Duration: 242 ms - ParityDiff.Tests.dll (net10.0)

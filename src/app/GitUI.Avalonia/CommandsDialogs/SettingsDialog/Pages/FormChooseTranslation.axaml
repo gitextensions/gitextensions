@@ -1,0 +1,58 @@
+<gitui:GitExtensionsForm xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:gitui="using:GitUI"
+                         x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.FormChooseTranslation"
+                         Width="800"
+                         Height="539"
+                         MinWidth="500"
+                         MinHeight="360"
+                         CanResize="True"
+                         WindowStartupLocation="CenterScreen"
+                         Background="{DynamicResource GitExtensionsKnownColorControlLightLightBrush}"
+                         Title="Choose language">
+  <Grid Width="800"
+        Height="539"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        ColumnDefinitions="12,*,12"
+        RowDefinitions="9,15,9,15,3,*,12">
+    <TextBlock x:Name="label1"
+               Grid.Row="1"
+               Grid.Column="1"
+               Width="126"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="Choose your language" />
+    <TextBlock x:Name="label2"
+               Grid.Row="3"
+               Grid.Column="1"
+               Width="338"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="You can change the language at any time in the settings dialog"
+               TextWrapping="Wrap" />
+    <ListBox x:Name="lvTranslations"
+             Grid.Row="5"
+             Grid.Column="1"
+             Background="{DynamicResource GitExtensionsKnownColorWindowBrush}"
+             BorderBrush="{DynamicResource GitExtensionsKnownColorWindowFrameBrush}"
+             Foreground="{DynamicResource GitExtensionsKnownColorWindowTextBrush}"
+             Padding="2,1,0,0">
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.Styles>
+        <Style Selector="ListBoxItem">
+          <Setter Property="Width" Value="190" />
+          <Setter Property="Height" Value="119" />
+          <Setter Property="Margin" Value="0,0,4,0" />
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="HorizontalContentAlignment" Value="Center" />
+          <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+      </ListBox.Styles>
+    </ListBox>
+  </Grid>
+</gitui:GitExtensionsForm>

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gitui="using:GitUI"
+             xmlns:commitinfo="using:GitUI.CommitInfo"
+             xmlns:editor="using:GitUI.Editor"
+             x:Class="GitUI.UserControls.CommitDiff"
+             MinWidth="150"
+             MinHeight="148">
+  <Grid x:Name="splitContainer1" RowDefinitions="200,0,*">
+    <Border Classes="gitextensions-section">
+      <commitinfo:CommitInfo x:Name="commitInfo" />
+    </Border>
+
+    <GridSplitter Grid.Row="1"
+                  Height="6"
+                  ResizeDirection="Rows" />
+
+    <Grid x:Name="splitContainer2"
+          Grid.Row="2"
+          ColumnDefinitions="260,0,*">
+      <Border Classes="gitextensions-section">
+        <gitui:FileStatusList x:Name="DiffFiles" />
+      </Border>
+
+      <GridSplitter Grid.Column="1"
+                    Width="6"
+                    ResizeDirection="Columns" />
+
+      <Border Grid.Column="2" Classes="gitextensions-section">
+        <editor:FileViewer x:Name="DiffText" />
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

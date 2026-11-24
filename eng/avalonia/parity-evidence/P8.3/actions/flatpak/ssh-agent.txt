@@ -1,0 +1,2 @@
+agentSocket=/run/flatpak/ssh-auth
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAS8sYzHI/YuzJb6BOc0ytAxqhVrN7aiNOwZzdgWe8JU begota@DESKTOP-QT4V7RG

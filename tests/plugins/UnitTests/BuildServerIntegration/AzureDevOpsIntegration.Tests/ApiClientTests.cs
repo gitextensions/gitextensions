@@ -19,9 +19,23 @@ public class ApiClientTests
     public void CreateCredentialFillStartInfo_should_leave_the_ssh_askpass_variables_alone()
     {
         // Prompting for an ssh passphrase is forced deliberately for interactive git operations
+        Dictionary<string, string?> inheritedEnvironment = new[] { "SSH_ASKPASS", "SSH_ASKPASS_REQUIRE", "DISPLAY" }
+            .ToDictionary(variableName => variableName, Environment.GetEnvironmentVariable);
         ProcessStartInfo startInfo = ApiClient.CreateCredentialFillStartInfo(gitExecutable: null);
 
-        startInfo.Environment.Keys.Should().NotContain(["SSH_ASKPASS", "SSH_ASKPASS_REQUIRE", "DISPLAY"]);
+        foreach ((string variableName, string? inheritedValue) in inheritedEnvironment)
+        {
+            if (inheritedValue is null)
+            {
+                startInfo.Environment.Should().NotContainKey(variableName);
+            }
+            else
+            {
+                startInfo.Environment.Should().ContainKey(variableName).WhoseValue.Should().Be(inheritedValue);
+            }
+
+            Environment.GetEnvironmentVariable(variableName).Should().Be(inheritedValue);
+        }
     }
 
     [TestCase(null, "git")]

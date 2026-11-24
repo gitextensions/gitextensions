@@ -1,0 +1,171 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.ReleaseNotesGenerator.ReleaseNotesGeneratorForm"
+        Width="614"
+        Height="547"
+        MinWidth="614"
+        MinHeight="454"
+        WindowStartupLocation="CenterOwner"
+        Title="Release Notes Generator">
+  <Grid RowDefinitions="154,*">
+    <Grid Margin="12,6,7,0"
+          ColumnDefinitions="192,162,*"
+          ColumnSpacing="10"
+          RowDefinitions="32,32,32,*">
+      <TextBlock x:Name="label2"
+                 VerticalAlignment="Center"
+                 Text="Commit expression &quot;From&quot; (excluding):" />
+      <TextBox x:Name="textBoxRevFrom"
+               Grid.Column="1"
+               Width="162"
+               Height="27"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top" />
+      <TextBlock x:Name="label7"
+                 Grid.Column="2"
+                 Grid.RowSpan="2"
+                 Margin="3,0,0,0"
+                 Text="(Commit expressions can be commit hashes,&#10;branch names, tag names)"
+                 TextWrapping="Wrap" />
+
+      <TextBlock x:Name="label1"
+                 Grid.Row="1"
+                 VerticalAlignment="Center"
+                 Text="Commit expression &quot;To&quot; (including):" />
+      <TextBox x:Name="_NO_TRANSLATE_textBoxRevTo"
+               Grid.Row="1"
+               Grid.Column="1"
+               Width="162"
+               Height="27"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="HEAD" />
+
+      <Grid Grid.Row="2"
+            Grid.ColumnSpan="3"
+            ColumnDefinitions="94,Auto,*">
+        <TextBlock x:Name="label3"
+                   VerticalAlignment="Center"
+                   Text="git log arguments:" />
+        <TextBox x:Name="_NO_TRANSLATE_textBoxGitLogArguments"
+                 Grid.Column="1"
+                 Width="366"
+                 Height="27"
+                 Margin="12,0,0,0"
+                 VerticalAlignment="Top"
+                 Text="--pretty=&quot;format:%h@%s%b&quot; --abbrev-commit {0}..{1}" />
+        <TextBlock x:Name="label4"
+                   Grid.Column="2"
+                   Margin="6,0,0,0"
+                   VerticalAlignment="Center"
+                   Text="{}{0} = from; {1} = to" />
+      </Grid>
+
+      <Button x:Name="buttonGenerate"
+              Classes="gitextensions-dialog-action"
+              Grid.Row="3"
+              Width="105"
+              Height="25"
+              Margin="3,11,0,0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"
+              Content="Generate" />
+    </Grid>
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
+                            Grid.Row="1"
+                            Margin="15,2,12,12"
+                            Header="Result">
+      <Grid RowDefinitions="24,116,*"
+            RowSpacing="5">
+        <StackPanel x:Name="flowLayoutPanel1"
+                    Orientation="Horizontal">
+          <TextBlock x:Name="label6"
+                     Text="Revisions count = " />
+          <TextBlock x:Name="labelRevCount"
+                     Text="n/a" />
+          <TextBlock x:Name="label5"
+                     Margin="6,0,0,0"
+                     Text="Sorting: Most recent revisions are listed on top." />
+        </StackPanel>
+
+        <TextBox x:Name="textBoxResult"
+                 Grid.Row="1"
+                 AcceptsReturn="True"
+                 AcceptsTab="True"
+                 IsReadOnly="True"
+                 TextWrapping="NoWrap"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <HeaderedContentControl x:Name="groupBoxCopy"
+                                Classes="gitextensions-group-box"
+                                Grid.Row="2"
+                                IsEnabled="False"
+                                Header="Copy to clipboard">
+          <StackPanel x:Name="flowLayoutPanel2"
+                      Spacing="3">
+            <Grid x:Name="flowLayoutPanel3"
+                  Height="35"
+                  ColumnDefinitions="131,*">
+              <Button x:Name="buttonCopyOrigOutput"
+                      Classes="gitextensions-dialog-action"
+                      Width="125"
+                      Height="25"
+                      HorizontalAlignment="Left"
+                      Content="original output" />
+              <TextBlock x:Name="label8"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         Text="as is" />
+            </Grid>
+            <Grid x:Name="flowLayoutPanel4"
+                  Height="35"
+                  ColumnDefinitions="131,*">
+              <Button x:Name="buttonCopyAsTextTableTab"
+                      Classes="gitextensions-dialog-action"
+                      Width="125"
+                      Height="25"
+                      HorizontalAlignment="Left"
+                      Content="as text table (tabs)" />
+              <TextBlock x:Name="label9"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         Text="separate columns with tabs" />
+            </Grid>
+            <Grid x:Name="flowLayoutPanel5"
+                  Height="35"
+                  ColumnDefinitions="131,*">
+              <Button x:Name="buttonCopyAsTextTableSpace"
+                      Classes="gitextensions-dialog-action"
+                      Width="125"
+                      Height="25"
+                      HorizontalAlignment="Left"
+                      Content="as text table (spaces)" />
+              <TextBlock x:Name="label10"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         Text="separate columns with spaces" />
+            </Grid>
+            <Grid x:Name="flowLayoutPanel6"
+                  Height="43"
+                  ColumnDefinitions="131,*">
+              <Button x:Name="buttonCopyAsHtml"
+                      Classes="gitextensions-dialog-action"
+                      Width="125"
+                      Height="25"
+                      HorizontalAlignment="Left"
+                      Content="as HTML table" />
+              <TextBlock x:Name="label11"
+                         Grid.Column="1"
+                         VerticalAlignment="Top"
+                         Text="Clipboard will contain HTML code (plain text) and HTML format&#10;which can be pasted to programs like MS Word or LibreOffice Writer."
+                         TextWrapping="Wrap" />
+            </Grid>
+          </StackPanel>
+        </HeaderedContentControl>
+      </Grid>
+    </HeaderedContentControl>
+  </Grid>
+</Window>

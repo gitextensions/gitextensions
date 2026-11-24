@@ -153,6 +153,10 @@ public sealed class Executable : IExecutable
                     _process.Exited -= OnProcessExit;
                     _exitHandlerRemoved = true;
                     _exitTaskCompletionSource.TrySetException(ex);
+
+                    // Construction failed, so no caller receives this private exit task.
+                    // Observe its fault before rethrowing the same startup exception.
+                    _ = _exitTaskCompletionSource.Task.Exception;
                     throw;
                 }
 
@@ -327,7 +331,7 @@ public sealed class Executable : IExecutable
                         else if (_cancellationToken.IsCancellationRequested)
                         {
                             // Directly kill the process because Ctrl+C does not reach the git process how we start it
-                            _process.Kill();
+                            _process.Kill(entireProcessTree: true);
 
                             OperationCanceledException ex = new("Process killed");
                             _logOperation.LogProcessEnd(ex);

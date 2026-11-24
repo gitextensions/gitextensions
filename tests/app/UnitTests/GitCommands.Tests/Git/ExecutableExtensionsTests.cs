@@ -85,6 +85,7 @@ public sealed class ExecutableExtensionsTests
     }
 
     // Process argument upper bound is actually (short.MaxValue - 1)
+    [Platform(Include = "Win")]
     [TestCase(32766, 32766, 32767, 2, new int[] { 1, 1 })]
     [TestCase(32764, 1, 32767, 1, new int[] { 2 })]
     public void RunBatchCommand_can_handle_max_length_arguments(int arg1Len, int arg2Len,
@@ -114,6 +115,7 @@ public sealed class ExecutableExtensionsTests
         });
     }
 
+    [Platform(Include = "Win")]
     [TestCase(32766 - 8, 32766 - 8, int.MaxValue)]
     [TestCase(32766 - 9, 1, int.MaxValue)]
     public void RunBatchCommand_throw_when_cmd_exceed_max_length(int arg1Len, int arg2Len,
@@ -129,6 +131,27 @@ public sealed class ExecutableExtensionsTests
         Action act = () => _gitExecutable.RunBatchCommand(args);
         ExternalOperationException ex = act.Should().Throw<ExternalOperationException>().Which;
         ex.InnerException.Should().BeOfType<Win32Exception>();
+    }
+
+    [Platform(Exclude = "Win")]
+    [Test]
+    public void RunBatchCommand_should_execute_arguments_beyond_windows_limit_on_unix()
+    {
+        // Unix argv limits are not CreateProcess's 32767-character command-line limit.
+        // Ask Git to quote the argument rather than interpret it as a filesystem path.
+        string argument = GenerateStringByLength(32768);
+        Executable executable = new("git", Path.GetTempPath());
+        ArgumentBuilder builder = ["rev-parse --sq-quote"];
+        List<BatchArgumentItem> args = builder.BuildBatchArguments([argument], executable.Command.Length + 3, int.MaxValue);
+
+        args.Should().ContainSingle();
+
+        ExecutionResult result = executable.RunBatchCommand(args)
+            ?? throw new AssertionException("The nonempty batch must produce an execution result.");
+
+        result.ExitedSuccessfully.Should().BeTrue();
+        result.StandardError.Should().BeEmpty();
+        result.StandardOutput.Trim().Should().Be($"'{argument}'");
     }
 
     private static string GenerateStringByLength(int length)

@@ -23,7 +23,6 @@ public class PathUtilTest
     [TestCase('"', false)]
     [TestCase('<', false)]
     [TestCase('>', false)]
-    [TestCase('|', false)]
     [TestCase('\0', false)]
     [TestCase('\t', false)]
     [TestCase('\n', false)]
@@ -32,6 +31,15 @@ public class PathUtilTest
     public void IsValidPathChar_should_return_expected(char c, bool expected)
     {
         PathUtil.IsValidPathChar(c).Should().Be(expected);
+    }
+
+    [Test]
+    public void IsValidPathChar_should_follow_native_path_rules_for_pipe()
+    {
+        // Unlike explicitly rejected quotes and angle brackets, pipes are valid in native Unix paths.
+        bool expected = !Path.GetInvalidPathChars().Contains('|');
+
+        PathUtil.IsValidPathChar('|').Should().Be(expected);
     }
 
     [Test]
@@ -95,6 +103,7 @@ public class PathUtilTest
         }
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void ToWslPathTest()
     {
@@ -104,6 +113,7 @@ public class PathUtilTest
         "/var/tmp/".Should().Be(@"/var/tmp/".ToWslPath());
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void ToCygwinPathTest()
     {
@@ -113,6 +123,7 @@ public class PathUtilTest
         "/var/tmp/".Should().Be(@"/var/tmp/".ToCygwinPath());
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void ToMountPathTest()
     {
@@ -237,25 +248,45 @@ public class PathUtilTest
         }
     }
 
-    [Platform(Include = "Win")]
-    [TestCase(null, "")]
-    [TestCase("", "")]
-    [TestCase(" ", "")]
-    [TestCase("c:", "")]
-    [TestCase("C:\\", "C:\\")]
-    [TestCase("a:\\folder\\filename.txt", "a:\\folder\\filename.txt")]
-    [TestCase("a:\\folder\\..\\filename.txt", "a:\\filename.txt")]
-    [TestCase("file:///C:/Test%20Project.exe", "C:\\Test Project.exe")]
-    [TestCase("C:\\Progra~1\\", "C:\\Program Files\\")]
-    [TestCase("C:\\Progra~1", "C:\\Program Files")]
-    [TestCase("\\\\folder\\filename.txt", "\\\\folder\\filename.txt")]
-    [TestCase("a:\\\\folder/filename.txt", "a:\\folder\\filename.txt")]
-    [TestCase(@"c:\folder#\filename.txt", @"c:\folder#\filename.txt")]
-    [TestCase(@"C:\WORK\..\WORK\.\GitExtensions\", @"C:\WORK\GitExtensions\")]
-    [TestCase(@"\\my-pc\Work\.\GitExtensions\", @"\\my-pc\Work\GitExtensions\")]
-    [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
-    [TestCase(@"\\Wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
-    [TestCase(@"\\w$\work\", "")]
+    // Absolute paths are normalized with the rules of the running platform, so the Windows
+    // and Unix forms are spelled out side by side. Drive letters, UNC shares and 8.3 short
+    // names have no Unix counterpart, and vice versa.
+    private static IEnumerable<TestCaseData> PathsToNormalize()
+    {
+        yield return new TestCaseData(null, "");
+        yield return new TestCaseData("", "");
+        yield return new TestCaseData(" ", "");
+
+        if (OperatingSystem.IsWindows())
+        {
+            yield return new TestCaseData("c:", "");
+            yield return new TestCaseData("C:\\", "C:\\");
+            yield return new TestCaseData("a:\\folder\\filename.txt", "a:\\folder\\filename.txt");
+            yield return new TestCaseData("a:\\folder\\..\\filename.txt", "a:\\filename.txt");
+            yield return new TestCaseData("file:///C:/Test%20Project.exe", "C:\\Test Project.exe");
+            yield return new TestCaseData("C:\\Progra~1\\", "C:\\Program Files\\");
+            yield return new TestCaseData("C:\\Progra~1", "C:\\Program Files");
+            yield return new TestCaseData("\\\\folder\\filename.txt", "\\\\folder\\filename.txt");
+            yield return new TestCaseData("a:\\\\folder/filename.txt", "a:\\folder\\filename.txt");
+            yield return new TestCaseData(@"c:\folder#\filename.txt", @"c:\folder#\filename.txt");
+            yield return new TestCaseData(@"C:\WORK\..\WORK\.\GitExtensions\", @"C:\WORK\GitExtensions\");
+            yield return new TestCaseData(@"\\my-pc\Work\.\GitExtensions\", @"\\my-pc\Work\GitExtensions\");
+            yield return new TestCaseData(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\");
+            yield return new TestCaseData(@"\\Wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\");
+            yield return new TestCaseData(@"\\w$\work\", "");
+        }
+        else
+        {
+            yield return new TestCaseData("/", "/");
+            yield return new TestCaseData("/dev/folder/filename.txt", "/dev/folder/filename.txt");
+            yield return new TestCaseData("/dev/folder/../filename.txt", "/dev/filename.txt");
+            yield return new TestCaseData("file:///dev/Test%20Project", "/dev/Test Project");
+            yield return new TestCaseData("/dev/folder#/filename.txt", "/dev/folder#/filename.txt");
+            yield return new TestCaseData("/WORK/../WORK/./GitExtensions/", "/WORK/GitExtensions/");
+        }
+    }
+
+    [TestCaseSource(nameof(PathsToNormalize))]
     public void NormalizePath(string? path, string expected)
     {
         PathUtil.NormalizePath(path!).Should().Be(expected);
@@ -358,6 +389,7 @@ public class PathUtilTest
         PathUtil.GetWslDistro(path).Should().Be(expected);
     }
 
+    [Platform(Include = "Win")]
     [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", "", @"//wsl$/Ubuntu/work/../GitExtensions/")]
     [TestCase(@"C:\work\..\GitExtensions\", "", @"C:/work/../GitExtensions/")]
     [TestCase(@"work\..\GitExtensions\", "", @"work/../GitExtensions/")]
@@ -367,6 +399,7 @@ public class PathUtilTest
         PathUtil.GetWindowsPath(expected, wslDistro).Should().Be(path);
     }
 
+    [Platform(Include = "Win")]
     [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", "Ubuntu", @"/work/../GitExtensions/")]
     [TestCase(@"\\wsl$\Ubuntu\work/../GitExtensions", "Ubuntu", @"/work/../GitExtensions")]
     [TestCase(@"\\wsl$\Ubuntu-20.04\work\..\GitExtensions\", "Ubuntu-20.04", @"/work/../GitExtensions/")]
@@ -377,6 +410,7 @@ public class PathUtilTest
         PathUtil.GetPathForGitExecution(path, wslDistro).Should().Be(expected);
     }
 
+    [Platform(Include = "Win")]
     [TestCase(@"\\wsl$/Ubuntu/work/../GitExtensions", "Ubuntu", @"//wsl$/Ubuntu/work/../GitExtensions")]
     [TestCase(@"\\wsl$\Ubuntu-20.04\work\..\GitExtensions\", "Ubuntu", @"//wsl$/Ubuntu-20.04/work/../GitExtensions/")]
     public void GetPathForGitExecution_unexpected_usage(string? path, string wslDistro, string expected)
@@ -385,6 +419,7 @@ public class PathUtilTest
     }
 
     // Mostly opposite to GetRepoPath_wsl
+    [Platform(Include = "Win")]
     [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", "Ubuntu", @"/work/../GitExtensions/")]
     [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions", "Ubuntu", @"/work/../GitExtensions")]
     [TestCase(@"\\wsl$\Ubuntu-20.04\work\..\GitExtensions\", "Ubuntu-20.04", @"/work/../GitExtensions/")]
@@ -395,7 +430,6 @@ public class PathUtilTest
         PathUtil.GetWindowsPath(path, wslDistro).Should().Be(expected);
     }
 
-    [Platform(Include = "Win")]
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
@@ -426,19 +460,40 @@ public class PathUtilTest
     [Test]
     public void GetDisplayPath()
     {
-        string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        // Not Environment.GetFolderPath(UserProfile): it follows HOME, which
+        // EnvironmentConfiguration.SetEnvironmentVariables() rewrites for the whole process,
+        // so on Unix it would disagree with the profile path the code under test captured.
+        string home = PathUtil.UserProfilePath;
 
-        PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")).Should().Be(@"~\SomePath");
+        PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")).Should().Be($"~{Path.DirectorySeparatorChar}SomePath");
         PathUtil.GetDisplayPath("c:\\SomePath").Should().Be("c:\\SomePath");
     }
 
-    [TestCase("/foo/bar", new[] { "\\foo\\", "\\" })]
-    [TestCase("/foo/bar/", new[] { "\\foo\\", "\\" })]
-    [TestCase("/foo", new[] { "\\" })]
-    [TestCase("/foo/", new[] { "\\" })]
-    [TestCase("/", new string[0])]
-    [TestCase("C:\\foo\\bar", new[] { "C:\\foo\\", "C:\\" })]
-    [TestCase("C:\\", new string[0])]
+    // Ancestors are produced with the native directory separator, so the expectations are
+    // spelled out per platform; the rooted cases have no counterpart on the other platform.
+    private static IEnumerable<TestCaseData> AncestorPaths()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            yield return new TestCaseData("/foo/bar", new[] { "\\foo\\", "\\" });
+            yield return new TestCaseData("/foo/bar/", new[] { "\\foo\\", "\\" });
+            yield return new TestCaseData("/foo", new[] { "\\" });
+            yield return new TestCaseData("/foo/", new[] { "\\" });
+            yield return new TestCaseData("/", new string[0]);
+            yield return new TestCaseData("C:\\foo\\bar", new[] { "C:\\foo\\", "C:\\" });
+            yield return new TestCaseData("C:\\", new string[0]);
+        }
+        else
+        {
+            yield return new TestCaseData("/foo/bar", new[] { "/foo/", "/" });
+            yield return new TestCaseData("/foo/bar/", new[] { "/foo/", "/" });
+            yield return new TestCaseData("/foo", new[] { "/" });
+            yield return new TestCaseData("/foo/", new[] { "/" });
+            yield return new TestCaseData("/", new string[0]);
+        }
+    }
+
+    [TestCaseSource(nameof(AncestorPaths))]
     public void FindAncestors(string? path, string[] expected)
     {
         PathUtil.FindAncestors(path!).ToArray().Should().Equal(expected);

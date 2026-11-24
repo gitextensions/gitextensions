@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "roles": [
+    {
+      "id": "semantic.app.panel.background",
+      "meaning": "The application panel background resolved through AppColor.PanelBackground."
+    },
+    {
+      "id": "semantic.app.selection.background",
+      "meaning": "The application selection background resolved through AppColor.Selection."
+    },
+    {
+      "id": "semantic.system.control.background",
+      "meaning": "The normal background of a desktop control surface."
+    },
+    {
+      "id": "semantic.system.control.foreground",
+      "meaning": "The normal foreground of text rendered on a desktop control surface."
+    },
+    {
+      "id": "semantic.system.control.disabledForeground",
+      "meaning": "The foreground of disabled desktop-control content."
+    },
+    {
+      "id": "semantic.system.highlight.background",
+      "meaning": "The active selection or highlight background."
+    },
+    {
+      "id": "semantic.system.highlight.foreground",
+      "meaning": "The foreground rendered over the active selection or highlight background."
+    },
+    {
+      "id": "semantic.system.inactiveSelection.background",
+      "meaning": "The selection background when its containing surface is inactive."
+    },
+    {
+      "id": "semantic.system.inactiveSelection.foreground",
+      "meaning": "The foreground rendered over an inactive selection background."
+    },
+    {
+      "id": "semantic.system.tooltip.background",
+      "meaning": "The background of tooltip and informational popup content."
+    },
+    {
+      "id": "semantic.system.tooltip.foreground",
+      "meaning": "The foreground rendered over tooltip and informational popup backgrounds."
+    },
+    {
+      "id": "semantic.system.window.background",
+      "meaning": "The editable or document-window background."
+    },
+    {
+      "id": "semantic.system.window.foreground",
+      "meaning": "The foreground rendered over editable or document-window backgrounds."
+    },
+    {
+      "id": "semantic.system.control.border",
+      "meaning": "The standard border of an interactive desktop control."
+    },
+    {
+      "id": "semantic.app.pane.border",
+      "meaning": "The application-defined separator and pane border."
+    },
+    {
+      "id": "semantic.app.reset.soft.background",
+      "meaning": "The background identifying the soft reset mode."
+    },
+    {
+      "id": "semantic.app.reset.mixed.background",
+      "meaning": "The background identifying the mixed reset mode."
+    },
+    {
+      "id": "semantic.app.reset.hard.background",
+      "meaning": "The background identifying the hard reset mode."
+    }
+  ]
+}

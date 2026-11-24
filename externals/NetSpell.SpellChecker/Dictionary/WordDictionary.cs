@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -20,7 +19,6 @@ using PhoneticRuleCollection = List<PhoneticRule>;
 /// <summary>
 /// The WordDictionary class contains all the logic for managing the word list.
 /// </summary>
-[ToolboxBitmap(typeof(WordDictionary), "Dictionary.bmp")]
 public partial class WordDictionary : Component
 {
     private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";

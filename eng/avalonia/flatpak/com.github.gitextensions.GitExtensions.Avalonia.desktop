@@ -1,0 +1,27 @@
+[Desktop Entry]
+Type=Application
+Name=Git Extensions
+Comment=Graphical user interface for Git
+Exec=GitExtensions.Avalonia browse %f
+Icon=com.github.gitextensions.GitExtensions.Avalonia
+Terminal=false
+Categories=Development;RevisionControl;
+Keywords=git;repository;revision;version control;
+StartupNotify=true
+Actions=commit;push;pull;close-all;
+
+[Desktop Action commit]
+Name=Commit
+Exec=GitExtensions.Avalonia --launcher-action commit
+
+[Desktop Action push]
+Name=Push
+Exec=GitExtensions.Avalonia --launcher-action push
+
+[Desktop Action pull]
+Name=Pull
+Exec=GitExtensions.Avalonia --launcher-action pull
+
+[Desktop Action close-all]
+Name=Close all windows
+Exec=GitExtensions.Avalonia --launcher-action close-all

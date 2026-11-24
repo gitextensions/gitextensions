@@ -1,0 +1,72 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.DiffViewerSettingsPage"
+                                 Text="Diff viewer">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbGeneral"
+                Header="General">
+        <StackPanel x:Name="tlpnlGeneral"
+                    Margin="8,4,8,8">
+          <Button x:Name="btnSaveCurrentViewSettingsAsDefault"
+                  HorizontalAlignment="Left"
+                  Content="Save current view settings as default" />
+          <CheckBox x:Name="chkRememberIgnoreWhiteSpacePreference"
+                    Content="Remember the 'Ignore whitespaces' preference" />
+          <CheckBox x:Name="chkRememberShowNonPrintingCharsPreference"
+                    Content="Remember the 'Show nonprinting characters' preference" />
+          <CheckBox x:Name="chkRememberShowEntireFilePreference"
+                    Content="Remember the 'Show entire file' preference" />
+          <CheckBox x:Name="chkRememberDiffAppearancePreference"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    Content="Remember the 'Diff appearance' preference" />
+          <CheckBox x:Name="chkRememberNumberOfContextLines"
+                    Content="Remember the 'Number of context lines' preference" />
+          <CheckBox x:Name="chkRememberShowSyntaxHighlightingInDiff"
+                    Content="Remember the 'Show syntax highlighting' preference" />
+          <CheckBox x:Name="chkOmitUninterestingDiff"
+                    Content="Omit uninteresting changes from combined diff" />
+          <CheckBox x:Name="chkContScrollToNextFileOnlyWithAlt"
+                    Content="Enable automatic continuous scroll (without ALT button)" />
+          <CheckBox x:Name="chkOpenSubmoduleDiffInSeparateWindow"
+                    Content="Open Submodule Diff in separate window" />
+          <CheckBox x:Name="chkShowDiffForAllParents"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    Content="Show file differences for all parents in browse dialog" />
+          <CheckBox x:Name="chkShowAllCustomDiffTools"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    Content="Show all available difftools" />
+          <StackPanel Orientation="Horizontal"
+                      Spacing="8">
+            <TextBlock x:Name="label1"
+                       VerticalAlignment="Center"
+                       Text="Vertical ruler position [chars]" />
+            <NumericUpDown x:Name="VerticalRulerPosition"
+                           Width="120"
+                           Minimum="0"
+                           Maximum="1000"
+                           Value="80" />
+          </StackPanel>
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="gbDiffColoring"
+                Header="Diff coloring">
+        <StackPanel x:Name="tlpnlDiffColoring"
+                    Margin="8,4,8,8">
+          <CheckBox x:Name="chkUseGitColoring"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    Content="Git coloring" />
+          <CheckBox x:Name="chkUseGEThemeGitColoring"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    Content="Reverse background color" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>
