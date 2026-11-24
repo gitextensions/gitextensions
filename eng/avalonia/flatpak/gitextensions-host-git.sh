@@ -101,6 +101,14 @@ then
 fi
 printf "started\n" >&9
 exec 9>&-
+# The startup environment names the askpass program without a path. Distributions often
+# install it outside PATH, so use a standard location when the bare name does not resolve.
+# parity-scaffolding: the candidate override supplies owned askpass fixtures in tests.
+if test "${SSH_ASKPASS:-}" = ssh-askpass && ! command -v ssh-askpass >/dev/null 2>&1; then
+    for candidate in ${GITEXTENSIONS_HOST_ASKPASS_CANDIDATES:-/usr/libexec/ssh/ssh-askpass /usr/lib/ssh/ssh-askpass /usr/libexec/openssh/ssh-askpass /usr/lib/openssh/ssh-askpass /usr/bin/ksshaskpass /usr/libexec/seahorse/ssh-askpass /usr/lib/seahorse/ssh-askpass}; do
+        if test -x "$candidate"; then export SSH_ASKPASS="$candidate"; break; fi
+    done
+fi
 # parity-scaffolding: records the actual host Git PID for the confined cancellation proof.
 export GITEXTENSIONS_HOST_GIT_PID=$$
 exec git "$@"

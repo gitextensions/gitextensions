@@ -43,7 +43,7 @@ cat > "$root/host-bin/git" <<'SH'
 #!/bin/bash
 if [[ ${1:-} = --version ]]; then printf 'git version %s\n' "$GITEXTENSIONS_HOST_TEST_VERSION"; exit 0; fi
 printf '%s\0' "$PWD" "$@" > "$GITEXTENSIONS_HOST_TEST_ROOT/host-arguments.log"
-printf '%s\n' "${GIT_AUTHOR_NAME:-}" "${GIT_CONFIG_PARAMETERS:-}" "${GIT_EDITOR:-}" "${GIT_SEQUENCE_EDITOR:-}" "${GIT_SSH:-}" "${GIT_SSH_COMMAND:-}" > "$GITEXTENSIONS_HOST_TEST_ROOT/host-environment.log"
+printf '%s\n' "${GIT_AUTHOR_NAME:-}" "${GIT_CONFIG_PARAMETERS:-}" "${GIT_EDITOR:-}" "${GIT_SEQUENCE_EDITOR:-}" "${GIT_SSH:-}" "${GIT_SSH_COMMAND:-}" "askpass=${SSH_ASKPASS:-}" >"$GITEXTENSIONS_HOST_TEST_ROOT/host-environment.log"
 /bin/cat > "$GITEXTENSIONS_HOST_TEST_ROOT/host-stdin.log"
 printf 'host-output\n'
 printf 'host-error\n' >&2
@@ -65,6 +65,16 @@ forward)
     export GIT_EDITOR="host editor with 'quotes'"
     export GIT_SEQUENCE_EDITOR='host sequence editor'
     export GIT_SSH="$root/package/bin/ssh" GIT_SSH_COMMAND="$root/package/bin/ssh -o owned=value"
+    ;;
+askpass-*)
+    mkdir -p "$root/askpass"
+    printf '#!/bin/sh\n' > "$root/askpass/ssh-askpass"
+    chmod +x "$root/askpass/ssh-askpass"
+    export SSH_ASKPASS=ssh-askpass GITEXTENSIONS_HOST_ASKPASS_CANDIDATES="$root/absent-askpass $root/askpass/ssh-askpass"
+    case "$scenario" in
+    askpass-on-path) cp "$root/askpass/ssh-askpass" "$root/host-bin/ssh-askpass";;
+    askpass-custom) export SSH_ASKPASS="$root/custom-askpass";;
+    esac
     ;;
 esac
 cd "$root/repository"
@@ -102,6 +112,11 @@ missing|old|denied)
         grep -Fx 'ssh' "$root/host-environment.log"
         grep -Fx 'ssh -o owned=value' "$root/host-environment.log"
     fi
+    case "$scenario" in
+    askpass-resolved) grep -Fx "askpass=$root/askpass/ssh-askpass" "$root/host-environment.log";;
+    askpass-on-path) grep -Fx 'askpass=ssh-askpass' "$root/host-environment.log";;
+    askpass-custom) grep -Fx "askpass=$root/custom-askpass" "$root/host-environment.log";;
+    esac
     ;;
 esac
 test -z "$(ls -A "$root/cache/GitExtensions/HostGit")"

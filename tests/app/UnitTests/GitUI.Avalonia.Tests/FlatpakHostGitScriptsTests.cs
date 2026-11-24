@@ -16,6 +16,9 @@ public sealed class FlatpakHostGitScriptsTests
     [TestCase("failed-command")]
     [TestCase("git-error")]
     [TestCase("cached-bundled-path")]
+    [TestCase("askpass-resolved")]
+    [TestCase("askpass-on-path")]
+    [TestCase("askpass-custom")]
     public async Task Packaged_launcher_should_forward_Git_or_fall_back_only_before_it_starts(string scenario)
     {
         string root = Path.Combine(Path.GetTempPath(), "GitExtensions.HostGit-" + Guid.NewGuid().ToString("N"));

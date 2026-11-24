@@ -63,7 +63,9 @@ standard streams and exit status through `flatpak-spawn --host --watch-bus`. Its
 group guard also stops descendants on cancellation. Only a missing, unsupported or unavailable
 host Git causes fallback before the requested operation starts; a failed Git command is not
 replayed. The application supplies the original minimum Git version and translated fallback
-messages. Port-owned text uses the existing translator with `English.Avalonia.xlf` and optional
+messages. When the default `ssh-askpass` name is not on the host `PATH`, the launcher uses the
+first executable askpass program in the standard distribution locations, so host SSH can ask
+for a key passphrase; an explicit `SSH_ASKPASS` is kept as set. Port-owned text uses the existing translator with `English.Avalonia.xlf` and optional
 language-specific companion catalogs.
 
 Both harnesses are parity scaffolding and use only disposable application data and
