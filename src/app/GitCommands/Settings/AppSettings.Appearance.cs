@@ -11,6 +11,12 @@ public static partial class AppSettings
         defaultValue: "--exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**");
 
     /// <summary>
+    ///  Controls whether the seconds are omitted from the date in the revision grid (issue #11812).
+    ///  Off by default to keep the full timestamp; the omission is opt-in.
+    /// </summary>
+    public static BooleanSetting OmitSecondsInRevisionGridDate { get; } = new(AppearanceSettingsPath, nameof(OmitSecondsInRevisionGridDate), defaultValue: false);
+
+    /// <summary>
     ///  Gets or sets whether to remember the preference for diff appearance.
     /// </summary>
     public static BooleanSetting RememberDiffDisplayAppearance { get; } = new(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), defaultValue: false);

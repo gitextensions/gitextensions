@@ -8,8 +8,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class DateColumnProvider : ColumnProvider
 {
-    // Seconds are omitted to keep the commit list compact (issue #11812); the full timestamp is still available in the cell tooltip.
-    private const string DateColumnFormat = "yyyy-MM-dd HH:mm";
+    // Format used when the user opts in to omitting the seconds to keep the commit list compact (issue #11812);
+    // the full timestamp is still available in the cell tooltip.
+    private const string OmittedSecondsDateColumnFormat = "yyyy-MM-dd HH:mm";
 
     private readonly RevisionGridControl _grid;
 
@@ -18,7 +19,7 @@ internal sealed class DateColumnProvider : ColumnProvider
     {
         _grid = grid;
 
-        int initialWidth = AppSettings.RelativeDate ? DpiUtil.Scale(130) : TextRenderer.MeasureText(DateTime.Now.ToString(DateColumnFormat), AppSettings.Font).Width;
+        int initialWidth = AppSettings.RelativeDate ? DpiUtil.Scale(130) : TextRenderer.MeasureText(DateTime.Now.ToString(GetDateFormat()), AppSettings.Font).Width;
 
         Column = new DataGridViewTextBoxColumn
         {
@@ -52,7 +53,8 @@ internal sealed class DateColumnProvider : ColumnProvider
     }
 
     /// <summary>
-    ///  Formats a date for the commit list, omitting the seconds to save horizontal space (issue #11812).
+    ///  Formats a date for the commit list. The seconds are omitted only when the user opts in
+    ///  (issue #11812); by default the full timestamp is shown.
     /// </summary>
     internal static string FormatDate(DateTime dt)
     {
@@ -66,7 +68,12 @@ internal sealed class DateColumnProvider : ColumnProvider
             return LocalizationHelpers.GetRelativeDateString(DateTime.Now, dt, displayWeeks: false);
         }
 
-        return dt.ToString(DateColumnFormat);
+        return dt.ToString(GetDateFormat());
+    }
+
+    private static string GetDateFormat()
+    {
+        return AppSettings.OmitSecondsInRevisionGridDate ? OmittedSecondsDateColumnFormat : "G";
     }
 
     public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
