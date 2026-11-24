@@ -16,12 +16,20 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
 
         _controlBindings = [SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer),
                             SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AddMergeLogMessages, addLogMessages),
-                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.MergeLogMessagesCount, nbMessages)];
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.MergeLogMessagesCount, nbMessages),
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AiDiffPromptPrefix, txtAiDiffPromptPrefix),
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AiDiffPromptSuffix, txtAiDiffPromptSuffix)];
     }
 
     public static SettingsPageReference GetPageReference()
     {
         return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
+    }
+
+    private void btnAiDiffPromptDefault_Click(object sender, EventArgs e)
+    {
+        txtAiDiffPromptPrefix.Text = DetailedSettings.AiDiffPromptPrefix.DefaultValue;
+        txtAiDiffPromptSuffix.Text = DetailedSettings.AiDiffPromptSuffix.DefaultValue;
     }
 
     protected override void SettingsToPage()

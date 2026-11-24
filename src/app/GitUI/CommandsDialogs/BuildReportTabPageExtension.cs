@@ -78,10 +78,16 @@ public class BuildReportTabPageExtension
             }
             else
             {
-                if (_buildReportTabPage is not null && _buildReportWebBrowser is not null && _tabControl.Controls.Contains(_buildReportTabPage))
+                if (_buildReportTabPage is not null && _tabControl.Controls.Contains(_buildReportTabPage))
                 {
-                    _buildReportWebBrowser.Stop();
-                    _buildReportWebBrowser.Document!.Write(string.Empty);
+                    if (_buildReportWebBrowser is not null)
+                    {
+                        _buildReportWebBrowser.Stop();
+
+                        // The document is null until a navigation has completed
+                        _buildReportWebBrowser.Document?.Write(string.Empty);
+                    }
+
                     _tabControl.Controls.Remove(_buildReportTabPage);
                 }
             }
@@ -94,19 +100,24 @@ public class BuildReportTabPageExtension
 
     private void LoadReportContent(GitRevision revision, bool isFavIconMissing)
     {
+        // A report which is only linked is not loaded, so there is neither content nor a favicon to fetch
+        if (revision.BuildStatus is not { ShowInBuildReportTab: true, Url: string url })
+        {
+            return;
+        }
+
         Validates.NotNull(_buildReportWebBrowser);
 
         try
         {
-            if (revision.BuildStatus?.ShowInBuildReportTab == true)
-            {
-                _buildReportWebBrowser.Navigate(revision.BuildStatus.Url!);
-            }
-
             if (isFavIconMissing)
             {
+                // The handler unsubscribes itself on the first navigation, so subscribe at most once until then
+                _buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
                 _buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
             }
+
+            _buildReportWebBrowser.Navigate(url);
         }
         catch
         {
@@ -121,8 +132,9 @@ public class BuildReportTabPageExtension
         if (revision.BuildStatus?.ShowInBuildReportTab == true)
         {
             _url = null;
-            Control = _buildReportWebBrowser;
-            _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
+            WebBrowserControl webBrowser = GetOrCreateWebBrowser();
+            Control = webBrowser;
+            _buildReportTabPage.Controls.Add(webBrowser);
         }
         else
         {
@@ -160,12 +172,16 @@ public class BuildReportTabPageExtension
             Text = _caption,
             UseVisualStyleBackColor = true
         };
+    }
 
-        _buildReportWebBrowser = new WebBrowserControl
+    // Created on demand only: the embedded Internet Explorer loads mshtml.dll, whose hidden window
+    // can block the UI thread (e.g. with a security agent hooking PeekMessage), and several build servers
+    // (GitHub Actions, GitLab, Azure DevOps) only show a link to their report.
+    private WebBrowserControl GetOrCreateWebBrowser()
+        => _buildReportWebBrowser ??= new WebBrowserControl
         {
             Dock = DockStyle.Fill
         };
-    }
 
     private void BuildReportWebBrowserOnNavigated(object? sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
     {
@@ -273,5 +289,14 @@ public class BuildReportTabPageExtension
             webRequest.BeginGetResponse,
             ar => (HttpWebResponse)webRequest.EndGetResponse(ar),
             null);
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(BuildReportTabPageExtension extension)
+    {
+        public TabPage? BuildReportTabPage => extension._buildReportTabPage;
+
+        public WebBrowser? BuildReportWebBrowser => extension._buildReportWebBrowser;
     }
 }

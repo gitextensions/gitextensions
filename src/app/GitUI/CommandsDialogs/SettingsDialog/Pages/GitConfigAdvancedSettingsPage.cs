@@ -37,6 +37,8 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
             new("rerere.enabled", lblReReReEnabled, _boolValues),
             new("rerere.autoupdate", lblReReReAutoUpdate, _boolValues),
             new("status.showuntrackedfiles", lblStatusShowUntrackedFiles, ["no", "normal", "all"]),
+            new("core.untrackedcache", lblCoreUntrackedCache, [.. _boolValues, "keep"]),
+            new("core.fsmonitor", lblCoreFsMonitor, _boolValues),
         ];
 
         lblUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;

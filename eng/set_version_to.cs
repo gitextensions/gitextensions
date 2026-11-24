@@ -4,6 +4,7 @@
 #:property EnableStyleCopAnalyzers=false
 #:property EnableVisualStudioThreading=false
 #:property GenerateDocumentationFile=false
+#:property PublishAot=false
 
 using System.Text.RegularExpressions;
 

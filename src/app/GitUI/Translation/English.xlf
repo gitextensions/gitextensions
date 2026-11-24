@@ -1325,6 +1325,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Add log messages</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnAiDiffPromptDefault.Text">
+        <source>Overwrite with default prompt</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
         <source>Merge graph lanes having common parent</source>
         <target />
@@ -1343,6 +1347,18 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbxAiDiffPrompt.Text">
+        <source>AI prompt for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptPrefix.Text">
+        <source>Prompt prefix:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptSuffix.Text">
+        <source>Prompt suffix:</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1541,6 +1557,18 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="_aiCaption.Text">
+        <source>AI prompt</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiNoChanges.Text">
+        <source>No changes found for the selected files.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiPromptCopied.Text">
+        <source>AI prompt with {0} chars copied to clipboard.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
@@ -1710,6 +1738,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiCommitSubmoduleChanges.Text">
         <source>&amp;Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopyAiPromptToClipboard.Text">
+        <source>Copy AI prompt with selected diffs to clipboard (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCopyPaths.Text">
@@ -7148,6 +7180,14 @@ Is the merge conflict solved?</source>
         <source>deleted</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonDescription.Text">
+        <source>Opens the difftool. This dialog stays open, so solve conflict afterwards.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonText.Text">
+        <source>Diff base with modified</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
         <source>Error starting mergetool: {0}</source>
         <target />
@@ -8097,6 +8137,14 @@ Context menu for additional operations</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCoreFsMonitor.Text">
+        <source>Run a file system monitor daemon per working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCoreUntrackedCache.Text">
+        <source>Cache the untracked files in the index</source>
         <target />
       </trans-unit>
       <trans-unit id="lblFetchPrune.Text">
@@ -10193,6 +10241,10 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_autostash.Text">
         <source>Autostash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_bisectText.Text">
+        <source>Bisect</source>
         <target />
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">

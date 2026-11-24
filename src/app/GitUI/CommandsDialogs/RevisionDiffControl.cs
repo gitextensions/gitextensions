@@ -450,9 +450,22 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             BlameControl.Focus();
         }
 
-        GitRevision? rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
-            ? _revisionGridInfo!.GetActualRevision(_revisionGridInfo.CurrentCheckout)
-            : DiffFiles.SelectedItem.SecondRevision;
+        GitRevision? rev;
+        if (!DiffFiles.SelectedItem.SecondRevision.IsArtificial)
+        {
+            rev = DiffFiles.SelectedItem.SecondRevision;
+        }
+        else if (_revisionGridInfo?.CurrentCheckout.IsZero is false)
+        {
+            rev = _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout);
+        }
+        else
+        {
+            // There is no commit to blame yet (e.g. a repository without commits), git would fail
+            await ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line);
+            return;
+        }
+
         await BlameControl.LoadBlameAsync(rev!, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, revisionGridFileUpdate: this,
             controlToMask: null, DiffText.Encoding, line, cancellationTokenSequence: _viewChangesSequence);
     }

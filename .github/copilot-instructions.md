@@ -24,6 +24,20 @@ This repository uses git submodules (under `externals/`). After cloning or creat
 git submodule update --init --recursive
 ```
 
+## Parallel work (git worktrees)
+
+Do issue/PR work in a **dedicated git worktree folder**, not by checking out a branch in the main
+clone. This lets several agents/changes proceed in parallel without clobbering each other's working
+tree.
+
+- The main clone stays on `master` (or the integration branch); never do issue work there.
+- One worktree per issue/PR, in its own folder: `git worktree add ../wt/<issue> -b <branch>` (or
+  `git worktree add ../wt/<issue> <branch>` for an existing branch). The folder name and the branch
+  name may differ (e.g. folder `wt/fix-13456` → branch `fix/13456-...`).
+- Do all edits, builds, and tests inside the worktree folder; push from the worktree.
+- After the PR merges, clean up: `git worktree remove ../wt/<issue>` and `git branch -d <branch>`
+  (local and fork). `git worktree list` shows all active worktrees.
+
 ## General
 
 * Make only high confidence suggestions when reviewing code changes.

@@ -138,7 +138,8 @@ public interface IGitUICommands : IServiceProvider
     bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath);
 
     /// <summary>
-    ///  Confirms with the user, deletes a worktree directory on disk, and runs <c>git worktree prune</c>.
+    ///  Confirms with the user and removes a worktree by <c>git worktree remove</c>, or by deleting its directory
+    ///  and running <c>git worktree prune</c> if git refuses.
     /// </summary>
     /// <param name="owner">Owner window for dialogs.</param>
     /// <param name="worktreePath">Absolute path of the worktree to delete.</param>
