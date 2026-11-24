@@ -27,6 +27,7 @@ public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
     private readonly BoolSetting _regexCaseInsensitiveFlag = new("Is regex filter case insensitive?", false);
     private readonly BoolSetting _regexInvertedFlag = new("Search branches that does not match regex", false);
     private readonly BoolSetting _includeUnmergedBranchesFlag = new("Delete unmerged branches", false);
+    private readonly BoolSetting _includeSessionRefsFlag = new("Include agentic session refs", false);
 
     public override IEnumerable<ISetting> GetSettings()
     {
@@ -39,6 +40,7 @@ public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
         yield return _regexCaseInsensitiveFlag;
         yield return _regexInvertedFlag;
         yield return _includeUnmergedBranchesFlag;
+        yield return _includeSessionRefsFlag;
     }
 
     public override bool Execute(GitUIEventArgs args)
@@ -52,7 +54,8 @@ public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
             _regexFilter.ValueOrDefault(Settings),
             _regexCaseInsensitiveFlag.ValueOrDefault(Settings),
             _regexInvertedFlag.ValueOrDefault(Settings),
-            _includeUnmergedBranchesFlag.ValueOrDefault(Settings));
+            _includeUnmergedBranchesFlag.ValueOrDefault(Settings),
+            _includeSessionRefsFlag.ValueOrDefault(Settings));
 
         using DeleteUnusedBranchesForm frm = new(settings, args.GitModule, args.GitUICommands, this);
         frm.ShowDialog(args.OwnerForm);
