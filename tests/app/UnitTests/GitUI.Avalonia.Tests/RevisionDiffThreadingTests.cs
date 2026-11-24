@@ -308,8 +308,27 @@ public sealed class RevisionDiffThreadingTests
         RevisionDiffControl control = CreateControl(fileTreeMode: false);
         RevisionDiffControl.TestAccessor accessor = control.GetTestAccessor();
 
-        await Task.Run(() => control.DisplayDiffTab([_head]));
-        await JoinAsync(control);
+        TaskCompletionSource selectionChanged = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        EventHandler selectionChangedHandler = (_, _) =>
+        {
+            if (accessor.DiffFiles.SelectedItem is not null)
+            {
+                selectionChanged.TrySetResult();
+            }
+        };
+        accessor.DiffFiles.SelectedIndexChanged += selectionChangedHandler;
+        try
+        {
+            await Task.Run(() => control.DisplayDiffTab([_head]));
+
+            // FileStatusList's real throttled notification is outside the owner's task collection.
+            await selectionChanged.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            await JoinAsync(control);
+        }
+        finally
+        {
+            accessor.DiffFiles.SelectedIndexChanged -= selectionChangedHandler;
+        }
 
         _exceptions.Should().BeEmpty();
         control.DisplayedRevision.Should().Be(_head);

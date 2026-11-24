@@ -2729,7 +2729,17 @@ public sealed class FileViewerContentTests
                 message.Should().Contain("warning: mode-warning.txt has type 100644, expected 100755");
             }
 
-            await WaitUntilAsync(() => viewer.GetText().Contains("+different", StringComparison.Ordinal));
+            await WaitUntilAsync(
+                () => viewer.GetText().Contains("+different", StringComparison.Ordinal),
+                () =>
+                {
+                    FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+                    FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+                    return $"Expected the rescanned diff. Active pane: {form.GetTestAccessor().CurrentFilesList.Name}\n"
+                        + $"Unstaged: {unstaged.GitItemStatuses.Count} files, keyboard focus={unstaged.IsKeyboardFocusWithin}\n"
+                        + $"Staged: {staged.GitItemStatuses.Count} files, keyboard focus={staged.IsKeyboardFocusWithin}\n"
+                        + $"Diff: {viewer.GetText()}";
+                });
         }
         finally
         {
@@ -3027,14 +3037,14 @@ public sealed class FileViewerContentTests
     private FileViewer CreateViewer()
         => new() { UICommandsSource = _source };
 
-    private static async Task WaitUntilAsync(Func<bool> condition)
+    private static async Task WaitUntilAsync(Func<bool> condition, Func<string>? timeoutReason = null)
     {
         DateTime timeout = DateTime.UtcNow.AddSeconds(10);
         while (!condition())
         {
             if (DateTime.UtcNow >= timeout)
             {
-                throw new TimeoutException("The FileViewer operation did not complete.");
+                throw new TimeoutException(timeoutReason?.Invoke() ?? "The FileViewer operation did not complete.");
             }
 
             Dispatcher.UIThread.RunJobs();

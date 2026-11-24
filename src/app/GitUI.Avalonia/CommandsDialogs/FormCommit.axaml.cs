@@ -877,6 +877,10 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         (GitRevision? headRev, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
+
+        // Replacing Avalonia's item source can detach the focused row before selection is restored.
+        bool stagedHadFocus = Staged.IsKeyboardFocusWithin;
+        bool unstagedHadFocus = Unstaged.IsKeyboardFocusWithin;
         _changingSelection = true;
         Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
         Staged.SetDiffs(headRev, indexRev, stagedFiles);
@@ -900,11 +904,16 @@ public sealed partial class FormCommit : GitModuleForm
             _currentFilesList = Staged;
         }
 
-        bool focusUnstaged = _indexOperationFilesList == Staged && Staged.IsEmpty;
+        bool focusUnstaged = Staged.IsEmpty && (stagedHadFocus || _indexOperationFilesList == Staged);
+        bool focusStaged = _indexOperationFilesList is null && !Staged.IsEmpty && Unstaged.IsEmpty && unstagedHadFocus;
         RestoreSelectedFiles(unstagedFiles, stagedFiles, lastSelection);
         if (focusUnstaged)
         {
             Unstaged.Focus();
+        }
+        else if (focusStaged)
+        {
+            Staged.Focus();
         }
 
         if (_currentFilesList == Staged && Staged.SelectedFileStatusItem is FileStatusItem stagedItem)
@@ -1015,7 +1024,7 @@ public sealed partial class FormCommit : GitModuleForm
         _currentItemStaged = staged;
         if (item is null)
         {
-            SelectedDiff.ViewPatch(string.Empty);
+            SelectedDiff.Clear();
             return;
         }
 
@@ -1297,7 +1306,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void UnstagedSelectionChanged(object? sender, EventArgs e)
     {
-        if (_currentFilesList != Unstaged || _changingSelection || Unstaged.SelectedFileStatusItem is not FileStatusItem item)
+        if (_currentFilesList != Unstaged || _changingSelection)
         {
             return;
         }
@@ -1305,6 +1314,10 @@ public sealed partial class FormCommit : GitModuleForm
         _changingSelection = true;
         Staged.ClearSelected();
         _changingSelection = false;
+        FileStatusItem[] selectedItems = Unstaged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? focusedItem = Unstaged.FocusedItem;
+        FileStatusItem? item = focusedItem is not null && selectedItems.Contains(focusedItem) ? focusedItem : selectedItems.FirstOrDefault();
         UpdateStageButtons();
         ShowChanges(item, staged: false);
     }
@@ -1445,7 +1458,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void StagedSelectionChanged(object? sender, EventArgs e)
     {
-        if (_currentFilesList != Staged || _changingSelection || Staged.SelectedFileStatusItem is not FileStatusItem item)
+        if (_currentFilesList != Staged || _changingSelection)
         {
             return;
         }
@@ -1453,6 +1466,10 @@ public sealed partial class FormCommit : GitModuleForm
         _changingSelection = true;
         Unstaged.ClearSelected();
         _changingSelection = false;
+        FileStatusItem[] selectedItems = Staged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? focusedItem = Staged.FocusedItem;
+        FileStatusItem? item = focusedItem is not null && selectedItems.Contains(focusedItem) ? focusedItem : selectedItems.FirstOrDefault();
         UpdateStageButtons();
         ShowChanges(item, staged: true);
     }
