@@ -1089,7 +1089,9 @@ public partial class FileViewer : GitModuleControl
 
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
     {
-        long maxLength = AppSettings.MaxDiffFileSizeMb * 1024 * 1024;
+        // 0 means the file size limit is disabled
+        int maxMb = AppSettings.MaxDiffFileSizeMb;
+        long maxLength = maxMb == 0 ? long.MaxValue : maxMb * 1024 * 1024;
 
         if (contentLength > maxLength)
         {

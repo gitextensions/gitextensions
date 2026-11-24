@@ -276,12 +276,12 @@ partial class DiffViewerSettingsPage
         // 
         MaxDiffFileSize.Location = new Point(334, 281);
         MaxDiffFileSize.Maximum = new decimal(new int[] {
-        10000,
+        100,
         0,
         0,
         0});
         MaxDiffFileSize.Minimum = new decimal(new int[] {
-        1,
+        0,
         0,
         0,
         0});

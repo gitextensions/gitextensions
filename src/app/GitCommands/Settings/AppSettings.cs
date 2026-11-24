@@ -1326,10 +1326,15 @@ public static partial class AppSettings
         set => SetInt("diffverticalrulerposition", value);
     }
 
+    /// <summary>
+    ///  Max file size for the diff view in MB. 0 means unlimited. Values are
+    ///  clamped to 0..100 on write and on read so that an invalid persisted
+    ///  value cannot break the diff viewer.
+    /// </summary>
     public static int MaxDiffFileSizeMb
     {
-        get => GetInt("maxdifffilesize", 5);
-        set => SetInt("maxdifffilesize", value);
+        get => Math.Clamp(GetInt("maxdifffilesize", 5), 0, 100);
+        set => SetInt("maxdifffilesize", Math.Clamp(value, 0, 100));
     }
 
     public static TextSetting GitGrepUserArguments { get; } = new(DialogSettingsPath, nameof(GitGrepUserArguments), defaultValue: "");

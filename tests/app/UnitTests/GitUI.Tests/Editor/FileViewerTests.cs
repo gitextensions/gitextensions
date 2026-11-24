@@ -155,4 +155,45 @@ public class FileViewerTests
         accessor.IsShowDeferred.Should().BeFalse();
         showInvoked.Should().BeTrue();
     }
+
+    [Test]
+    public void ShowOrDeferAsync_should_show_file_of_any_size_when_max_size_is_zero()
+    {
+        AppSettings.MaxDiffFileSizeMb = 0;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                10000 * 1024L * 1024,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeFalse();
+        showInvoked.Should().BeTrue();
+    }
+
+    [Test]
+    public void ShowOrDeferAsync_should_defer_file_when_setting_is_clamped_from_out_of_range_value()
+    {
+        // 10000 is clamped to 100, so a 150 MB file is deferred
+        AppSettings.MaxDiffFileSizeMb = 10000;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                150 * 1024L * 1024,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeTrue();
+        showInvoked.Should().BeFalse();
+    }
 }
