@@ -53,7 +53,7 @@ public class SplitterPersistenceTests
     [Test]
     public async Task SplitterPositionsShouldBeDefault()
     {
-        AppSettings.CommitInfoPosition.Should().Be(CommitInfoPosition.BelowList);
+        AppSettings.CommitInfoPosition.Value.Should().Be(CommitInfoPosition.BelowList);
 
         await RunFormTestAsync(
             async form =>

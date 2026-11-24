@@ -290,7 +290,6 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
             yield return (properties[nameof(AppSettings.MessageEditorWordWrap)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);
             yield return (properties[nameof(AppSettings.ProvideAutocompletion)], true, false, false);
             yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
             yield return (properties[nameof(AppSettings.ShowGitStatusInBrowseToolbar)], true, false, false);
