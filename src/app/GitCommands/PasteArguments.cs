@@ -1,3 +1,9 @@
+// The argument escaping in this file is adapted from the .NET runtime (BCL),
+// specifically System.Private.CoreLib's PasteArguments.AppendArgument
+// (https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/PasteArguments.cs).
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses that file to you under the MIT license.
+
 using System.Text;
 
 namespace GitCommands;
