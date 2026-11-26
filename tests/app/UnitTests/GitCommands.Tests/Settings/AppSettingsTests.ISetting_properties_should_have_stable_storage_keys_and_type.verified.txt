@@ -2,6 +2,7 @@
 BoolRuntimeSetting BranchFilterEnabled = BranchFilterEnabled
 BooleanSetting CheckoutOtherBranchAfterReset = Dialogs.CheckoutOtherBranchAfterReset
 BooleanSetting CommitDialogSelectStagedOnEnterMessage = Dialogs.CommitDialogSelectStagedOnEnterMessage
+EnumSetting`1<CommitInfoPosition> CommitInfoPosition = Detailed.CommitInfoPosition
 TextSetting ConEmuStyle = Detailed.ConEmuStyle
 TextSetting ConEmuTerminal = Detailed.ConEmuTerminal
 BooleanSetting ConfirmBranchCheckout = Confirmations.ConfirmBranchCheckout
@@ -50,6 +51,7 @@ BooleanSetting ShowOutputHistoryAsTab = Detailed.ShowOutputHistoryAsTab
 BooleanSetting ShowProcessDialogPasswordInput = Detailed.ShowProcessDialogPasswordInput
 BoolRuntimeSetting ShowReflogReferences = ShowReflogReferences
 BooleanSetting ShowRevisionGridTooltips = Appearance.ShowRevisionGridTooltips
+BooleanSetting ShowSplitViewLayout = Detailed.ShowSplitViewLayout
 BoolRuntimeSetting ShowSyntaxHighlightingInDiff = ShowSyntaxHighlightingInDiff
 BooleanSetting StraightenGraphDiagonals = Appearance.RevisionGraph.StraightenGraphDiagonals
 IntegerSetting StraightenGraphSegmentsLimit = Appearance.RevisionGraph.StraightenGraphSegmentsLimit

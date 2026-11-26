@@ -18,8 +18,8 @@ internal sealed class FormBrowseDiagnosticsReporter
             {
                 // layout
                 { "ShowLeftPanel".FormatKey(), _owner.MainSplitContainer.Panel1Collapsed.ToString() },
-                { nameof(AppSettings.ShowSplitViewLayout).FormatKey(), AppSettings.ShowSplitViewLayout.ToString() },
-                { nameof(AppSettings.CommitInfoPosition).FormatKey(), AppSettings.CommitInfoPosition.ToString() },
+                { nameof(AppSettings.ShowSplitViewLayout).FormatKey(), AppSettings.ShowSplitViewLayout.Value.ToString() },
+                { nameof(AppSettings.CommitInfoPosition).FormatKey(), AppSettings.CommitInfoPosition.Value.ToString() },
 
                 // revision grid
                 { nameof(AppSettings.ShowAuthorAvatarColumn).FormatKey(), AppSettings.ShowAuthorAvatarColumn.ToString() },
