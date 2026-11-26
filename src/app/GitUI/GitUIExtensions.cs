@@ -155,11 +155,15 @@ public static partial class GitUIExtensions
 
         if (item.Item.IsSubmodule)
         {
-            GitSubmoduleStatus? status = item.Item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus?> statusTask
-
-                // Patch already evaluated, normal case for e.g. FileStatusList
-                ? await statusTask
-                : await SubmoduleHelpers.GetSubmoduleDiffChangesAsync(fileViewer.Module, item.Item.Name, item.Item.OldName, firstId, item.SecondRevision.ObjectId, cancellationToken);
+            // Use the pre-computed status when available (e.g. FileStatusList),
+            // otherwise compute it fresh. A null result (the submodule is not
+            // available in this scenario) must fall back to the fresh computation
+            // so that the sha can be displayed instead of an error.
+            GitSubmoduleStatus? status = await item.Item.GetSubmoduleStatusAsync();
+            if (status is null)
+            {
+                status = await SubmoduleHelpers.GetSubmoduleDiffChangesAsync(fileViewer.Module, item.Item.Name, item.Item.OldName, firstId, item.SecondRevision.ObjectId, cancellationToken);
+            }
 
             cancellationToken.ThrowIfCancellationRequested();
             string subText = status is null

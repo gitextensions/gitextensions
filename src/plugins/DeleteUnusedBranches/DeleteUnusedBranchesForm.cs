@@ -21,6 +21,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     private readonly TranslationString _deleteCaption = new("Delete");
     private readonly TranslationString _selectBranchesToDelete = new("Select branches to delete using checkboxes in '{0}' column.");
     private readonly TranslationString _areYouSureToDelete = new("Are you sure to delete {0} selected branches?");
+    private readonly TranslationString _sessionRefsMayBeInUse = new("{0} of them are agentic session refs.\nAI agents may still need these refs, e.g. for the checkpoints of an active session.\nDo not delete them while an agentic session is in progress.");
     private readonly TranslationString _dangerousAction = new("DANGEROUS ACTION!\nBranches will be deleted on the remote '{0}'. This can not be undone.\nAre you sure you want to continue?");
     private readonly TranslationString _deletingBranches = new("Deleting branches...");
     private readonly TranslationString _deletingUnmergedBranches = new("Deleting unmerged branches will result in dangling commits. Use with caution!");
@@ -83,6 +84,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         useRegexCaseInsensitive.Checked = _settings.RegexCaseInsensitiveFlag;
         regexDoesNotMatch.Checked = _settings.RegexInvertedFlag;
         includeUnmergedBranches.Checked = _settings.IncludeUnmergedBranchesFlag;
+        includeSessionRefs.Checked = _settings.IncludeSessionRefsFlag;
 
         checkBoxHeaderCell.CheckBoxClicked += CheckBoxHeader_OnCheckBoxClicked;
         _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
@@ -95,7 +97,15 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     private IEnumerable<Branch> GetObsoleteBranches(RefreshContext context, string curBranch)
     {
         DateTime oldBranchLimitDate = DateTime.Now - context.ObsolescenceDuration;
-        foreach (string branchName in GetObsoleteBranchNames(context, curBranch))
+        IEnumerable<(string Name, bool IsSessionRef)> candidates = GetObsoleteBranchNames(context, curBranch).Select(name => (name, false));
+        if (context.SessionRefsFilters is not null)
+        {
+            // Session refs are offered independently of the "merged into" and regex filters, which are meant for branches.
+            // Like branches, they are preselected for deletion only if their commit is older than the obsolescence duration.
+            candidates = candidates.Concat(SessionRefs.GetRefs(context.Commands.GitExecutable, context.SessionRefsFilters).Select(name => (name, true)));
+        }
+
+        foreach ((string branchName, bool isSessionRef) in candidates)
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
@@ -107,17 +117,20 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
                 "--"
             };
 
-            string[] commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
-            if (!DateTime.TryParse(commitLog[0], out DateTime commitDate))
+            // A ref which cannot be resolved, e.g. a dangling session ref, fails "git log" without aborting the whole listing
+            ExecutionResult logResult = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
+            string[] commitLog = logResult.StandardOutput.Split('\n', StringSplitOptions.TrimEntries);
+
+            DateTime commitDate = DateTime.MinValue;
+            if (logResult.ExitedSuccessfully && commitLog.Length > 0 && !DateTime.TryParse(commitLog[0], out commitDate))
             {
                 Trace.WriteLine($"Failed to parse commit date from git log output: '{commitLog[0]}' from {commitLog}");
-                commitDate = DateTime.MinValue;
             }
 
             string authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
             string message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 
-            yield return new Branch(branchName, commitDate, authorName, message, commitDate < oldBranchLimitDate);
+            yield return new Branch(branchName, commitDate, authorName, message, commitDate < oldBranchLimitDate, isSessionRef);
         }
     }
 
@@ -157,7 +170,14 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
             return;
         }
 
-        if (MessageBoxes.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+        List<Branch> sessionRefs = [.. selectedBranches.Where(branch => branch.IsSessionRef)];
+        string confirmation = string.Format(_areYouSureToDelete.Text, selectedBranches.Count);
+        if (sessionRefs.Count > 0)
+        {
+            confirmation += $"{Environment.NewLine}{Environment.NewLine}{string.Format(_sessionRefsMayBeInUse.Text, sessionRefs.Count)}";
+        }
+
+        if (MessageBoxes.Show(this, confirmation, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
         {
             return;
         }
@@ -165,7 +185,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         string remoteName = _NO_TRANSLATE_Remote.Text;
         string remoteBranchPrefix = remoteName + "/";
         IEnumerable<Branch> remoteBranchesSource = IncludeRemoteBranches.Checked
-            ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
+            ? selectedBranches.Where(branch => !branch.IsSessionRef && branch.Name.StartsWith(remoteBranchPrefix))
             : [];
         List<Branch> remoteBranches = [.. remoteBranchesSource];
 
@@ -180,12 +200,14 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         HasDeletedBranch = true;
 
-        List<Branch> localBranches = [.. selectedBranches.Except(remoteBranches)];
+        List<Branch> localBranches = [.. selectedBranches.Except(remoteBranches).Except(sessionRefs)];
         SetWorkingState(isWorking: true);
         lblStatus.Text = _deletingBranches.Text;
 
         ThreadHelper.FileAndForget(async () =>
         {
+            List<string> failedSessionRefs = [];
+
             try
             {
                 foreach (Branch remoteBranch in remoteBranches)
@@ -211,6 +233,16 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
                     // Delete branches one by one, because it is possible one fails
                     _gitCommands.GitExecutable.GetOutput(args);
                 }
+
+                foreach (Branch sessionRef in sessionRefs)
+                {
+                    // Delete session refs one by one without throwing on a non-zero exit, so a missing or protected ref does not block the remaining ones
+                    ExecutionResult result = _gitCommands.GitExecutable.Execute(SessionRefs.GetDeleteRefArgs(sessionRef.Name), throwOnErrorExit: false);
+                    if (result is { ExitedSuccessfully: false })
+                    {
+                        failedSessionRefs.Add($"{sessionRef.Name}: {result.StandardError.Trim()}");
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -225,6 +257,11 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
             SetWorkingState(isWorking: false);
             await RefreshObsoleteBranchesAsync().ConfigureAwait(false);
+
+            if (failedSessionRefs.Count > 0)
+            {
+                MessageBoxes.ShowError(this, string.Join(Environment.NewLine, failedSessionRefs), _deleteCaption.Text);
+            }
         });
     }
 
@@ -320,6 +357,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
             useRegexCaseInsensitive.Checked,
             regexDoesNotMatch.Checked,
             TimeSpan.FromDays((int)olderThanDays.Value),
+            includeSessionRefs.Checked ? AppSettings.SessionRefsFilters.Value : null,
             _refreshCancellation.Token);
 
         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
@@ -380,8 +418,9 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     {
         public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
             string remoteRepositoryName, string? regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,
-            TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
+            TimeSpan obsolescenceDuration, string? sessionRefsFilters, CancellationToken cancellationToken)
         {
+            SessionRefsFilters = sessionRefsFilters;
             Commands = commands;
             RemoteBranches = includeRemotes;
             IncludeUnmerged = includeUnmerged;
@@ -403,6 +442,11 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         public bool RegexIgnoreCase { get; }
         public bool RegexDoesNotMatch { get; }
         public TimeSpan ObsolescenceDuration { get; }
+
+        /// <summary>
+        ///  Gets <see cref="AppSettings.SessionRefsFilters"/> if the agentic session refs shall be listed, otherwise <see langword="null"/>.
+        /// </summary>
+        public string? SessionRefsFilters { get; }
         public CancellationToken CancellationToken { get; }
     }
 }

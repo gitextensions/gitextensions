@@ -126,8 +126,55 @@ internal sealed class AppSettingsTests
         }
         else
         {
-            storedValue.Should().Be(value);
+            // The validated property stores the clamped value
+            object expectedValue = property.Name == nameof(AppSettings.MaxDiffFileSizeMb)
+                ? Math.Clamp((int)value, 0, 100)
+                : value;
+            storedValue.Should().Be(expectedValue);
         }
+    }
+
+    [Test]
+    [TestCase(-5, 0)]
+    [TestCase(0, 0)]
+    [TestCase(5, 5)]
+    [TestCase(100, 100)]
+    [TestCase(101, 100)]
+    [TestCase(10000, 100)]
+    public void MaxDiffFileSizeMb_should_clamp_value_to_valid_range(int input, int expected)
+    {
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+        tempFiles.AddFile(filePath + ".backup", keepFile: false);
+        File.WriteAllText(filePath, SettingsFileContent);
+        using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+        DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            AppSettings.MaxDiffFileSizeMb = input;
+            AppSettings.MaxDiffFileSizeMb.Should().Be(expected);
+        });
+    }
+
+    [Test]
+    [TestCase("-5", 0)]
+    [TestCase("5000", 100)]
+    public void MaxDiffFileSizeMb_should_clamp_invalid_persisted_value(string storedValue, int expected)
+    {
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+        tempFiles.AddFile(filePath + ".backup", keepFile: false);
+        // The settings file stores values wrapped in a <string> element, matching
+        // the format produced by GitExtSettingsCache.WriteSettings.
+        File.WriteAllText(filePath, $@"<?xml version=""1.0"" encoding=""utf-8""?><dictionary><item><key><string>maxdifffilesize</string></key><value><string>{storedValue}</string></value></item></dictionary>");
+        using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+        DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            AppSettings.MaxDiffFileSizeMb.Should().Be(expected);
+        });
     }
 
     /// <summary>
@@ -346,6 +393,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.MaxDiffFileSizeMb)], 5, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isISetting);
