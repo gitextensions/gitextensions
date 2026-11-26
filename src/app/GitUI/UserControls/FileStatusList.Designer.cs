@@ -611,7 +611,7 @@ partial class FileStatusList
         // btnLabels
         //
         btnLabels.DisplayStyle = ToolStripItemDisplayStyle.Image;
-        btnLabels.DropDownItems.AddRange(new ToolStripItem[] { tsmiEnableTemporaryLabels, sepTemporaryLabels, tsmiTemporaryLabel1, tsmiTemporaryLabel2, tsmiTemporaryLabel3, tsmiTemporaryLabel4, tsmiTemporaryLabel5, tsmiTemporaryLabel6, tsmiTemporaryLabel7, tsmiTemporaryLabel8, tsmiTemporaryLabel9, sepClearTemporaryLabels, tsmiClearTemporaryLabel, tsmiClearAllTemporaryLabels });
+        btnLabels.DropDownItems.AddRange(new ToolStripItem[] { tsmiTemporaryLabel1, tsmiTemporaryLabel2, tsmiTemporaryLabel3, tsmiTemporaryLabel4, tsmiTemporaryLabel5, tsmiTemporaryLabel6, tsmiTemporaryLabel7, tsmiTemporaryLabel8, tsmiTemporaryLabel9, sepClearTemporaryLabels, tsmiClearTemporaryLabel, tsmiClearAllTemporaryLabels, sepTemporaryLabels, tsmiEnableTemporaryLabels });
         btnLabels.Image = Properties.Images.Tag;
         btnLabels.Name = "btnLabels";
         btnLabels.Size = new Size(29, 22);
@@ -635,7 +635,7 @@ partial class FileStatusList
         tsmiTemporaryLabel1.Name = "tsmiTemporaryLabel1";
         tsmiTemporaryLabel1.Size = new Size(180, 22);
         tsmiTemporaryLabel1.Tag = 1;
-        tsmiTemporaryLabel1.Text = "Label 1";
+        tsmiTemporaryLabel1.Text = "Toggle label 1";
         tsmiTemporaryLabel1.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel2
@@ -643,7 +643,7 @@ partial class FileStatusList
         tsmiTemporaryLabel2.Name = "tsmiTemporaryLabel2";
         tsmiTemporaryLabel2.Size = new Size(180, 22);
         tsmiTemporaryLabel2.Tag = 2;
-        tsmiTemporaryLabel2.Text = "Label 2";
+        tsmiTemporaryLabel2.Text = "Toggle label 2";
         tsmiTemporaryLabel2.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel3
@@ -651,7 +651,7 @@ partial class FileStatusList
         tsmiTemporaryLabel3.Name = "tsmiTemporaryLabel3";
         tsmiTemporaryLabel3.Size = new Size(180, 22);
         tsmiTemporaryLabel3.Tag = 3;
-        tsmiTemporaryLabel3.Text = "Label 3";
+        tsmiTemporaryLabel3.Text = "Toggle label 3";
         tsmiTemporaryLabel3.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel4
@@ -659,7 +659,7 @@ partial class FileStatusList
         tsmiTemporaryLabel4.Name = "tsmiTemporaryLabel4";
         tsmiTemporaryLabel4.Size = new Size(180, 22);
         tsmiTemporaryLabel4.Tag = 4;
-        tsmiTemporaryLabel4.Text = "Label 4";
+        tsmiTemporaryLabel4.Text = "Toggle label 4";
         tsmiTemporaryLabel4.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel5
@@ -667,7 +667,7 @@ partial class FileStatusList
         tsmiTemporaryLabel5.Name = "tsmiTemporaryLabel5";
         tsmiTemporaryLabel5.Size = new Size(180, 22);
         tsmiTemporaryLabel5.Tag = 5;
-        tsmiTemporaryLabel5.Text = "Label 5";
+        tsmiTemporaryLabel5.Text = "Toggle label 5";
         tsmiTemporaryLabel5.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel6
@@ -675,7 +675,7 @@ partial class FileStatusList
         tsmiTemporaryLabel6.Name = "tsmiTemporaryLabel6";
         tsmiTemporaryLabel6.Size = new Size(180, 22);
         tsmiTemporaryLabel6.Tag = 6;
-        tsmiTemporaryLabel6.Text = "Label 6";
+        tsmiTemporaryLabel6.Text = "Toggle label 6";
         tsmiTemporaryLabel6.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel7
@@ -683,7 +683,7 @@ partial class FileStatusList
         tsmiTemporaryLabel7.Name = "tsmiTemporaryLabel7";
         tsmiTemporaryLabel7.Size = new Size(180, 22);
         tsmiTemporaryLabel7.Tag = 7;
-        tsmiTemporaryLabel7.Text = "Label 7";
+        tsmiTemporaryLabel7.Text = "Toggle label 7";
         tsmiTemporaryLabel7.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel8
@@ -691,7 +691,7 @@ partial class FileStatusList
         tsmiTemporaryLabel8.Name = "tsmiTemporaryLabel8";
         tsmiTemporaryLabel8.Size = new Size(180, 22);
         tsmiTemporaryLabel8.Tag = 8;
-        tsmiTemporaryLabel8.Text = "Label 8";
+        tsmiTemporaryLabel8.Text = "Toggle label 8";
         tsmiTemporaryLabel8.Click += TemporaryLabelMenuItem_Click;
         //
         // tsmiTemporaryLabel9
@@ -699,7 +699,7 @@ partial class FileStatusList
         tsmiTemporaryLabel9.Name = "tsmiTemporaryLabel9";
         tsmiTemporaryLabel9.Size = new Size(180, 22);
         tsmiTemporaryLabel9.Tag = 9;
-        tsmiTemporaryLabel9.Text = "Label 9";
+        tsmiTemporaryLabel9.Text = "Toggle label 9";
         tsmiTemporaryLabel9.Click += TemporaryLabelMenuItem_Click;
         //
         // sepClearTemporaryLabels

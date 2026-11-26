@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
 
 namespace GitUI.UserControls;
 
@@ -72,31 +71,18 @@ internal sealed class TemporaryFileLabels
     }
 
     /// <summary>
-    ///  Maps a plain digit key press to a label: 1-9 assign that label, 0 clears it.
-    ///  Keys pressed with Ctrl, Alt or Shift are not hotkeys, so typing into the
-    ///  filter boxes keeps working.
+    ///  Toggles <paramref name="label"/> for the file at <paramref name="filePath"/>:
+    ///  removes it when the file already has that label, assigns it otherwise.
     /// </summary>
-    /// <param name="keyData">The pressed key, including modifiers.</param>
-    /// <param name="label">The label, 0 to <see cref="MaxLabel"/>.</param>
-    /// <returns><c>true</c> if <paramref name="keyData"/> is a label hotkey.</returns>
-    public static bool TryParseHotkey(Keys keyData, out int label)
+    /// <param name="filePath">The path of the file, as in <c>GitItemStatus.Name</c>.</param>
+    /// <param name="label">The label, 1 to <see cref="MaxLabel"/>.</param>
+    /// <returns><c>true</c> if the stored label changed.</returns>
+    public bool Toggle(string filePath, int label)
     {
-        label = keyData switch
-        {
-            Keys.D0 or Keys.NumPad0 => NoLabel,
-            Keys.D1 or Keys.NumPad1 => 1,
-            Keys.D2 or Keys.NumPad2 => 2,
-            Keys.D3 or Keys.NumPad3 => 3,
-            Keys.D4 or Keys.NumPad4 => 4,
-            Keys.D5 or Keys.NumPad5 => 5,
-            Keys.D6 or Keys.NumPad6 => 6,
-            Keys.D7 or Keys.NumPad7 => 7,
-            Keys.D8 or Keys.NumPad8 => 8,
-            Keys.D9 or Keys.NumPad9 => 9,
-            _ => -1,
-        };
+        ArgumentOutOfRangeException.ThrowIfLessThan(label, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(label, MaxLabel);
 
-        return label >= NoLabel;
+        return GetLabel(filePath) == label ? Clear(filePath) : TryAssign(filePath, label);
     }
 
     /// <summary>

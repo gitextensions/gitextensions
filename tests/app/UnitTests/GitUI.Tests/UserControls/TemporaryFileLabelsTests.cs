@@ -1,39 +1,36 @@
-﻿using System.Windows.Forms;
-using GitUI.UserControls;
+﻿using GitUI.UserControls;
 
 namespace GitUITests.UserControls;
 
 public class TemporaryFileLabelsTests
 {
     [Test]
-    public void TryParseHotkey_should_map_digit_keys_to_labels()
+    public void Toggle_should_assign_label_when_file_is_unlabelled()
     {
-        TemporaryFileLabels.TryParseHotkey(Keys.D1, out int label1).Should().BeTrue();
-        label1.Should().Be(1);
-        TemporaryFileLabels.TryParseHotkey(Keys.D9, out int label9).Should().BeTrue();
-        label9.Should().Be(9);
-        TemporaryFileLabels.TryParseHotkey(Keys.NumPad1, out int numPadLabel1).Should().BeTrue();
-        numPadLabel1.Should().Be(1);
-        TemporaryFileLabels.TryParseHotkey(Keys.NumPad9, out int numPadLabel9).Should().BeTrue();
-        numPadLabel9.Should().Be(9);
+        TemporaryFileLabels labels = new();
+
+        labels.Toggle("src/file.cs", 3).Should().BeTrue();
+        labels.GetLabel("src/file.cs").Should().Be(3);
     }
 
     [Test]
-    public void TryParseHotkey_should_map_zero_to_clearing()
+    public void Toggle_should_remove_label_when_file_already_has_it()
     {
-        TemporaryFileLabels.TryParseHotkey(Keys.D0, out int label).Should().BeTrue();
-        label.Should().Be(TemporaryFileLabels.NoLabel);
-        TemporaryFileLabels.TryParseHotkey(Keys.NumPad0, out int numPadLabel).Should().BeTrue();
-        numPadLabel.Should().Be(TemporaryFileLabels.NoLabel);
+        TemporaryFileLabels labels = new();
+        labels.TryAssign("src/file.cs", 3);
+
+        labels.Toggle("src/file.cs", 3).Should().BeTrue();
+        labels.GetLabel("src/file.cs").Should().BeNull();
     }
 
     [Test]
-    public void TryParseHotkey_should_ignore_other_keys()
+    public void Toggle_should_replace_label_when_file_has_a_different_label()
     {
-        TemporaryFileLabels.TryParseHotkey(Keys.A, out _).Should().BeFalse();
-        TemporaryFileLabels.TryParseHotkey(Keys.Control | Keys.D1, out _).Should().BeFalse();
-        TemporaryFileLabels.TryParseHotkey(Keys.Alt | Keys.D1, out _).Should().BeFalse();
-        TemporaryFileLabels.TryParseHotkey(Keys.Shift | Keys.D1, out _).Should().BeFalse();
+        TemporaryFileLabels labels = new();
+        labels.TryAssign("src/file.cs", 3);
+
+        labels.Toggle("src/file.cs", 5).Should().BeTrue();
+        labels.GetLabel("src/file.cs").Should().Be(5);
     }
 
     [Test]

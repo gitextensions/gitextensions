@@ -55,6 +55,7 @@ BooleanSetting ShowSplitViewLayout = Detailed.ShowSplitViewLayout
 BoolRuntimeSetting ShowSyntaxHighlightingInDiff = ShowSyntaxHighlightingInDiff
 BooleanSetting StraightenGraphDiagonals = Appearance.RevisionGraph.StraightenGraphDiagonals
 IntegerSetting StraightenGraphSegmentsLimit = Appearance.RevisionGraph.StraightenGraphSegmentsLimit
+BooleanSetting TemporaryLabelsEnabled = Appearance.FileStatus.TemporaryLabelsEnabled
 TextSetting UninformativeRepoNameRegex = Detailed.UninformativeRepoNameRegex
 BooleanSetting UseBrowseForFileHistory = Detailed.UseBrowseForFileHistory
 BooleanSetting UseConsoleEmulatorForCommands = UseConsoleEmulatorForCommands

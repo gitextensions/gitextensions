@@ -1,4 +1,6 @@
-﻿using GitUI.UserControls;
+﻿using GitCommands;
+using GitUI.CommandsDialogs;
+using GitUI.UserControls;
 
 namespace GitUI;
 
@@ -9,12 +11,13 @@ partial class FileStatusList
 
     /// <summary>
     ///  Gets whether temporary labels are enabled for this list.
-    ///  Labels are toggled from the toolbar, are off by default and live only
-    ///  as long as this list (for example a <c>FormDiff</c> window).
+    ///  The on/off state is persisted in <see cref="AppSettings.TemporaryLabelsEnabled"/>
+    ///  (on by default); the label assignments themselves live only as long as
+    ///  this list (for example a <c>FormDiff</c> window).
     ///  Disabling the labels hides them; the assignments are kept, so
     ///  re-enabling the labels shows them again.
     /// </summary>
-    public bool TemporaryLabelsEnabled { get; private set; }
+    public bool TemporaryLabelsEnabled => AppSettings.TemporaryLabelsEnabled;
 
     private ToolStripMenuItem[] TemporaryLabelMenuItems => _temporaryLabelMenuItems ??=
     [
@@ -65,7 +68,7 @@ partial class FileStatusList
             return;
         }
 
-        TemporaryLabelsEnabled = enabled;
+        AppSettings.TemporaryLabelsEnabled.Value = enabled;
         RefreshTemporaryLabels();
     }
 
@@ -77,7 +80,7 @@ partial class FileStatusList
         {
             changed |= label == TemporaryFileLabels.NoLabel
                 ? _temporaryLabels.Clear(item.Item.Name)
-                : _temporaryLabels.TryAssign(item.Item.Name, label);
+                : _temporaryLabels.Toggle(item.Item.Name, label);
         }
 
         if (changed)
@@ -85,6 +88,13 @@ partial class FileStatusList
             RefreshTemporaryLabels();
         }
     }
+
+    private static int GetTemporaryLabel(RevisionDiffControl.Command command) => command switch
+    {
+        RevisionDiffControl.Command.ClearTemporaryLabel => TemporaryFileLabels.NoLabel,
+        >= RevisionDiffControl.Command.ToggleTemporaryLabel1 and <= RevisionDiffControl.Command.ToggleTemporaryLabel9 => (int)command - (int)RevisionDiffControl.Command.ToggleTemporaryLabel1 + 1,
+        _ => throw new ArgumentOutOfRangeException(nameof(command), command, null),
+    };
 
     private void RefreshTemporaryLabels()
     {

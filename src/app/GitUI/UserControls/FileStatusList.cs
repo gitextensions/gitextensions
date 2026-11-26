@@ -1805,16 +1805,6 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private void FileStatusListView_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (TemporaryLabelsEnabled && TemporaryFileLabels.TryParseHotkey(e.KeyData, out int label))
-        {
-            // Assign (1-9) or clear (0) the label of the selected files, like in Thunderbird.
-            // Suppress the key press so the tree does not also start its incremental search.
-            SetTemporaryLabelForSelectedItems(label);
-            e.Handled = true;
-            e.SuppressKeyPress = true;
-            return;
-        }
-
         switch (e.KeyData)
         {
             case Keys.Control | Keys.A:
