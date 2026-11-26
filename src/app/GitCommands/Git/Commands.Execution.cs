@@ -139,6 +139,86 @@ public static partial class Commands
     }
 
     /// <summary>
+    ///  Gets the commit ID of the currently checked out commit.
+    ///  If the repo is bare, has no commits or is corrupt, a zero <see cref="ObjectId"/> is returned.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The commit ID of HEAD; a zero <see cref="ObjectId"/> if it could not be determined.</returns>
+    public static ObjectId GetCurrentCheckout(this IExecutable gitExecutable)
+    {
+        GitArgumentBuilder args = new("rev-parse") { "HEAD" };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out ObjectId objectId)
+            ? objectId
+            : default;
+    }
+
+    /// <summary>
+    ///  Gets the first tag pointing at HEAD.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The name of the first tag; <see langword="null"/> if there is no tag at HEAD or git fails.</returns>
+    public static string? GetFirstTagPointingAtHead(this IExecutable gitExecutable)
+    {
+        GitArgumentBuilder args = new("tag")
+        {
+            "--points-at",
+            "HEAD"
+        };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        if (!result.ExitedSuccessfully)
+        {
+            return null;
+        }
+
+        string tags = result.StandardOutput;
+        (int beginning, int length) = tags.LazySplitRanges('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        return length == 0 ? null : tags.Substring(beginning, length);
+    }
+
+    /// <summary>
+    ///  Gets the first branch pointing at HEAD, local branches before remote-tracking branches.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The short name of the first branch; <see langword="null"/> if there is no branch at HEAD or git fails.</returns>
+    public static string? GetFirstBranchPointingAtHead(this IExecutable gitExecutable)
+    {
+        GitArgumentBuilder args = new("for-each-ref")
+        {
+            "--points-at HEAD",
+            "--format=%(refname)",
+            GitRefName.RefsHeadsPrefix,
+            GitRefName.RefsRemotesPrefix
+        };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        if (!result.ExitedSuccessfully)
+        {
+            return null;
+        }
+
+        // refs/heads sorts before refs/remotes; skip the symbolic remote HEAD (refs/remotes/origin/HEAD)
+        string refs = result.StandardOutput;
+        foreach ((int beginning, int length) in refs.LazySplitRanges('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+        {
+            string refName = refs.Substring(beginning, length);
+            if (refName.StartsWith(GitRefName.RefsHeadsPrefix, StringComparison.Ordinal))
+            {
+                return refName.Substring(GitRefName.RefsHeadsPrefix.Length);
+            }
+
+            if (refName.StartsWith(GitRefName.RefsRemotesPrefix, StringComparison.Ordinal) && !refName.EndsWith("/HEAD", StringComparison.Ordinal))
+            {
+                return refName.Substring(GitRefName.RefsRemotesPrefix.Length);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     ///  Removes a git config (sub)section.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
