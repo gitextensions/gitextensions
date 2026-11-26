@@ -26,6 +26,7 @@ public partial class Dashboard : GitModuleControl
     {
         InitializeComponent();
         InitializeComplete();
+        this.EnableProperWordBoundaries();
 
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
         Visible = false;

@@ -111,6 +111,7 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
             buildServerSettingsPanel.Controls.Add((Control)control);
             ((Control)control).Dock = DockStyle.Fill;
+            ((Control)control).EnableProperWordBoundaries();
         }
     }
 
