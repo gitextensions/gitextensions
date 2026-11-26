@@ -221,14 +221,18 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly IShellProvider _shellProvider;
 
-    // An asynchronously-populated worktree list for the toolbar dropdown. The refresh starts the
-    // fetch off the UI thread (independent of the left panel being visible); the dropdown reuses
-    // the last completed value so it never runs `git worktree list` on the UI thread (see #13059).
-    // The left-panel tree fetches its own list off the UI thread, so the two are independent.
+    // An asynchronously-populated worktree list, shared by the toolbar dropdown and the left-panel
+    // tree so a refresh runs `git worktree list` (and its existence probes) once, off the UI thread
+    // and independent of the left panel being visible; the dropdown reuses the last completed value
+    // (see #13059). Fetches are serialized: a new fetch starts only after the previous one completed,
+    // and a fetch superseded while still queued is skipped, so repeated refreshes cannot pile up
+    // concurrent `git worktree list` calls behind a slow (e.g. disconnected UNC) path.
     // A successful fetch is published only while it is still the current fetch for the same module
     // (so an older, slower fetch can't overwrite a newer list out of order), and the list is
     // cleared when the repository changes (see SetGitModule).
+    private readonly CancellationTokenSequence _worktreesSequence = new();
     private Task<IReadOnlyList<GitWorktree>>? _worktreesTask;
+    private IGitModule? _worktreesModule;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
@@ -473,6 +477,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             _gitStatusMonitor?.Dispose();
             _windowsJumpListManager?.Dispose();
             _gpgInfoSequence.Dispose();
+            _worktreesSequence.Dispose();
         }
 
         base.Dispose(disposing);
@@ -727,25 +732,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _aheadBehindDataProvider?.ResetCache();
 
         // Start a fresh worktree fetch off the UI thread (independent of the left panel being
-        // visible), so a dead UNC path never blocks the UI. The dropdown reuses the last
-        // completed value; while the fetch is in flight it shows the previous value (see #13059).
-        // The left-panel tree fetches its own list off the UI thread.
-        // Capture the module the fetch belongs to; a successful result is published only while
-        // this is still the current fetch for the same module, so an older, slower fetch can't
-        // overwrite a newer list out of order (or a different repository's list after a switch).
-        IGitModule module = Module;
-        _worktreesTask = Task.Run(() => module.GetWorktrees());
-        _worktreesTask.ContinueWith(
-            t =>
-            {
-                if (t.IsFaulted || t.IsCanceled || !ReferenceEquals(_worktreesTask, t) || !ReferenceEquals(Module, module))
-                {
-                    return;
-                }
+        // visible), so a dead UNC path never blocks the UI. The left-panel tree consumes the
+        // same fetch when the revision grid raises RevisionsLoading (see #13059).
+        StartWorktreesFetchAsync();
 
-                _worktrees = t.Result;
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
         {
@@ -769,6 +759,49 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         RefreshGitStatusMonitor();
         UpdateStashCount();
+    }
+
+    /// <summary>
+    ///  Returns the current worktree fetch for the current module, starting one only if there is none
+    ///  for this module yet, so the left-panel tree reuses the fetch started by the refresh.
+    /// </summary>
+    private Task<IReadOnlyList<GitWorktree>> GetWorktreesAsync()
+        => _worktreesTask is not null && ReferenceEquals(_worktreesModule, Module)
+            ? _worktreesTask
+            : StartWorktreesFetchAsync();
+
+    private Task<IReadOnlyList<GitWorktree>> StartWorktreesFetchAsync()
+    {
+        // `git worktree list` and the existence probes cannot be cancelled once started, so a new fetch is
+        // chained after the previous one instead of running concurrently with it. Starting a new fetch
+        // cancels the token of a still queued one; with LazyCancellation the skipped fetch completes only
+        // after its predecessor, so at most one fetch runs at a time and only the newest queued one runs.
+        // Capture the module the fetch belongs to; a successful result is published only while
+        // this is still the current fetch for the same module, so an older, slower fetch can't
+        // overwrite a newer list out of order (or a different repository's list after a switch).
+        IGitModule module = Module;
+        CancellationToken cancellationToken = _worktreesSequence.Next();
+        Task previousTask = _worktreesTask ?? Task.CompletedTask;
+        Task<IReadOnlyList<GitWorktree>> worktreesTask = previousTask.ContinueWith(
+            _ => module.GetWorktrees(),
+            cancellationToken,
+            TaskContinuationOptions.LazyCancellation,
+            TaskScheduler.Default);
+        _worktreesTask = worktreesTask;
+        _worktreesModule = module;
+        worktreesTask.ContinueWith(
+            t =>
+            {
+                if (t.IsFaulted || t.IsCanceled || !ReferenceEquals(_worktreesTask, t) || !ReferenceEquals(Module, module))
+                {
+                    return;
+                }
+
+                _worktrees = t.Result;
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+
+        return worktreesTask;
     }
 
     private void RefreshGitStatusMonitor() => _gitStatusMonitor?.RequestRefresh();
@@ -1366,7 +1399,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh);
+        repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, GetWorktreesAsync(), forceRefresh);
     }
 
     private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)

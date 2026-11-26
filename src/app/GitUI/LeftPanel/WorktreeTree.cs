@@ -9,23 +9,38 @@ namespace GitUI.LeftPanel;
 
 internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCommands) : Tree(treeNode, uiCommands)
 {
-    internal void Refresh()
+    /// <summary>
+    ///  Reloads the worktree nodes.
+    /// </summary>
+    /// <param name="worktrees">
+    ///  An already started fetch of the worktrees to display, shared with the revision refresh so that
+    ///  <c>git worktree list</c> does not run twice; <see langword="null"/> to fetch the worktrees here.
+    /// </param>
+    internal void Refresh(Task<IReadOnlyList<GitWorktree>>? worktrees = null)
     {
         if (!IsAttached)
         {
             return;
         }
 
-        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(cancellationToken), getRefs: null!);
+        // The shared fetch runs on the thread pool and does not need the UI thread to complete.
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(worktrees, cancellationToken), getRefs: null!);
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
     }
 
-    private async Task<Nodes> LoadNodesAsync(CancellationToken token)
+    private async Task<Nodes> LoadNodesAsync(Task<IReadOnlyList<GitWorktree>>? worktreesTask, CancellationToken token)
     {
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
 
         // Fetched off the UI thread so the (potentially slow) git call never blocks the UI.
-        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+        // A superseded reload must not wait for a slow shared fetch, so the await observes the token.
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
+        IReadOnlyList<GitWorktree> worktrees = worktreesTask is null
+            ? Module.GetWorktrees()
+            : await worktreesTask.WithCancellation(token);
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
         return FillWorktreeTree(worktrees, token);
     }
 

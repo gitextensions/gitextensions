@@ -250,12 +250,13 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// </summary>
     /// <param name="getRefs">Function to get refs.</param>
     /// <param name="getStashRevs">Lazy accessor for stash commits.</param>
+    /// <param name="worktrees">The worktree fetch shared with the caller, so the worktrees are not fetched twice.</param>
     /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-    public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
+    public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, Task<IReadOnlyList<GitWorktree>> worktrees, bool forceRefresh)
     {
         _branchesTree.Refresh(getRefs);
         _remotesTree.Refresh(getRefs);
-        _worktreeTree.Refresh();
+        _worktreeTree.Refresh(worktrees);
         _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
         RefreshBisectTree(getRefs);
