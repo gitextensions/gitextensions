@@ -1356,7 +1356,7 @@ partial class FileStatusList
         tsmiOpenWorkingDirectoryFileWith.Visible = canOpenFile;
 
         bool canIgnoreFiles = selectionInfo.IsAnyItemWorkTree && !isSubmodule;
-        bool canStopTracking = isSingleFile && selectionInfo.IsAnyTracked;
+        bool canStopTracking = _revisionDiffController.ShouldShowMenuStopTracking(selectionInfo);
 
         sepIgnore.Visible = canIgnoreFiles || canStopTracking;
 
