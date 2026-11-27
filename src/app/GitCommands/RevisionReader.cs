@@ -702,9 +702,13 @@ public sealed class RevisionReader
                 firstRecord = record.ToArray();
                 isFirst = false;
             }
-            else if (!string.IsNullOrWhiteSpace(Encoding.UTF8.GetString(record.ToArray())))
+            else
             {
-                Trace.WriteLine($"Ignoring unexpected trailing git log output: {Encoding.UTF8.GetString(record.ToArray())}");
+                string trailingOutput = GitModule.LosslessEncoding.GetString(record.ToArray());
+                if (!string.IsNullOrWhiteSpace(trailingOutput))
+                {
+                    Trace.WriteLine($"Ignoring unexpected trailing git log output: {trailingOutput}");
+                }
             }
         }
 
