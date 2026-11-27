@@ -3515,6 +3515,10 @@ Do you want to continue?</source>
 Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkOmitSecondsInRevisionGridDate.Text">
+        <source>Omit seconds in the commit list timestamp</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowConsoleTab.Text">
         <source>Show the Console tab</source>
         <target />

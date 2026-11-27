@@ -47,6 +47,7 @@ partial class FormBrowseRepoSettingsPage
         lblOutputHistoryDepth = new Label();
         _NO_TRANSLATE_OutputHistoryDepth = new NumericUpDown();
         chkShowRevisionGridTooltip = new SettingsCheckBox();
+        chkOmitSecondsInRevisionGridDate = new SettingsCheckBox();
         tlpnlMain.SuspendLayout();
         groupBox1.SuspendLayout();
         tlpnlGeneral.SuspendLayout();
@@ -172,6 +173,22 @@ partial class FormBrowseRepoSettingsPage
         chkShowRevisionGridTooltip.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
         chkShowRevisionGridTooltip.ToolTipText = "";
         // 
+        // chkOmitSecondsInRevisionGridDate
+        // 
+        chkOmitSecondsInRevisionGridDate.AutoSize = true;
+        chkOmitSecondsInRevisionGridDate.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        chkOmitSecondsInRevisionGridDate.Checked = false;
+        chkOmitSecondsInRevisionGridDate.Dock = DockStyle.Fill;
+        chkOmitSecondsInRevisionGridDate.Location = new Point(4, 157);
+        chkOmitSecondsInRevisionGridDate.ManualSectionAnchorName = null;
+        chkOmitSecondsInRevisionGridDate.Margin = new Padding(4, 3, 4, 3);
+        chkOmitSecondsInRevisionGridDate.Name = "chkOmitSecondsInRevisionGridDate";
+        chkOmitSecondsInRevisionGridDate.Size = new Size(249, 19);
+        chkOmitSecondsInRevisionGridDate.TabIndex = 6;
+        chkOmitSecondsInRevisionGridDate.Text = "Omit seconds in the commit list timestamp";
+        chkOmitSecondsInRevisionGridDate.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+        chkOmitSecondsInRevisionGridDate.ToolTipText = null;
+        // 
         // tlpnlMain
         // 
         tlpnlMain.ColumnCount = 1;
@@ -217,10 +234,12 @@ partial class FormBrowseRepoSettingsPage
         tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 2);
         tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 3);
         tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 4);
+        tlpnlGeneral.Controls.Add(chkOmitSecondsInRevisionGridDate, 0, 5);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 5;
+        tlpnlGeneral.RowCount = 6;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -344,4 +363,5 @@ partial class FormBrowseRepoSettingsPage
     private Label lblOutputHistoryDepth;
     private NumericUpDown _NO_TRANSLATE_OutputHistoryDepth;
     private SettingsCheckBox chkShowRevisionGridTooltip;
+    private SettingsCheckBox chkOmitSecondsInRevisionGridDate;
 }
