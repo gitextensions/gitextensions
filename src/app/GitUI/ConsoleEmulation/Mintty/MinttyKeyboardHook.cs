@@ -15,12 +15,12 @@ namespace GitUI.ConsoleEmulation.Mintty;
 /// </summary>
 internal sealed class MinttyKeyboardHook : IDisposable
 {
-    private const uint _altContextBit = 1u << 29;
+    private const uint _wmApp = 0x8000;
+    internal const uint InterceptedKeyMessage = _wmApp + 1;
     private const nuint _keyDownMessage = 0x0100;
     private const nuint _keyUpMessage = 0x0101;
     private const nuint _sysKeyDownMessage = 0x0104;
     private const nuint _sysKeyUpMessage = 0x0105;
-    private const uint _scanCodeShift = 16;
 
     private readonly HashSet<VIRTUAL_KEY> _consumedKeyDowns = [];
     private readonly Func<HWND> _getFormWindow;
@@ -29,6 +29,7 @@ internal sealed class MinttyKeyboardHook : IDisposable
     private readonly HOOKPROC _hookProc;
     private readonly bool _interceptTabPress;
     private bool _ctrlDown;
+    private bool _shiftDown;
 
     public MinttyKeyboardHook(Func<HWND> getFormWindow, Func<HWND> getMinttyWindow, bool interceptTabPress)
     {
@@ -66,6 +67,7 @@ internal sealed class MinttyKeyboardHook : IDisposable
         _hook = HHOOK.Null;
         _consumedKeyDowns.Clear();
         _ctrlDown = false;
+        _shiftDown = false;
     }
 
     private LRESULT HookProc(int code, WPARAM messageId, LPARAM hookData)
@@ -86,6 +88,9 @@ internal sealed class MinttyKeyboardHook : IDisposable
         return PInvoke.GetGUIThreadInfo(0, ref info) && info.hwndFocus == window;
     }
 
+    private Keys GetModifiers(bool altDown)
+        => (_ctrlDown ? Keys.Control : Keys.None) | (_shiftDown ? Keys.Shift : Keys.None) | (altDown ? Keys.Alt : Keys.None);
+
     private bool ShouldIntercept(VIRTUAL_KEY key, bool altDown)
     {
         if (key is VIRTUAL_KEY.VK_TAB)
@@ -101,13 +106,13 @@ internal sealed class MinttyKeyboardHook : IDisposable
         }
 
         // Ctrl + digit is used for focus control. Ctrl+Alt is AltGr, i.e. text input.
-        if (key is >= VIRTUAL_KEY.VK_0 and <= VIRTUAL_KEY.VK_9)
+        if (key is >= VIRTUAL_KEY.VK_0 and <= VIRTUAL_KEY.VK_9 && _ctrlDown && !altDown)
         {
-            return !altDown && _ctrlDown;
+            return true;
         }
 
         // Alt + character (mnemonic). Ctrl+Alt is AltGr, i.e. text input.
-        return altDown && !_ctrlDown && key is not (VIRTUAL_KEY.VK_MENU or VIRTUAL_KEY.VK_LMENU or VIRTUAL_KEY.VK_RMENU);
+        return altDown && !_ctrlDown && key is (>= VIRTUAL_KEY.VK_A and <= VIRTUAL_KEY.VK_Z) or (>= VIRTUAL_KEY.VK_0 and <= VIRTUAL_KEY.VK_9);
     }
 
     private unsafe bool TryHandle(WPARAM messageId, LPARAM hookData)
@@ -126,6 +131,10 @@ internal sealed class MinttyKeyboardHook : IDisposable
         if (key is VIRTUAL_KEY.VK_CONTROL or VIRTUAL_KEY.VK_LCONTROL or VIRTUAL_KEY.VK_RCONTROL)
         {
             _ctrlDown = !isKeyUp;
+        }
+        else if (key is VIRTUAL_KEY.VK_SHIFT or VIRTUAL_KEY.VK_LSHIFT or VIRTUAL_KEY.VK_RSHIFT)
+        {
+            _shiftDown = !isKeyUp;
         }
 
         // Swallow the matching key-up independent of current focus and modifiers
@@ -151,11 +160,11 @@ internal sealed class MinttyKeyboardHook : IDisposable
 
         _consumedKeyDowns.Add(key);
 
-        // Posting (not sending) lets the message loop run the regular WinForms pre-processing:
-        // dialog keys (Tab), shortcuts (ProcessCmdKey) and mnemonics.
+        // Posting (not sending) avoids re-entering the hook. The modifiers are carried explicitly,
+        // as WinForms reads them from the keyboard state of its own thread, which mintty does not update.
+        Keys keyData = (Keys)(int)key | GetModifiers(altDown);
         nuint message = altDown ? _sysKeyDownMessage : _keyDownMessage;
-        nint keyDownLParam = (nint)(1u | (data->scanCode << (int)_scanCodeShift) | (altDown ? _altContextBit : 0));
-        PInvoke.PostMessage(formWindow, (uint)message, (nuint)key, keyDownLParam);
+        PInvoke.PostMessage(formWindow, InterceptedKeyMessage, (nuint)(uint)keyData, (nint)message);
 
         return true;
     }

@@ -24,7 +24,7 @@ internal sealed class MinttyControl : Panel
         SetStyle(ControlStyles.Selectable, true);
 
         _keyboardHook = new MinttyKeyboardHook(
-            () => FindForm() is { IsHandleCreated: true } form ? (HWND)form.Handle : HWND.Null,
+            () => IsHandleCreated ? (HWND)Handle : HWND.Null,
             () => _runningSession?.WindowHandle ?? HWND.Null,
             interceptTabPress);
     }
@@ -39,6 +39,44 @@ internal sealed class MinttyControl : Panel
     {
         _keyboardHook.Uninstall();
         base.OnHandleDestroyed(e);
+    }
+
+    protected override void WndProc(ref Message m)
+    {
+        if (m.Msg == MinttyKeyboardHook.InterceptedKeyMessage)
+        {
+            ProcessInterceptedKey(m);
+            return;
+        }
+
+        base.WndProc(ref m);
+    }
+
+    private void ProcessInterceptedKey(Message interceptedMessage)
+    {
+        // The modifiers are taken from the hook, as the keyboard state of this thread does not reflect them.
+        Keys keyData = (Keys)interceptedMessage.WParam.ToInt32();
+        Message keyMessage = Message.Create(Handle, interceptedMessage.LParam.ToInt32(), (nint)(int)(keyData & Keys.KeyCode), nint.Zero);
+        if (ProcessCmdKey(ref keyMessage, keyData))
+        {
+            return;
+        }
+
+        if ((keyData & Keys.Alt) == Keys.Alt
+            && (keyData & Keys.Control) == Keys.None
+            && ((keyData & Keys.KeyCode) is (>= Keys.A and <= Keys.Z) or (>= Keys.D0 and <= Keys.D9)))
+        {
+            ProcessDialogChar((char)(keyData & Keys.KeyCode));
+            if (FindForm() is { IsHandleCreated: true } form)
+            {
+                form.ActiveControl = null;
+                NativeMethods.MoveFocusFromForeignThread((HWND)form.Handle);
+            }
+
+            return;
+        }
+
+        ProcessDialogKey(keyData);
     }
 
     internal MinttySession? RunningSession => _runningSession;

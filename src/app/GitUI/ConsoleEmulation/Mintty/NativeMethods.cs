@@ -1,4 +1,4 @@
-using Windows.Win32;
+﻿using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.JobObjects;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -94,6 +94,36 @@ internal static class NativeMethods
         finally
         {
             PInvoke.AttachThreadInput(currentThreadId, targetThreadId, false);
+        }
+    }
+
+    /// <summary>
+    ///  Moves keyboard focus from the window currently holding it, which may belong to another thread, to <paramref name="hwnd"/>.
+    /// </summary>
+    internal static void MoveFocusFromForeignThread(HWND hwnd)
+    {
+        GUITHREADINFO info = new() { cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf<GUITHREADINFO>() };
+        if (!PInvoke.GetGUIThreadInfo(0, ref info) || info.hwndFocus.IsNull)
+        {
+            FocusWindowWithAttachedInput(hwnd);
+            return;
+        }
+
+        uint focusThreadId = PInvoke.GetWindowThreadProcessId(info.hwndFocus, out _);
+        uint currentThreadId = PInvoke.GetCurrentThreadId();
+        if (focusThreadId == currentThreadId || !PInvoke.AttachThreadInput(currentThreadId, focusThreadId, true))
+        {
+            FocusWindowWithAttachedInput(hwnd);
+            return;
+        }
+
+        try
+        {
+            PInvoke.SetFocus(hwnd);
+        }
+        finally
+        {
+            PInvoke.AttachThreadInput(currentThreadId, focusThreadId, false);
         }
     }
 
