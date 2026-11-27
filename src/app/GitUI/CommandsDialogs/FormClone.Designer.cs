@@ -33,6 +33,7 @@ partial class FormClone
         cbDownloadFullHistory = new CheckBox();
         Info = new Label();
         groupBox1 = new GroupBox();
+        flpnlRepositoryType = new FlowLayoutPanel();
         CentralRepository = new RadioButton();
         PersonalRepository = new RadioButton();
         LoadSSHKey = new Button();
@@ -43,6 +44,7 @@ partial class FormClone
         ControlsPanel.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         groupBox1.SuspendLayout();
+        flpnlRepositoryType.SuspendLayout();
         tpnlMain.SuspendLayout();
         optionsPanel.SuspendLayout();
         SuspendLayout();
@@ -77,10 +79,12 @@ partial class FormClone
         // 
         // tableLayoutPanel1
         // 
+        tableLayoutPanel1.AutoSize = true;
+        tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         tableLayoutPanel1.ColumnCount = 3;
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
         tableLayoutPanel1.Controls.Add(repositoryLabel, 0, 0);
         tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_From, 1, 0);
         tableLayoutPanel1.Controls.Add(FromBrowse, 2, 0);
@@ -96,10 +100,10 @@ partial class FormClone
         tableLayoutPanel1.Margin = new Padding(0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
         tableLayoutPanel1.RowCount = 4;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle());
+        tableLayoutPanel1.RowStyles.Add(new RowStyle());
+        tableLayoutPanel1.RowStyles.Add(new RowStyle());
+        tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.Size = new Size(623, 125);
         tableLayoutPanel1.TabIndex = 0;
         // 
@@ -130,11 +134,13 @@ partial class FormClone
         // FromBrowse
         // 
         FromBrowse.Anchor = AnchorStyles.Right;
+        FromBrowse.AutoSize = true;
+        FromBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         FromBrowse.Image = Properties.Images.BrowseFileExplorer;
         FromBrowse.ImageAlign = ContentAlignment.MiddleLeft;
         FromBrowse.Location = new Point(526, 3);
+        FromBrowse.MinimumSize = new Size(94, 25);
         FromBrowse.Name = "FromBrowse";
-        FromBrowse.Size = new Size(94, 24);
         FromBrowse.TabIndex = 2;
         FromBrowse.Text = "&Browse";
         FromBrowse.UseVisualStyleBackColor = true;
@@ -168,11 +174,13 @@ partial class FormClone
         // ToBrowse
         // 
         ToBrowse.Anchor = AnchorStyles.Right;
+        ToBrowse.AutoSize = true;
+        ToBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         ToBrowse.Image = Properties.Images.BrowseFileExplorer;
         ToBrowse.ImageAlign = ContentAlignment.MiddleLeft;
         ToBrowse.Location = new Point(526, 34);
+        ToBrowse.MinimumSize = new Size(94, 25);
         ToBrowse.Name = "ToBrowse";
-        ToBrowse.Size = new Size(94, 24);
         ToBrowse.TabIndex = 5;
         ToBrowse.Text = "B&rowse";
         ToBrowse.UseVisualStyleBackColor = true;
@@ -264,38 +272,47 @@ partial class FormClone
         groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         groupBox1.AutoSize = true;
         groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        groupBox1.Controls.Add(CentralRepository);
-        groupBox1.Controls.Add(PersonalRepository);
+        groupBox1.Controls.Add(flpnlRepositoryType);
         groupBox1.Location = new Point(3, 184);
         groupBox1.Margin = new Padding(3, 4, 3, 0);
-        groupBox1.MaximumSize = new Size(0, 88);
         groupBox1.Name = "groupBox1";
         groupBox1.Size = new Size(617, 88);
         groupBox1.TabIndex = 2;
         groupBox1.TabStop = false;
         groupBox1.Text = "Repository type";
         // 
-        // CentralRepository
+        // flpnlRepositoryType
         // 
-        CentralRepository.AutoSize = true;
-        CentralRepository.Location = new Point(20, 48);
-        CentralRepository.Name = "CentralRepository";
-        CentralRepository.Size = new Size(277, 19);
-        CentralRepository.TabIndex = 0;
-        CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
-        CentralRepository.UseVisualStyleBackColor = true;
+        flpnlRepositoryType.AutoSize = true;
+        flpnlRepositoryType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        flpnlRepositoryType.Controls.Add(PersonalRepository);
+        flpnlRepositoryType.Controls.Add(CentralRepository);
+        flpnlRepositoryType.Dock = DockStyle.Fill;
+        flpnlRepositoryType.FlowDirection = FlowDirection.TopDown;
+        flpnlRepositoryType.Location = new Point(3, 19);
+        flpnlRepositoryType.Name = "flpnlRepositoryType";
+        flpnlRepositoryType.Padding = new Padding(9, 4, 9, 4);
+        flpnlRepositoryType.Size = new Size(611, 66);
+        flpnlRepositoryType.TabIndex = 0;
+        flpnlRepositoryType.WrapContents = false;
         // 
         // PersonalRepository
         // 
         PersonalRepository.AutoSize = true;
         PersonalRepository.Checked = true;
-        PersonalRepository.Location = new Point(20, 25);
         PersonalRepository.Name = "PersonalRepository";
-        PersonalRepository.Size = new Size(126, 19);
-        PersonalRepository.TabIndex = 1;
+        PersonalRepository.TabIndex = 0;
         PersonalRepository.TabStop = true;
         PersonalRepository.Text = "&Personal repository";
         PersonalRepository.UseVisualStyleBackColor = true;
+        // 
+        // CentralRepository
+        // 
+        CentralRepository.AutoSize = true;
+        CentralRepository.Name = "CentralRepository";
+        CentralRepository.TabIndex = 1;
+        CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
+        CentralRepository.UseVisualStyleBackColor = true;
         // 
         // LoadSSHKey
         // 
@@ -375,6 +392,8 @@ partial class FormClone
         tableLayoutPanel1.PerformLayout();
         groupBox1.ResumeLayout(false);
         groupBox1.PerformLayout();
+        flpnlRepositoryType.ResumeLayout(false);
+        flpnlRepositoryType.PerformLayout();
         tpnlMain.ResumeLayout(false);
         tpnlMain.PerformLayout();
         optionsPanel.ResumeLayout(false);
@@ -391,6 +410,7 @@ partial class FormClone
     private Button FromBrowse;
     private ComboBox _NO_TRANSLATE_To;
     private GroupBox groupBox1;
+    private FlowLayoutPanel flpnlRepositoryType;
     private RadioButton CentralRepository;
     private RadioButton PersonalRepository;
     private Button LoadSSHKey;

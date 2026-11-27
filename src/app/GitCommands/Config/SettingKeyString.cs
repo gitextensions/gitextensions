@@ -27,34 +27,44 @@ public static class SettingKeyString
     public static readonly string FilesEncoding = "i18n.filesencoding";
 
     /// <summary>
+    /// "remote."
+    /// </summary>
+    public static string RemoteKeyPrefix = "remote.";
+
+    /// <summary>
     /// "remote.{0}.color"
     /// </summary>
-    public static string RemoteColor = "remote.{0}.color";
+    public static string RemoteColor = RemoteKeyPrefix + "{0}.color";
 
     /// <summary>
     /// "remote.{0}.prefix"
     /// </summary>
-    public static readonly string RemotePrefix = "remote.{0}.prefix";
+    public static readonly string RemotePrefix = RemoteKeyPrefix + "{0}.prefix";
 
     /// <summary>
     /// "remote.{0}.push"
     /// </summary>
-    public static readonly string RemotePush = "remote.{0}.push";
+    public static readonly string RemotePush = RemoteKeyPrefix + "{0}.push";
 
     /// <summary>
     /// "remote.{0}.pushurl"
     /// </summary>
-    public static readonly string RemotePushUrl = "remote.{0}.pushurl";
+    public static readonly string RemotePushUrl = RemoteKeyPrefix + "{0}.pushurl";
+
+    /// <summary>
+    /// ".url"
+    /// </summary>
+    public static readonly string RemoteUrlSuffix = ".url";
 
     /// <summary>
     /// "remote.{0}.url"
     /// </summary>
-    public static readonly string RemoteUrl = "remote.{0}.url";
+    public static readonly string RemoteUrl = RemoteKeyPrefix + "{0}" + RemoteUrlSuffix;
 
     /// <summary>
     /// "remote.{0}.puttykeyfile"
     /// </summary>
-    public static readonly string RemotePuttySshKey = "remote.{0}.puttykeyfile";
+    public static readonly string RemotePuttySshKey = RemoteKeyPrefix + "{0}.puttykeyfile";
 
     /// <summary>
     /// user.name

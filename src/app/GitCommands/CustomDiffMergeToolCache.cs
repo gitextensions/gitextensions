@@ -1,5 +1,4 @@
 ﻿using GitCommands.Config;
-using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.Threading;
 
@@ -15,7 +14,7 @@ public class CustomDiffMergeToolCache
     private readonly bool _isDiff;
     private readonly SemaphoreSlim _mutex = new(1);
 
-    private IEnumerable<string>? _tools;
+    private IReadOnlyCollection<string>? _tools;
 
     public static CustomDiffMergeToolCache DiffToolCache { get; } = new(true);
     public static CustomDiffMergeToolCache MergeToolCache { get; } = new(false);
@@ -42,7 +41,7 @@ public class CustomDiffMergeToolCache
     /// </summary>
     /// <param name="module">The Git module</param>
     /// <param name="delay">The delay before starting the operation</param>
-    public async Task<IEnumerable<string>> GetToolsAsync(IGitModule module, int delay, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<string>> GetToolsAsync(IGitModule module, int delay, CancellationToken cancellationToken)
     {
         if (_tools is not null)
         {
@@ -87,10 +86,20 @@ public class CustomDiffMergeToolCache
     /// Parse the output from 'git difftool --tool-help'.
     /// </summary>
     /// <param name="output">The output string.</param>
-    /// <returns>list with tool names.</returns>
-    private static IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
+    /// <returns>The distinct tool names, the default tool first.</returns>
+    private static SortedSet<string> ParseCustomDiffMergeTool(string output, string defaultTool)
     {
-        List<string> tools = [];
+        SortedSet<string> tools = new(Comparer<string>.Create((x, y) =>
+        {
+            // The default tool first
+            int result = (x != defaultTool).CompareTo(y != defaultTool);
+            if (result == 0)
+            {
+                result = string.Compare(x, y, StringComparison.InvariantCulture);
+            }
+
+            return result != 0 ? result : string.CompareOrdinal(x, y);
+        }));
 
         // Simple parsing of the textual output opposite to porcelain format
         // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298
@@ -98,9 +107,12 @@ public class CustomDiffMergeToolCache
 
         // The sections to parse in the text has a 'header', then break parsing at first non match
 
-        foreach (string l in output.LazySplit('\n'))
+        ReadOnlySpan<char> outputAsSpan = output.AsSpan();
+        Span<Range> splitDestination = stackalloc Range[2];
+        foreach (Range range in outputAsSpan.Split('\n'))
         {
-            if (l == "The following tools are valid, but not currently available:")
+            ReadOnlySpan<char> l = outputAsSpan[range];
+            if (l is "The following tools are valid, but not currently available:")
             {
                 // No more usable tools
                 break;
@@ -113,38 +125,29 @@ public class CustomDiffMergeToolCache
 
             // two tabs, then tool name, cmd (if split in 3) in second
             // cmd is unreliable for diff and not needed but could be used for mergetool special handling
-            string[] delimit = [" ", ".cmd"];
-            string[] tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
-            if (tool.Length == 0)
+            ReadOnlySpan<char> withoutTabs = l[2..];
+            int rangesWritten = withoutTabs.SplitAny(splitDestination, [" ", ".cmd"], StringSplitOptions.RemoveEmptyEntries);
+            if (rangesWritten == 0)
             {
                 continue;
             }
 
             // Ignore (known) tools that must run in a terminal
-            string[] ignoredTools = ["vimdiff", "vimdiff1", "vimdiff2", "vimdiff3"];
-            string toolName = tool[0];
-            if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
+            ReadOnlySpan<char> toolNameSpan = withoutTabs[splitDestination[0]];
+            if (toolNameSpan is "vimdiff" or "vimdiff1" or "vimdiff2" or "vimdiff3")
             {
-                tools.Add(toolName);
+                continue;
             }
+
+            tools.Add(new string(toolNameSpan));
         }
 
-        // Return the default tool first
-        return tools.OrderBy(tool => tool != defaultTool).ThenBy(tool => tool);
+        return tools;
     }
 
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor
+    internal static class TestAccessor
     {
-        private readonly CustomDiffMergeToolCache _cache;
-
-        public TestAccessor(CustomDiffMergeToolCache cache)
-        {
-            _cache = cache;
-        }
-
-        public IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
+        public static SortedSet<string> ParseCustomDiffMergeTool(string output, string defaultTool)
             => CustomDiffMergeToolCache.ParseCustomDiffMergeTool(output, defaultTool);
     }
 }

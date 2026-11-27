@@ -13,11 +13,9 @@ internal abstract class Tree : NodeBase, IDisposable
     protected TaskCompletionSource LoadingCompleted = new();
 
     protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+        : base(treeNode)
     {
-        Nodes = new Nodes(this);
         _uiCommandsSource = uiCommands;
-        TreeViewNode = treeNode;
-        treeNode.Tag = this;
 
         uiCommands.UICommandsChanged += (a, e) =>
         {
@@ -113,6 +111,11 @@ internal abstract class Tree : NodeBase, IDisposable
 
                 await treeView.SwitchToMainThreadAsync(cancellationToken);
 
+                // The nodes are added to the tree view in one go, which can take seconds for thousands of refs.
+                // Posted messages, like the continuation of this task, are handled before painting, so wait for
+                // the UI thread to be idle to let the rest of the window (e.g. the revision grid) be painted first.
+                await WaitForIdleAsync(cancellationToken);
+
                 // Check again after switch to main thread
                 treeView = TreeViewNode.TreeView;
 
@@ -157,6 +160,38 @@ internal abstract class Tree : NodeBase, IDisposable
                 LoadingCompleted.TrySetResult();
             }
         });
+    }
+
+    /// <summary>
+    ///  Completes when the UI thread has no more messages to handle, i.e. after the pending painting is done.
+    /// </summary>
+    /// <param name="cancellationToken">The token to cancel waiting.</param>
+    private static async Task WaitForIdleAsync(CancellationToken cancellationToken)
+    {
+        // Application.Idle is not raised without a message loop, like in unit tests.
+        if (!Application.MessageLoop)
+        {
+            return;
+        }
+
+        TaskCompletionSource idle = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        Application.Idle += OnIdle;
+
+        try
+        {
+            using (cancellationToken.Register(() => idle.TrySetCanceled(cancellationToken)))
+            {
+                await idle.Task;
+            }
+        }
+        finally
+        {
+            Application.Idle -= OnIdle;
+        }
+
+        return;
+
+        void OnIdle(object? sender, EventArgs e) => idle.TrySetResult();
     }
 
     private void FillTreeViewNode(string? originalSelectedNodeFullNamePath, bool firstTime)

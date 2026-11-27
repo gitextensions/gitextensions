@@ -8,9 +8,15 @@ public sealed class NestledVirtualRef(IGitRef gitRef, string completeName, bool 
     public string Name { get; } = GitRef.ParseName(completeName);
 
     /// <summary>
+    ///  Gets the ref that the virtual label is attached to.
+    /// </summary>
+    public IGitRef TargetRef => gitRef;
+
+    /// <summary>
     ///  <see cref="ObjectId"/> of a nestled ref is always default/zero.
     /// </summary>
     public ObjectId ObjectId => default;
+
     public string? Guid => null;
     public string CompleteName => completeName;
     public string LocalName => GitRef.ComputeLocalName(IsRemote, Remote, Name);

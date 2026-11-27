@@ -53,6 +53,7 @@ partial class InteractiveGitActionControl
         // ButtonContainer
         // 
         ButtonContainer.AutoSize = true;
+        ButtonContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         ButtonContainer.Controls.Add(ResolveButton);
         ButtonContainer.Controls.Add(ContinueButton);
         ButtonContainer.Controls.Add(AbortButton);
@@ -68,9 +69,11 @@ partial class InteractiveGitActionControl
         // 
         // ResolveButton
         // 
+        ResolveButton.AutoSize = true;
+        ResolveButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         ResolveButton.Location = new Point(3, 5);
+        ResolveButton.MinimumSize = new Size(75, 23);
         ResolveButton.Name = "ResolveButton";
-        ResolveButton.Size = new Size(75, 23);
         ResolveButton.TabIndex = 6;
         ResolveButton.Text = "Resolve...";
         ResolveButton.UseVisualStyleBackColor = true;
@@ -78,9 +81,11 @@ partial class InteractiveGitActionControl
         // 
         // ContinueButton
         // 
+        ContinueButton.AutoSize = true;
+        ContinueButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         ContinueButton.Location = new Point(84, 5);
+        ContinueButton.MinimumSize = new Size(75, 23);
         ContinueButton.Name = "ContinueButton";
-        ContinueButton.Size = new Size(75, 23);
         ContinueButton.TabIndex = 1;
         ContinueButton.Text = "Continue";
         ContinueButton.UseVisualStyleBackColor = true;
@@ -88,9 +93,11 @@ partial class InteractiveGitActionControl
         // 
         // AbortButton
         // 
+        AbortButton.AutoSize = true;
+        AbortButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         AbortButton.Location = new Point(165, 5);
+        AbortButton.MinimumSize = new Size(75, 23);
         AbortButton.Name = "AbortButton";
-        AbortButton.Size = new Size(75, 23);
         AbortButton.TabIndex = 2;
         AbortButton.Text = "Abort";
         AbortButton.UseVisualStyleBackColor = true;
@@ -98,9 +105,11 @@ partial class InteractiveGitActionControl
         // 
         // MoreButton
         // 
+        MoreButton.AutoSize = true;
+        MoreButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         MoreButton.Location = new Point(246, 5);
+        MoreButton.MinimumSize = new Size(75, 23);
         MoreButton.Name = "MoreButton";
-        MoreButton.Size = new Size(75, 23);
         MoreButton.TabIndex = 5;
         MoreButton.Text = "M&ore...";
         MoreButton.UseVisualStyleBackColor = true;

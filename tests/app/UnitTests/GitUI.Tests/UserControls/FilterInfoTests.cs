@@ -1072,58 +1072,37 @@ public class FilterInfoTests
         }
     }
 
-    public static IEnumerable<TestCaseData> FilterInfo_NotesStash
-    {
-        get
-        {
-            foreach (bool showNotes in new[] { false, true })
-            {
-                foreach (bool showStash in new[] { false, true })
-                {
-                    foreach (bool showSessionRefs in new[] { false, true })
-                    {
-                        foreach (bool showReflog in new[] { false, true })
-                        {
-                            foreach (bool showCurrentBranchOnly in new[] { false, true })
-                            {
-                                foreach (bool isValidCheckout in new[] { false, true })
-                                {
-                                    foreach (bool showFilteredBranches in new[] { false, true })
-                                    {
-                                        foreach (string? branchFilter in new[] { "branch1", "", null })
-                                        {
-                                            yield return new TestCaseData(showNotes, showStash, showSessionRefs, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    [TestCaseSource(nameof(FilterInfo_NotesStash))]
-    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showSessionRefs, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
+    [Test]
+    public void FilterInfo_GitNotes_Stashes(
+        [Values] bool showGitNotes,
+        [Values] bool showStashes,
+        [Values] bool showSessionRefs,
+        [Values] bool showReflogReferences,
+        [Values] bool showCurrentBranchOnly,
+        [Values] bool isValidCheckout,
+        [Values] bool branchFilterEnabled,
+        [Values("branch1", "", null)] string? branchFilter)
     {
         bool originalShowGitNotes = AppSettings.ShowGitNotes;
         AppSettings.ShowGitNotes = showGitNotes;
-        bool originalShowStash = AppSettings.ShowStashes;
-        AppSettings.ShowStashes = showStash;
+        bool originalShowStashes = AppSettings.ShowStashes;
+        AppSettings.ShowStashes = showStashes;
         bool originalShowSessionRefs = AppSettings.ShowSessionRefs;
         AppSettings.ShowSessionRefs = showSessionRefs;
+        bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
+        AppSettings.ShowReflogReferences.Value = showReflogReferences;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
+        bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+        AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
         FilterInfo filterInfo = new()
         {
-            ShowReflogReferences = showReflog,
-            ShowCurrentBranchOnly = showCurrentBranchOnly,
-            ByBranchFilter = showFilteredBranches,
-            BranchFilter = branchFilter
+            BranchFilter = branchFilter!
         };
         ObjectId objectId = isValidCheckout ? ObjectId.Random() : default;
         string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => objectId));
         bool showAll = !(showCurrentBranchOnly && !objectId.IsZero)
-            && !(!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter));
+            && !(!showCurrentBranchOnly && branchFilterEnabled && !string.IsNullOrWhiteSpace(branchFilter));
 
         try
         {
@@ -1136,7 +1115,7 @@ public class FilterInfoTests
                 args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/notes/commits($|\s)");
             }
 
-            if (showAll && !showStash)
+            if (showAll && !showStashes)
             {
                 args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
             }
@@ -1149,7 +1128,9 @@ public class FilterInfoTests
             {
                 @"(^|\s)--exclude=refs/agents/\*\*($|\s)",
                 @"(^|\s)--exclude=refs/sessions/\*\*($|\s)",
-                @"(^|\s)--exclude=refs/copilot/checkpoints/\*\*($|\s)"
+                @"(^|\s)--exclude=refs/\*/checkpoints/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/copilot/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/jj/keep/\*\*($|\s)"
             };
 
             foreach (string sessionRefExclusion in sessionRefExclusions)
@@ -1171,8 +1152,8 @@ public class FilterInfoTests
             }
 
             string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
-            if (showStash && ((showCurrentBranchOnly && !objectId.IsZero)
-                || (!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter))))
+            if (showStashes && ((showCurrentBranchOnly && !objectId.IsZero)
+                || (!showCurrentBranchOnly && branchFilterEnabled && !string.IsNullOrWhiteSpace(branchFilter))))
             {
                 args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
             }
@@ -1184,8 +1165,11 @@ public class FilterInfoTests
         finally
         {
             AppSettings.ShowGitNotes = originalShowGitNotes;
-            AppSettings.ShowStashes = originalShowStash;
+            AppSettings.ShowStashes = originalShowStashes;
             AppSettings.ShowSessionRefs = originalShowSessionRefs;
+            AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
+            AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+            AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
         }
 
         return;

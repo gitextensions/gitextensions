@@ -19,9 +19,9 @@ internal readonly struct RevisionGraphConfig
 
     public RevisionGraphConfig()
     {
-        MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
-        RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals.Value;
-        StraightenGraphDiagonals = AppSettings.StraightenGraphDiagonals.Value;
-        StraightenGraphSegmentsLimit = AppSettings.StraightenGraphSegmentsLimit.Value;
+        MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent;
+        RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals;
+        StraightenGraphDiagonals = AppSettings.StraightenGraphDiagonals;
+        StraightenGraphSegmentsLimit = AppSettings.StraightenGraphSegmentsLimit;
     }
 }

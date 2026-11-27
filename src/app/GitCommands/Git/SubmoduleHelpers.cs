@@ -90,15 +90,19 @@ public static partial class SubmoduleHelpers
 
                 char c = line[0];
                 const string commitStr = "commit ";
-                string hash = "";
+                ReadOnlySpan<char> hash = "";
                 int pos = line.IndexOf(commitStr);
                 if (pos >= 0)
                 {
-                    hash = line[(pos + commitStr.Length)..];
+                    hash = line.AsSpan(pos + commitStr.Length);
                 }
 
                 bool endsWithDirty = hash.EndsWith("-dirty");
-                hash = hash.Replace("-dirty", "");
+                if (endsWithDirty)
+                {
+                    hash = hash[..^"-dirty".Length];
+                }
+
                 if (c == '-')
                 {
                     oldCommitId = ObjectId.Parse(hash);

@@ -21,6 +21,21 @@ public class InteractiveGitActionControlTests
         _control.Dispose();
     }
 
+    [TestCase(InteractiveGitActionControl.GitAction.Rebase, true)]
+    [TestCase(InteractiveGitActionControl.GitAction.Merge, true)]
+    [TestCase(InteractiveGitActionControl.GitAction.Bisect, false)]
+    public void The_buttons_must_be_tall_enough_for_their_caption(InteractiveGitActionControl.GitAction action, bool conflicts)
+    {
+        _accessor.SetGitAction(action, conflicts);
+        _control.PerformLayout();
+
+        foreach (Button button in _accessor.Controls.OfType<Button>())
+        {
+            button.Height.Should().BeGreaterThanOrEqualTo(button.GetPreferredSize(Size.Empty).Height,
+                $"the caption of '{button.Text}' would be cut off otherwise");
+        }
+    }
+
     [TestCase(InteractiveGitActionControl.GitAction.Rebase, false)]
     [TestCase(InteractiveGitActionControl.GitAction.Rebase, true)]
     [TestCase(InteractiveGitActionControl.GitAction.Merge, false)]

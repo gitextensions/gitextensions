@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -8,7 +9,7 @@ using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
-public sealed class GitStatusMonitor : IDisposable
+public sealed partial class GitStatusMonitor : IDisposable
 {
     /// <summary>
     /// We often change several files at once.
@@ -151,7 +152,8 @@ public sealed class GitStatusMonitor : IDisposable
                 return;
             }
 
-            if (e.FullPath.EndsWith("\\index.lock"))
+            // files created by git commands that queries the daemon (e.g. by git-status)
+            if (e.FullPath.EndsWith("\\index.lock") || IsFsMonitorDaemonPath(e.FullPath, _gitPath))
             {
                 return;
             }
@@ -181,8 +183,8 @@ public sealed class GitStatusMonitor : IDisposable
                 return;
             }
 
-            // old submodule .git\index.lock file
-            if (e.FullPath.EndsWith("\\.git\\index.lock"))
+            // old submodule files
+            if (e.FullPath.EndsWith("\\.git\\index.lock") || IsNestedFsMonitorDaemonPath(e.FullPath, _workTreeWatcher.Path))
             {
                 return;
             }
@@ -190,6 +192,47 @@ public sealed class GitStatusMonitor : IDisposable
             _workTreeWatcher.EnableRaisingEvents = false;
             ScheduleNextUpdateTime(FileChangedUpdateDelay);
         }
+    }
+
+    // The cookies directory, relative to the git directory, of the daemon of the repository, of a linked worktree or of a submodule
+    [GeneratedRegex(@"^(worktrees\\[^\\]+\\)?(modules\\.+\\)?fsmonitor--daemon\\cookies(\\[^\\]+)?$", RegexOptions.ExplicitCapture)]
+    private static partial Regex FsMonitorDaemonPathRegex { get; }
+
+    /// <summary>
+    ///  Determines whether <paramref name="path"/> is the cookies directory of a <c>git fsmonitor--daemon</c>
+    ///  in <paramref name="gitDir"/> or a file in it.
+    /// </summary>
+    /// <remarks>
+    ///  Every git command which queries the daemon creates and deletes a cookie file.
+    ///  These must not trigger a status update, otherwise every status update would schedule the next one.
+    /// </remarks>
+    private static bool IsFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> gitDir)
+    {
+        gitDir = gitDir.TrimEnd('\\');
+
+        return path.Length > gitDir.Length + 1
+            && path[gitDir.Length] == '\\'
+            && path.StartsWith(gitDir, StringComparison.OrdinalIgnoreCase)
+            && FsMonitorDaemonPathRegex.IsMatch(path[(gitDir.Length + 1)..]);
+    }
+
+    /// <summary>
+    ///  Like <see cref="IsFsMonitorDaemonPath"/> for an old submodule, which has its own <c>.git</c> directory in <paramref name="workTreeDir"/>.
+    /// </summary>
+    private static bool IsNestedFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> workTreeDir)
+    {
+        const string gitDirName = "\\.git";
+
+        // Search behind the working directory
+        int start = workTreeDir.TrimEnd('\\').Length;
+        if (path.Length <= start)
+        {
+            return false;
+        }
+
+        int index = path[start..].IndexOf(gitDirName + "\\", StringComparison.Ordinal);
+
+        return index >= 0 && IsFsMonitorDaemonPath(path, path[..(start + index + gitDirName.Length)]);
     }
 
     public void InvalidateGitWorkingDirectoryStatus()
@@ -626,5 +669,14 @@ public sealed class GitStatusMonitor : IDisposable
                 _nextUpdateTime = ticks + delay;
             }
         }
+    }
+
+    internal static class TestAccessor
+    {
+        internal static bool IsFsMonitorDaemonPath(string path, string gitDir)
+            => GitStatusMonitor.IsFsMonitorDaemonPath(path, gitDir);
+
+        internal static bool IsNestedFsMonitorDaemonPath(string path, string workTreeDir)
+            => GitStatusMonitor.IsNestedFsMonitorDaemonPath(path, workTreeDir);
     }
 }

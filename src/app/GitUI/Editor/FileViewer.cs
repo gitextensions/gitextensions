@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
 using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
@@ -123,7 +124,7 @@ public partial class FileViewer : GitModuleControl
         diffAppearanceToolStripMenuItem.Visible = false;
         SetStateOfContextLinesButtons();
 
-        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance.Value);
+        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance);
 
         automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
         automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
@@ -307,7 +308,7 @@ public partial class FileViewer : GitModuleControl
 
     [Description("Use Git coloring with patch commands (always for git-word-diff, setting for normal patch).")]
     [DefaultValue(false)]
-    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring.Value;
+    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring;
 
     [Description("Show Difftastic diff coloring.")]
     [DefaultValue(false)]
@@ -449,7 +450,7 @@ public partial class FileViewer : GitModuleControl
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
 
-        // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
+        // Difftastic coloring is always used (AppSettings.UseGitColoring is not used).
         // Allow user to override with difftool command line options.
         SetEnvironmentVariable("DFT_COLOR", "always");
 
@@ -560,7 +561,7 @@ public partial class FileViewer : GitModuleControl
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
-        => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value, cancellationToken);
+        => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring, cancellationToken);
 
     /// <summary>
     /// Present the text as a patch in the file viewer.
@@ -1088,7 +1089,9 @@ public partial class FileViewer : GitModuleControl
 
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
     {
-        const long maxLength = 5 * 1024 * 1024;
+        // 0 means the file size limit is disabled
+        int maxMb = AppSettings.MaxDiffFileSizeMb;
+        long maxLength = maxMb == 0 ? long.MaxValue : maxMb * 1024 * 1024;
 
         if (contentLength > maxLength)
         {
@@ -1116,11 +1119,44 @@ public partial class FileViewer : GitModuleControl
             return icon.ToBitmap();
         }
 
-        return new Bitmap(stream);
+        try
+        {
+            return new Bitmap(stream);
+        }
+        catch (ArgumentException)
+        {
+            stream.Position = 0;
+
+            // Use WIC as fallback for formats GDI+ doesn't support (e.g. WebP).
+            try
+            {
+                return CreateImageFromWic();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"The display of image '{fileName}' might require the Windows WIC WebP codec.\n{ex.Message}");
+                throw;
+            }
+        }
 
         bool IsIcon()
         {
             return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        Bitmap CreateImageFromWic()
+        {
+            BitmapDecoder decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+
+            using MemoryStream pngStream = new();
+            PngBitmapEncoder encoder = new();
+            encoder.Frames.Add(decoder.Frames[0]);
+            encoder.Save(pngStream);
+
+            using Bitmap pngBitmap = new(pngStream);
+
+            // Copy the bitmap, so we can dispose the MemoryStream (Bitmap(Stream) requires that it stays open).
+            return new Bitmap(pngBitmap);
         }
     }
 
@@ -1193,7 +1229,7 @@ public partial class FileViewer : GitModuleControl
 
             // Diffs, currently requires that the file to update exists
             ((_viewMode.IsNormalDiffView() && (text?.Contains("@@") ?? false)
-                    && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
+                    && AppSettings.DiffDisplayAppearance != DiffDisplayAppearance.GitWordDiff
                     && File.Exists(_fullPathResolver.Resolve(fileName)))
 
                 // Added files, i.e. new or copied ones: patching only applies for an artificial
@@ -1627,16 +1663,23 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
-        if (items.Length == 1)
+        using IEnumerator<IObjectGitItem> enumerator = Module.GetTree(commitId, full: true, file.Name, cancellationToken).GetEnumerator();
+        if (!enumerator.MoveNext())
         {
-            IObjectGitItem gitItem = items[0];
-            file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
-            file.TreeId = gitItem.ObjectId;
-            return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
+            // file not found in tree
+            return default;
         }
 
-        return default;
+        IObjectGitItem gitItem = enumerator.Current;
+        if (enumerator.MoveNext())
+        {
+            // more than one item found
+            return default;
+        }
+
+        file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
+        file.TreeId = gitItem.ObjectId;
+        return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
     }
 
     /// <summary>
@@ -2229,5 +2272,9 @@ public partial class FileViewer : GitModuleControl
             ThreadHelper.JoinableTaskFactory.Run(
                 () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool));
         }
+
+        internal Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc) => _fileViewer.ShowOrDeferAsync(contentLength, showFunc);
+
+        public bool IsShowDeferred => _fileViewer._deferShowFunc is not null;
     }
 }

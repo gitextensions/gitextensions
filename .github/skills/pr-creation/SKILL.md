@@ -9,7 +9,9 @@ A deterministic checklist to make a change merge-ready. Do the steps in order; S
 
 ## Prechecks
 
-1. Confirm you're on a feature branch (not `master`) with a descriptive name.
+1. Confirm you're on a feature branch (not `master`) with a descriptive name, working in a
+   dedicated git worktree folder (not the main clone — see the "Parallel work" convention in
+   `CLAUDE.md`).
 2. Confirm the working tree contains only intended changes (`git status`).
 
 ## Build & test (gates)

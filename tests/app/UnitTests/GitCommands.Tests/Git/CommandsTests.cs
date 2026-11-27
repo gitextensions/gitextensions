@@ -8,6 +8,9 @@ using GitUIPluginInterfaces;
 namespace GitCommandsTests_Git;
 public partial class CommandsTests
 {
+    private const string FirstSha = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private const string SecondSha = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
     [Test]
     public void AbortMergeCmd()
     {
@@ -196,6 +199,56 @@ public partial class CommandsTests
             extraDiffArguments, noLocks).ToString().Should().Be(expected);
     }
 
+    [Test]
+    public void GetDiffs_should_use_diff_tree_root_for_initial_commit()
+    {
+        GitRevision second = new(ObjectId.Parse(SecondSha));
+
+        Commands.GetDiffs(first: null, second, [new GitItemStatus("file.txt")], contextLines: 3).Arguments
+            .Should().Be($"diff-tree --root -p --no-color {SecondSha} -- \"file.txt\"");
+    }
+
+    [Test]
+    public void GetDiffs_should_use_diff_between_two_revisions()
+    {
+        GitRevision first = new(ObjectId.Parse(FirstSha));
+        GitRevision second = new(ObjectId.Parse(SecondSha));
+
+        const string expectedConfig = "-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false";
+        Commands.GetDiffs(first, second, [new GitItemStatus("file.txt")], contextLines: 5).Arguments
+            .Should().Be($"{expectedConfig} diff --no-ext-diff --no-color --unified=5 \"{FirstSha}\" \"{SecondSha}\" -- \"file.txt\"");
+    }
+
+    [Test]
+    public void GetDiffs_should_include_old_name_when_renamed()
+    {
+        GitRevision first = new(ObjectId.Parse(FirstSha));
+        GitRevision second = new(ObjectId.Parse(SecondSha));
+
+        Commands.GetDiffs(first, second, [new GitItemStatus("new.txt") { OldName = "old.txt" }], contextLines: 3).Arguments
+            .Should().EndWith($" diff --no-ext-diff --no-color --unified=3 \"{FirstSha}\" \"{SecondSha}\" -- \"new.txt\" \"old.txt\"");
+    }
+
+    [Test]
+    public void GetDiffs_should_not_use_root_when_second_is_artificial()
+    {
+        GitRevision second = new(ObjectId.IndexId);
+
+        Commands.GetDiffs(first: null, second, [new GitItemStatus("file.txt")], contextLines: 3).Arguments
+            .Should().Contain(" diff --no-ext-diff")
+            .And.NotContain("--root");
+    }
+
+    [Test]
+    public void GetDiffs_should_add_all_items()
+    {
+        GitRevision first = new(ObjectId.Parse(FirstSha));
+        GitRevision second = new(ObjectId.Parse(SecondSha));
+
+        Commands.GetDiffs(first, second, [new GitItemStatus("a.txt"), new GitItemStatus("b.txt")], contextLines: 3).Arguments
+            .Should().EndWith("-- \"a.txt\" \"b.txt\"");
+    }
+
     private static IEnumerable<TestCaseData> GetRefsTestData
     {
         get
@@ -223,23 +276,25 @@ public partial class CommandsTests
                         sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
                     }
 
+                    const string exclusions = " --exclude=refs/notes/commits --exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**";
+
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/{exclusions}");
 
                     yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                 }
             }
         }

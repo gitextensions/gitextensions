@@ -56,7 +56,7 @@ internal abstract class BaseRevisionNode : Node
     {
         base.ApplyStyle();
 
-        TreeViewNode.ForeColor = Visible && TreeViewNode.TreeView is not null ? TreeViewNode.TreeView.ForeColor : _invisibleForeColor;
+        TreeViewNode.ForeColor = Visible && OwnerTreeView is { } treeView ? treeView.ForeColor : _invisibleForeColor;
         TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
     }
 

@@ -126,15 +126,62 @@ internal sealed class AppSettingsTests
         }
         else
         {
-            storedValue.Should().Be(value);
+            // The validated property stores the clamped value
+            object expectedValue = property.Name == nameof(AppSettings.MaxDiffFileSizeMb)
+                ? Math.Clamp((int)value, 0, 100)
+                : value;
+            storedValue.Should().Be(expectedValue);
         }
+    }
+
+    [Test]
+    [TestCase(-5, 0)]
+    [TestCase(0, 0)]
+    [TestCase(5, 5)]
+    [TestCase(100, 100)]
+    [TestCase(101, 100)]
+    [TestCase(10000, 100)]
+    public void MaxDiffFileSizeMb_should_clamp_value_to_valid_range(int input, int expected)
+    {
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+        tempFiles.AddFile(filePath + ".backup", keepFile: false);
+        File.WriteAllText(filePath, SettingsFileContent);
+        using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+        DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            AppSettings.MaxDiffFileSizeMb = input;
+            AppSettings.MaxDiffFileSizeMb.Should().Be(expected);
+        });
+    }
+
+    [Test]
+    [TestCase("-5", 0)]
+    [TestCase("5000", 100)]
+    public void MaxDiffFileSizeMb_should_clamp_invalid_persisted_value(string storedValue, int expected)
+    {
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+        tempFiles.AddFile(filePath + ".backup", keepFile: false);
+        // The settings file stores values wrapped in a <string> element, matching
+        // the format produced by GitExtSettingsCache.WriteSettings.
+        File.WriteAllText(filePath, $@"<?xml version=""1.0"" encoding=""utf-8""?><dictionary><item><key><string>maxdifffilesize</string></key><value><string>{storedValue}</string></value></item></dictionary>");
+        using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+        DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            AppSettings.MaxDiffFileSizeMb.Should().Be(expected);
+        });
     }
 
     /// <summary>
     ///  Verifies that ISetting property names (storage keys) remain stable across changes.
     /// </summary>
     [Test]
-    public Task ISetting_properties_should_have_stable_storage_keys()
+    public Task ISetting_properties_should_have_stable_storage_keys_and_type()
     {
         StringBuilder sb = new();
         IOrderedEnumerable<PropertyInfo> properties = typeof(AppSettings)
@@ -147,7 +194,14 @@ internal sealed class AppSettingsTests
             string fullPath = (string)setting.GetType()
                 .GetProperty(nameof(ISetting<int>.FullPath))!
                 .GetValue(setting)!;
-            sb.AppendLine($"{property.Name} = {fullPath}");
+            Type type = property.PropertyType;
+            sb.Append(type.Name);
+            if (type.IsGenericType)
+            {
+                sb.Append('<').Append(type.GenericTypeArguments[0].Name).Append('>');
+            }
+
+            sb.AppendLine($" {property.Name} = {fullPath}");
         }
 
         return Verifier.Verify(sb.ToString());
@@ -209,7 +263,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.FileStatusShowGroupNodesInFlatList)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
             yield return (properties[nameof(AppSettings.StashKeepIndex)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, false);
+            yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.ApplyPatchIgnoreWhitespace)], false, false, false);
             yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
             yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);
@@ -236,7 +290,6 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
             yield return (properties[nameof(AppSettings.MessageEditorWordWrap)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);
             yield return (properties[nameof(AppSettings.ProvideAutocompletion)], true, false, false);
             yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
             yield return (properties[nameof(AppSettings.ShowGitStatusInBrowseToolbar)], true, false, false);
@@ -284,21 +337,21 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.UseDefaultCheckoutBranchAction)], false, false, false);
             yield return (properties[nameof(AppSettings.DontShowHelpImages)], false, false, false);
             yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmAmend)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmCommitIfNoBranch)], false, false, false);
+            yield return (properties[nameof(AppSettings.DontConfirmAmend)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmCommitIfNoBranch)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.ConfirmBranchCheckout)], false, false, false);
             yield return (properties[nameof(AppSettings.AutoPopStashAfterPull)], null, true, false);
             yield return (properties[nameof(AppSettings.AutoPopStashAfterCheckoutBranch)], null, true, false);
             yield return (properties[nameof(AppSettings.AutoPullOnPushRejectedAction)], null, true, false);
-            yield return (properties[nameof(AppSettings.DontConfirmPushNewBranch)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmAddTrackingRef)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmCommitAfterConflictsResolved)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmSecondAbortConfirmation)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmRebase)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmResolveConflicts)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmUndoLastCommit)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmFetchAndPruneAll)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmSwitchWorktree)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmPushNewBranch)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmAddTrackingRef)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmCommitAfterConflictsResolved)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmSecondAbortConfirmation)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmRebase)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmResolveConflicts)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmUndoLastCommit)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmFetchAndPruneAll)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmSwitchWorktree)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInAutoStash)], false, false, false);
             yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInManualStash)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowRemoteBranches)], true, false, false);
@@ -307,7 +360,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowSuperprojectBranches)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowSuperprojectRemoteBranches)], false, false, false);
             yield return (properties[nameof(AppSettings.UpdateSubmodulesOnCheckout)], null, true, false);
-            yield return (properties[nameof(AppSettings.DontConfirmUpdateSubmodulesOnCheckout)], null, true, false);
+            yield return (properties[nameof(AppSettings.DontConfirmUpdateSubmodulesOnCheckout)], null, true, isISetting);
             yield return (properties[nameof(AppSettings.ShowGitCommandLine)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowStashCount)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowAheadBehindData)], true, false, false);
@@ -339,6 +392,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.MaxDiffFileSizeMb)], 5, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isISetting);
@@ -369,7 +423,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowRepoCurrentBranch)], true, false, false);
             yield return (properties[nameof(AppSettings.OwnScripts)], string.Empty, true, false);
             yield return (properties[nameof(AppSettings.RecursiveSubmodules)], 1, false, false);
-            yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.None, false, false);
+            yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.MostSignDir, false, false);
             yield return (properties[nameof(AppSettings.MaxTopRepositories)], 0, false, false);
             yield return (properties[nameof(AppSettings.RecentRepositoriesHistorySize)], 30, false, false);
             yield return (properties[nameof(AppSettings.HideTopRepositoriesFromRecentList)], false, isNotNullable, isISetting);

@@ -87,16 +87,18 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 
     private static void Parse(string settings, Action<string, string> storeSetting)
     {
-        foreach (string setting in settings.TrimEnd('\0').LazySplit('\0'))
+        ReadOnlySpan<char> settingsAsSpan = settings.AsSpan();
+        foreach (Range range in settingsAsSpan.TrimEnd('\0').Split('\0'))
         {
+            ReadOnlySpan<char> setting = settingsAsSpan[range];
             int linefeedIndex = setting.IndexOf('\n');
             if (linefeedIndex > 0)
             {
-                storeSetting(setting[..linefeedIndex], setting[(linefeedIndex + 1)..]);
+                storeSetting(new string(setting[..linefeedIndex]), new string(setting[(linefeedIndex + 1)..]));
             }
             else
             {
-                storeSetting(setting, "true");
+                storeSetting(new string(setting), "true");
             }
         }
     }

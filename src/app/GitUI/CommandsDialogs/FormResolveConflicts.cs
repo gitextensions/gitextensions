@@ -60,6 +60,8 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _deleteFileButtonText = new("Delete file");
     private readonly TranslationString _keepModifiedButtonText = new("Keep modified");
     private readonly TranslationString _keepBaseButtonText = new("Keep base file");
+    private readonly TranslationString _diffBaseWithModifiedButtonText = new("Diff base with modified");
+    private readonly TranslationString _diffBaseWithModifiedButtonDescription = new("Opens the difftool. This dialog stays open, so solve conflict afterwards.");
 
     private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to '{0}' and {1} other file(s)");
     private readonly TranslationString _solveMergeConflictDialogCaption = new("Solve merge conflict");
@@ -89,6 +91,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _chooseBaseFileFailedText = new("Choose base file failed.");
     private readonly TranslationString _chooseLocalFileFailedText = new("Choose local file failed.");
     private readonly TranslationString _chooseRemoteFileFailedText = new("Choose remote file failed.");
+    private readonly TranslationString _chooseFileFailedDetailFormat = new("File: {0}");
 
     private readonly TranslationString _currentFormatFilter =
         new("Current format (*.{0})");
@@ -132,6 +135,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private int _conflictItemsCount;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private bool _inTheMiddleOfRebase;
+    private Action<TaskDialogPage>? _solveMergeConflictDialogPageCreatedForTests;
 
     public FormResolveConflicts(IGitUICommands commands, bool offerCommit = true)
         : base(commands)
@@ -882,6 +886,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForBaseRevision(conflictItem))
@@ -899,9 +907,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseBaseOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "BASE"))
+        if (!Module.HandleConflictSelectSide(fileName, "BASE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseBaseFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
@@ -909,6 +917,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose base) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForLocalRevision(conflictItem))
@@ -926,9 +938,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseLocalOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
+        if (!Module.HandleConflictSelectSide(fileName, "LOCAL", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseLocalFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
@@ -936,6 +948,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForRemoteRevision(conflictItem))
@@ -953,14 +969,14 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseRemoteOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
+        if (!Module.HandleConflictSelectSide(fileName, "REMOTE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseRemoteFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
     private TaskDialogPage CreateSolveMergeConflictTaskDialogPage(string text, string instructionText, string caption, string applyToAllCheckBoxText,
-        string keepLocalButtonText, string keepRemoteButtonText, string keepBaseButtonText)
+        string keepLocalButtonText, string keepRemoteButtonText, string keepBaseButtonText, (string Text, Action Show)? diff)
     {
         TaskDialogPage page = new()
         {
@@ -1002,19 +1018,42 @@ public partial class FormResolveConflicts : GitModuleForm
         page.Buttons.Add(btnKeepRemote);
         page.Buttons.Add(btnKeepBase);
 
+        // Diff: only a look at the changes, not a resolution. The dialog stays open so that the file is
+        // resolved with one of the choices above; hence the diff can never be applied to all files.
+        if (diff is { } diffButton)
+        {
+            TaskDialogCommandLinkButton btnDiff = new(diffButton.Text, _diffBaseWithModifiedButtonDescription.Text)
+            {
+                AllowCloseDialog = false
+            };
+            btnDiff.Click += (_, _) => diffButton.Show();
+            page.Buttons.Add(btnDiff);
+        }
+
+        _solveMergeConflictDialogPageCreatedForTests?.Invoke(page);
+
         return page;
     }
 
     private void OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction(Action<ConflictResolutionPreference> selectedMergeAction,
         string dialogText, string dialogInstructionText, string dialogCaption, string dialogFooterCheckboxText,
-        string keepLocalButtonText, string keepRemoteButtonText, string keepBaseButtonText)
+        string keepLocalButtonText, string keepRemoteButtonText, string keepBaseButtonText, (string Text, Action Show)? diff = null)
     {
         if (!_solveMergeConflictApplyToAll)
         {
             TaskDialogPage page = CreateSolveMergeConflictTaskDialogPage(dialogText, dialogInstructionText, dialogCaption, dialogFooterCheckboxText,
-                keepLocalButtonText, keepRemoteButtonText, keepBaseButtonText);
+                keepLocalButtonText, keepRemoteButtonText, keepBaseButtonText, diff);
 
-            TaskDialog.ShowDialog(Handle, page);
+            TaskDialogButton answer = TaskDialog.ShowDialog(Handle, page);
+
+            // Dismissing the dialog (Cancel/Esc) is not an answer, so it must not be remembered as
+            // one, and the previously selected action (from _solveMergeConflictDialogResult) must
+            // not be silently (re-)applied to this file.
+            if (answer == TaskDialogButton.Cancel)
+            {
+                return;
+            }
+
             _solveMergeConflictApplyToAll = page.Verification?.Checked ?? false;
         }
 
@@ -1164,7 +1203,8 @@ public partial class FormResolveConflicts : GitModuleForm
             (_filesDeletedLocallyAndModifiedRemotelySolved > 1) ? string.Format(_solveMergeConflictApplyToAllCheckBoxText.Text, item.Filename, _filesDeletedLocallyAndModifiedRemotelySolved - 1) : string.Empty,
             string.Format(_deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
             string.Format(_keepModifiedButtonText.Text + " ({0})", GetRemoteSideString()),
-            string.Format(_keepBaseButtonText.Text + " ({0})", GetLocalSideString()));
+            string.Format(_keepBaseButtonText.Text + " ({0})", GetLocalSideString()),
+            GetDiffBaseWithModified(item, item.Remote, stage: 3, GetRemoteSideString()));
 
         return false;
     }
@@ -1232,9 +1272,28 @@ public partial class FormResolveConflicts : GitModuleForm
             (_filesModifiedLocallyAndDeletedRemotelySolved > 1) ? string.Format(_solveMergeConflictApplyToAllCheckBoxText.Text, item.Filename, _filesModifiedLocallyAndDeletedRemotelySolved - 1) : string.Empty,
             string.Format(_keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
             string.Format(_deleteFileButtonText.Text + " ({0})", GetRemoteSideString()),
-            _keepBaseButtonText.Text);
+            _keepBaseButtonText.Text,
+            GetDiffBaseWithModified(item, item.Local, stage: 2, GetLocalSideString()));
 
         return false;
+    }
+
+    /// <summary>
+    ///  Gets the choice to diff the base with the side which still has the file, which is what the
+    ///  user needs to see to decide between keeping the modified file and deleting it.
+    /// </summary>
+    /// <returns><see langword="null"/> if there is no base to diff with.</returns>
+    private (string Text, Action Show)? GetDiffBaseWithModified(ConflictData item, ConflictedFileData modified, int stage, string modifiedSide)
+    {
+        if (item.Base.Filename is not string itemBaseFileName || modified.Filename is not string modifiedFileName)
+        {
+            return null;
+        }
+
+        // Diff the index stages (1 = base, 2 = local, 3 = remote) rather than their blobs,
+        // so that the difftool gets file names with the extension of the conflicted file.
+        return (string.Format(_diffBaseWithModifiedButtonText.Text + " ({0})", modifiedSide),
+            () => Module.OpenFilesWithDifftool($":1:{itemBaseFileName}", $":{stage}:{modifiedFileName}", customTool: null));
     }
 
     private void OpenMergeTool()
@@ -1571,4 +1630,22 @@ public partial class FormResolveConflicts : GitModuleForm
     }
 
     #endregion
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(FormResolveConflicts form)
+    {
+        /// <summary>
+        ///  Called with each "Solve merge conflict" dialog page before it is shown.
+        /// </summary>
+        public Action<TaskDialogPage>? SolveMergeConflictDialogPageCreated
+        {
+            get => form._solveMergeConflictDialogPageCreatedForTests;
+            set => form._solveMergeConflictDialogPageCreatedForTests = value;
+        }
+
+        public bool CheckForLocalRevision(ConflictData item) => form.CheckForLocalRevision(item);
+
+        public bool CheckForRemoteRevision(ConflictData item) => form.CheckForRemoteRevision(item);
+    }
 }

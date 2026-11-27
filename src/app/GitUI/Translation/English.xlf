@@ -1325,6 +1325,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Add log messages</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnAiDiffPromptDefault.Text">
+        <source>Overwrite with default prompt</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
         <source>Merge graph lanes having common parent</source>
         <target />
@@ -1343,6 +1347,18 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbxAiDiffPrompt.Text">
+        <source>AI prompt for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptPrefix.Text">
+        <source>Prompt prefix:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptSuffix.Text">
+        <source>Prompt suffix:</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1457,6 +1473,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Vertical ruler position [chars]</source>
         <target />
       </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Max file size for diff view [MB]</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">
@@ -1539,6 +1559,18 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiCaption.Text">
+        <source>AI prompt</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiNoChanges.Text">
+        <source>No changes found for the selected files.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiPromptCopied.Text">
+        <source>AI prompt with {0} chars copied to clipboard.</source>
         <target />
       </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
@@ -1710,6 +1742,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiCommitSubmoduleChanges.Text">
         <source>&amp;Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopyAiPromptToClipboard.Text">
+        <source>Copy AI prompt with selected diffs to clipboard (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCopyPaths.Text">
@@ -7092,6 +7128,10 @@ Is the merge conflict solved?</source>
         <source>Choose base file failed.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chooseFileFailedDetailFormat.Text">
+        <source>File: {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_chooseLocalButtonText.Text">
         <source>Choose local</source>
         <target />
@@ -7142,6 +7182,14 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_deleted.Text">
         <source>deleted</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonDescription.Text">
+        <source>Opens the difftool. This dialog stays open, so solve conflict afterwards.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonText.Text">
+        <source>Diff base with modified</source>
         <target />
       </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
@@ -8095,36 +8143,52 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxFetchPrune.Text">
+      <trans-unit id="lblCoreFsMonitor.Text">
+        <source>Run a file system monitor daemon per working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCoreUntrackedCache.Text">
+        <source>Cache the untracked files in the index</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPullRebase.Text">
+      <trans-unit id="lblMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullFF.Text">
+        <source>Fast-forward behavior when pulling</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+      <trans-unit id="lblReReReAutoUpdate.Text">
         <source>Automatically apply recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReEnabled.Text">
+      <trans-unit id="lblReReReEnabled.Text">
         <source>Reuse recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutosquash.Text">
+      <trans-unit id="lblRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutostash.Text">
+      <trans-unit id="lblRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxUpdateRefs.Text">
-        <source>Rebase also dependent branches</source>
+      <trans-unit id="lblStatusShowUntrackedFiles.Text">
+        <source>Show untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkboxMergeAutoStash.Text">
-        <source>Automatically stash before doing a merge</source>
+      <trans-unit id="lblUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
     </body>
@@ -9365,8 +9429,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Show remote &amp;branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowSessionCheckpoints.Text">
-        <source>Show session checkpoints</source>
+      <trans-unit id="ShowSessionRefs.Text">
+        <source>Show agentic sessions (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowStashes.Text">
@@ -9595,6 +9659,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="editCommitWithFixupToolStripMenuItem.Text">
+        <source>E&amp;dit commit by creating a fixup commit and squash-rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
@@ -10177,6 +10245,10 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_autostash.Text">
         <source>Autostash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_bisectText.Text">
+        <source>Bisect</source>
         <target />
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">

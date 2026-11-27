@@ -30,7 +30,7 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
         chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
         chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
-        chkRememberDiffAppearancePreference.Checked = AppSettings.RememberDiffDisplayAppearance.Value;
+        chkRememberDiffAppearancePreference.Checked = AppSettings.RememberDiffDisplayAppearance;
         chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
         chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
         chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff;
@@ -39,8 +39,9 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
         chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
         VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
-        chkUseGitColoring.Checked = AppSettings.UseGitColoring.Value;
-        chkUseGEThemeGitColoring.Checked = AppSettings.ReverseGitColoring.Value;
+        MaxDiffFileSize.Value = Math.Clamp(AppSettings.MaxDiffFileSizeMb, MaxDiffFileSize.Minimum, MaxDiffFileSize.Maximum);
+        chkUseGitColoring.Checked = AppSettings.UseGitColoring;
+        chkUseGEThemeGitColoring.Checked = AppSettings.ReverseGitColoring;
         chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
 
         base.SettingsToPage();
@@ -60,6 +61,7 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
         AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
         AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+        AppSettings.MaxDiffFileSizeMb = (int)MaxDiffFileSize.Value;
         AppSettings.UseGitColoring.Value = chkUseGitColoring.Checked;
         AppSettings.ReverseGitColoring.Value = chkUseGEThemeGitColoring.Checked;
 

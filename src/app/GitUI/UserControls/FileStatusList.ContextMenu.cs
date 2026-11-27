@@ -2,8 +2,10 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extended;
+using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -75,6 +77,9 @@ partial class FileStatusList
     private readonly CancellationTokenSequence _interactiveAddResetChunkSequence = new();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
 
+    private readonly TranslationString _aiCaption = new("AI prompt");
+    private readonly TranslationString _aiNoChanges = new("No changes found for the selected files.");
+    private readonly TranslationString _aiPromptCopied = new("AI prompt with {0} chars copied to clipboard.");
     private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
     private readonly TranslationString _deleteSelectedFiles = new("Are you sure you want to delete the selected file(s)?");
     private readonly TranslationString _deleteFailed = new("Delete file failed");
@@ -133,7 +138,6 @@ partial class FileStatusList
 
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -217,6 +221,34 @@ partial class FileStatusList
     private void CherryPickChanges_Click(object sender, EventArgs e)
     {
         _cherryPickChanges?.Invoke();
+    }
+
+    private void CopyAiPromptToClipboard_Click(object sender, EventArgs e)
+    {
+        List<FileStatusItem> selectedItems = [.. SelectedItems];
+        IGitModule module = Module;
+        ThreadHelper.FileAndForget(async () =>
+            {
+                StringBuilder prompt = new();
+                SettingsSource effectiveSettings = module.GetEffectiveSettings();
+                prompt.AppendLine(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(effectiveSettings));
+                int lengthBeforeDiffs = prompt.Length;
+
+                const int contextLinesForAi = 10;
+                await DiffProvider.AppendDiffsAsync(prompt, selectedItems, module, contextLinesForAi);
+
+                await this.SwitchToMainThreadAsync();
+
+                if (prompt.Length == lengthBeforeDiffs)
+                {
+                    MessageBoxes.Show(this, _aiNoChanges.Text, _aiCaption.Text, MessageBoxButtons.OK);
+                    return;
+                }
+
+                prompt.Append(DetailedSettings.AiDiffPromptSuffix.ValueOrDefault(effectiveSettings));
+                Clipboard.SetText(prompt.ToString());
+                MessageBoxes.Show(this, string.Format(_aiPromptCopied.Text, prompt.Length), _aiCaption.Text, MessageBoxButtons.OK);
+            });
     }
 
     private void CommitSubmoduleChanges_Click(object sender, EventArgs e)
@@ -613,6 +645,11 @@ partial class FileStatusList
 
             return (allFilesExist, allDirectoriesExist, allFilesOrUntrackedDirectoriesExist);
         }
+    }
+
+    public void InitializeContextMenuAndToolbar()
+    {
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
     }
 
     public void InitResetFileToToolStripMenuItem()
@@ -1143,7 +1180,7 @@ partial class FileStatusList
     private void ShowFindInCommitFilesGitGrep_Click(object sender, EventArgs e)
     {
         AppSettings.ShowFindInCommitFilesGitGrep.Value = tsmiShowFindInCommitFilesGitGrep.Checked;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
     }
 
     private void ShowInFileTree_Click(object sender, EventArgs e)
@@ -1295,7 +1332,7 @@ partial class FileStatusList
         tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame || _blame is null
             ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
             : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)
@@ -1334,6 +1371,8 @@ partial class FileStatusList
 
         tsmiSkipWorktree.ToolTipText = _skipWorktreeToolTip.Text;
         tsmiAssumeUnchanged.ToolTipText = _assumeUnchangedToolTip.Text;
+
+        tsmiCopyAiPromptToClipboard.Enabled = selectionInfo.SelectedGitItemCount > 0;
     }
 
     private void UpdateSubmodule_Click(object sender, EventArgs e)

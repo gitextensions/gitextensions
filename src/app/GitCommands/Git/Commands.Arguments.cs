@@ -8,6 +8,26 @@ namespace GitCommands.Git;
 
 public static partial class Commands
 {
+    public static ArgumentBuilder AddOptionalRefsFilters(this ArgumentBuilder args)
+    {
+        if (!AppSettings.ShowGitNotes)
+        {
+            args.Add($"--exclude={GitRefName.RefsNotesPrefix}");
+        }
+
+        if (!AppSettings.ShowStashes)
+        {
+            args.Add($"--exclude={GitRefName.RefsStashPrefix}");
+        }
+
+        if (!AppSettings.ShowSessionRefs)
+        {
+            args.Add(AppSettings.SessionRefsFilters);
+        }
+
+        return args;
+    }
+
     public static ArgumentString Abort()
     {
         return new GitArgumentBuilder("am")
@@ -290,6 +310,51 @@ public static partial class Commands
             };
     }
 
+    /// <summary>
+    ///  Gets the diff arguments for the items between two revisions.
+    /// </summary>
+    /// <remarks>
+    ///  An initial commit (no parent) uses diff-tree --root, to avoid <see cref="RevisionDiffProvider"/> interpreting null as the worktree and generating -R.
+    /// </remarks>
+    /// <param name="first">The first revision, or null for an initial commit.</param>
+    /// <param name="second">The second revision.</param>
+    /// <param name="items">The tracked items to diff.</param>
+    /// <param name="contextLines">The number of context lines for the diff.</param>
+    public static ArgumentString GetDiffs(GitRevision? first, GitRevision second, IReadOnlyList<GitItemStatus> items, int contextLines)
+    {
+        GitArgumentBuilder args;
+        if (first is null && !second.IsArtificial)
+        {
+            args = new GitArgumentBuilder("diff-tree")
+            {
+                "--root",
+                "-p",
+                "--no-color",
+                second.Guid,
+                "--"
+            };
+        }
+        else
+        {
+            args = new GitArgumentBuilder("diff")
+            {
+                "--no-ext-diff",
+                "--no-color",
+                $"--unified={contextLines}",
+                new RevisionDiffProvider().Get(first?.Guid, second.Guid),
+                "--"
+            };
+        }
+
+        foreach (GitItemStatus item in items)
+        {
+            args.Add(item.Name.QuoteNE());
+            args.Add(item.OldName.QuoteNE());
+        }
+
+        return args;
+    }
+
     public static ArgumentString GetRefs(RefsFilter getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count = 0)
     {
         bool hasTags = (getRef == RefsFilter.NoFilter) || (getRef & RefsFilter.Tags) != 0;
@@ -302,8 +367,7 @@ public static partial class Commands
             { count > 0, $"--count={count}" },
             GitRefsPattern(getRef)
         };
-
-        return cmd;
+        return cmd.AddOptionalRefsFilters();
 
         static ArgumentString SortCriteria(bool needTags, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
         {

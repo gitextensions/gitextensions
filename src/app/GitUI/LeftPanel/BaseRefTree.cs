@@ -32,6 +32,9 @@ internal abstract class BaseRefTree : BaseRevisionTree
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
 
+        await PreloadAsync(token);
+        token.ThrowIfCancellationRequested();
+
         if (_loadedRefs is null)
         {
             _loadedRefs = getRefs(_refsFilter);
@@ -40,6 +43,12 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
         return FillTree(_loadedRefs, token);
     }
+
+    /// <summary>
+    /// Optional async preload hook running on a background thread before refs are read.
+    /// Used to fetch data like remotes without blocking the UI thread.
+    /// </summary>
+    protected virtual Task PreloadAsync(CancellationToken token) => Task.CompletedTask;
 
     protected abstract Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token);
 

@@ -1,6 +1,9 @@
-﻿using GitCommands;
+using System.Linq;
+using CommonTestUtils;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using ResourceManager;
 
 namespace GitCommandsTests.Git;
 public class SubmoduleHelpersTest
@@ -96,5 +99,79 @@ public class SubmoduleHelpersTest
         {
             // Ignore
         }
+    }
+
+    [Test]
+    public async Task GetSubmoduleDiffChangesAsync_repro_unavailable_submodule()
+    {
+        using UnavailableSubmoduleScenario scenario = CreateUnavailableSubmoduleScenario();
+
+        Directory.Exists(Path.Combine(scenario.Repo.Module.WorkingDir, "submod")).Should().BeFalse();
+
+        GitSubmoduleStatus? status = await SubmoduleHelpers.GetSubmoduleDiffChangesAsync(scenario.Repo.Module, "submod", null, scenario.CommitA, scenario.CommitB, default);
+        status.Should().NotBeNull();
+        // The submodule is not available, so the status must be based on the diff (new submodule)
+        status!.Status.Should().Be(SubmoduleStatus.NewSubmodule);
+        status.Commit.ToString().Should().Be(scenario.SubmoduleSha);
+
+        string text = SubmoduleResources.GetSubmoduleStatusText(scenario.Repo.Module, status);
+        // The sha must be displayed instead of an exception
+        text.Should().Contain(scenario.SubmoduleSha);
+    }
+
+    [Test]
+    public async Task GetDiffFilesWithSubmodulesStatus_repro_unavailable_submodule()
+    {
+        using UnavailableSubmoduleScenario scenario = CreateUnavailableSubmoduleScenario();
+
+        // The diff-view path: pre-computes the status for each submodule item
+        IReadOnlyList<GitItemStatus> items = scenario.Repo.Module.GetDiffFilesWithSubmodulesStatus(scenario.CommitA, scenario.CommitB, default, false, UntrackedFilesMode.Default, CancellationToken.None);
+        GitItemStatus? submoduleItem = items.FirstOrDefault(i => i.IsSubmodule);
+        submoduleItem.Should().NotBeNull();
+
+        // Simulate the IsSubmodule branch of GitUIExtensions
+        GitSubmoduleStatus? status = await submoduleItem!.GetSubmoduleStatusAsync();
+        status.Should().NotBeNull();
+
+        string text = SubmoduleResources.GetSubmoduleStatusText(scenario.Repo.Module, status!);
+        text.Should().Contain(scenario.SubmoduleSha);
+    }
+
+    // The scenario of issue #12098, shared by the repro tests above so that
+    // the repository setup is not duplicated: a superproject where the
+    // submodule was added in a commit that is not checked out, so that the
+    // submodule's working directory does not exist.
+    private sealed record UnavailableSubmoduleScenario(GitModuleTestHelper Repo, ObjectId CommitA, ObjectId CommitB, string SubmoduleSha) : IDisposable
+    {
+        public void Dispose() => Repo.Dispose();
+    }
+
+    private static UnavailableSubmoduleScenario CreateUnavailableSubmoduleScenario()
+    {
+        using GitModuleTestHelper sub = new("sub");
+        GitModuleTestHelper repo = new("super");
+
+        repo.CreateRepoFile("file.txt", "content");
+        repo.Module.GitExecutable.GetOutput("add file.txt");
+        repo.Module.GitExecutable.GetOutput(@"commit -m ""Initial commit""");
+        ObjectId commitA = repo.Module.GetCurrentCheckout();
+        string branchA = repo.Module.GitExecutable.GetOutput("rev-parse --abbrev-ref HEAD").Trim();
+
+        repo.Module.GitExecutable.GetOutput("checkout -b with-submodule");
+        repo.AddSubmodule(sub, "submod");
+        ObjectId commitB = repo.Module.GetCurrentCheckout();
+        // The gitlink target (submodule sha) recorded in the superproject
+        string submoduleSha = repo.Module.GitExecutable.GetOutput($"ls-tree {commitB} submod").Trim().Split(' ')[2].Split('\t')[0];
+
+        // Back to the branch without the submodule. In the real issue the branch
+        // never had the submodule, so its working directory does not exist.
+        repo.Module.GitExecutable.GetOutput($"checkout {branchA}");
+        string submoduleDir = Path.Combine(repo.Module.WorkingDir, "submod");
+        if (Directory.Exists(submoduleDir))
+        {
+            Directory.Delete(submoduleDir, recursive: true);
+        }
+
+        return new(repo, commitA, commitB, submoduleSha);
     }
 }

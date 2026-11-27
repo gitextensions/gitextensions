@@ -84,17 +84,14 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
         if (isRefreshDisabled)
         {
             // just wait running git exits
-            fetchTriggers = WaitForRunningGitExitsObservable(gitModule);
+            fetchTriggers = WaitForRunningGitExitsObservable(gitModule.IsRunningGitProcess, Scheduler.Default);
         }
         else
         {
             // generate triggers periodically
             TimeSpan triggersInterval = TimeSpan.FromSeconds(Math.Max(5, fetchInterval));
             TimeSpan firstTrigger = fetchOnOpening ? TimeSpan.FromMilliseconds(10) : triggersInterval;
-            fetchTriggers = Observable
-                .Timer(firstTrigger, triggersInterval)
-                .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
-                .Repeat();
+            fetchTriggers = CreateFetchTriggersObservable(gitModule.IsRunningGitProcess, firstTrigger, triggersInterval, Scheduler.Default);
         }
 
         _cancellationToken = fetchTriggers
@@ -102,18 +99,28 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
             .Subscribe(_ => RunBackgroundGitFetch());
     }
 
-    private static IObservable<long> WaitForRunningGitExitsObservable(IGitModule gitModule)
+    internal static IObservable<long> CreateFetchTriggersObservable(Func<bool> isGitRunning, TimeSpan firstTrigger, TimeSpan triggersInterval, IScheduler scheduler)
+    {
+        // Switch to the latest wait: if git is still running at the next tick, the previous wait is disposed.
+        // Merging the waits (SelectMany) would accumulate one poller per tick for as long as git keeps running.
+        return Observable
+            .Timer(firstTrigger, triggersInterval, scheduler)
+            .Select(_ => WaitForRunningGitExitsObservable(isGitRunning, scheduler))
+            .Switch();
+    }
+
+    internal static IObservable<long> WaitForRunningGitExitsObservable(Func<bool> isGitRunning, IScheduler scheduler)
     {
         // if git not running - start fetch immediately
-        if (!gitModule.IsRunningGitProcess())
+        if (!isGitRunning())
         {
             return Observable.Return(1L);
         }
 
         // in other case - every seconds check if git still running
         return Observable
-            .Interval(TimeSpan.FromSeconds(1))
-            .SkipWhile(_ => gitModule.IsRunningGitProcess())
+            .Interval(TimeSpan.FromSeconds(1), scheduler)
+            .SkipWhile(_ => isGitRunning())
             .FirstAsync();
     }
 

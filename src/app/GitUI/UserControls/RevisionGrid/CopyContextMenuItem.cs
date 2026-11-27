@@ -1,4 +1,5 @@
 ﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -10,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid;
 public sealed class CopyContextMenuItem : ToolStripMenuItem
 {
     private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
-    private Func<IEnumerable<string>, IEnumerable<string>> _filterRefsFunc = refs => refs;
+    private Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> _filterRefsFunc = refs => refs;
     private Func<IReadOnlyList<GitRevision>>? _revisionFunc;
     private uint _itemNumber;
 
@@ -22,7 +23,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         DropDownOpening += OnDropDownOpening;
     }
 
-    public void SetFilterRefsFunc(Func<IEnumerable<string>, IEnumerable<string>> filterRefsFunc)
+    public void SetFilterRefsFunc(Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefsFunc)
     {
         _filterRefsFunc = filterRefsFunc;
     }
@@ -110,8 +111,8 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         foreach (GitRevision revision in revisions)
         {
             GitRefListsForRevision refLists = new(revision);
-            branchNames.AddRange(_filterRefsFunc(refLists.GetAllBranchNames()));
-            tagNames.AddRange(_filterRefsFunc(refLists.GetAllTagNames()));
+            branchNames.AddRange(_filterRefsFunc(refLists.AllBranches).Select(r => r.Name));
+            tagNames.AddRange(_filterRefsFunc(refLists.AllTags).Select(r => r.Name));
         }
 
         _itemNumber = 0;

@@ -93,6 +93,11 @@ public sealed class ExternalLinkRevisionParser : IExternalLinkRevisionParser
 
     private static IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match? remoteMatch)
     {
+        if (string.IsNullOrEmpty(definition.SearchPattern))
+        {
+            return definition.LinkFormats.Select(format => format.Apply(remoteMatch, revisionMatch: null, revision));
+        }
+
         List<IEnumerable<ExternalLink>> links = [];
 
         if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.LocalBranches))
@@ -121,7 +126,7 @@ public sealed class ExternalLinkRevisionParser : IExternalLinkRevisionParser
 
     private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match? remoteMatch, string? part)
     {
-        if (string.IsNullOrEmpty(definition.SearchPattern) || definition.SearchPatternRegex?.Value is null || part is null)
+        if (definition.SearchPatternRegex?.Value is null || part is null)
         {
             yield break;
         }

@@ -35,16 +35,6 @@ internal sealed class GitRefListsForRevision
 
     public IReadOnlyList<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes;
 
-    public IReadOnlyList<string> GetAllBranchNames()
-    {
-        return Array.ConvertAll(_allBranches, b => b.Name);
-    }
-
-    public IReadOnlyList<string> GetAllTagNames()
-    {
-        return AllTags.Select(t => t.Name).ToArray();
-    }
-
     /// <summary>
     /// Returns the collection of branches and tags which can be deleted.
     /// </summary>
