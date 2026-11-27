@@ -134,6 +134,7 @@ cherry
 cleanup
 clone [path]
 commit [--quiet] [--message commitmessage]
+compare first second
 difftool filename
 filehistory filename
 fileeditor filename

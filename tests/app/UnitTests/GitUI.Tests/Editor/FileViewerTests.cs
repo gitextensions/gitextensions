@@ -1,4 +1,6 @@
-﻿using GitCommands.Settings;
+﻿using GitCommands;
+using GitCommands.Settings;
+using GitUI;
 using GitUI.Editor;
 
 namespace GitUITests.Editor;
@@ -107,5 +109,91 @@ public class FileViewerTests
 
         accessor.IgnoreAllWhitespacesButton.Checked.Should().Be(false);
         accessor.IgnoreAllWhitespacesMenuItem.Checked.Should().Be(false);
+    }
+
+    [Test]
+    [TestCase(1)]
+    [TestCase(5)]
+    [TestCase(100)]
+    public void ShowOrDeferAsync_should_defer_file_larger_than_configured_max_size(int maxMb)
+    {
+        AppSettings.MaxDiffFileSizeMb = maxMb;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                (maxMb * 1024L * 1024) + 1,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeTrue();
+        showInvoked.Should().BeFalse();
+    }
+
+    [Test]
+    [TestCase(1)]
+    [TestCase(5)]
+    public void ShowOrDeferAsync_should_show_file_within_configured_max_size(int maxMb)
+    {
+        AppSettings.MaxDiffFileSizeMb = maxMb;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                maxMb * 1024L * 1024,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeFalse();
+        showInvoked.Should().BeTrue();
+    }
+
+    [Test]
+    public void ShowOrDeferAsync_should_show_file_of_any_size_when_max_size_is_zero()
+    {
+        AppSettings.MaxDiffFileSizeMb = 0;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                10000 * 1024L * 1024,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeFalse();
+        showInvoked.Should().BeTrue();
+    }
+
+    [Test]
+    public void ShowOrDeferAsync_should_defer_file_when_setting_is_clamped_from_out_of_range_value()
+    {
+        // 10000 is clamped to 100, so a 150 MB file is deferred
+        AppSettings.MaxDiffFileSizeMb = 10000;
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        bool showInvoked = false;
+
+        ThreadHelper.JoinableTaskFactory.Run(
+            () => accessor.ShowOrDeferAsync(
+                150 * 1024L * 1024,
+                () =>
+                {
+                    showInvoked = true;
+                    return Task.CompletedTask;
+                }));
+
+        accessor.IsShowDeferred.Should().BeTrue();
+        showInvoked.Should().BeFalse();
     }
 }

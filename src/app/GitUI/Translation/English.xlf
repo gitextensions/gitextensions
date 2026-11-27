@@ -1325,6 +1325,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Add log messages</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnAiDiffPromptDefault.Text">
+        <source>Overwrite with default prompt</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
         <source>Merge graph lanes having common parent</source>
         <target />
@@ -1343,6 +1347,18 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbxAiDiffPrompt.Text">
+        <source>AI prompt for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptPrefix.Text">
+        <source>Prompt prefix:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptSuffix.Text">
+        <source>Prompt suffix:</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1457,6 +1473,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Vertical ruler position [chars]</source>
         <target />
       </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Max file size for diff view [MB]</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">
@@ -1539,6 +1559,18 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiCaption.Text">
+        <source>AI prompt</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiNoChanges.Text">
+        <source>No changes found for the selected files.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiPromptCopied.Text">
+        <source>AI prompt with {0} chars copied to clipboard.</source>
         <target />
       </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
@@ -1710,6 +1742,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiCommitSubmoduleChanges.Text">
         <source>&amp;Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopyAiPromptToClipboard.Text">
+        <source>Copy AI prompt with selected diffs to clipboard (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCopyPaths.Text">
@@ -7148,6 +7184,14 @@ Is the merge conflict solved?</source>
         <source>deleted</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonDescription.Text">
+        <source>Opens the difftool. This dialog stays open, so solve conflict afterwards.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonText.Text">
+        <source>Diff base with modified</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
         <source>Error starting mergetool: {0}</source>
         <target />
@@ -10201,6 +10245,10 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_autostash.Text">
         <source>Autostash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_bisectText.Text">
+        <source>Bisect</source>
         <target />
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
