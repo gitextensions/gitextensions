@@ -784,6 +784,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         public ContextMenuStrip ContextMenu => _repoObjectsTree.menuMain;
         public NativeTreeView TreeView => _repoObjectsTree.treeMain;
         public Tree BisectTree => _repoObjectsTree._bisectTree;
+        public WorktreeTree WorktreeTree => _repoObjectsTree._worktreeTree;
 
         public void AddTree(Tree tree) => _repoObjectsTree.AddTree(tree);
 
