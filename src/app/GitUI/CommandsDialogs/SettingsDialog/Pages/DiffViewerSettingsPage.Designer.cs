@@ -46,6 +46,8 @@ partial class DiffViewerSettingsPage
         chkShowAllCustomDiffTools = new SettingsCheckBox();
         label1 = new Label();
         VerticalRulerPosition = new NumericUpDown();
+        label2 = new Label();
+        MaxDiffFileSize = new NumericUpDown();
         tlpnlMain = new TableLayoutPanel();
         gbGeneral = new GroupBox();
         gbDiffColoring = new GroupBox();
@@ -54,6 +56,7 @@ partial class DiffViewerSettingsPage
         chkUseGEThemeGitColoring = new SettingsCheckBox();
         tlpnlGeneral.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(MaxDiffFileSize)).BeginInit();
         tlpnlMain.SuspendLayout();
         gbGeneral.SuspendLayout();
         gbDiffColoring.SuspendLayout();
@@ -82,10 +85,12 @@ partial class DiffViewerSettingsPage
         tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 11);
         tlpnlGeneral.Controls.Add(label1, 0, 12);
         tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 12);
+        tlpnlGeneral.Controls.Add(label2, 0, 13);
+        tlpnlGeneral.Controls.Add(MaxDiffFileSize, 1, 13);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 13;
+        tlpnlGeneral.RowCount = 14;
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -100,7 +105,8 @@ partial class DiffViewerSettingsPage
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(1725, 304);
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
+        tlpnlGeneral.Size = new Size(1725, 329);
         // 
         // btnSaveCurrentViewSettingsAsDefault
         // 
@@ -256,6 +262,37 @@ partial class DiffViewerSettingsPage
         0,
         0});
         // 
+        // label2
+        // 
+        label2.AutoSize = true;
+        label2.Dock = DockStyle.Fill;
+        label2.Location = new Point(3, 278);
+        label2.Name = "label2";
+        label2.Size = new Size(325, 29);
+        label2.Text = "Max file size for diff view [MB]";
+        label2.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // MaxDiffFileSize
+        // 
+        MaxDiffFileSize.Location = new Point(334, 281);
+        MaxDiffFileSize.Maximum = new decimal(new int[] {
+        100,
+        0,
+        0,
+        0});
+        MaxDiffFileSize.Minimum = new decimal(new int[] {
+        0,
+        0,
+        0,
+        0});
+        MaxDiffFileSize.Name = "MaxDiffFileSize";
+        MaxDiffFileSize.Size = new Size(120, 23);
+        MaxDiffFileSize.Value = new decimal(new int[] {
+        5,
+        0,
+        0,
+        0});
+        // 
         // chkUseGitColoring
         // 
         chkUseGitColoring.AutoSize = true;
@@ -359,6 +396,7 @@ partial class DiffViewerSettingsPage
         tlpnlGeneral.ResumeLayout(false);
         tlpnlGeneral.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(MaxDiffFileSize)).EndInit();
         tlpnlDiffColoring.ResumeLayout(false);
         tlpnlDiffColoring.PerformLayout();
         tlpnlMain.ResumeLayout(false);
@@ -388,6 +426,8 @@ partial class DiffViewerSettingsPage
     private SettingsCheckBox chkShowAllCustomDiffTools;
     private NumericUpDown VerticalRulerPosition;
     private Label label1;
+    private NumericUpDown MaxDiffFileSize;
+    private Label label2;
     private TableLayoutPanel tlpnlMain;
     private GroupBox gbDiffColoring;
     private TableLayoutPanel tlpnlDiffColoring;

@@ -1473,6 +1473,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Vertical ruler position [chars]</source>
         <target />
       </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Max file size for diff view [MB]</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">

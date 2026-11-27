@@ -5,12 +5,6 @@ namespace GitCommands;
 public static partial class AppSettings
 {
     /// <summary>
-    ///  Additional refs filters to be applied when listing refs for the revision grid in dependency on <see cref="ShowSessionRefs"/>.
-    /// </summary>
-    public static TextSetting SessionRefsFilters { get; } = new(AppearanceSettingsPath, nameof(SessionRefsFilters),
-        defaultValue: "--exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**");
-
-    /// <summary>
     ///  Controls whether the seconds are omitted from the date in the revision grid (issue #11812).
     ///  Off by default to keep the full timestamp; the omission is opt-in.
     /// </summary>
@@ -25,6 +19,12 @@ public static partial class AppSettings
     ///  Color the background at changes (invert colors).
     /// </summary>
     public static BooleanSetting ReverseGitColoring { get; } = new(AppearanceSettingsPath, nameof(ReverseGitColoring), defaultValue: true);
+
+    /// <summary>
+    ///  Additional refs filters to be applied when listing refs for the revision grid in dependency on <see cref="ShowSessionRefs"/>.
+    /// </summary>
+    public static TextSetting SessionRefsFilters { get; } = new(AppearanceSettingsPath, nameof(SessionRefsFilters),
+        defaultValue: "--exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**");
 
     /// <summary>
     ///  Controls whether the Find in Commit Files (git grep) box is shown.
