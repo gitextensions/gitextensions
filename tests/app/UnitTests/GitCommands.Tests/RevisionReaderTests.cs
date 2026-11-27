@@ -32,6 +32,26 @@ public sealed class RevisionReaderTests
     }
 
     [Test]
+    public void GetFirstLogRecord_should_return_first_record()
+    {
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes("record\0"));
+
+        ReadOnlyMemory<byte> record = RevisionReader.TestAccessor.ReadFirstLogRecord(stream);
+
+        Encoding.UTF8.GetString(record.ToArray()).Should().Be("record");
+    }
+
+    [Test]
+    public void GetFirstLogRecord_should_ignore_trailing_records()
+    {
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes("record\0\0extra\0"));
+
+        ReadOnlyMemory<byte> record = RevisionReader.TestAccessor.ReadFirstLogRecord(stream);
+
+        Encoding.UTF8.GetString(record.ToArray()).Should().Be("record");
+    }
+
+    [Test]
     public void GetLog_shall_add_Autostash()
     {
         const string autostashLabel = nameof(autostashLabel);
