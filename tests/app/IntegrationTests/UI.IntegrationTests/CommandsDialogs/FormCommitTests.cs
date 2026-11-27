@@ -18,6 +18,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 [Apartment(ApartmentState.STA)]
 public class FormCommitTests
 {
+    private const string _firstChangeMessage = "first change";
+
+    private const string _secondChangeMessage = "second change";
+
     // Created once for the fixture
     private ReferenceRepository _referenceRepository = null!;
 
@@ -822,6 +826,96 @@ public class FormCommitTests
             FileStatusItem? stagedAndRenamed = ta.StagedList.AllItems.FirstOrDefault(i => i.Item.Name.Contains("original2.txt"));
             stagedAndRenamed.Should().NotBeNull();
             stagedAndRenamed!.Item.IsRenamed.Should().BeTrue();
+        });
+    }
+
+    [Test]
+    public void StageHunk_should_stage_hunk_at_caret_when_selection_spans_hunks()
+    {
+        RunFormTest(form =>
+        {
+            FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+            FileViewer.TestAccessor selectedDiff = ta.SelectedDiff.GetTestAccessor();
+            FileViewerInternal selectedDiffInternal = selectedDiff.FileViewerInternal;
+
+            // Two changes far enough apart to be in separate hunks
+            string contents = string.Concat(Enumerable.Range(1, 20).Select(i => $"line{i}\n"));
+            _referenceRepository.CreateCommit("commit", contents, "hunks.txt");
+            _referenceRepository.CreateRepoFile("hunks.txt", contents.Replace("line2\n", _firstChangeMessage + "\n").Replace("line18\n", "second change\n"));
+
+            ta.RescanChanges();
+            AsyncTestHelper.JoinPendingOperations();
+
+            ta.UnstagedList.SelectedGitItem = ta.UnstagedList.AllItems.Single(i => i.Item.Name == "hunks.txt").Item;
+            selectedDiffInternal.Focus();
+            AsyncTestHelper.JoinPendingOperations();
+
+            TextAreaControl textArea = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl;
+            int firstChangeLine = LineOf("+" + _firstChangeMessage);
+            int secondChangeLine = LineOf("+" + _secondChangeMessage);
+            firstChangeLine.Should().BeLessThan(secondChangeLine);
+
+            // Select from the first hunk down into the second hunk, so the caret ends up in the second hunk
+            textArea.Caret.Position = new TextLocation(1, secondChangeLine);
+            textArea.SelectionManager.SetSelection(new TextLocation(1, firstChangeLine), new TextLocation(1, secondChangeLine));
+
+            selectedDiff.ExecuteCommand(FileViewer.Command.StageHunk).Should().BeTrue();
+            AsyncTestHelper.JoinPendingOperations();
+
+            string stagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff --cached -- hunks.txt");
+            stagedDiff.Should().Contain("+" + _secondChangeMessage);
+            stagedDiff.Should().NotContain("+" + _firstChangeMessage);
+
+            int LineOf(string text)
+            {
+                int offset = textArea.Document.TextContent.IndexOf(text, StringComparison.Ordinal);
+                offset.Should().BeGreaterThanOrEqualTo(0);
+                return textArea.Document.GetLineNumberForOffset(offset);
+            }
+        });
+    }
+
+    [Test]
+    public void UnstageHunk_should_unstage_only_the_hunk_at_caret()
+    {
+        RunFormTest(form =>
+        {
+            FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+            FileViewer.TestAccessor selectedDiff = ta.SelectedDiff.GetTestAccessor();
+            FileViewerInternal selectedDiffInternal = selectedDiff.FileViewerInternal;
+
+            // Two staged changes far enough apart to be in separate hunks
+            string contents = string.Concat(Enumerable.Range(1, 20).Select(i => $"line{i}\n"));
+            _referenceRepository.CreateCommit("commit", contents, "unstage.txt");
+            _referenceRepository.CreateRepoFile("unstage.txt", contents.Replace("line2\n", _firstChangeMessage + "\n").Replace("line18\n", "second change\n"));
+            _referenceRepository.Module.GitExecutable.GetOutput("add -- unstage.txt");
+
+            ta.RescanChanges();
+            AsyncTestHelper.JoinPendingOperations();
+
+            ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name == "unstage.txt").Item;
+            selectedDiffInternal.Focus();
+            AsyncTestHelper.JoinPendingOperations();
+
+            // Caret in the first hunk, nothing selected
+            TextAreaControl textArea = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl;
+            int offset = textArea.Document.TextContent.IndexOf("+" + _firstChangeMessage, StringComparison.Ordinal);
+            offset.Should().BeGreaterThanOrEqualTo(0);
+            textArea.SelectionManager.ClearSelection();
+            textArea.Caret.Position = new TextLocation(1, textArea.Document.GetLineNumberForOffset(offset));
+
+            selectedDiff.ExecuteCommand(FileViewer.Command.UnstageHunk).Should().BeTrue();
+            AsyncTestHelper.JoinPendingOperations();
+
+            string stagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff --cached -- unstage.txt");
+            stagedDiff.Should().Contain("+" + _secondChangeMessage);
+            stagedDiff.Should().NotContain("+" + _firstChangeMessage);
+
+            string unstagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff -- unstage.txt");
+            unstagedDiff.Should().Contain("+" + _firstChangeMessage);
+            unstagedDiff.Should().NotContain("+" + _secondChangeMessage);
         });
     }
 

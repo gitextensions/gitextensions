@@ -389,6 +389,11 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         return TextEditor.ActiveTextAreaControl.Caret.Offset;
     }
 
+    /// <summary>
+    /// Gets the caret offset, which may be at either end of a selection.
+    /// </summary>
+    public int GetCaretPosition() => TextEditor.ActiveTextAreaControl.Caret.Offset;
+
     public int GetSelectionLength()
     {
         if (TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection.Count > 0)

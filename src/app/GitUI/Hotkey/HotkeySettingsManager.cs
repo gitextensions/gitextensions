@@ -337,6 +337,8 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(FileViewer.Command.PreviousOccurrence, Keys.Alt | Keys.Left),
                 Hk(FileViewer.Command.StageLines, Keys.S),
                 Hk(FileViewer.Command.UnstageLines, Keys.U),
+                Hk(FileViewer.Command.StageHunk, Keys.Shift | Keys.S),
+                Hk(FileViewer.Command.UnstageHunk, Keys.Shift | Keys.U),
                 Hk(FileViewer.Command.ResetLines, Keys.R),
                 Hk(FileViewer.Command.IgnoreAllWhitespace, Keys.Control | Keys.Shift | Keys.W)),
             new HotkeySettings(
