@@ -100,7 +100,7 @@ public partial class FormMergeBranch : GitModuleForm
             mergeMessagePath = _commitMessageManager.MergeMessagePath;
         }
 
-        ArgumentString command = Commands.MergeBranch(Branches.GetSelectedText(),
+        ArgumentString command = Commands.MergeBranch(Branches.GetSelectedTextQualifiedIfNumeric(),
                                                         fastForward.Checked,
                                                         squash.Checked,
                                                         noCommit.Checked,

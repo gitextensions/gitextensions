@@ -115,6 +115,23 @@ public static class GitRefName
         return RefsHeadsPrefix + branch;
     }
 
+    /// <summary>
+    ///  Qualifies a purely numeric branch name as a full ref name so git does not report
+    ///  "refname is ambiguous" (issue #13458). E.g. "13435" becomes "refs/heads/13435".
+    ///  Non-numeric names, commit hashes, and full ref paths are returned unchanged.
+    /// </summary>
+    /// <remarks>
+    ///  Unlike <see cref="GetFullBranchName" />, this qualifies only purely numeric names,
+    ///  re-using <see cref="GetFullBranchName" /> for the qualification. The merge/rebase
+    ///  branch argument can also be a remote-tracking branch (e.g. "origin/main") or a tag
+    ///  (e.g. "v1.0"); qualifying those to "refs/heads/..." produces a ref git rejects, so
+    ///  they must be left unchanged.
+    /// </remarks>
+    [Pure]
+    [return: NotNullIfNotNull(nameof(branchName))]
+    public static string? GetFullBranchNameIfNumeric(string? branchName)
+        => branchName?.Trim().All(char.IsDigit) is true ? GetFullBranchName(branchName) : branchName;
+
     [Pure]
     [return: NotNullIfNotNull(nameof(branch))]
     public static string? GetFullRemoteName(string? branch, string remote)
