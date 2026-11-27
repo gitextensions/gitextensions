@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Text;
 using CommonTestUtils;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
@@ -420,6 +421,56 @@ public class CommitMessageManagerTests
             .Should().Be(expectedMessage);
     }
 
+    // null: not configured - the git config of the machine is not queried in order to be independent from it
+    [TestCase(null, null, "# comment", false)]
+    [TestCase(null, null, "#", false)]
+    [TestCase(null, null, "#123 issue", true)]
+    [TestCase("auto", null, "#comment", false)]
+    [TestCase("auto", null, "#123 issue", true)]
+    [TestCase(";", null, "; comment", false)]
+    [TestCase(";", null, "#123 issue", true)]
+    [TestCase(";", null, "# no comment", true)]
+    [TestCase(null, "//", "// comment", false)]
+    [TestCase(null, "//", "# no comment", true)]
+    [TestCase(";", "//", "; no comment", true)]
+    public void FormatCommitMessage_should_skip_template_comments_per_core_commentChar(string? commentChar, string? commentStringSetting, string line, bool expectedKept)
+    {
+        if (commentStringSetting is not null && !_referenceRepository.Module.GitVersion.SupportCommentString)
+        {
+            Assert.Ignore("core.commentString requires Git 2.45");
+        }
+
+        if (commentChar is not null)
+        {
+            _referenceRepository.Module.SetSetting("core.commentchar", commentChar);
+        }
+
+        if (commentStringSetting is not null)
+        {
+            _referenceRepository.Module.SetSetting("core.commentstring", commentStringSetting);
+        }
+
+        string? commentString = commentChar is null && commentStringSetting is null
+            ? null
+            : CommitMessageManager.GetConfiguredCommentString(_referenceRepository.Module);
+
+        string nl = Environment.NewLine;
+        CommitMessageManager.FormatCommitMessage($"subject\n{line}", usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false, commentString)
+            .Should().Be(expectedKept ? $"subject{nl}{line}{nl}" : $"subject{nl}");
+    }
+
+    [TestCase(true, "//")]
+    [TestCase(false, ";")]
+    public void GetConfiguredCommentString_should_ignore_core_commentString_if_git_does_not_support_it(bool supportCommentString, string expected)
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GitVersion.SupportCommentString.Returns(supportCommentString);
+        module.GetEffectiveSetting("core.commentstring").Returns("//");
+        module.GetEffectiveSetting("core.commentchar").Returns(";");
+
+        CommitMessageManager.GetConfiguredCommentString(module).Should().Be(expected);
+    }
+
     public class FormatCommitMessageTestData
     {
         private static readonly string NL = Environment.NewLine;
@@ -443,16 +494,16 @@ public class CommitMessageManagerTests
                 yield return new TestCaseData(["\n", true, true, NL + NL]);
                 yield return new TestCaseData(["1", true, false, "1" + NL]);
                 yield return new TestCaseData(["#1", false, false, "#1" + NL]);
-                yield return new TestCaseData(["#1", true, false, ""]);
+                yield return new TestCaseData(["# 1", true, false, ""]);
                 yield return new TestCaseData(["1\n\n3", false, false, "1" + NL + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n\n3", false, true, "1" + NL + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n# 0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL]);
