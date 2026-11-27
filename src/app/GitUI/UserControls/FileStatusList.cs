@@ -98,6 +98,7 @@ public sealed partial class FileStatusList : GitModuleControl
                 : SelectedItems.Select(fsi => fsi.Item.Name));
         tsmiFilterFileInGrid.Text = TranslatedStrings.FilterFileInGrid;
         tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep;
+        tsmiEnableTemporaryLabels.Checked = AppSettings.TemporaryLabelsEnabled;
         SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
 
         CreateTreeContextMenuItems();
