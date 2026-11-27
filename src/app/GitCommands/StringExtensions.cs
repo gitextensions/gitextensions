@@ -213,9 +213,8 @@ public static class StringExtensions
     [Pure]
     public static string EscapeForCommandLine(this string s, bool? forWindows = null)
     {
-        return (forWindows ?? OperatingSystem.IsWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
+        return (forWindows ?? OperatingSystem.IsWindows()) ? GitCommands.PasteArguments.EscapeArgument(s) : EscapeForPosixCommandLine(s);
 
-        static string EscapeForWindowsCommandLine(string s) => s.Replace("\"", "\"\"");
         static string EscapeForPosixCommandLine(string s) => s.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("'", @"\'");
     }
 

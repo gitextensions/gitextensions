@@ -511,9 +511,19 @@ public sealed partial class ScriptOptionsParser
         {
             string newStringQuoted = QuoteRegex.Replace(newString, "\\\"");
             newStringQuoted = '"' + newStringQuoted;
-            if (newStringQuoted.EndsWith('\\'))
+
+            // Double the trailing backslashes so that the closing quote is not
+            // interpreted as escaped (BCL ProcessStartInfo behavior: N trailing
+            // backslashes become 2N, matching PasteArguments).
+            int trailingBackslashes = 0;
+            for (int i = newStringQuoted.Length - 1; i >= 0 && newStringQuoted[i] == '\\'; i--)
             {
-                newStringQuoted += '\\';
+                trailingBackslashes++;
+            }
+
+            if (trailingBackslashes > 0)
+            {
+                newStringQuoted += new string('\\', trailingBackslashes);
             }
 
             newStringQuoted += '"';
