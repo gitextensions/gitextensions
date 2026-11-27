@@ -224,7 +224,7 @@ public sealed class RevisionReader
 
             await standardOutputTask;
             standardOutputBuffer.Position = 0;
-            commandBytes = standardOutputBuffer.SplitLogOutput().SingleOrDefault();
+            commandBytes = GetFirstLogRecord(standardOutputBuffer);
         }
 
         GitRevision? revision;
@@ -690,6 +690,31 @@ public sealed class RevisionReader
     internal TestAccessor GetTestAccessor()
         => new(this);
 
+    private static ReadOnlyMemory<byte> GetFirstLogRecord(Stream standardOutput)
+    {
+        ReadOnlyMemory<byte> firstRecord = ReadOnlyMemory<byte>.Empty;
+        bool isFirst = true;
+        foreach (ReadOnlyMemory<byte> record in standardOutput.SplitLogOutput())
+        {
+            // Copy: SplitLogOutput reuses its buffer, so yielded memory may be overwritten by later reads
+            if (isFirst)
+            {
+                firstRecord = record.ToArray();
+                isFirst = false;
+            }
+            else
+            {
+                string trailingOutput = GitModule.LosslessEncoding.GetString(record.ToArray());
+                if (!string.IsNullOrWhiteSpace(trailingOutput))
+                {
+                    Trace.WriteLine($"Ignoring unexpected trailing git log output: {trailingOutput}");
+                }
+            }
+        }
+
+        return firstRecord;
+    }
+
     private void EnsureDecodeBufferSize(int requiredLength)
     {
         if (requiredLength <= _decodeBuffer.Length)
@@ -732,6 +757,9 @@ public sealed class RevisionReader
 
         internal bool TryParseRevision(ReadOnlyMemory<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
             _revisionReader.TryParseRevision(chunk, out revision);
+
+        internal static ReadOnlyMemory<byte> ReadFirstLogRecord(Stream standardOutput) =>
+            GetFirstLogRecord(standardOutput);
 
         internal int NoOfParseError
         {
