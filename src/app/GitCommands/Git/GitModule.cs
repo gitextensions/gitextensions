@@ -2243,33 +2243,40 @@ public sealed partial class GitModule : IGitModule
         };
 
         string output = GitExecutable.GetOutput(args);
+
+        // Note: -z for separator is not configurable before Git 2.36 so paths with \n will fail
+        // Just ignore this case, require Git update (no user feedback other than NBug).
+        char separator = GitVersion.SupportWorktreeZ ? '\0' : '\n';
+
+        return ParseWorktrees(output, separator);
+    }
+
+    private List<GitWorktree> ParseWorktrees(string output, char separator)
+    {
         List<GitWorktree> worktrees = [];
 
         string? path = null;
         string? sha1 = null;
         string? branch = null;
         GitWorktreeHeadType headType = GitWorktreeHeadType.Branch;
+        bool isLocked = false;
+        string? lockReason = null;
+        string? prunableReason = null;
 
-        // Note: -z for separator is not configurable before Git 2.36 so paths with \n will fail
-        // Just ignore this case, require Git update (no user feedback other than NBug).
-        char sep = GitVersion.SupportWorktreeZ ? '\0' : '\n';
-
-        foreach (string field in output.LazySplit(sep))
+        foreach (string field in output.LazySplit(separator))
         {
             // Double \0 (empty field) marks the boundary between worktree records
             if (field.Length == 0)
             {
-                if (path is not null)
-                {
-                    string fullPath = GetWindowsPath(path);
-                    bool isDeleted = !Directory.Exists(fullPath);
-                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
-                }
+                AddWorktree();
 
                 path = null;
                 sha1 = null;
                 branch = null;
                 headType = GitWorktreeHeadType.Branch;
+                isLocked = false;
+                lockReason = null;
+                prunableReason = null;
                 continue;
             }
 
@@ -2293,17 +2300,40 @@ public sealed partial class GitModule : IGitModule
                 case "detached":
                     headType = GitWorktreeHeadType.Detached;
                     break;
+
+                // "locked" and "prunable" are followed by their reason, if any (git 2.31+).
+                case "locked":
+                    isLocked = true;
+                    lockReason = value.Length > 0 ? value : null;
+                    break;
+                case "prunable":
+                    prunableReason = value;
+                    break;
             }
         }
 
-        if (path is not null)
-        {
-            string fullPath = GetWindowsPath(path);
-            bool isDeleted = !Directory.Exists(fullPath);
-            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
-        }
+        AddWorktree();
 
         return worktrees;
+
+        void AddWorktree()
+        {
+            if (path is null)
+            {
+                return;
+            }
+
+            string fullPath = GetWindowsPath(path);
+            bool isDeleted = !Directory.Exists(fullPath);
+            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted)
+            {
+                IsMain = worktrees.Count == 0,
+                IsLocked = isLocked,
+                LockReason = lockReason,
+                IsPrunable = prunableReason is not null,
+                PrunableReason = prunableReason
+            });
+        }
     }
 
     public async Task<ExecutionResult> GetSingleDifftoolAsync(
@@ -4182,6 +4212,9 @@ public sealed partial class GitModule : IGitModule
 
         public List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
             => _gitModule.GetDiffChangedFilesFromString(statusString, staged);
+
+        public List<GitWorktree> ParseWorktrees(string output, char separator)
+            => _gitModule.ParseWorktrees(output, separator);
 
         public StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
             => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);

@@ -62,7 +62,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
             }
         }
 
-        buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted);
+        buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted || w.IsPrunable);
     }
 
     private void buttonPruneWorktrees_Click(object sender, EventArgs e) => PruneWorktrees();
