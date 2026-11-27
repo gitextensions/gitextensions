@@ -17,7 +17,6 @@ internal sealed class MinttyKeyboardHook : IDisposable
 {
     private const uint _altContextBit = 1u << 29;
     private const nuint _keyDownMessage = 0x0100;
-    private const int _keyPressedMask = 0x8000;
     private const nuint _keyUpMessage = 0x0101;
     private const nuint _sysKeyDownMessage = 0x0104;
     private const nuint _sysKeyUpMessage = 0x0105;
@@ -29,6 +28,7 @@ internal sealed class MinttyKeyboardHook : IDisposable
     private HHOOK _hook;
     private readonly HOOKPROC _hookProc;
     private readonly bool _interceptTabPress;
+    private bool _ctrlDown;
 
     public MinttyKeyboardHook(Func<HWND> getFormWindow, Func<HWND> getMinttyWindow, bool interceptTabPress)
     {
@@ -65,6 +65,7 @@ internal sealed class MinttyKeyboardHook : IDisposable
         PInvoke.UnhookWindowsHookEx(_hook);
         _hook = HHOOK.Null;
         _consumedKeyDowns.Clear();
+        _ctrlDown = false;
     }
 
     private LRESULT HookProc(int code, WPARAM messageId, LPARAM hookData)
@@ -76,9 +77,6 @@ internal sealed class MinttyKeyboardHook : IDisposable
 
         return PInvoke.CallNextHookEx(_hook, code, messageId, hookData);
     }
-
-    private static bool IsAltGrOrCtrlDown()
-        => (PInvoke.GetKeyState((int)VIRTUAL_KEY.VK_CONTROL) & _keyPressedMask) != 0;
 
     private static bool IsFocusedWindow(HWND window)
     {
@@ -92,9 +90,9 @@ internal sealed class MinttyKeyboardHook : IDisposable
     {
         if (key is VIRTUAL_KEY.VK_TAB)
         {
-            // Tab and Shift+Tab must reach the shell for tab completion in the console tab.
+            // Unmodified Tab must reach the shell for tab completion; Ctrl+Tab switches tabs.
             // Alt+Tab is handled by the OS.
-            return _interceptTabPress && !altDown;
+            return !altDown && (_interceptTabPress || _ctrlDown);
         }
 
         if (key is >= VIRTUAL_KEY.VK_F1 and <= VIRTUAL_KEY.VK_F24)
@@ -103,13 +101,13 @@ internal sealed class MinttyKeyboardHook : IDisposable
         }
 
         // Ctrl + digit is used for focus control. Ctrl+Alt is AltGr, i.e. text input.
-        if (key is >= VIRTUAL_KEY.VK_0 and <= VIRTUAL_KEY.VK_9 && !altDown && IsAltGrOrCtrlDown())
+        if (key is >= VIRTUAL_KEY.VK_0 and <= VIRTUAL_KEY.VK_9)
         {
-            return true;
+            return !altDown && _ctrlDown;
         }
 
         // Alt + character (mnemonic). Ctrl+Alt is AltGr, i.e. text input.
-        return altDown && !IsAltGrOrCtrlDown() && key is not (VIRTUAL_KEY.VK_MENU or VIRTUAL_KEY.VK_LMENU or VIRTUAL_KEY.VK_RMENU);
+        return altDown && !_ctrlDown && key is not (VIRTUAL_KEY.VK_MENU or VIRTUAL_KEY.VK_LMENU or VIRTUAL_KEY.VK_RMENU);
     }
 
     private unsafe bool TryHandle(WPARAM messageId, LPARAM hookData)
@@ -123,6 +121,12 @@ internal sealed class MinttyKeyboardHook : IDisposable
         VIRTUAL_KEY key = (VIRTUAL_KEY)data->vkCode;
         bool altDown = (data->flags & KBDLLHOOKSTRUCT_FLAGS.LLKHF_ALTDOWN) != 0;
         bool isKeyUp = (data->flags & KBDLLHOOKSTRUCT_FLAGS.LLKHF_UP) != 0;
+
+        // The low-level hook observes all keyboard input, unlike GetKeyState which is per thread.
+        if (key is VIRTUAL_KEY.VK_CONTROL or VIRTUAL_KEY.VK_LCONTROL or VIRTUAL_KEY.VK_RCONTROL)
+        {
+            _ctrlDown = !isKeyUp;
+        }
 
         // Swallow the matching key-up independent of current focus and modifiers
         // so no window ever sees an unpaired event.
