@@ -8,19 +8,23 @@ namespace GitUI.Infrastructure;
 public static class PuttyHelpers
 {
     /// <summary>
-    ///  Starts PuTTY agent for the specified working directory.
+    ///  Starts PuTTY agent.
     /// </summary>
-    /// <param name="workingDirectory">The working directory.</param>
+    /// <remarks>
+    ///  The agent is a long-running process, so it is started with a neutral working
+    ///  directory: pinning a repository directory (e.g. on a removable drive) would
+    ///  keep the drive locked for the agent's entire lifetime (#11834).
+    /// </remarks>
     /// <exception cref="UserExternalOperationException">PuTTY executable cannot be found.</exception>
     /// <exception cref="COMException">The method was not called on the UI thread.</exception>
-    public static void StartPageant(string workingDirectory)
+    public static void StartPageant()
     {
         // Exceptions must be thrown from the UI thread, otherwise we'll crash the app.
         ThreadHelper.ThrowIfNotOnUIThread();
 
         ThrowIfFileNotFound(AppSettings.Pageant, $"'{AppSettings.Pageant}'\r\n\r\n{TranslatedStrings.ErrorSshPuTTYInstalled}");
 
-        new Executable(AppSettings.Pageant, workingDirectory).Start();
+        new Executable(AppSettings.Pageant).Start();
     }
 
     /// <summary>

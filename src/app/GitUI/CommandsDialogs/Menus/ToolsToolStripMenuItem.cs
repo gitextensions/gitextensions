@@ -65,7 +65,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 
     private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
     {
-        PuttyHelpers.StartPageant(UICommands.Module.WorkingDir);
+        PuttyHelpers.StartPageant();
     }
 
     private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)

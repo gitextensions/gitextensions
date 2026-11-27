@@ -21,6 +21,18 @@ public sealed class PuttyHelpersTests
     }
 
     [Test]
+    public Task StartPageant_throw_if_Pageant_not_found()
+    {
+        return RunTestAsync(
+            () => ((Action)PuttyHelpers.StartPageant)
+                .Should()
+                .Throw<UserExternalOperationException>()
+                .WithMessage(TranslatedStrings.ErrorFileNotFound)
+                .WithInnerException<FileNotFoundException>(),
+            pageant: Plink);
+    }
+
+    [Test]
     public Task StartPageantIfConfigured_throw_if_not_Plink()
     {
         return RunTestAsync(
