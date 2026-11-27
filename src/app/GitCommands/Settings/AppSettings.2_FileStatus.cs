@@ -9,4 +9,6 @@ public static partial class AppSettings
     public static BooleanSetting FileStatusMergeSingleItemWithFolder { get; } = new(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), defaultValue: false);
 
     public static BooleanSetting FileStatusShowGroupNodesInFlatList { get; } = new(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), defaultValue: false);
+
+    public static BooleanSetting TemporaryLabelsEnabled { get; } = new(FileStatusSettingsPath, nameof(TemporaryLabelsEnabled), defaultValue: true);
 }

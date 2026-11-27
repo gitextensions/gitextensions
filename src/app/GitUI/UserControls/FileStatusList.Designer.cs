@@ -80,6 +80,22 @@ partial class FileStatusList
         tsmiFindUsingDialog = new ToolStripMenuItem();
         tsmiFindUsingInputBox = new ToolStripMenuItem();
         tsmiFindUsingBoth = new ToolStripMenuItem();
+        sepLabels = new ToolStripSeparator();
+        btnLabels = new ToolStripDropDownButton();
+        tsmiEnableTemporaryLabels = new ToolStripMenuItem();
+        sepTemporaryLabels = new ToolStripSeparator();
+        tsmiTemporaryLabel1 = new ToolStripMenuItem();
+        tsmiTemporaryLabel2 = new ToolStripMenuItem();
+        tsmiTemporaryLabel3 = new ToolStripMenuItem();
+        tsmiTemporaryLabel4 = new ToolStripMenuItem();
+        tsmiTemporaryLabel5 = new ToolStripMenuItem();
+        tsmiTemporaryLabel6 = new ToolStripMenuItem();
+        tsmiTemporaryLabel7 = new ToolStripMenuItem();
+        tsmiTemporaryLabel8 = new ToolStripMenuItem();
+        tsmiTemporaryLabel9 = new ToolStripMenuItem();
+        sepClearTemporaryLabels = new ToolStripSeparator();
+        tsmiClearTemporaryLabel = new ToolStripMenuItem();
+        tsmiClearAllTemporaryLabels = new ToolStripMenuItem();
         sepSettings = new ToolStripSeparator();
         btnSettings = new ToolStripDropDownButton();
         tsmiShowIgnoredFiles = new ToolStripMenuItem();
@@ -282,7 +298,7 @@ partial class FileStatusList
         Toolbar.ClickThrough = true;
         Toolbar.DrawBorder = false;
         Toolbar.GripStyle = ToolStripGripStyle.Hidden;
-        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepSettings, btnSettings });
+        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepLabels, btnLabels, sepSettings, btnSettings });
         Toolbar.Location = new Point(0, 0);
         Toolbar.Name = "Toolbar";
         Toolbar.RenderMode = ToolStripRenderMode.Professional;
@@ -587,6 +603,124 @@ partial class FileStatusList
         tsmiFindUsingBoth.Text = "Using &both";
         tsmiFindUsingBoth.Click += FindUsing_Click;
         // 
+        // sepLabels
+        //
+        sepLabels.Name = "sepLabels";
+        sepLabels.Size = new Size(6, 25);
+        //
+        // btnLabels
+        //
+        btnLabels.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        btnLabels.DropDownItems.AddRange(new ToolStripItem[] { tsmiTemporaryLabel1, tsmiTemporaryLabel2, tsmiTemporaryLabel3, tsmiTemporaryLabel4, tsmiTemporaryLabel5, tsmiTemporaryLabel6, tsmiTemporaryLabel7, tsmiTemporaryLabel8, tsmiTemporaryLabel9, sepClearTemporaryLabels, tsmiClearTemporaryLabel, tsmiClearAllTemporaryLabels, sepTemporaryLabels, tsmiEnableTemporaryLabels });
+        btnLabels.Image = Properties.Images.Tag;
+        btnLabels.Name = "btnLabels";
+        btnLabels.Size = new Size(29, 22);
+        btnLabels.ToolTipText = "Temporary labels for files (hotkeys 1-9, 0 clears)";
+        //
+        // tsmiEnableTemporaryLabels
+        //
+        tsmiEnableTemporaryLabels.CheckOnClick = true;
+        tsmiEnableTemporaryLabels.Name = "tsmiEnableTemporaryLabels";
+        tsmiEnableTemporaryLabels.Size = new Size(180, 22);
+        tsmiEnableTemporaryLabels.Text = "&Enable temporary labels";
+        tsmiEnableTemporaryLabels.Click += TemporaryLabelsEnable_Click;
+        //
+        // sepTemporaryLabels
+        //
+        sepTemporaryLabels.Name = "sepTemporaryLabels";
+        sepTemporaryLabels.Size = new Size(177, 6);
+        //
+        // tsmiTemporaryLabel1
+        //
+        tsmiTemporaryLabel1.Name = "tsmiTemporaryLabel1";
+        tsmiTemporaryLabel1.Size = new Size(180, 22);
+        tsmiTemporaryLabel1.Tag = 1;
+        tsmiTemporaryLabel1.Text = "Toggle label 1";
+        tsmiTemporaryLabel1.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel2
+        //
+        tsmiTemporaryLabel2.Name = "tsmiTemporaryLabel2";
+        tsmiTemporaryLabel2.Size = new Size(180, 22);
+        tsmiTemporaryLabel2.Tag = 2;
+        tsmiTemporaryLabel2.Text = "Toggle label 2";
+        tsmiTemporaryLabel2.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel3
+        //
+        tsmiTemporaryLabel3.Name = "tsmiTemporaryLabel3";
+        tsmiTemporaryLabel3.Size = new Size(180, 22);
+        tsmiTemporaryLabel3.Tag = 3;
+        tsmiTemporaryLabel3.Text = "Toggle label 3";
+        tsmiTemporaryLabel3.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel4
+        //
+        tsmiTemporaryLabel4.Name = "tsmiTemporaryLabel4";
+        tsmiTemporaryLabel4.Size = new Size(180, 22);
+        tsmiTemporaryLabel4.Tag = 4;
+        tsmiTemporaryLabel4.Text = "Toggle label 4";
+        tsmiTemporaryLabel4.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel5
+        //
+        tsmiTemporaryLabel5.Name = "tsmiTemporaryLabel5";
+        tsmiTemporaryLabel5.Size = new Size(180, 22);
+        tsmiTemporaryLabel5.Tag = 5;
+        tsmiTemporaryLabel5.Text = "Toggle label 5";
+        tsmiTemporaryLabel5.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel6
+        //
+        tsmiTemporaryLabel6.Name = "tsmiTemporaryLabel6";
+        tsmiTemporaryLabel6.Size = new Size(180, 22);
+        tsmiTemporaryLabel6.Tag = 6;
+        tsmiTemporaryLabel6.Text = "Toggle label 6";
+        tsmiTemporaryLabel6.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel7
+        //
+        tsmiTemporaryLabel7.Name = "tsmiTemporaryLabel7";
+        tsmiTemporaryLabel7.Size = new Size(180, 22);
+        tsmiTemporaryLabel7.Tag = 7;
+        tsmiTemporaryLabel7.Text = "Toggle label 7";
+        tsmiTemporaryLabel7.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel8
+        //
+        tsmiTemporaryLabel8.Name = "tsmiTemporaryLabel8";
+        tsmiTemporaryLabel8.Size = new Size(180, 22);
+        tsmiTemporaryLabel8.Tag = 8;
+        tsmiTemporaryLabel8.Text = "Toggle label 8";
+        tsmiTemporaryLabel8.Click += TemporaryLabelMenuItem_Click;
+        //
+        // tsmiTemporaryLabel9
+        //
+        tsmiTemporaryLabel9.Name = "tsmiTemporaryLabel9";
+        tsmiTemporaryLabel9.Size = new Size(180, 22);
+        tsmiTemporaryLabel9.Tag = 9;
+        tsmiTemporaryLabel9.Text = "Toggle label 9";
+        tsmiTemporaryLabel9.Click += TemporaryLabelMenuItem_Click;
+        //
+        // sepClearTemporaryLabels
+        //
+        sepClearTemporaryLabels.Name = "sepClearTemporaryLabels";
+        sepClearTemporaryLabels.Size = new Size(177, 6);
+        //
+        // tsmiClearTemporaryLabel
+        //
+        tsmiClearTemporaryLabel.Name = "tsmiClearTemporaryLabel";
+        tsmiClearTemporaryLabel.Size = new Size(180, 22);
+        tsmiClearTemporaryLabel.Text = "Clear label (0)";
+        tsmiClearTemporaryLabel.Click += ClearTemporaryLabel_Click;
+        //
+        // tsmiClearAllTemporaryLabels
+        //
+        tsmiClearAllTemporaryLabels.Name = "tsmiClearAllTemporaryLabels";
+        tsmiClearAllTemporaryLabels.Size = new Size(180, 22);
+        tsmiClearAllTemporaryLabels.Text = "Clear all labels";
+        tsmiClearAllTemporaryLabels.Click += ClearAllTemporaryLabels_Click;
+        //
         // sepSettings
         // 
         sepSettings.Name = "sepSettings";
@@ -1169,6 +1303,22 @@ partial class FileStatusList
     private ToolStripMenuItem tsmiFindUsingDialog;
     private ToolStripMenuItem tsmiFindUsingInputBox;
     private ToolStripMenuItem tsmiFindUsingBoth;
+    private ToolStripSeparator sepLabels;
+    private ToolStripDropDownButton btnLabels;
+    private ToolStripMenuItem tsmiEnableTemporaryLabels;
+    private ToolStripSeparator sepTemporaryLabels;
+    private ToolStripMenuItem tsmiTemporaryLabel1;
+    private ToolStripMenuItem tsmiTemporaryLabel2;
+    private ToolStripMenuItem tsmiTemporaryLabel3;
+    private ToolStripMenuItem tsmiTemporaryLabel4;
+    private ToolStripMenuItem tsmiTemporaryLabel5;
+    private ToolStripMenuItem tsmiTemporaryLabel6;
+    private ToolStripMenuItem tsmiTemporaryLabel7;
+    private ToolStripMenuItem tsmiTemporaryLabel8;
+    private ToolStripMenuItem tsmiTemporaryLabel9;
+    private ToolStripSeparator sepClearTemporaryLabels;
+    private ToolStripMenuItem tsmiClearTemporaryLabel;
+    private ToolStripMenuItem tsmiClearAllTemporaryLabels;
     private ToolStripSeparator sepSettings;
     private ToolStripDropDownButton btnSettings;
     internal ToolStripMenuItem tsmiShowIgnoredFiles;

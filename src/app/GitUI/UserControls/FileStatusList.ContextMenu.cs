@@ -458,6 +458,23 @@ partial class FileStatusList
             case RevisionDiffControl.Command.OpenInVisualStudio: tsmiOpenInVisualStudio.PerformClick(); break;
             case RevisionDiffControl.Command.AddFileToGitIgnore: return AddFileToGitIgnore();
             case RevisionDiffControl.Command.RenameMove: tsmiMove.PerformClick(); break;
+            case RevisionDiffControl.Command.ToggleTemporaryLabel1:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel2:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel3:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel4:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel5:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel6:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel7:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel8:
+            case RevisionDiffControl.Command.ToggleTemporaryLabel9:
+            case RevisionDiffControl.Command.ClearTemporaryLabel:
+                if (!TemporaryLabelsEnabled)
+                {
+                    return false;
+                }
+
+                SetTemporaryLabelForSelectedItems(GetTemporaryLabel((RevisionDiffControl.Command)cmd));
+                break;
             default: return base.ExecuteCommand(cmd);
         }
 
@@ -915,6 +932,16 @@ partial class FileStatusList
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
         tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
+        tsmiTemporaryLabel1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel1);
+        tsmiTemporaryLabel2.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel2);
+        tsmiTemporaryLabel3.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel3);
+        tsmiTemporaryLabel4.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel4);
+        tsmiTemporaryLabel5.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel5);
+        tsmiTemporaryLabel6.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel6);
+        tsmiTemporaryLabel7.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel7);
+        tsmiTemporaryLabel8.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel8);
+        tsmiTemporaryLabel9.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ToggleTemporaryLabel9);
+        tsmiClearTemporaryLabel.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ClearTemporaryLabel);
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)

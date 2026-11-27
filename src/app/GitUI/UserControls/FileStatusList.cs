@@ -98,6 +98,7 @@ public sealed partial class FileStatusList : GitModuleControl
                 : SelectedItems.Select(fsi => fsi.Item.Name));
         tsmiFilterFileInGrid.Text = TranslatedStrings.FilterFileInGrid;
         tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep;
+        tsmiEnableTemporaryLabels.Checked = AppSettings.TemporaryLabelsEnabled;
         SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
 
         CreateTreeContextMenuItems();
@@ -1154,7 +1155,7 @@ public sealed partial class FileStatusList : GitModuleControl
         }
 
         bool expandIfFewFiles = !_isFileTreeMode || _filter is not null || !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-        (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles, gitGrepState, _noItemStatuses, cancellationToken);
+        (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles, gitGrepState, _noItemStatuses, _temporaryLabels, TemporaryLabelsEnabled, cancellationToken);
 
         GitItemStatusesWithDescription = items;
         if (nodes.Count > 0)
@@ -1252,6 +1253,8 @@ public sealed partial class FileStatusList : GitModuleControl
         bool expandIfFewFiles,
         GitGrepState gitGrepState,
         IReadOnlyList<GitItemStatus> noItemStatuses,
+        TemporaryFileLabels temporaryLabels,
+        bool temporaryLabelsEnabled,
         CancellationToken cancellationToken)
     {
         List<TreeNodeInfo> rootNodes = [];
@@ -1379,6 +1382,13 @@ public sealed partial class FileStatusList : GitModuleControl
             // Also set .Text in order to provide accessibility information (needed for partial standard drawing by TreeView control, too)
             string oldName = item.OldName is null ? "" : $" ({item.OldName})";
             TreeNode listItem = new(text: $"{item.Name}{oldName}");
+
+            if (temporaryLabelsEnabled && temporaryLabels.GetLabel(item.Name) is int label)
+            {
+                // Keep the label in the node text for accessibility and for the
+                // partially standard drawing of range diffs, which display .Text.
+                listItem.Text = $"{TemporaryFileLabels.Format(label)}{listItem.Text}";
+            }
 
             bool isGitGrep = FileStatusDiffCalculator.IsGrepItemStatuses(fileStatusWithDescription);
             listItem.ImageIndex = GetItemImageIndex(item, isGitGrep);
@@ -1752,6 +1762,19 @@ public sealed partial class FileStatusList : GitModuleControl
                 ? SystemColors.ControlText
                 : SystemColors.HighlightText)
             : SystemColors.WindowText;
+
+        if (TemporaryLabelsEnabled && item.Tag is FileStatusItem fileStatusItem
+            && !fileStatusItem.Item.IsRangeDiff
+            && _temporaryLabels.GetLabel(fileStatusItem.Item.Name) is int label)
+        {
+            // Draw the label marker in its color in front of the file name.
+            // Range diffs are excluded: their text is the node .Text, which
+            // already carries the marker from CreateNode.
+            string labelText = TemporaryFileLabels.Format(label);
+            DrawString(textRect, labelText, TemporaryFileLabels.GetColor(label));
+            Size labelSize = formatter.MeasureString(labelText);
+            textRect.Offset(labelSize.Width, 0);
+        }
 
         if (!string.IsNullOrEmpty(prefix))
         {

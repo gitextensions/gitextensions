@@ -320,6 +320,17 @@ partial class FileStatusList
             }
         }
 
+        tsmiEnableTemporaryLabels.Checked = TemporaryLabelsEnabled;
+
+        bool hasSelection = HasSelection;
+        foreach (ToolStripMenuItem item in TemporaryLabelMenuItems)
+        {
+            item.Enabled = TemporaryLabelsEnabled && hasSelection;
+        }
+
+        tsmiClearTemporaryLabel.Enabled = TemporaryLabelsEnabled && hasSelection;
+        tsmiClearAllTemporaryLabels.Enabled = TemporaryLabelsEnabled && _temporaryLabels.Count > 0;
+
         for (int itemIndex = 0; itemIndex < Toolbar.Items.Count; ++itemIndex)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)tsmiToolbar.DropDown.Items[itemIndex];

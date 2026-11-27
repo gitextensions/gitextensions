@@ -115,6 +115,16 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         AddFileToGitIgnore = 22,
         RenameMove = 23,
         FindInCommitFilesUsingGitGrep_FileTreeTab = 24,
+        ToggleTemporaryLabel1 = 25,
+        ToggleTemporaryLabel2 = 26,
+        ToggleTemporaryLabel3 = 27,
+        ToggleTemporaryLabel4 = 28,
+        ToggleTemporaryLabel5 = 29,
+        ToggleTemporaryLabel6 = 30,
+        ToggleTemporaryLabel7 = 31,
+        ToggleTemporaryLabel8 = 32,
+        ToggleTemporaryLabel9 = 33,
+        ClearTemporaryLabel = 34,
     }
 
     public bool ExecuteCommand(Command cmd)
@@ -163,6 +173,16 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             case Command.OpenInVisualStudio:
             case Command.AddFileToGitIgnore:
             case Command.RenameMove:
+            case Command.ToggleTemporaryLabel1:
+            case Command.ToggleTemporaryLabel2:
+            case Command.ToggleTemporaryLabel3:
+            case Command.ToggleTemporaryLabel4:
+            case Command.ToggleTemporaryLabel5:
+            case Command.ToggleTemporaryLabel6:
+            case Command.ToggleTemporaryLabel7:
+            case Command.ToggleTemporaryLabel8:
+            case Command.ToggleTemporaryLabel9:
+            case Command.ClearTemporaryLabel:
                 return DiffFiles.ExecuteCommand((Command)cmd);
 
             default: return base.ExecuteCommand(cmd);
