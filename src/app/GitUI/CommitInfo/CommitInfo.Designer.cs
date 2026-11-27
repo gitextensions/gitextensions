@@ -70,16 +70,16 @@ partial class CommitInfo
         pnlCommitMessage.Location = new Point(0, 112);
         pnlCommitMessage.Margin = new Padding(0);
         pnlCommitMessage.Name = "pnlCommitMessage";
+        pnlCommitMessage.Padding = new Padding(8);
         pnlCommitMessage.Size = new Size(456, 36);
         pnlCommitMessage.TabIndex = 0;
         // 
         // rtbxCommitMessage
         // 
-        rtbxCommitMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         rtbxCommitMessage.BackColor = SystemColors.Control;
         rtbxCommitMessage.BorderStyle = BorderStyle.None;
         rtbxCommitMessage.ContextMenuStrip = commitInfoContextMenuStrip;
-        rtbxCommitMessage.Location = new Point(8, 8);
+        rtbxCommitMessage.Dock = DockStyle.Fill;
         rtbxCommitMessage.Margin = new Padding(8);
         rtbxCommitMessage.Name = "rtbxCommitMessage";
         rtbxCommitMessage.ReadOnly = true;
