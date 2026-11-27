@@ -200,3 +200,81 @@ public sealed class GitModuleWorktreeTests
         return module;
     }
 }
+
+/// <summary>
+/// Unit tests for <see cref="GitModule.CheckExistsInParallel"/>, a pure static helper that
+/// checks a set of paths concurrently. These do not need a <see cref="MockExecutable"/>.
+/// </summary>
+public sealed class CheckExistsInParallelTests
+{
+    [Test]
+    public void CheckExistsInParallel_should_check_paths_concurrently()
+    {
+        // A check that blocks while "in flight"; if the checks ran serially, only one would
+        // ever be in flight at a time, so the observed concurrency would never exceed 1.
+        int inFlight = 0;
+        int maxInFlight = 0;
+
+        Func<string, bool> check = path =>
+        {
+            int current = Interlocked.Increment(ref inFlight);
+            int observed = Volatile.Read(ref maxInFlight);
+            while (current > observed && Interlocked.CompareExchange(ref maxInFlight, current, observed) != observed)
+            {
+                observed = Volatile.Read(ref maxInFlight);
+            }
+
+            Thread.Sleep(100);
+            Interlocked.Decrement(ref inFlight);
+            return true;
+        };
+
+        string[] paths = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+        bool[] result = GitModule.CheckExistsInParallel(paths, check);
+
+        result.Should().HaveCount(paths.Length);
+        result.Count(b => b).Should().Be(paths.Length);
+        maxInFlight.Should().BeGreaterThanOrEqualTo(2);
+    }
+
+    [Test]
+    public void CheckExistsInParallel_should_return_empty_for_no_paths()
+    {
+        bool[] result = GitModule.CheckExistsInParallel([], path => true);
+
+        result.Should().BeEmpty();
+    }
+
+    [Test]
+    public void CheckExistsInParallel_should_return_results_in_input_order()
+    {
+        Func<string, bool> check = path => path != "missing";
+
+        string[] paths = ["exists", "missing", "exists"];
+
+        bool[] result = GitModule.CheckExistsInParallel(paths, check);
+
+        result.Should().Equal(true, false, true);
+    }
+
+    [Test]
+    public void CheckExistsInParallel_should_treat_a_throwing_check_as_not_existing()
+    {
+        Func<string, bool> check = path =>
+        {
+            if (path == "throws")
+            {
+                throw new InvalidOperationException();
+            }
+
+            return true;
+        };
+
+        string[] paths = ["exists", "throws", "exists"];
+
+        bool[] result = GitModule.CheckExistsInParallel(paths, check);
+
+        result.Should().Equal(true, false, true);
+    }
+}
