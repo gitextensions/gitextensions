@@ -581,18 +581,16 @@ public static partial class Commands
         {
             builder.Add("--committer-date-is-author-date");
         }
-        else
-        {
-            if (rebaseOptions.Interactive)
-            {
-                builder.Add("-i");
-                builder.Add(rebaseOptions.AutoSquash ? "--autosquash" : "--no-autosquash");
-            }
 
-            if (rebaseOptions.PreserveMerges)
-            {
-                builder.Add(rebaseOptions.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
-            }
+        if (rebaseOptions.Interactive)
+        {
+            builder.Add("-i");
+            builder.Add(rebaseOptions.AutoSquash ? "--autosquash" : "--no-autosquash");
+        }
+
+        if (rebaseOptions.PreserveMerges)
+        {
+            builder.Add(rebaseOptions.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
         }
 
         if (rebaseOptions.UpdateRefs.HasValue)

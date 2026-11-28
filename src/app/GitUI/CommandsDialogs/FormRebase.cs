@@ -230,9 +230,6 @@ public partial class FormRebase : GitExtensionsDialog
     {
         chkCommitterDateIsAuthorDate.Enabled = !chkIgnoreDate.Checked;
         chkIgnoreDate.Enabled = !chkCommitterDateIsAuthorDate.Checked;
-        chkInteractive.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
-        chkPreserveMerges.Enabled = !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
-        chkAutosquash.Enabled = chkInteractive.Checked && !chkIgnoreDate.Checked && !chkCommitterDateIsAuthorDate.Checked;
     }
 
     private void AddFilesClick(object sender, EventArgs e)

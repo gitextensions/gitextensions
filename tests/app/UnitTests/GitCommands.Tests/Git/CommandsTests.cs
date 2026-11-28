@@ -409,8 +409,12 @@ public partial class CommandsTests
     [TestCase(false, false, false, false, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date \"branch\"")]
     [TestCase(false, false, false, true, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date --autostash \"branch\"")]
     [TestCase(false, false, false, true, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
-    [TestCase(true, true, true, true, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date --autostash \"branch\"")]
-    [TestCase(true, true, true, true, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
+    [TestCase(true, false, false, false, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date -i --no-autosquash \"branch\"")]
+    [TestCase(true, false, true, false, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date -i --autosquash \"branch\"")]
+    [TestCase(false, true, false, false, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date --rebase-merges \"branch\"")]
+    [TestCase(false, true, false, false, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date --rebase-merges \"branch\"")]
+    [TestCase(true, true, true, true, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date -i --autosquash --rebase-merges --autostash \"branch\"")]
+    [TestCase(true, true, true, true, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date -i --autosquash --rebase-merges --autostash \"branch\"")]
     [TestCase(true, true, true, true, false, false, true, null, "-c rebase.autosquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"")]
     [TestCase(false, false, false, false, false, false, true, false, "-c rebase.autosquash=false rebase --no-update-refs \"branch\"")]
     [TestCase(false, false, false, false, false, false, true, true, "-c rebase.autosquash=false rebase --update-refs \"branch\"")]
@@ -434,6 +438,7 @@ public partial class CommandsTests
 
     [TestCase(false, false, false, false, false, false, null, "from", "onto", "-c rebase.autosquash=false rebase --onto onto \"from\" \"branch\"")]
     [TestCase(false, false, false, false, true, false, null, "from", "onto", "-c rebase.autosquash=false rebase --ignore-date --onto onto \"from\" \"branch\"")]
+    [TestCase(true, false, true, false, false, true, null, "from", "onto", "-c rebase.autosquash=false rebase --committer-date-is-author-date -i --autosquash --onto onto \"from\" \"branch\"")]
     public void RebaseCmd_specific_range(bool interactive, bool preserveMerges, bool autoSquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool? updateRefs, string? from, string? onto, string expected)
     {
         Commands.RebaseOptions rebaseOptions = new()

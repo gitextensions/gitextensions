@@ -55,115 +55,103 @@ public class FormRebaseTests
     }
 
     [Test]
-    public void Ignore_date_check_disables_all_other_options()
+    public void Ignore_date_check_disables_only_the_other_date_option()
     {
         RunFormTest(
             form =>
             {
                 FormRebase.TestAccessor accessor = form.GetTestAccessor();
+                accessor.chkInteractive.Checked = true;
 
                 accessor.chkIgnoreDate.Checked = true;
 
-                accessor.chkInteractive.Enabled.Should().BeFalse();
-                accessor.chkPreserveMerges.Enabled.Should().BeFalse();
-                accessor.chkAutosquash.Enabled.Should().BeFalse();
+                accessor.chkInteractive.Enabled.Should().BeTrue();
+                accessor.chkPreserveMerges.Enabled.Should().BeTrue();
+                accessor.chkAutosquash.Enabled.Should().BeTrue();
                 accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeFalse();
             },
             from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
-    public void Ignore_date_uncheck_enables_all_options_if_interactive_checked()
+    public void Ignore_date_uncheck_enables_the_other_date_option()
+    {
+        RunFormTest(
+            form =>
+            {
+                FormRebase.TestAccessor accessor = form.GetTestAccessor();
+                accessor.chkIgnoreDate.Checked = true;
+
+                accessor.chkIgnoreDate.Checked = false;
+
+                accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeTrue();
+            },
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
+    }
+
+    [Test]
+    public void Ignore_date_check_keeps_autosquash_disabled_if_interactive_not_checked()
+    {
+        RunFormTest(
+            form =>
+            {
+                FormRebase.TestAccessor accessor = form.GetTestAccessor();
+
+                accessor.chkIgnoreDate.Checked = true;
+
+                accessor.chkInteractive.Enabled.Should().BeTrue();
+                accessor.chkAutosquash.Enabled.Should().BeFalse();
+            },
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
+    }
+
+    [Test]
+    public void Committer_date_check_disables_only_the_other_date_option()
     {
         RunFormTest(
             form =>
             {
                 FormRebase.TestAccessor accessor = form.GetTestAccessor();
                 accessor.chkInteractive.Checked = true;
-                accessor.chkIgnoreDate.Checked = true;
 
-                accessor.chkIgnoreDate.Checked = false;
+                accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
                 accessor.chkInteractive.Enabled.Should().BeTrue();
                 accessor.chkPreserveMerges.Enabled.Should().BeTrue();
                 accessor.chkAutosquash.Enabled.Should().BeTrue();
-                accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeTrue();
-            },
-            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
-    }
-
-    [Test]
-    public void Ignore_date_uncheck_enables_all_options_but_autosquash_if_interactive_not_checked()
-    {
-        RunFormTest(
-            form =>
-            {
-                FormRebase.TestAccessor accessor = form.GetTestAccessor();
-                accessor.chkIgnoreDate.Checked = true;
-
-                accessor.chkIgnoreDate.Checked = false;
-
-                accessor.chkInteractive.Enabled.Should().BeTrue();
-                accessor.chkPreserveMerges.Enabled.Should().BeTrue();
-                accessor.chkAutosquash.Enabled.Should().BeFalse();
-                accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeTrue();
-            },
-            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
-    }
-
-    [Test]
-    public void Committer_date_check_disables_all_other_options()
-    {
-        RunFormTest(
-            form =>
-            {
-                FormRebase.TestAccessor accessor = form.GetTestAccessor();
-
-                accessor.chkCommitterDateIsAuthorDate.Checked = true;
-
-                accessor.chkInteractive.Enabled.Should().BeFalse();
-                accessor.chkPreserveMerges.Enabled.Should().BeFalse();
-                accessor.chkAutosquash.Enabled.Should().BeFalse();
                 accessor.chkIgnoreDate.Enabled.Should().BeFalse();
             },
             from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
-    public void Committer_date_uncheck_enables_all_options_if_interactive_is_checked()
+    public void Committer_date_uncheck_enables_the_other_date_option()
     {
         RunFormTest(
             form =>
             {
                 FormRebase.TestAccessor accessor = form.GetTestAccessor();
-                accessor.chkInteractive.Checked = true;
                 accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
                 accessor.chkCommitterDateIsAuthorDate.Checked = false;
 
-                accessor.chkInteractive.Enabled.Should().BeTrue();
-                accessor.chkPreserveMerges.Enabled.Should().BeTrue();
-                accessor.chkAutosquash.Enabled.Should().BeTrue();
                 accessor.chkIgnoreDate.Enabled.Should().BeTrue();
             },
             from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
-    public void Committer_date_uncheck_enables_all_options_but_autosquash_if_interactive_not_checked()
+    public void Committer_date_check_keeps_autosquash_disabled_if_interactive_not_checked()
     {
         RunFormTest(
             form =>
             {
                 FormRebase.TestAccessor accessor = form.GetTestAccessor();
+
                 accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
-                accessor.chkCommitterDateIsAuthorDate.Checked = false;
-
                 accessor.chkInteractive.Enabled.Should().BeTrue();
-                accessor.chkPreserveMerges.Enabled.Should().BeTrue();
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
-                accessor.chkIgnoreDate.Enabled.Should().BeTrue();
             },
             from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
