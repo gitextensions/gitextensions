@@ -203,6 +203,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
+    private readonly SettingsSource _settingsSource;
     private readonly SplitterManager _splitterManager;
     private readonly GitStatusMonitor _gitStatusMonitor;
     private readonly FormBrowseMenus _formBrowseMenus;
@@ -253,6 +254,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.Invalidate(invalidateChildren: true);
 
+        _settingsSource = settingsSource;
         _splitterManager = new(settingsSource);
 
         SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
@@ -492,6 +494,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RefreshSplitViewLayout();
         LayoutRevisionInfo();
         SetSplitterPositions();
+        RestoreSelectedTab();
 
         base.OnLoad(e);
 
@@ -597,6 +600,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _splitterManager.SaveSplitters();
+        SaveSelectedTab();
 
         SaveApplicationSettings();
 
