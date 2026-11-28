@@ -12,8 +12,9 @@ internal sealed class MinttyControl : Panel
     private MinttySession? _runningSession;
     private CancellationTokenSource? _sessionCts;
     private HANDLE _jobHandle = NativeMethods.CreateKillOnCloseJob();
+    private readonly MinttyKeyboardHook _keyboardHook;
 
-    public MinttyControl()
+    public MinttyControl(bool interceptTabPress)
     {
         // Make the panel focusable so Focus() works programmatically and
         // OnGotFocus runs whenever WinForms restores focus here (e.g. after
@@ -21,6 +22,61 @@ internal sealed class MinttyControl : Panel
         // to the embedded mintty hwnd — centralising what used to be scattered
         // FocusWindowWithAttachedInput calls at every entry point.
         SetStyle(ControlStyles.Selectable, true);
+
+        _keyboardHook = new MinttyKeyboardHook(
+            () => IsHandleCreated ? (HWND)Handle : HWND.Null,
+            () => _runningSession?.WindowHandle ?? HWND.Null,
+            interceptTabPress);
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        _keyboardHook.Install();
+    }
+
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+        _keyboardHook.Uninstall();
+        base.OnHandleDestroyed(e);
+    }
+
+    protected override void WndProc(ref Message m)
+    {
+        if (m.Msg == MinttyKeyboardHook.InterceptedKeyMessage)
+        {
+            ProcessInterceptedKey(m);
+            return;
+        }
+
+        base.WndProc(ref m);
+    }
+
+    private void ProcessInterceptedKey(Message interceptedMessage)
+    {
+        // The modifiers are taken from the hook, as the keyboard state of this thread does not reflect them.
+        Keys keyData = (Keys)interceptedMessage.WParam.ToInt32();
+        Message keyMessage = Message.Create(Handle, interceptedMessage.LParam.ToInt32(), (nint)(int)(keyData & Keys.KeyCode), nint.Zero);
+        if (ProcessCmdKey(ref keyMessage, keyData))
+        {
+            return;
+        }
+
+        if ((keyData & Keys.Alt) == Keys.Alt
+            && (keyData & Keys.Control) == Keys.None
+            && ((keyData & Keys.KeyCode) is (>= Keys.A and <= Keys.Z) or (>= Keys.D0 and <= Keys.D9)))
+        {
+            ProcessDialogChar((char)(keyData & Keys.KeyCode));
+            if (FindForm() is { IsHandleCreated: true } form)
+            {
+                form.ActiveControl = null;
+                NativeMethods.MoveFocusFromForeignThread((HWND)form.Handle);
+            }
+
+            return;
+        }
+
+        ProcessDialogKey(keyData);
     }
 
     internal MinttySession? RunningSession => _runningSession;
@@ -321,6 +377,7 @@ internal sealed class MinttyControl : Panel
     {
         if (disposing)
         {
+            _keyboardHook.Dispose();
             _sessionCts?.Cancel();
             _sessionCts?.Dispose();
             _sessionCts = null;
